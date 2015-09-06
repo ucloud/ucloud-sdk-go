@@ -1,0 +1,8 @@
+{
+	"ImportPath": "github.com/xiaohui/goucloud",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"github.com/xiaohui/goucloud/ucloud/client"
+	],
+	"Deps": []
+}

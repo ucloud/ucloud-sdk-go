@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+BUILD_IMAGE_NAME="ucloud-go-sdk"
+
+# Build image for compilation if not detected
+if [[ $(docker images -q ${BUILD_IMAGE_NAME} | wc -l) -ne 1 ]]; then
+    docker build -t ${BUILD_IMAGE_NAME} .
+fi
+
