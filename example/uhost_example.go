@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/xiaohui/goucloud/ucloud"
-	"github.com/xiaohui/goucloud/service/uhost"
-	"github.com/xiaohui/goucloud/ucloud/auth"
-	"github.com/xiaohui/goucloud/ucloud/utils"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/service/uhost"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utils"
 )
 
 

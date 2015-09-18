@@ -1,8 +1,8 @@
 {
-	"ImportPath": "github.com/xiaohui/goucloud",
+	"ImportPath": "github.com/ucloud/ucloud-sdk-go",
 	"GoVersion": "go1.5",
 	"Packages": [
-		"github.com/xiaohui/goucloud/ucloud/client"
+		"github.com/ucloud/ucloud-sdk-go/ucloud/client"
 	],
 	"Deps": []
 }

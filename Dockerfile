@@ -6,6 +6,6 @@ RUN go get github.com/tools/godep
 ENV GOPATH /go/src/github.com/docker/machine/Godeps/_workspace:/go
 ENV USER root
 
-WORKDIR /go/src/github.com/xiaohui/goucloud
+WORKDIR /go/src/github.com/ucloud/ucloud-sdk-go
 
-ADD . /go/src/github.com/xiaohui/goucloud
+ADD . /go/src/github.com/ucloud/ucloud-sdk-go

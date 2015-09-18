@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/xiaohui/goucloud/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
 func ConvertParamsToValues(params interface{}, values *url.Values) {

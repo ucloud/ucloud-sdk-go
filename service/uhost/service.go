@@ -3,8 +3,8 @@ package uhost
 import (
 	"net/http"
 
-	"github.com/xiaohui/goucloud/ucloud"
-	"github.com/xiaohui/goucloud/ucloud/service"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/service"
 )
 
 type UHost struct {

@@ -1,7 +1,7 @@
 package uhost
 
 import (
-	"github.com/xiaohui/goucloud/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
 // CreateUHostInstance will create instances

@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/xiaohui/goucloud/ucloud"
-	"github.com/xiaohui/goucloud/ucloud/uclouderr"
-	"github.com/xiaohui/goucloud/ucloud/utils"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/uclouderr"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utils"
 )
 
 type Service struct {

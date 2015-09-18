@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/xiaohui/goucloud/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
 const (
