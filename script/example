@@ -9,4 +9,6 @@ fi
 echo $ARGS
 
 docker build -t goucloud .
-exec docker run --rm goucloud godep go build $ARGS
+exec docker run --rm \
+                -v `pwd`:/go/src/github.com/ucloud/ucloud-sdk-go \
+                goucloud godep go build $ARGS

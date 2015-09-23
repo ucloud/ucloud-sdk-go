@@ -57,8 +57,6 @@ func (s *Service) DoRequest(action string, params interface{}, response interfac
 	}
 
 	err = json.Unmarshal(body, &response)
-	fmt.Println("%+v", response)
-
 	if err != nil {
 		return fmt.Errorf("unmarshal url failed, error: %s", err)
 	}

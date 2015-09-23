@@ -35,10 +35,10 @@ type CreateUHostInstanceResponse struct {
 }
 
 func (u *UHost) CreateUHostInstance(params *CreateUHostInstanceParams) (*CreateUHostInstanceResponse, error) {
-	response := CreateUHostInstanceResponse{}
+	response := &CreateUHostInstanceResponse{}
 	err := u.DoRequest("CreateUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type DescribeUHostInstanceParams struct {
@@ -77,7 +77,7 @@ type UHostSet struct {
 	State          string
 	CreateTime     int
 	ChargeType     string
-	ExpireTime     string
+	ExpireTime     int
 	CPU            int
 	Memory         int
 	DiskSet        DiskSetArray
@@ -95,10 +95,10 @@ type DescribeUHostInstanceResponse struct {
 }
 
 func (u *UHost) DescribeUHostInstance(params *DescribeUHostInstanceParams) (*DescribeUHostInstanceResponse, error) {
-	response := DescribeUHostInstanceResponse{}
+	response := &DescribeUHostInstanceResponse{}
 	err := u.DoRequest("DescribeUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type TerminateUHostInstanceParams struct {
@@ -114,10 +114,10 @@ type TerminateUHostInstanceResponse struct {
 }
 
 func (u *UHost) TerminateUHostInstance(params *TerminateUHostInstanceParams) (*TerminateUHostInstanceResponse, error) {
-	response := TerminateUHostInstanceResponse{}
+	response := &TerminateUHostInstanceResponse{}
 	err := u.DoRequest("TerminateUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type ResizeUHostInstanceParams struct {
@@ -137,10 +137,10 @@ type ResizeUHostInstanceResponse struct {
 }
 
 func (u *UHost) ResizeUHostInstance(params *ResizeUHostInstanceParams) (*ResizeUHostInstanceResponse, error) {
-	response := ResizeUHostInstanceResponse{}
+	response := &ResizeUHostInstanceResponse{}
 	err := u.DoRequest("ResizeUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type ReinstallUHostInstanceParams struct {
@@ -161,10 +161,10 @@ type ReinstallUHostInstanceResponse struct {
 }
 
 func (u *UHost) ReinstallUHostInstance(params *ReinstallUHostInstanceParams) (*ReinstallUHostInstanceResponse, error) {
-	response := ReinstallUHostInstanceResponse{}
+	response := &ReinstallUHostInstanceResponse{}
 	err := u.DoRequest("ReinstallUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type StartUHostInstanceParams struct {
@@ -180,10 +180,10 @@ type StartUHostInstanceResponse struct {
 }
 
 func (u *UHost) StartUHostInstance(params *StartUHostInstanceParams) (*StartUHostInstanceResponse, error) {
-	response := StartUHostInstanceResponse{}
+	response := &StartUHostInstanceResponse{}
 	err := u.DoRequest("StartUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type StopUHostInstanceParams struct {
@@ -200,10 +200,10 @@ type StopUHostInstanceResponse struct {
 }
 
 func (u *UHost) StopUHostInstance(params *StopUHostInstanceParams) (*StopUHostInstanceResponse, error) {
-	response := StopUHostInstanceResponse{}
+	response := &StopUHostInstanceResponse{}
 	err := u.DoRequest("StopUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type PoweroffUHostInstanceParams struct {
@@ -220,10 +220,10 @@ type PoweroffUHostInstanceResponse struct {
 }
 
 func (u *UHost) PoweroffUHostInstance(params *PoweroffUHostInstanceParams) (*PoweroffUHostInstanceResponse, error) {
-	response := PoweroffUHostInstanceResponse{}
+	response := &PoweroffUHostInstanceResponse{}
 	err := u.DoRequest("PoweroffUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type RebootUHostInstanceParams struct {
@@ -240,10 +240,10 @@ type RebootUHostInstanceResponse struct {
 }
 
 func (u *UHost) RebootUHostInstance(params *RebootUHostInstanceParams) (*RebootUHostInstanceResponse, error) {
-	response := RebootUHostInstanceResponse{}
+	response := &RebootUHostInstanceResponse{}
 	err := u.DoRequest("RebootUHostInstance", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type ResetUHostInstancePasswordParams struct {
@@ -261,10 +261,10 @@ type ResetUHostInstancePasswordResponse struct {
 }
 
 func (u *UHost) ResetUHostInstancePassword(params *ResetUHostInstancePasswordParams) (*ResetUHostInstancePasswordResponse, error) {
-	response := ResetUHostInstancePasswordResponse{}
+	response := &ResetUHostInstancePasswordResponse{}
 	err := u.DoRequest("ResetUHostInstancePassword", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type ModifyUHostInstanceNameParams struct {
@@ -282,10 +282,10 @@ type ModifyUHostInstanceNameResponse struct {
 }
 
 func (u *UHost) ModifyUHostInstanceName(params *ModifyUHostInstanceNameParams) (*ModifyUHostInstanceNameResponse, error) {
-	response := ModifyUHostInstanceNameResponse{}
+	response := &ModifyUHostInstanceNameResponse{}
 	err := u.DoRequest("ModifyUHostInstanceName", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type ModifyUHostInstanceTagParams struct {
@@ -303,10 +303,10 @@ type ModifyUHostInstanceTagResponse struct {
 }
 
 func (u *UHost) ModifyUHostInstanceTag(params *ModifyUHostInstanceTagParams) (*ModifyUHostInstanceTagResponse, error) {
-	response := ModifyUHostInstanceTagResponse{}
+	response := &ModifyUHostInstanceTagResponse{}
 	err := u.DoRequest("ModifyUHostInstanceTag", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type ModifyUHostInstanceRemarkParams struct {
@@ -324,10 +324,10 @@ type ModifyUHostInstanceRemarkResponse struct {
 }
 
 func (u *UHost) ModifyUHostInstanceRemark(params *ModifyUHostInstanceRemarkParams) (*ModifyUHostInstanceRemarkResponse, error) {
-	response := ModifyUHostInstanceRemarkResponse{}
+	response := &ModifyUHostInstanceRemarkResponse{}
 	err := u.DoRequest("ModifyUHostInstanceRemark", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type GetUHostInstancePriceParams struct {
@@ -356,10 +356,10 @@ type GetUHostInstancePriceResponse struct {
 }
 
 func (u *UHost) GetUHostInstancePrice(params *GetUHostInstancePriceParams) (*GetUHostInstancePriceResponse, error) {
-	response := GetUHostInstancePriceResponse{}
+	response := &GetUHostInstancePriceResponse{}
 	err := u.DoRequest("GetUHostInstancePrice", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type GetUHostInstanceVncInfoParams struct {
@@ -379,10 +379,10 @@ type GetUHostInstanceVncInfoResponse struct {
 }
 
 func (u *UHost) GetUHostInstanceVncInfo(params *GetUHostInstanceVncInfoParams) (*GetUHostInstanceVncInfoResponse, error) {
-	response := GetUHostInstanceVncInfoResponse{}
+	response := &GetUHostInstanceVncInfoResponse{}
 	err := u.DoRequest("GetUHostInstanceVncInfo", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type DescribeImageParams struct {
@@ -417,10 +417,10 @@ type DescribeImageResponse struct {
 }
 
 func (u *UHost) DescribeImage(params *DescribeImageParams) (*DescribeImageResponse, error) {
-	response := DescribeImageResponse{}
+	response := &DescribeImageResponse{}
 	err := u.DoRequest("DescribeImage", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type CreateCustomImageParams struct {
@@ -439,10 +439,10 @@ type CreateCustomImageResponse struct {
 }
 
 func (u *UHost) CreateCustomImage(params *CreateCustomImageParams) (*CreateCustomImageResponse, error) {
-	response := CreateCustomImageResponse{}
+	response := &CreateCustomImageResponse{}
 	err := u.DoRequest("CreateCustomImage", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type TerminateCustomImageParams struct {
@@ -459,10 +459,10 @@ type TerminateCustomImageResponse struct {
 }
 
 func (u *UHost) TerminateCustomImage(params *TerminateCustomImageParams) (*TerminateCustomImageResponse, error) {
-	response := TerminateCustomImageResponse{}
+	response := &TerminateCustomImageResponse{}
 	err := u.DoRequest("TerminateCustomImage", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type AttachUDiskParams struct {
@@ -481,10 +481,10 @@ type AttachUDiskResponse struct {
 }
 
 func (u *UHost) AttachUDisk(params *AttachUDiskParams) (*AttachUDiskResponse, error) {
-	response := AttachUDiskResponse{}
+	response := &AttachUDiskResponse{}
 	err := u.DoRequest("AttachUDisk", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type DetachUDiskParams struct {
@@ -503,10 +503,10 @@ type DetachUDiskResponse struct {
 }
 
 func (u *UHost) DetachUDisk(params *DetachUDiskParams) (*DetachUDiskResponse, error) {
-	response := DetachUDiskResponse{}
+	response := &DetachUDiskResponse{}
 	err := u.DoRequest("DetachUDisk", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type CreateUHostInstanceSnapshotParams struct {
@@ -524,10 +524,10 @@ type CreateUHostInstanceSnapshotResponse struct {
 }
 
 func (u *UHost) CreateUHostInstanceSnapshot(params *CreateUHostInstanceSnapshotParams) (*CreateUHostInstanceSnapshotResponse, error) {
-	response := CreateUHostInstanceSnapshotResponse{}
+	response := &CreateUHostInstanceSnapshotResponse{}
 	err := u.DoRequest("CreateUHostInstanceSnapshot", params, response)
 
-	return &response, err
+	return response, err
 }
 
 type DescribeUHostInstanceSnapshotParams struct {
@@ -550,8 +550,8 @@ type DescribeUHostInstanceSnapshotResponse struct {
 }
 
 func (u *UHost) DescribeUHostInstanceSnapshot(params *DescribeUHostInstanceSnapshotParams) (*DescribeUHostInstanceSnapshotResponse, error) {
-	response := DescribeUHostInstanceSnapshotResponse{}
+	response := &DescribeUHostInstanceSnapshotResponse{}
 	err := u.DoRequest("DescribeUHostInstanceSnapshot", params, response)
 
-	return &response, err
+	return response, err
 }
