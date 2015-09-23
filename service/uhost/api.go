@@ -31,7 +31,7 @@ type CreateUHostInstanceParams struct {
 
 type CreateUHostInstanceResponse struct {
 	ucloud.CommonResponse
-	HostIds []string
+	UHostIds []string
 }
 
 func (u *UHost) CreateUHostInstance(params *CreateUHostInstanceParams) (*CreateUHostInstanceResponse, error) {
