@@ -1,13 +1,14 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/url"
 	"reflect"
 	"strconv"
-	"strings"
+	"sort"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
@@ -71,18 +72,27 @@ func ConvertParamsToValues(params interface{}, values *url.Values) {
 	}
 }
 
-func UrlWithSignature(values *url.Values, baseUrl, privateKey string) (string, error) {
+func UrlWithSignature(values url.Values, baseUrl, privateKey string) (string, error) {
 
-	urlEncoded, err := url.QueryUnescape(values.Encode())
-	if err != nil {
-		return "", fmt.Errorf("unescape failed, error: %s", err)
+	if values == nil {
+		return "", fmt.Errorf("values is empty")
 	}
 
-	// replace '&' and '=' in url
-	urlEncoded = strings.Replace(urlEncoded, "=", "", -1)
-	urlEncoded = strings.Replace(urlEncoded, "&", "", -1)
+	var buf bytes.Buffer
+	keys := make([]string, 0, len(values))
+	for k := range values {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		vs := values[k]
+		for _, v := range vs {
+			buf.WriteString(k)
+			buf.WriteString(v)
+		}
+	}
 
-	signature, err := auth.GenerateSignature(urlEncoded, privateKey)
+	signature, err := auth.GenerateSignature(buf.String(), privateKey)
 	if err != nil {
 		return "", fmt.Errorf("generate signature error:%s", err)
 	}

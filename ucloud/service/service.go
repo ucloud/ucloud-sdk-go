@@ -82,7 +82,7 @@ func (s *Service) RequestURL(action string, params interface{}) (string, error) 
 	utils.ConvertParamsToValues(commonRequest, &values)
 	utils.ConvertParamsToValues(params, &values)
 
-	url, err := utils.UrlWithSignature(&values, s.BaseUrl, s.Config.Credentials.PrivateKey)
+	url, err := utils.UrlWithSignature(values, s.BaseUrl, s.Config.Credentials.PrivateKey)
 	if err != nil {
 		return "", fmt.Errorf("convert params error: %s", err)
 	}
