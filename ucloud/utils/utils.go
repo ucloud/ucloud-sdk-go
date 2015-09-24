@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/url"
 	"reflect"
-	"strconv"
 	"sort"
+	"strconv"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
@@ -59,6 +59,25 @@ func ConvertParamsToValues(params interface{}, values *url.Values) {
 
 		case reflect.String:
 			v = field.String()
+		case reflect.Slice:
+			switch field.Type().Elem().Kind() {
+			case reflect.String:
+				l := field.Len()
+				if l > 0 {
+					for i := 0; i < l; i++ {
+						v = field.Index(i).String()
+						name := elemType.Field(i).Tag.Get("ArgName")
+						if name == "" {
+							name = fieldName
+						}
+						name = fmt.Sprintf("%s.%d", name, i)
+						values.Set(name, v)
+					}
+					continue
+				}
+			default:
+
+			}
 		}
 
 		if v != "" {

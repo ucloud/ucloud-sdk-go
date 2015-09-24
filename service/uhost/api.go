@@ -42,10 +42,11 @@ func (u *UHost) CreateUHostInstance(params *CreateUHostInstanceParams) (*CreateU
 }
 
 type DescribeUHostInstanceParams struct {
-	Region string
-	Tag    string
-	Offset int
-	Limit  int
+	Region   string
+	UHostIds []string
+	Tag      string
+	Offset   int
+	Limit    int
 }
 
 type DiskSet struct {
