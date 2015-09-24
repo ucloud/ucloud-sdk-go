@@ -7,10 +7,11 @@ import (
 type AllocateEIPParams struct {
 	ucloud.CommonRequest
 
-	Region     string
-	Bandwidth  int
-	ChargeType string
-	Quantity   int
+	OperatorName string
+	Region       string
+	Bandwidth    int
+	ChargeType   string
+	Quantity     int
 }
 
 type EIPAddr struct {
@@ -107,6 +108,26 @@ type ReleaseEIPResponse struct {
 func (u *UNet) ReleaseEIP(params *ReleaseEIPParams) (*ReleaseEIPResponse, error) {
 	response := &ReleaseEIPResponse{}
 	err := u.DoRequest("ReleaseEIP", params, response)
+
+	return response, err
+}
+
+type BindEIPParams struct {
+	ucloud.CommonRequest
+
+	Region       string
+	EIPId        string
+	ResourceType string
+	ResourceId   string
+}
+
+type BindEIPResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) BindEIP(params *BindEIPParams) (*BindEIPResponse, error) {
+	response := &BindEIPResponse{}
+	err := u.DoRequest("BindEIP", params, response)
 
 	return response, err
 }
@@ -255,6 +276,7 @@ func (u *UNet) ReleaseVIP(params *ReleaseVIPParams) (*ReleaseVIPResponse, error)
 type CreateSecurityGroupParams struct {
 	ucloud.CommonRequest
 
+	Region      string
 	GroupName   string
 	Description string
 	Rule        []string
@@ -274,10 +296,10 @@ func (u *UNet) CreateSecurityGroup(params *CreateSecurityGroupParams) (*CreateSe
 type DescribeSecurityGroupParams struct {
 	ucloud.CommonRequest
 
+	Region       string
 	ResourceType string
 	ResourceId   int
 	GroupId      string
-	Rule         []string
 }
 
 type Rule struct {
