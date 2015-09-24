@@ -11,3 +11,9 @@ type CommonResponse struct {
 	Action  string
 	RetCode int
 }
+
+type Resource struct {
+	ResourceType string
+	ResourceName string
+	ResourceId   string
+}
