@@ -11,6 +11,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/uclouderr"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utils"
+	"reflect"
 )
 
 type Service struct {
@@ -56,9 +57,19 @@ func (s *Service) DoRequest(action string, params interface{}, response interfac
 		}
 	}
 
-	err = json.Unmarshal(body, &response)
-	if err != nil {
+	if err = json.Unmarshal(body, &response); err != nil {
 		return fmt.Errorf("unmarshal url failed, error: %s", err)
+	}
+
+	retCode := reflect.ValueOf(response).Elem().FieldByName("RetCode").Int()
+	if retCode != 0 {
+		var resp *uclouderr.UcloudError
+		if err = json.Unmarshal(body, &resp); err != nil {
+			return fmt.Errorf("unmarshal fault message failed, error:%s", err)
+		}
+
+		message := reflect.ValueOf(resp).Elem().FieldByName("Message").String()
+		return fmt.Errorf("RetCode:%d Message:%s", retCode, message)
 	}
 
 	return nil
