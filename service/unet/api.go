@@ -311,10 +311,10 @@ type Rule struct {
 }
 
 type FirewallDataSet struct {
-	GroupId    string
+	GroupId    int
 	GroupName  string
-	CreateTime string
-	Type       string
+	CreateTime int
+	Type       int
 	Rule       *[]Rule
 }
 

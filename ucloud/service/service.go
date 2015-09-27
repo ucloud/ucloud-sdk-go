@@ -7,11 +7,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/uclouderr"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utils"
-	"reflect"
 )
 
 type Service struct {

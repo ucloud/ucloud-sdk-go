@@ -43,10 +43,14 @@ func ConvertParamsToValues(params interface{}, values *url.Values) {
 		var v string
 		switch kind {
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			v = strconv.FormatInt(field.Int(), 10)
+			if field.Int() != 0 {
+				v = strconv.FormatInt(field.Int(), 10)
+			}
 
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			v = strconv.FormatUint(field.Uint(), 10)
+			if field.Uint() != 0 {
+				v = strconv.FormatUint(field.Uint(), 10)
+			}
 
 		case reflect.Float32:
 			v = strconv.FormatFloat(field.Float(), 'f', 4, 32)
@@ -66,12 +70,14 @@ func ConvertParamsToValues(params interface{}, values *url.Values) {
 				if l > 0 {
 					for i := 0; i < l; i++ {
 						v = field.Index(i).String()
-						name := elemType.Field(i).Tag.Get("ArgName")
-						if name == "" {
-							name = fieldName
+						if v != "" {
+							name := elemType.Field(i).Tag.Get("ArgName")
+							if name == "" {
+								name = fieldName
+							}
+							name = fmt.Sprintf("%s.%d", name, i)
+							values.Set(name, v)
 						}
-						name = fmt.Sprintf("%s.%d", name, i)
-						values.Set(name, v)
 					}
 					continue
 				}
