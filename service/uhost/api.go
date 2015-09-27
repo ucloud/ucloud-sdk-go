@@ -405,7 +405,7 @@ type ImageSet struct {
 	State     string
 
 	ImageDescription string
-	CreateTime       string
+	CreateTime       int
 }
 
 type ImageSetArray []ImageSet
