@@ -23,6 +23,16 @@ type Service struct {
 	HttpClient *http.Client
 }
 
+func (s *Service) setHttpHeader(req *http.Request) {
+	if len(s.Config.HTTPHeader) == 0 {
+		return
+	}
+
+	for key, value := range s.Config.HTTPHeader {
+		req.Header.Set(key, value)
+	}
+}
+
 func (s *Service) DoRequest(action string, params interface{}, response interface{}) error {
 	requestURL, err := s.RequestURL(action, params)
 	if err != nil {
@@ -33,7 +43,7 @@ func (s *Service) DoRequest(action string, params interface{}, response interfac
 	if err != nil {
 		return fmt.Errorf("new request url failed, error: %s", err)
 	}
-
+	s.setHttpHeader(httpReq)
 	httpResp, err := s.HttpClient.Do(httpReq)
 	if err != nil {
 		return fmt.Errorf("do request url failed, error: %s", err)

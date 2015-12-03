@@ -35,6 +35,8 @@ type Config struct {
 	ProjectID string
 
 	SleepDelay func(time.Duration)
+
+	HTTPHeader map[string]string
 }
 
 // NewConfig returns a new Config pointer that can be chained with builder methods to
@@ -109,6 +111,10 @@ func (c Config) Merge(other *Config) *Config {
 
 	if len(other.ProjectID) != 0 {
 		dst.ProjectID = other.ProjectID
+	}
+
+	if len(other.HTTPHeader) != 0 {
+		dst.HTTPHeader = other.HTTPHeader
 	}
 
 	return &dst
