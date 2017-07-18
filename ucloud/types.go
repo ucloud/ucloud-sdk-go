@@ -16,4 +16,5 @@ type Resource struct {
 	ResourceType string
 	ResourceName string
 	ResourceId   string
+	Zone         string
 }

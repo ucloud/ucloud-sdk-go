@@ -19,7 +19,7 @@ var DefaultConfig = NewConfig().
 	WithCredentials(&DefaultCredential).
 	WithRegion(os.Getenv("UCLOUD_REGION")).
 	WithMaxRetries(DefaultRetries).
-	WithProjectId("").
+	WithProjectID("").
 	WithSleepDelay(time.Sleep)
 
 // A Config provides service configuration for service clients. By default,
@@ -42,7 +42,7 @@ type Config struct {
 // NewConfig returns a new Config pointer that can be chained with builder methods to
 // set multiple configuration values inline without using pointers.
 //
-//     svc := s3.New(aws.NewConfig().WithRegion("us-west-2").WithMaxRetries(10))
+//     svc := uhost.New(ucloud.NewConfig().WithRegion("cn-bj-2").WithMaxRetries(10))
 //
 func NewConfig() *Config {
 	return &Config{}
@@ -69,9 +69,9 @@ func (c *Config) WithMaxRetries(max int) *Config {
 	return c
 }
 
-// WithProjectId sets a config ProjectID value returning a Config pointer
+// WithProjectID sets a config ProjectID value returning a Config pointer
 // for chaining
-func (c *Config) WithProjectId(projectID string) *Config {
+func (c *Config) WithProjectID(projectID string) *Config {
 	c.ProjectID = projectID
 	return c
 }

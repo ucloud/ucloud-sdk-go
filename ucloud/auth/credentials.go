@@ -7,7 +7,7 @@ import (
 
 var (
 	ErrPublicKeyIDNotFound = errors.New("UCLOUD_PUBLIC_KEY not found in environment")
-	ErrPrivateKeyNotFound  = errors.New("UCLOUD_PUBLIC_KEY not found in environment")
+	ErrPrivateKeyNotFound  = errors.New("UCLOUD_PRIVATE_KEY not found in environment")
 )
 
 type KeyPair struct {
