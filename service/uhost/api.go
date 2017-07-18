@@ -4,21 +4,21 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
-// CreateUHostInstance will create instances
+// CreateUHostInstanceParams params of create instances
 type CreateUHostInstanceParams struct {
 	ucloud.CommonRequest
 
-	Region    string
-	ImageId   string
-	LoginMode string
-	Password  string
-	KeyPair   string
-	CPU       int
-	Memory    int
-	DiskSpace int
-	Name      string
-	NetworkId string
-
+	Region          string
+	Zone            string
+	ImageId         string
+	LoginMode       string
+	Password        string
+	KeyPair         string
+	CPU             int
+	Memory          int
+	DiskSpace       int
+	Name            string
+	NetworkId       string
 	SecurityGroupId string
 	ChargeType      string
 	Quantity        int
@@ -27,6 +27,7 @@ type CreateUHostInstanceParams struct {
 	NetCapability   string
 	Tag             string
 	CouponId        string
+	BootDiskSpace   int
 }
 
 type CreateUHostInstanceResponse struct {
@@ -43,6 +44,7 @@ func (u *UHost) CreateUHostInstance(params *CreateUHostInstanceParams) (*CreateU
 
 type DescribeUHostInstanceParams struct {
 	Region   string
+	Zone     string
 	UHostIds []string
 	Tag      string
 	Offset   int
@@ -52,6 +54,8 @@ type DescribeUHostInstanceParams struct {
 type DiskSet struct {
 	Type   string
 	DiskId string
+	Name   string
+	Drive  int
 	Size   int
 }
 
@@ -67,23 +71,29 @@ type IPSet struct {
 type IPSetArray []IPSet
 
 type UHostSet struct {
-	UHostId        string
-	UHostType      string
-	ImageId        string
-	BasicImageId   string
-	BasicImageName string
-	Tag            string
-	Remark         string
-	Name           string
-	State          string
-	CreateTime     int
-	ChargeType     string
-	ExpireTime     int
-	CPU            int
-	Memory         int
-	DiskSet        DiskSetArray
-	IPSet          IPSetArray
-	NetCapability  string
+	UHostId            string
+	UHostType          string
+	Zone               string
+	StorageType        string
+	ImageId            string
+	BasicImageId       string
+	BasicImageName     string
+	Tag                string
+	Remark             string
+	Name               string
+	State              string
+	CreateTime         int
+	ChargeType         string
+	ExpireTime         int
+	CPU                int
+	Memory             int
+	AutoRenew          string
+	DiskSet            DiskSetArray
+	IPSet              IPSetArray
+	NetCapability      string
+	NetworkState       string
+	TimemachineFeature string
+	HotplugFeature     string
 }
 
 type UHostSetArray []UHostSet
@@ -106,12 +116,14 @@ type TerminateUHostInstanceParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
+	Destroy int
 }
 
 type TerminateUHostInstanceResponse struct {
 	ucloud.CommonResponse
-	UhostId string
+	UhostIds []string
 }
 
 func (u *UHost) TerminateUHostInstance(params *TerminateUHostInstanceParams) (*TerminateUHostInstanceResponse, error) {
@@ -124,11 +136,14 @@ func (u *UHost) TerminateUHostInstance(params *TerminateUHostInstanceParams) (*T
 type ResizeUHostInstanceParams struct {
 	ucloud.CommonRequest
 
-	Region    string
-	UHostId   string
-	CPU       int
-	Memory    int
-	DiskSpace int
+	Region        string
+	Zone          string
+	UHostId       string
+	CPU           int
+	Memory        int
+	DiskSpace     int
+	BootDiskSpace int
+	NetCapValue   int
 }
 
 type ResizeUHostInstanceResponse struct {
@@ -148,6 +163,7 @@ type ReinstallUHostInstanceParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 
 	Password    string
@@ -172,6 +188,7 @@ type StartUHostInstanceParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 
@@ -191,6 +208,7 @@ type StopUHostInstanceParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 
@@ -211,6 +229,7 @@ type PoweroffUHostInstanceParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 
@@ -231,6 +250,7 @@ type RebootUHostInstanceParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 
@@ -251,6 +271,7 @@ type ResetUHostInstancePasswordParams struct {
 	ucloud.CommonRequest
 
 	Region   string
+	Zone     string
 	UHostId  string
 	Password string
 }
@@ -272,6 +293,7 @@ type ModifyUHostInstanceNameParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 	Name    string
 }
@@ -293,6 +315,7 @@ type ModifyUHostInstanceTagParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 	Tag     string
 }
@@ -314,6 +337,7 @@ type ModifyUHostInstanceRemarkParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 	Remark  string
 }
@@ -334,14 +358,18 @@ func (u *UHost) ModifyUHostInstanceRemark(params *ModifyUHostInstanceRemarkParam
 type GetUHostInstancePriceParams struct {
 	ucloud.CommonRequest
 
-	Region  string
-	UHostId string
-
-	CPU        int
-	Memory     int
-	Count      int
-	ChargeType string
-	DiskSpace  int
+	Region             string
+	Zone               string
+	ImageId            string
+	CPU                int
+	Memory             int
+	Count              int
+	ChargeType         string
+	StorageType        string
+	DiskSpace          int
+	UHostType          string
+	NetCapability      string
+	TimemachineFeature string
 }
 
 type PriceSet struct {
@@ -367,6 +395,7 @@ type GetUHostInstanceVncInfoParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 
@@ -390,6 +419,7 @@ type DescribeImageParams struct {
 	ucloud.CommonRequest
 
 	Region    string
+	Zone      string
 	ImageType string
 	OsType    string
 	ImageId   string
@@ -398,14 +428,21 @@ type DescribeImageParams struct {
 }
 
 type ImageSet struct {
-	ImageId   string
-	ImageName string
-	OsType    string
-	OsName    string
-	State     string
-
-	ImageDescription string
-	CreateTime       int
+	ImageId            string
+	ImageName          string
+	Zone               string
+	OsType             string
+	OsName             string
+	ImageType          string
+	Features           []string
+	FuncType           string
+	IntegratedSoftware string
+	Vendor             string
+	Links              string
+	State              string
+	ImageDescription   string
+	CreateTime         int
+	ImageSize          int
 }
 
 type ImageSetArray []ImageSet
@@ -428,6 +465,7 @@ type CreateCustomImageParams struct {
 	ucloud.CommonRequest
 
 	Region           string
+	Zone             string
 	UHostId          string
 	ImageName        string
 	ImageDescription string
@@ -450,6 +488,7 @@ type TerminateCustomImageParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	ImageId string
 }
 
@@ -470,6 +509,7 @@ type AttachUDiskParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 	UDiskId string
 }
@@ -492,6 +532,7 @@ type DetachUDiskParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 	UDiskId string
 }
@@ -514,6 +555,7 @@ type CreateUHostInstanceSnapshotParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 
@@ -535,6 +577,7 @@ type DescribeUHostInstanceSnapshotParams struct {
 	ucloud.CommonRequest
 
 	Region  string
+	Zone    string
 	UHostId string
 }
 

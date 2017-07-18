@@ -7,10 +7,12 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/service"
 )
 
+// UHost api service for UHost
 type UHost struct {
 	*service.Service
 }
 
+// New create a uhost service
 func New(config *ucloud.Config) *UHost {
 
 	service := &service.Service{
