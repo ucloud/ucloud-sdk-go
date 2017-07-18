@@ -7,11 +7,17 @@ import (
 type AllocateEIPParams struct {
 	ucloud.CommonRequest
 
-	OperatorName string
-	Region       string
-	Bandwidth    int
-	ChargeType   string
-	Quantity     int
+	OperatorName     string
+	Region           string
+	Bandwidth        int
+	Tag              string
+	ChargeType       string
+	Quantity         int
+	PayMode          string
+	ShareBandwidthId string
+	CouponId         string
+	Name             string
+	Remark           string
 }
 
 type EIPAddr struct {
@@ -19,27 +25,34 @@ type EIPAddr struct {
 	IP           string
 }
 
+type ShareBandwidthSet struct {
+	ShareBandwidth     int
+	ShareBandwidthId   string
+	ShareBandwidthName string
+}
+
 type EIPSet struct {
-	EIPId         string
-	CurBandwidth  float32
-	Weight        int
-	BandwidthType int
-	Bandwidth     int
-	Status        string
-	ChargeType    string
-	CreateTime    int
-	ExpireTime    int
-	Name          string
-	Tag           string
-	Remark        string
-	EIPAddr       *[]EIPAddr
-	Resource      *[]ucloud.Resource
+	EIPId             string
+	CurBandwidth      float32
+	Weight            int
+	BandwidthType     int
+	Bandwidth         int
+	Status            string
+	ChargeType        string
+	CreateTime        int
+	ExpireTime        int
+	Name              string
+	Tag               string
+	Remark            string
+	PayMode           string
+	ShareBandwidthSet *ShareBandwidthSet
+	EIPAddr           *[]EIPAddr
+	Resource          *[]ucloud.Resource
 }
 
 type AllocateEIPResponse struct {
 	ucloud.CommonResponse
 
-	EIPIds *[]string
 	EIPSet *[]EIPSet
 }
 
@@ -62,8 +75,9 @@ type DescribeEIPParams struct {
 type DescribeEIPResponse struct {
 	ucloud.CommonResponse
 
-	TotalCount int
-	EIPSet     *[]EIPSet
+	TotalCount     int
+	TotalBandwidth int
+	EIPSet         *[]EIPSet
 }
 
 func (u *UNet) DescribeEIP(params *DescribeEIPParams) (*DescribeEIPResponse, error) {
@@ -196,6 +210,7 @@ type GetEIPPriceParams struct {
 	OperatorName string
 	Bandwidth    int
 	ChargeType   string
+	PayMode      string
 }
 
 type PriceSet struct {
@@ -216,59 +231,68 @@ func (u *UNet) GetEIPPrice(params *GetEIPPriceParams) (*GetEIPPriceResponse, err
 	return response, err
 }
 
-type AllocateVIPParams struct {
+type GetEIPUpgradePriceParams struct {
 	ucloud.CommonRequest
 
-	Region string
-	Count  int
+	Region    string
+	EIPId     string
+	Bandwidth int
 }
 
-type AllocateVIPResponse struct {
+type GetEIPUpgradePriceResponse struct {
 	ucloud.CommonResponse
 
-	DataSet []string
+	Price float64
 }
 
-func (u *UNet) AllocateVIP(params *AllocateVIPParams) (*AllocateVIPResponse, error) {
-	response := &AllocateVIPResponse{}
-	err := u.DoRequest("AllocateVIP", params, response)
+func (u *UNet) GetEIPUpgradePrice(params *GetEIPUpgradePriceParams) (*GetEIPUpgradePriceResponse, error) {
+	response := &GetEIPUpgradePriceResponse{}
+	err := u.DoRequest("GetEIPUpgradePrice", params, response)
 
 	return response, err
 }
 
-type DescribeVIPParams struct {
+type GetEIPPayModeEIPParams struct {
 	ucloud.CommonRequest
 
 	Region string
+	EIPIds []string
 }
 
-type DescribeVIPResponse struct {
+type EIPPayMode struct {
+	EIPId      string
+	EIPPaymode string
+}
+
+type GetEIPPayModeEIPResponse struct {
 	ucloud.CommonResponse
 
-	DataSet []string
+	EIPPayMode *[]EIPPayMode
 }
 
-func (u *UNet) DescribeVIP(params *DescribeVIPParams) (*DescribeVIPResponse, error) {
-	response := &DescribeVIPResponse{}
-	err := u.DoRequest("DescribeVIP", params, response)
+func (u *UNet) GetEIPPayModeEIP(params *GetEIPUpgradePriceParams) (*GetEIPPayModeEIPResponse, error) {
+	response := &GetEIPPayModeEIPResponse{}
+	err := u.DoRequest("GetEIPPayModeEIP", params, response)
 
 	return response, err
 }
 
-type ReleaseVIPParams struct {
+type SetEIPPayModeParams struct {
 	ucloud.CommonRequest
 
-	Region string
-	VIP    string
+	Region    string
+	EIPId     string
+	Bandwidth int
+	PayMode   string
 }
 
-type ReleaseVIPResponse struct {
+type SetEIPPayModeResponse struct {
 	ucloud.CommonResponse
 }
 
-func (u *UNet) ReleaseVIP(params *ReleaseVIPParams) (*ReleaseVIPResponse, error) {
-	response := &ReleaseVIPResponse{}
-	err := u.DoRequest("ReleaseVIP", params, response)
+func (u *UNet) SetEIPPayMode(params *SetEIPPayModeParams) (*SetEIPPayModeResponse, error) {
+	response := &SetEIPPayModeResponse{}
+	err := u.DoRequest("SetEIPPayMode", params, response)
 
 	return response, err
 }
@@ -311,11 +335,12 @@ type Rule struct {
 }
 
 type FirewallDataSet struct {
-	GroupId    int
-	GroupName  string
-	CreateTime int
-	Type       int
-	Rule       *[]Rule
+	GroupId     int
+	GroupName   string
+	CreateTime  int
+	Type        int
+	Description string
+	Rule        *[]Rule
 }
 
 type DescribeSecurityGroupResponse struct {
@@ -410,6 +435,66 @@ func (u *UNet) DeleteSecurityGroup(params *DeleteSecurityGroupParams) (*DeleteSe
 	return response, err
 }
 
+type AllocateVIPParams struct {
+	ucloud.CommonRequest
+
+	Region string
+	Zone   string
+	Count  int
+}
+
+type AllocateVIPResponse struct {
+	ucloud.CommonResponse
+
+	DataSet []string
+}
+
+func (u *UNet) AllocateVIP(params *AllocateVIPParams) (*AllocateVIPResponse, error) {
+	response := &AllocateVIPResponse{}
+	err := u.DoRequest("AllocateVIP", params, response)
+
+	return response, err
+}
+
+type DescribeVIPParams struct {
+	ucloud.CommonRequest
+
+	Region string
+	Zone   string
+}
+
+type DescribeVIPResponse struct {
+	ucloud.CommonResponse
+
+	DataSet []string
+}
+
+func (u *UNet) DescribeVIP(params *DescribeVIPParams) (*DescribeVIPResponse, error) {
+	response := &DescribeVIPResponse{}
+	err := u.DoRequest("DescribeVIP", params, response)
+
+	return response, err
+}
+
+type ReleaseVIPParams struct {
+	ucloud.CommonRequest
+
+	Region string
+	Zone   string
+	VIP    string
+}
+
+type ReleaseVIPResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) ReleaseVIP(params *ReleaseVIPParams) (*ReleaseVIPResponse, error) {
+	response := &ReleaseVIPResponse{}
+	err := u.DoRequest("ReleaseVIP", params, response)
+
+	return response, err
+}
+
 type CreateBandwidthPackageParams struct {
 	ucloud.CommonRequest
 
@@ -418,6 +503,7 @@ type CreateBandwidthPackageParams struct {
 	Bandwidth  int
 	EnableTime int
 	TimeRange  int
+	CouponId   string
 }
 
 type CreateBandwidthPackageResponse struct {
@@ -483,22 +569,47 @@ func (u *UNet) DeleteBandwidthPackage(params *DeleteBandwidthPackageParams) (*De
 	return response, err
 }
 
+type AllocateShareBandwidthParams struct {
+	ucloud.CommonRequest
+
+	Region         string
+	ShareBandwidth int
+	ChargeType     string
+	Quantity       int
+	Name           string
+}
+
+type AllocateShareBandwidthResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) AllocateShareBandwidth(params *AllocateShareBandwidthParams) (*AllocateShareBandwidthResponse, error) {
+	response := &AllocateShareBandwidthResponse{}
+	err := u.DoRequest("AllocateShareBandwidth", params, response)
+
+	return response, err
+}
+
 type DescribeShareBandwidthParams struct {
 	ucloud.CommonRequest
 
-	Region string
+	Region            string
+	ShareBandwidthIds []string
+}
+
+type UNetShareBandwidthSet struct {
+	Bandwidth        int
+	ShareBandwidthId string
+	ChargeType       string
+	CreateTime       int
+	ExpireTime       int
+	EIPSet           *[]EIPAddr
 }
 
 type DescribeShareBandwidthResponse struct {
 	ucloud.CommonResponse
 
-	IsShare          bool
-	ShareBandwidth   int
-	ShareBandwidthId string
-	ChargeType       string
-	CreateTime       int
-	ExpireTime       int
-	PurchaseValue    int
+	DataSet *[]UNetShareBandwidthSet
 }
 
 func (u *UNet) DescribeShareBandwidth(params *DescribeShareBandwidthParams) (*DescribeShareBandwidthResponse, error) {
@@ -511,8 +622,9 @@ func (u *UNet) DescribeShareBandwidth(params *DescribeShareBandwidthParams) (*De
 type ResizeShareBandwidthParams struct {
 	ucloud.CommonRequest
 
-	Region         string
-	ShareBandwidth int
+	Region           string
+	ShareBandwidth   int
+	ShareBandwidthId string
 }
 
 type ResizeShareBandwidthResponse struct {
@@ -526,17 +638,81 @@ func (u *UNet) ResizeShareBandwidth(params *ResizeShareBandwidthParams) (*Resize
 	return response, err
 }
 
+type ReleaseShareBandwidthParams struct {
+	ucloud.CommonRequest
+
+	Region           string
+	EIPBandwidth     int
+	ShareBandwidthId string
+}
+
+type ReleaseShareBandwidthResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) ReleaseShareBandwidth(params *ReleaseShareBandwidthParams) (*ReleaseShareBandwidthResponse, error) {
+	response := &ReleaseShareBandwidthResponse{}
+	err := u.DoRequest("ReleaseShareBandwidth", params, response)
+
+	return response, err
+}
+
+type AssociateEIPWithShareBandwidthParams struct {
+	ucloud.CommonRequest
+
+	Region           string
+	EIPIds           []string
+	ShareBandwidthId string
+}
+
+type AssociateEIPWithShareBandwidthResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) AssociateEIPWithShareBandwidth(params *AssociateEIPWithShareBandwidthParams) (*AssociateEIPWithShareBandwidthResponse, error) {
+	response := &AssociateEIPWithShareBandwidthResponse{}
+	err := u.DoRequest("AssociateEIPWithShareBandwidth", params, response)
+
+	return response, err
+}
+
+type DisassociateEIPWithShareBandwidthParams struct {
+	ucloud.CommonRequest
+
+	Region           string
+	EIPIds           []string
+	ShareBandwidthId string
+	Bandwidth        int
+}
+
+type DisassociateEIPWithShareBandwidthResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) DisassociateEIPWithShareBandwidth(params *DisassociateEIPWithShareBandwidthParams) (*DisassociateEIPWithShareBandwidthResponse, error) {
+	response := &DisassociateEIPWithShareBandwidthResponse{}
+	err := u.DoRequest("DisassociateEIPWithShareBandwidth", params, response)
+
+	return response, err
+}
+
 type DescribeBandwidthUsageParams struct {
 	ucloud.CommonRequest
 
 	OffSet int
 	Limit  int
+	EIPIds []string
 }
 
+type UnetBandwidthUsageEIPSet struct {
+	CurBandwidth float64
+	EIPId        string
+}
 type DescribeBandwidthUsageResponse struct {
 	ucloud.CommonResponse
 
-	EIPSet *[]EIPSet
+	TotalCount int
+	EIPSet     *[]UnetBandwidthUsageEIPSet
 }
 
 func (u *UNet) DescribeBandwidthUsage(params *ResizeShareBandwidthParams) (*ResizeShareBandwidthResponse, error) {
