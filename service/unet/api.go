@@ -47,7 +47,7 @@ type EIPSet struct {
 	PayMode           string
 	ShareBandwidthSet *ShareBandwidthSet
 	EIPAddr           *[]EIPAddr
-	Resource          *[]ucloud.Resource
+	Resource          *ucloud.Resource
 }
 
 type AllocateEIPResponse struct {
