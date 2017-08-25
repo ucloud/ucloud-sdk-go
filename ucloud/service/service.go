@@ -68,7 +68,7 @@ func (s *Service) DoRequest(action string, params interface{}, response interfac
 	}
 
 	if err = json.Unmarshal(body, &response); err != nil {
-		return fmt.Errorf("unmarshal url failed, error: %s", err)
+		return fmt.Errorf("unmarshal url failed, error: %s body: %v", err, string(body))
 	}
 
 	retCode := reflect.ValueOf(response).Elem().FieldByName("RetCode").Int()

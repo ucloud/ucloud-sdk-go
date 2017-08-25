@@ -55,7 +55,7 @@ type DiskSet struct {
 	Type   string
 	DiskId string
 	Name   string
-	Drive  int
+	Drive  string
 	Size   int
 }
 
@@ -93,7 +93,7 @@ type UHostSet struct {
 	NetCapability      string
 	NetworkState       string
 	TimemachineFeature string
-	HotplugFeature     string
+	HotplugFeature     bool
 }
 
 type UHostSetArray []UHostSet
