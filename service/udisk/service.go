@@ -17,7 +17,7 @@ func New(config *ucloud.Config) *UDisk {
 
 	service := &service.Service{
 		Config:      ucloud.DefaultConfig.Merge(config),
-		ServiceName: "UHost",
+		ServiceName: "UDisk",
 		APIVersion:  ucloud.APIVersion,
 
 		BaseUrl:    ucloud.APIBaseURL,
