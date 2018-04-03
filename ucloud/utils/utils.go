@@ -23,7 +23,6 @@ func ConvertParamsToValues(params interface{}, values *url.Values) {
 	elemType := elem.Type()
 	for i := 0; i < elem.NumField(); i++ {
 		fieldName := elemType.Field(i).Name
-
 		field := elem.Field(i)
 		kind := field.Kind()
 		if (kind == reflect.Ptr ||
@@ -68,21 +67,18 @@ func ConvertParamsToValues(params interface{}, values *url.Values) {
 			case reflect.String:
 				l := field.Len()
 				if l > 0 {
-					for i := 0; i < l; i++ {
-						v = field.Index(i).String()
+					for j := 0; j < l; j++ {
+						v = field.Index(j).String()
 						if v != "" {
 							name := elemType.Field(i).Tag.Get("ArgName")
 							if name == "" {
 								name = fieldName
 							}
-							name = fmt.Sprintf("%s.%d", name, i)
+							name = fmt.Sprintf("%s.%d", name, j)
 							values.Set(name, v)
 						}
 					}
-					continue
 				}
-			default:
-
 			}
 		}
 
