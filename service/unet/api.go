@@ -297,144 +297,6 @@ func (u *UNet) SetEIPPayMode(params *SetEIPPayModeParams) (*SetEIPPayModeRespons
 	return response, err
 }
 
-type CreateSecurityGroupParams struct {
-	ucloud.CommonRequest
-
-	Region      string
-	GroupName   string
-	Description string
-	Rule        []string
-}
-
-type CreateSecurityGroupResponse struct {
-	ucloud.CommonResponse
-}
-
-func (u *UNet) CreateSecurityGroup(params *CreateSecurityGroupParams) (*CreateSecurityGroupResponse, error) {
-	response := &CreateSecurityGroupResponse{}
-	err := u.DoRequest("CreateSecurityGroup", params, response)
-
-	return response, err
-}
-
-type DescribeSecurityGroupParams struct {
-	ucloud.CommonRequest
-
-	Region       string
-	ResourceType string
-	ResourceId   int
-	GroupId      string
-}
-
-type Rule struct {
-	SrcIP        string
-	Priority     int
-	ProtocolType string
-	DstPort      string
-	RuleAction   string
-}
-
-type FirewallDataSet struct {
-	GroupId     int
-	GroupName   string
-	CreateTime  int
-	Type        int
-	Description string
-	Rule        *[]Rule
-}
-
-type DescribeSecurityGroupResponse struct {
-	ucloud.CommonResponse
-
-	DataSet []FirewallDataSet
-}
-
-func (u *UNet) DescribeSecurityGroup(params *DescribeSecurityGroupParams) (*DescribeSecurityGroupResponse, error) {
-	response := &DescribeSecurityGroupResponse{}
-	err := u.DoRequest("DescribeSecurityGroup", params, response)
-
-	return response, err
-}
-
-type DescribeSecurityGroupResourceParams struct {
-	ucloud.CommonRequest
-
-	Region  string
-	GroupId int
-}
-
-type DescribeSecurityGroupResourceResponse struct {
-	ucloud.CommonResponse
-
-	DataSet []string
-}
-
-func (u *UNet) DescribeSecurityGroupResource(params *DescribeSecurityGroupParams) (*DescribeSecurityGroupResourceResponse, error) {
-	response := &DescribeSecurityGroupResourceResponse{}
-	err := u.DoRequest("DescribeSecurityGroupResource", params, response)
-
-	return response, err
-}
-
-type UpdateSecurityGroupParams struct {
-	ucloud.CommonRequest
-
-	Region  string
-	GroupId int
-	Rule    []string
-}
-
-type UpdateSecurityGroupResponse struct {
-	ucloud.CommonResponse
-
-	DataSet []string
-}
-
-func (u *UNet) UpdateSecurityGroup(params *UpdateSecurityGroupParams) (*UpdateSecurityGroupResponse, error) {
-	response := &UpdateSecurityGroupResponse{}
-	err := u.DoRequest("UpdateSecurityGroup", params, response)
-
-	return response, err
-}
-
-type GrantSecurityGroupParams struct {
-	ucloud.CommonRequest
-
-	Region       string
-	GroupId      int
-	ResourceType string
-	ResourceId   string
-}
-
-type GrantSecurityGroupResponse struct {
-	ucloud.CommonResponse
-}
-
-func (u *UNet) GrantSecurityGroup(params *GrantSecurityGroupParams) (*GrantSecurityGroupResponse, error) {
-	response := &GrantSecurityGroupResponse{}
-	err := u.DoRequest("GrantSecurityGroup", params, response)
-
-	return response, err
-}
-
-type DeleteSecurityGroupParams struct {
-	ucloud.CommonRequest
-
-	Region  string
-	GroupId int
-}
-
-type DeleteSecurityGroupResponse struct {
-	ucloud.CommonResponse
-}
-
-func (u *UNet) DeleteSecurityGroup(params *DeleteSecurityGroupParams) (*DeleteSecurityGroupResponse, error) {
-	response := &DeleteSecurityGroupResponse{}
-	err := u.DoRequest("DeleteSecurityGroup", params, response)
-
-	return response, err
-}
-
 type AllocateVIPParams struct {
 	ucloud.CommonRequest
 
@@ -715,9 +577,169 @@ type DescribeBandwidthUsageResponse struct {
 	EIPSet     *[]UnetBandwidthUsageEIPSet
 }
 
-func (u *UNet) DescribeBandwidthUsage(params *ResizeShareBandwidthParams) (*ResizeShareBandwidthResponse, error) {
-	response := &ResizeShareBandwidthResponse{}
+func (u *UNet) DescribeBandwidthUsage(params *DescribeBandwidthUsageParams) (*DescribeBandwidthUsageResponse, error) {
+	response := &DescribeBandwidthUsageResponse{}
 	err := u.DoRequest("DescribeBandwidthUsage", params, response)
+
+	return response, err
+}
+
+type DescribeFirewallParams struct {
+	ucloud.CommonRequest
+
+	Region    string
+	ProjectId string
+	FWId      string
+	OffSet    int
+	Limit     int
+}
+
+type FirewallDataSet struct {
+	Name          string
+	Tag           string
+	Remark        string
+	ResourceCount int
+	CreateTime    string
+	Type          string
+	Rule          *[]FirewallRuleSet
+}
+
+type FirewallRuleSet struct {
+	SrcIP        string
+	Priority     int
+	ProtocolType string
+	DstPort      string
+	RuleAction   string
+}
+type DescribeFirewallResponse struct {
+	ucloud.CommonResponse
+
+	DataSet *[]FirewallDataSet
+}
+
+func (u *UNet) DescribeFirewall(params *DescribeFirewallParams) (*DescribeFirewallResponse, error) {
+	response := &DescribeFirewallResponse{}
+	err := u.DoRequest("DescribeFirewall", params, response)
+
+	return response, err
+}
+
+type UpdateFirewallParams struct {
+	ucloud.CommonRequest
+
+	Region    string
+	ProjectId string
+	FWId      string
+	Rule      []string
+}
+
+type UpdateFirewallResponse struct {
+	ucloud.CommonResponse
+
+	FWId string
+}
+
+func (u *UNet) UpdateFirewall(params *UpdateFirewallParams) (*UpdateFirewallResponse, error) {
+	response := &UpdateFirewallResponse{}
+	err := u.DoRequest("UpdateFirewall", params, response)
+
+	return response, err
+}
+
+type DescribeFirewallResourceParams struct {
+	ucloud.CommonRequest
+
+	Region    string
+	ProjectId string
+	FWId      string
+
+	Limit  string
+	OffSet string
+}
+
+type ResourceSet struct {
+	Name         string
+	PrivateIP    string
+	Remark       string
+	ResourceID   string
+	ResourceType string
+	Status       string
+	Tag          string
+	Zone         string
+}
+
+type DescribeFirewallResourceResponse struct {
+	ucloud.CommonResponse
+
+	ResourceSet *[]ResourceSet
+}
+
+func (u *UNet) DescribeFirewallResource(params *DescribeFirewallResourceParams) (*DescribeFirewallResourceResponse, error) {
+	response := &DescribeFirewallResourceResponse{}
+	err := u.DoRequest("DescribeFirewallResource", params, response)
+
+	return response, err
+}
+
+type DeleteFirewallParams struct {
+	ucloud.CommonRequest
+
+	Region    string
+	ProjectId string
+	FWId      string
+}
+
+type DeleteFirewallResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) DeleteFirewall(params *DeleteFirewallParams) (*DeleteFirewallResponse, error) {
+	response := &DeleteFirewallResponse{}
+	err := u.DoRequest("DeleteFirewall", params, response)
+
+	return response, err
+}
+
+type GrantFirewallParams struct {
+	ucloud.CommonRequest
+
+	Region    string
+	ProjectId string
+	FWId      string
+
+	ResourceType string
+	ResourceId   string
+}
+
+type GrantFirewallResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) GrantFirewall(params *GrantFirewallParams) (*GrantFirewallResponse, error) {
+	response := &GrantFirewallResponse{}
+	err := u.DoRequest("GrantFirewall", params, response)
+
+	return response, err
+}
+
+type CreateFirewallParams struct {
+	ucloud.CommonRequest
+
+	Region    string
+	ProjectId string
+	Rule      []string
+	Name      string
+	Tag       string
+	Remark    string
+}
+
+type CreateFirewallResponse struct {
+	ucloud.CommonResponse
+}
+
+func (u *UNet) CreateFirewall(params *CreateFirewallParams) (*CreateFirewallResponse, error) {
+	response := &CreateFirewallResponse{}
+	err := u.DoRequest("CreateFirewall", params, response)
 
 	return response, err
 }
