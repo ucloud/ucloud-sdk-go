@@ -1,127 +1,53 @@
 package ucloud
 
 import (
-	"os"
 	"time"
 
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 )
 
-const (
-	DefaultRetries        = -1
-	APIVersion     string = "v2"
-	APIBaseURL     string = "https://api.ucloud.cn/"
-)
-
-var DefaultCredential, _ = auth.LoadKeyPairFromEnv()
-
-var DefaultConfig = NewConfig().
-	WithCredentials(&DefaultCredential).
-	WithRegion(os.Getenv("UCLOUD_REGION")).
-	WithMaxRetries(DefaultRetries).
-	WithProjectID("").
-	WithSleepDelay(time.Sleep)
-
-// A Config provides service configuration for service clients. By default,
-// all clients will use the {defaults.DefaultConfig} structure.
-// TODO: max retries and timeout should be added
 type Config struct {
-	Credentials *auth.KeyPair
+	// Region is the region of backend service
+	// See also <https://docs.ucloud.cn/api/summary/regionlist> ...
+	Region string `default:""`
 
-	Region string
+	// ProjectId is the unique identify of project, used for organize resources,
+	// Most of resources should belong to a project.
+	// Sub-Account must have an project id.
+	// See also <https://docs.ucloud.cn/api/summary/get_project_list> ...
+	ProjectId string `default:""`
 
-	MaxRetries int
+	// BaseUrl is the url of backend api
+	// See also <doc link> ...
+	BaseUrl string `default:"https://api.ucloud.cn"`
 
-	ProjectID string
+	// UserAgent is an attribute for sdk client, used for distinguish who is using sdk.
+	// See also https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+	// It will be appended to the end of sdk user-agent.
+	// eg. "Terraform/0.10.1" -> "GO/1.9.1 GO-SDK/0.1.0 Terraform/0.10.1"
+	// NOTE: it will conflict with the User-Agent of HTTPHeaders
+	UserAgent string `default:""`
 
-	SleepDelay func(time.Duration)
+	// Timeout is timeout for every request.
+	Timeout time.Duration `default:"30s"`
 
-	HTTPHeader map[string]string
+	// MaxRetries is the number of max retry times.
+	// Set MaxRetries more than 0 to enable auto-retry for network and service availability problem
+	// if auto-retry is enabled, it will enable default retry policy using exponential backoff.
+	MaxRetries int `default:"0"`
+
+	// LogLevel is equal to logrus level,
+	// if logLevel not be set, use INFO level as default.
+	LogLevel log.Level `default:"log.InfoLevel"`
 }
 
-// NewConfig returns a new Config pointer that can be chained with builder methods to
-// set multiple configuration values inline without using pointers.
-//
-//     svc := uhost.New(ucloud.NewConfig().WithRegion("cn-bj-2").WithMaxRetries(10))
-//
-func NewConfig() *Config {
-	return &Config{}
-}
-
-// WithCredentials sets a config Credentials value returning a Config pointer
-// for chaining.
-func (c *Config) WithCredentials(creds *auth.KeyPair) *Config {
-	c.Credentials = creds
-	return c
-}
-
-// WithRegion sets a config Region value returning a Config pointer for
-// chaining.
-func (c *Config) WithRegion(region string) *Config {
-	c.Region = region
-	return c
-}
-
-// WithMaxRetries sets a config MaxRetries value returning a Config pointer
-// for chaining.
-func (c *Config) WithMaxRetries(max int) *Config {
-	c.MaxRetries = max
-	return c
-}
-
-// WithProjectID sets a config ProjectID value returning a Config pointer
-// for chaining
-func (c *Config) WithProjectID(projectID string) *Config {
-	c.ProjectID = projectID
-	return c
-}
-
-// WithSleepDelay overrides the function used to sleep while waiting for the
-// next retry. Defaults to time.Sleep.
-func (c *Config) WithSleepDelay(fn func(time.Duration)) *Config {
-	c.SleepDelay = fn
-	return c
-}
-
-// Merge returns a new Config with the other Config's attribute values merged into
-// this Config. If the other Config's attribute is nil it will not be merged into
-// the new Config to be returned.
-func (c Config) Merge(other *Config) *Config {
-	if other == nil {
-		return &c
+// NewConfig will return a new client config with default options.
+func NewConfig() Config {
+	cfg := Config{
+		BaseUrl:    "https://api.ucloud.cn",
+		Timeout:    30 * time.Second,
+		MaxRetries: 0,
+		LogLevel:   log.ErrorLevel,
 	}
-
-	dst := c
-
-	if other.Credentials != nil {
-		dst.Credentials = other.Credentials
-	}
-
-	if other.Region != "" {
-		dst.Region = other.Region
-	}
-
-	if other.SleepDelay != nil {
-		dst.SleepDelay = other.SleepDelay
-	}
-
-	if other.MaxRetries != -1 {
-		dst.MaxRetries = other.MaxRetries
-	}
-
-	if len(other.ProjectID) != 0 {
-		dst.ProjectID = other.ProjectID
-	}
-
-	if len(other.HTTPHeader) != 0 {
-		dst.HTTPHeader = other.HTTPHeader
-	}
-
-	return &dst
-}
-
-// Copy will return a shallow copy of the Config object.
-func (c Config) Copy() *Config {
-	dst := c
-	return &dst
+	return cfg
 }
