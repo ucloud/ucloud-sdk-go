@@ -1,5 +1,20 @@
-.idea/
-*.iml
-*.example
+# Temporary
+.*.swp
+.idea
+/.vs
+.DS_Store
+core.*
+debug
+debug.test
+.vscode
 
-uhost_example
+# Executable
+bin/
+*.dll
+*.exe
+
+# Build
+coverage.out
+
+# Test Data
+# autotest/set_*
