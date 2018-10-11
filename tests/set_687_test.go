@@ -177,6 +177,7 @@ func testSet687CreateVPC04(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Name", "vpc_2"))
 	ctx.NoError(utest.SetReqValue(req, "Network", "192.168.16.0/20"))
+	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
