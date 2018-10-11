@@ -587,7 +587,7 @@ func testSet333DescribeUHostInstance17(ctx *utest.TestContext) {
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
-	ctx.NoError(utest.SetReqValue(req, "UHostIds", []string{ctx.GetVar("hostId").(string), ctx.GetVar("hostId2").(string)})) // TODO: check
+	ctx.NoError(utest.SetReqValue(req, "UHostIds", ctx.GetVar("hostId"), ctx.GetVar("hostId2")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {

@@ -27,7 +27,7 @@ type MetricInfo struct {
 	SupportAlarm string
 
 	// 告警设置范围
-	AlarmRange string
+	AlarmRange interface{} // Backend Bug: backend use dynamic type, object or string
 
 	// 数据上报频率
 	Frequency string
