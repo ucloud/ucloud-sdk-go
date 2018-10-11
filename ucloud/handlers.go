@@ -83,7 +83,7 @@ func errorHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpResponse,
 func logHandler(c *Client, req request.Common, resp response.Common, err error) (response.Common, error) {
 	action := req.GetAction()
 	if err != nil {
-		log.Errorf("do %s failed, %s", action, err)
+		log.Warnf("do %s failed, %s", action, err)
 	} else {
 		log.Infof("do %s successful!", action)
 	}

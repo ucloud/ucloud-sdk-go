@@ -47,7 +47,7 @@ func NewConfig() Config {
 		BaseUrl:    "https://api.ucloud.cn",
 		Timeout:    30 * time.Second,
 		MaxRetries: 0,
-		LogLevel:   log.ErrorLevel,
+		LogLevel:   log.WarnLevel,
 	}
 	return cfg
 }
