@@ -13,7 +13,7 @@ go get github.com/ucloud/ucloud-sdk-go
 ### via dep
 
 ```
-dep add github.com/ucloud/ucloud-sdk-go
+dep ensure -add github.com/ucloud/ucloud-sdk-go
 ```
 
 ## Useful Docs

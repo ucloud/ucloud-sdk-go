@@ -9,7 +9,6 @@ Build a UHost instance.
 ```go
 export UCLOUD_PUBLIC_KEY="your public key"
 export UCLOUD_PRIVATE_KEY="your private key"
-export UCLOUD_REGION="cn-bj2"
 export UCLOUD_PROJECT_ID="your project id"
 ```
 
