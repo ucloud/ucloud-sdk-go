@@ -203,6 +203,7 @@ func testSet687CreateSubnet05(ctx *utest.TestContext) {
 	req := vpcClient.NewCreateSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId_2")))
 	ctx.NoError(utest.SetReqValue(req, "Subnet", "192.168.17.0"))
@@ -235,6 +236,7 @@ func testSet687CreateSubnet06(ctx *utest.TestContext) {
 	req := vpcClient.NewCreateSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId_2")))
 	ctx.NoError(utest.SetReqValue(req, "Subnet", "192.168.18.0"))
@@ -466,6 +468,7 @@ func testSet687DeleteSubnet13(ctx *utest.TestContext) {
 	req := vpcClient.NewDeleteSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId_2_1")))
 
@@ -494,6 +497,7 @@ func testSet687DeleteSubnet14(ctx *utest.TestContext) {
 	req := vpcClient.NewDeleteSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId_2_2")))
 
@@ -696,6 +700,7 @@ func testSet687DeleteVPC21(ctx *utest.TestContext) {
 	req := vpcClient.NewDeleteVPCRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId_2")))
 
