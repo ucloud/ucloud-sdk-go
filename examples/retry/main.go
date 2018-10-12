@@ -3,16 +3,19 @@ package main
 import (
 	"os"
 
-	"github.com/ucloud/ucloud-sdk-go/services/ulb"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
+
+	"github.com/ucloud/ucloud-sdk-go/services/ulb"
 )
+
+const region = "cn-bj2"
 
 func main() {
 	cfg := ucloud.NewConfig()
 	cfg.LogLevel = log.DebugLevel
-	cfg.Region = os.Getenv("UCLOUD_REGION")
+	cfg.Region = region
 	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
 
 	credential := auth.NewCredential()
