@@ -1,9 +1,10 @@
 package main
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
 var uhostClient *uhost.UHostClient

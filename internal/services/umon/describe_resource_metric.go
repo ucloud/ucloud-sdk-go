@@ -27,7 +27,12 @@ type DescribeResourceMetricResponse struct {
 // NewDescribeResourceMetricRequest will create request of DescribeResourceMetric action.
 func (c *UMonClient) NewDescribeResourceMetricRequest() *DescribeResourceMetricRequest {
 	req := &DescribeResourceMetricRequest{}
+
+	// setup request with client config
 	c.client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
 	return req
 }
 

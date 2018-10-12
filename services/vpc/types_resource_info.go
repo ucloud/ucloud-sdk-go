@@ -14,7 +14,7 @@ type ResourceInfo struct {
 	// 资源id
 	ResourceId string
 
-	// 创建时间
+	// 资源类型
 	ResourceType string
 
 	// ip地址

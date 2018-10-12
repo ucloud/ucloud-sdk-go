@@ -12,7 +12,7 @@ type SecurityGroupRuleSet struct {
 	SrcIP string
 
 	// 优先级
-	Priority int
+	Priority string
 
 	// 协议类型
 	ProtocolType string

@@ -1,8 +1,8 @@
-# UCloud SDK Retry Example
+# UCloud SDK Wait Example
 
 ## What is the goal
 
-To enable retry for client or request.
+To enable state waiter to wait remote resource is completed.
 
 ## Setup Environment
 

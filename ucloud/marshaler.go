@@ -3,6 +3,7 @@ package ucloud
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"runtime"
 
 	"github.com/pkg/errors"
@@ -69,12 +70,19 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 	return &httpReq, nil
 }
 
-// UnmarshalHTTPReponse will get body from http response and unmarshal it's data into response struct
-func (c *Client) UnmarshalHTTPReponse(httpResp *http.HttpResponse, resp response.Common) error {
+// unmarshalHTTPReponse will get body from http response and unmarshal it's data into response struct
+func (c *Client) unmarshalHTTPReponse(httpResp *http.HttpResponse, resp response.Common) error {
 	body := httpResp.GetBody()
 	if len(body) < 0 {
 		return nil
 	}
 
+	body = patchForRetCodeString(body)
 	return json.Unmarshal([]byte(body), &resp)
+}
+
+var patchForCodePattern = regexp.MustCompile(`"RetCode":\s*"(\d+)"`)
+
+func patchForRetCodeString(body []byte) []byte {
+	return patchForCodePattern.ReplaceAll(body, []byte(`"RetCode": $1`))
 }

@@ -58,6 +58,7 @@ func testSet1840CreateUHostInstance00(ctx *utest.TestContext) {
 
 	ctx.NoError(utest.SetReqValue(req, "TimemachineFeature", "no"))
 	ctx.NoError(utest.SetReqValue(req, "HotplugFeature", "false"))
+	ctx.NoError(utest.SetReqValue(req, "DiskSpace", 20))
 
 	ctx.NoError(utest.SetReqValue(req, "GPU", 0)) // TODO: check
 

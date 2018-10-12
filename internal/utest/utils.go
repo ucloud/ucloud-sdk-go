@@ -24,7 +24,11 @@ func GetValue(obj interface{}, path string) (interface{}, error) {
 }
 
 // SetReqValue will set value into pointer referenced or slice
-func SetReqValue(addr interface{}, field string, value interface{}) error {
+func SetReqValue(addr interface{}, field string, values ...interface{}) error {
+	if len(values) == 0 {
+		return errors.Errorf("no values to be set")
+	}
+
 	rv := reflect.ValueOf(addr)
 	if rv.IsValid() == false {
 		return errors.Errorf("struct is invalid")
@@ -54,16 +58,23 @@ func SetReqValue(addr interface{}, field string, value interface{}) error {
 		return errors.Errorf("cannot set %s, field cannot be set", field)
 	}
 
-	s, _ := toString(value)
-	v, err := convertValueWithType(rv.Type().Elem(), s)
-	if err != nil {
-		return err
+	rValues := []reflect.Value{}
+	for _, value := range values {
+		s, _ := toString(value)
+		v, err := convertValueWithType(rv.Type().Elem(), s)
+		if err != nil {
+			return err
+		}
+		rValues = append(rValues, v)
 	}
 
 	if rv.Kind() == reflect.Ptr {
-		rv.Set(v)
+		rv.Set(rValues[0])
 	} else if rv.Kind() == reflect.Slice {
-		rv.Set(reflect.Append(rv, v.Elem()))
+		rv.Set(reflect.MakeSlice(rv.Type(), 0, 0))
+		for _, willSet := range rValues {
+			rv.Set(reflect.Append(rv, willSet.Elem()))
+		}
 	}
 
 	return nil

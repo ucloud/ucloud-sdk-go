@@ -15,10 +15,10 @@ type UnetSecurityGroupSet struct {
 	GroupName string
 
 	// 防火墙组创建时间，格式为Unix Timestamp
-	CreateTime string
+	CreateTime int
 
 	// 防火墙组类型，枚举值为： 0：用户自定义防火墙； 1：默认Web防火墙； 2：默认非Web防火墙
-	Type string
+	Type int
 
 	// 防火墙组中的规则表,参见 SecurityGroupRuleSet
 	Rule []SecurityGroupRuleSet
