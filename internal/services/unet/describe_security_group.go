@@ -33,7 +33,12 @@ type DescribeSecurityGroupResponse struct {
 // NewDescribeSecurityGroupRequest will create request of DescribeSecurityGroup action.
 func (c *UNetClient) NewDescribeSecurityGroupRequest() *DescribeSecurityGroupRequest {
 	req := &DescribeSecurityGroupRequest{}
+
+	// setup request with client config
 	c.client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
 	return req
 }
 
