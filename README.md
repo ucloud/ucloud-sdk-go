@@ -20,7 +20,8 @@ dep ensure -add github.com/ucloud/ucloud-sdk-go
 
 - [Configure Document](./docs/Configure.md)
 - [Usage Document](./docs/Usage.md)
-- *Retry Policy (wait for writing)*
+- [Retry Policy Document](./docs/Retry.md)
+- [State Waiter Document](./docs/Wait.md)
 
 ## Feedback && Contributing
 

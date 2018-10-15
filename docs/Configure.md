@@ -1,10 +1,10 @@
-## Configure SDK
+# Configure SDK
 
-### Client Config
+## Client Config
 
 client config can control many common behaviors of sdk, it is required for any client.
 
-#### Common Request Fields
+### Common Request Fields
 
 To set common region and project id for any request, you can also overwrite it by request.
 
@@ -15,7 +15,7 @@ cfg.Region = "cn-bj2"
 cfg.ProjectId = "xxx"
 ```
 
-#### Auto Retry
+### Auto Retry
 
 To enable auto-retry for any request, default is disabled(max retries is 0), it will auto retry for
 
@@ -26,7 +26,9 @@ To enable auto-retry for any request, default is disabled(max retries is 0), it 
 cfg.MaxRetries = 3
 ```
 
-#### Logging
+See [Retry Policy](./Retry.md) for more details.
+
+### Logging
 
 To set log level, you can see log with different level on **stdout**, you can also use it to enable or disable log.
 
@@ -39,7 +41,7 @@ cfg.LogLevel = log.PanicLevel
 cfg.LogLevel = log.DebugLevel
 ```
 
-#### Timeout
+### Timeout
 
 To set timeout for any network request, default is 30s.
 
@@ -47,7 +49,7 @@ To set timeout for any network request, default is 30s.
 cfg.Timeout = 30 * time.Second
 ```
 
-#### Internal Usage
+### Internal Usage
 
 the followed configuration should not be set in general usage.
 
@@ -57,7 +59,7 @@ To set User-Agent, you can append custom UserAgent for any request, it also used
 cfg.UserAgent = "UCloud-CLI/0.1.0"
 ```
 
-### Credential Config
+## Credential Config
 
 To set credential info for any request, credential is required for any client
 ```go
