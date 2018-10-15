@@ -1,4 +1,4 @@
-# UCloud SDK Wait Example
+# UCloud SDK Wait For Remote State Example
 
 ## What is the goal
 
