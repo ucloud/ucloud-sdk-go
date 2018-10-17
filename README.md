@@ -1,5 +1,7 @@
 # UCloud Golang SDK
 
+[![GoDoc](https://godoc.org/github.com/ucloud/ucloud-sdk-go?status.svg)](https://godoc.org/github.com/ucloud/ucloud-sdk-go)
+
 UCloud Golang SDK is a toolkit for developer to create custom infrastructure via ucloud open api.
 
 ## Install
