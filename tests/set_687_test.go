@@ -8,6 +8,8 @@ import (
 )
 
 func TestSet687(t *testing.T) {
+	t.Parallel()
+
 	ctx := utest.NewTestContext()
 	ctx.T = t
 	ctx.Vars = map[string]interface{}{}
