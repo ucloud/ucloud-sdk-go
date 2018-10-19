@@ -1,11 +1,11 @@
-# UCloud Golang SDK
+# UCloud Go SDK
 
 [![GoDoc](https://godoc.org/github.com/ucloud/ucloud-sdk-go?status.svg)](https://godoc.org/github.com/ucloud/ucloud-sdk-go)
 
 - Website: https://www.ucloud.cn/
 - Mailing list: [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
 
-![UCloud Logo](http://terraform.dl.ufileos.com/logo.png)
+![UCloud Logo](http://cli-ucloud-logo.sg.ufileos.com/ucloud.png)
 
 UCloud SDK is a Go client library for accessing the UCloud API.
 
