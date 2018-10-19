@@ -11,7 +11,7 @@ type UHostDisk struct {
 	Type *string `required:"true"`
 
 	// 是否是系统盘。枚举值：True|False
-	IsBoot *bool `required:"true"`
+	IsBoot *string `required:"true"`
 
 	// NONE|DATAARK
 	BackupType *string `required:"false"`
