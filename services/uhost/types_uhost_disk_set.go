@@ -24,7 +24,7 @@ type UHostDiskSet struct {
 	Size int
 
 	// 是否是系统盘
-	IsBoot bool
+	IsBoot string
 
 	// 磁盘类型
 	DiskType string
