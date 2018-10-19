@@ -1,6 +1,7 @@
-# UCloud Golang SDK
+# UCloud Go SDK
 
 [![GoDoc](https://godoc.org/github.com/ucloud/ucloud-sdk-go?status.svg)](https://godoc.org/github.com/ucloud/ucloud-sdk-go)
+
 - Website: https://www.ucloud.cn/
 - Mailing list: [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
 
@@ -39,7 +40,7 @@ Currently, user public key & private key is the only method of authenticating wi
 
 You can then use your keys to create a new client of uhost service: 
 
-```
+```go
 package main
 
 import (
@@ -50,9 +51,11 @@ import (
 
 func loadConfig()(*sdk.Config, *auth.Credential){
     cfg := sdk.NewConfig()
+
     credential := auth.NewCredential()
     credential.PrivateKey ="my_privatekey"
     credential.PublicKey = "my_publickey"
+
     return &cfg, &credential
 }
 
@@ -66,26 +69,27 @@ func main(){
 
 To create a new uhost:
 
-```golang
+```go
+# build Request
 req := uhostClient.NewCreateUHostInstanceRequest()
-req.Name = sdk.String("sdk-example-uhost")
-req.Zone = sdk.String("cn-bj2-02")
-req.ImageId = sdk.String("uimage-ixczxu")
-req.LoginMode = sdk.String("Password")
-req.Password = sdk.String("my_uhost_password")
+req.Name       = sdk.String("sdk-example-uhost")
+req.Zone       = sdk.String("cn-bj2-02")
+req.ImageId    = sdk.String("uimage-ixczxu")
+req.LoginMode  = sdk.String("Password")
+req.Password   = sdk.String("my_uhost_password")
 req.ChargeType = sdk.String("Dynamic")
-req.CPU = sdk.Int(1)
-req.Memory = sdk.Int(1024)
-req.Tag =sdk.String("sdk-example")
+req.CPU        = sdk.Int(1)
+req.Memory     = sdk.Int(1024)
+req.Tag        = sdk.String("sdk-example")
 
+# send request
 newUHost,err := uhostClient.CreateUHostInstance(req)
 
 if err != nil{
-    fmt.Printf("something bad happened: %s\n\n",err)
-    return "", err
+    fmt.Printf("something bad happened: %s\n", err)
 }
 
-fmt.Printf("resource id of the uhost: %s\n",newUHost.UHostIds[0])
+fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 ```
 
 **Note**
