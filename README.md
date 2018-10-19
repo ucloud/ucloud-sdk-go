@@ -5,7 +5,7 @@
 - Website: https://www.ucloud.cn/
 - Mailing list: [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
 
-![UCloud Logo](http://terraform.ufile.ucloud.com.cn/logo.png)
+![UCloud Logo](http://terraform.dl.ufileos.com/logo.png)
 
 UCloud SDK is a Go client library for accessing the UCloud API.
 
