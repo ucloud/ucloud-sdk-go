@@ -3,7 +3,6 @@ package ucloud
 import (
 	"net/http"
 	"os"
-	"reflect"
 	"testing"
 	"time"
 
@@ -136,27 +135,6 @@ func Test_errorHandler(t *testing.T) {
 			err := step.step()
 			if err != nil {
 				t.Errorf("errorHandler() error %s", err)
-			}
-		})
-	}
-}
-
-func Test_patchForRetCodeString(t *testing.T) {
-	type args struct {
-		body []byte
-	}
-	tests := []struct {
-		name string
-		args args
-		want []byte
-	}{
-		{"int_code", args{[]byte(`"RetCode": 100,`)}, []byte(`"RetCode": 100,`)},
-		{"str_code", args{[]byte(`"RetCode": "100",`)}, []byte(`"RetCode": 100,`)},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := patchForRetCodeString(tt.args.body); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("patchForRetCodeString() = %v, want %v", got, tt.want)
 			}
 		})
 	}

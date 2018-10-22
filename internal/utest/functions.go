@@ -85,6 +85,50 @@ func GetRegionImage(input interface{}) (string, error) {
 	return "", errors.Errorf("cannot get region image, invalid region %s", region)
 }
 
+var udpnResource = map[string]string{
+	"cn-sh2": "cn-bj2",
+	"cn-bj2": "cn-sh2",
+}
+
+// GetUDPNRegionResource the vpc id for udpn peer destinition
+func GetUDPNRegionResource(input interface{}) (string, error) {
+	region, err := toString(input)
+	if err != nil {
+		return "", err
+	}
+	if img, ok := udpnResource[region]; ok {
+		return img, nil
+	}
+	return "", errors.Errorf("cannot get udpn region resource, invalid region %s", region)
+}
+
+// GetNotEqual will return the first item of vL that is not equal to v
+func GetNotEqual(v interface{}, vL ...interface{}) (string, error) {
+	if len(vL) < 2 {
+		return "", errors.Errorf("cannot return value")
+	}
+
+	vs, err := toString(v)
+	if err != nil {
+		return "", err
+	}
+
+	target := vs
+	for _, c := range vL {
+		target, err = toString(c)
+		if err != nil {
+			return "", err
+		}
+
+		if vs != target {
+			break
+		}
+	}
+
+	return target, nil
+}
+
+// GetTimestamp will return the timestamp string
 func GetTimestamp(input interface{}) (string, error) {
 	strLen, err := toInt(input)
 	if err != nil {
@@ -101,10 +145,12 @@ func getTimestamp(strLen int) (string, error) {
 	return strconv.FormatInt(time.Now().UnixNano(), 10)[:strLen], nil
 }
 
+// Concat will concat any data as string
 func Concat(input ...interface{}) (string, error) {
 	return joinAsString("", input...)
 }
 
+// ConcatWithVertical will concat any data as string join with '|'
 func ConcatWithVertical(input ...interface{}) (string, error) {
 	return joinAsString("|", input...)
 }
@@ -122,27 +168,52 @@ func joinAsString(sep string, input ...interface{}) (string, error) {
 }
 
 // Calculate will to calculate two number by operator
-func Calculate(op string, a, b interface{}) (int, error) {
-	aVal, err := toInt(a)
+func Calculate(op interface{}, rvL ...interface{}) (int, error) {
+	l := len(rvL)
+	if l == 0 {
+		v, err := toInt(op)
+		if err != nil {
+			return 0, err
+		}
+		return v, nil
+	}
+
+	if l < 2 {
+		return 0, errors.Errorf("not enough arguments, expect least two item, got %s", op, len(rvL))
+	}
+
+	vL := make([]int, l)
+	for i := 0; i < l; i++ {
+		v, err := toInt(rvL[i])
+		if err != nil {
+			return 0, err
+		}
+		vL[i] = v
+	}
+
+	opSymbol, err := toString(op)
 	if err != nil {
 		return 0, err
 	}
 
-	bVal, err := toInt(b)
-	if err != nil {
-		return 0, err
-	}
-
-	switch op {
+	switch opSymbol {
 	case "+":
-		return aVal + bVal, nil
+		return caculateInt(func(a, b int) int { return a + b }, vL...), nil
 	case "-":
-		return aVal - bVal, nil
+		return caculateInt(func(a, b int) int { return a - b }, vL...), nil
 	case "*":
-		return aVal * bVal, nil
+		return caculateInt(func(a, b int) int { return a * b }, vL...), nil
 	default:
 		return 0, errors.Errorf("function Calculate has not support %s", op)
 	}
+}
+
+func caculateInt(fn func(a, b int) int, vL ...int) int {
+	r := fn(vL[0], vL[1])
+	for _, v := range vL[2:] {
+		r = fn(r, v)
+	}
+	return r
 }
 
 // SearchValue will search key/value in an collection and return the value of destination key
@@ -177,6 +248,7 @@ func SearchValue(arr interface{}, originKey string, originValue interface{}, des
 	return "", errors.Errorf("value of key: %s is not found", destKey)
 }
 
+// GetUUID will return uuid string
 func GetUUID() (string, error) {
 	items := []string{}
 	for _, strLen := range []int{8, 4, 4, 16} {

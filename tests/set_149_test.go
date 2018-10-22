@@ -613,7 +613,7 @@ func testSet149DeleteVServer17(ctx *utest.TestContext) {
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "4103", "str_eq"),
 		},
-		MaxRetries:    10,
+		MaxRetries:    20,
 		RetryInterval: 10 * time.Second,
 		T:             ctx.T,
 	}

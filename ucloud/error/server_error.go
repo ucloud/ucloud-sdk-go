@@ -82,8 +82,8 @@ func (e ServerError) Retryable() bool {
 	return isIn(e.statusCode, []int{429, 502, 503, 504}) || e.retryable
 }
 
-func isIn(i int, avaliables []int) bool {
-	for _, v := range avaliables {
+func isIn(i int, availables []int) bool {
+	for _, v := range availables {
 		if i == v {
 			return true
 		}

@@ -11,7 +11,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/private/utils"
 )
 
-var avaliableHTTPMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTION", "HEAD", "PATCH"}
+var availableHTTPMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTION", "HEAD", "PATCH"}
 
 type HttpRequest struct {
 	url         string
@@ -61,7 +61,7 @@ func (h *HttpRequest) GetURL() string {
 
 // SetMethod will set method of current request
 func (h *HttpRequest) SetMethod(val string) error {
-	err := utils.CheckStringIn(val, avaliableHTTPMethods)
+	err := utils.CheckStringIn(val, availableHTTPMethods)
 	if err != nil {
 		return errors.Errorf("method is invalid, %s", err)
 	}
@@ -104,7 +104,7 @@ func (h *HttpRequest) BuildQueryString() (string, error) {
 	}
 
 	// if query string is not set by user,
-	// otherwise needn't keep them ordered, encode immediatly.
+	// otherwise needn't keep them ordered, encode immediately.
 	if h.queryString == "" {
 		return values.Encode(), nil
 	}

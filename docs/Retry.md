@@ -18,7 +18,7 @@ req.WithRetry(3)
 
 ## Retrying and side-effect
 
-SDK has default retry policy to prevent retrying with side-effect. It will prevent most of action when follow term: ``create``, ``allocate``, ``clone``, ``copy`` is contained.
+SDK has default retry policy to prevent retrying with side-effect. It will prevent most of action when follow term: ``create``, ``allocate``, ``clone``, ``copy``, ``upload``, is contained.
 
 this actions will be set request-level retryable is false as default,
 
@@ -58,7 +58,18 @@ Here is a table to show which action will prevent retrying by default:
 | CloneUDisk              | √            |
 | CreateProject           | √            |
 | CreateGlobalSSHInstance | √            |
-|                         |              |
+| CreateUDBInstance       | √            |
+| BackupUDBInstance        | √            |
+| UploadUDBParamGroup         | √            |
+| CreateUDBParamGroup             | √            |
+| CreateUDBSlave              | √            |
+| CreateUDBReplicationInstance           | √            |
+| CreateUDBRouteInstance | √            |
+| CreateUDBInstanceByRecovery       | √            |
+| CreateUMemSpace        | √            |
+| CreateUMemcacheGroup         | √            |
+| CreateURedisGroup             | √            |
+| AllocateUDPN              | √            |
 
 ## Example
 

@@ -89,7 +89,11 @@ func (c *Comparators) Get(name string) CompareFunc {
 }
 
 func eq(a, b interface{}) (bool, error) {
-	return reflect.DeepEqual(a, b), nil
+	return checkStrings(a, b, func(aVal, bVal string) (bool, error) { return aVal == bVal, nil })
+}
+
+func ne(a, b interface{}) (bool, error) {
+	return checkStrings(a, b, func(aVal, bVal string) (bool, error) { return aVal != bVal, nil })
 }
 
 func absEq(a, b interface{}) (bool, error) {
@@ -110,10 +114,6 @@ func gt(a, b interface{}) (bool, error) {
 
 func ge(a, b interface{}) (bool, error) {
 	return checkFloats(a, b, func(aVal, bVal float64) (bool, error) { return aVal >= bVal, nil })
-}
-
-func ne(a, b interface{}) (bool, error) {
-	return checkFloats(a, b, func(aVal, bVal float64) (bool, error) { return aVal != bVal, nil })
 }
 
 func floatEq(a, b interface{}) (bool, error) {
@@ -146,22 +146,26 @@ func lenLe(a, b interface{}) (bool, error) {
 
 func contains(a, b interface{}) (bool, error) {
 	rv := reflect.ValueOf(a)
-	if rv.Kind() != reflect.Slice && rv.Kind() != reflect.Array {
+	switch rv.Kind() {
+	case reflect.Slice, reflect.Array:
+		for i := 0; i < rv.Len(); i++ {
+			isEq, err := strEq(rv.Index(i).String(), b)
+			if isEq {
+				return true, nil
+			}
+
+			if err != nil {
+				return false, err
+			}
+		}
+		return false, nil
+	case reflect.String:
+		return checkStrings(a, b, func(aVal, bVal string) (bool, error) {
+			return strings.Contains(aVal, bVal), nil
+		})
+	default:
 		return false, errors.Errorf("val must be contained by an iterable type, got %s", rv.String())
 	}
-
-	for i := 0; i < rv.Len(); i++ {
-		isEq, err := strEq(rv.Index(i), b)
-		if isEq {
-			return true, nil
-		}
-
-		if err != nil {
-			return false, err
-		}
-	}
-
-	return false, nil
 }
 
 func containedBy(a, b interface{}) (bool, error) {

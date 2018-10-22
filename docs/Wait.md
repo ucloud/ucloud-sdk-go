@@ -17,7 +17,7 @@ By the default, waiter will use exponential back-off delay between twice request
 ```go
 waiter.StateWaiter{
     Pending: []string{"pending"},
-    Target:  []string{"avaliable"},
+    Target:  []string{"available"},
     Refresh: CustomRefreshFn,
     Timeout: 5 * time.Minute,
 }
@@ -42,7 +42,7 @@ func CustomRefreshFn() (interface{}, string, error) {
         return nil, "pending", nil
     }
 
-    return inst, "avaliable", nil
+    return inst, "available", nil
 }
 ```
 
@@ -79,7 +79,7 @@ Delay option will wait until delay time is passed before first state is refreshe
 ```go
 waiter.StateWaiter{
     Pending: []string{"pending"},
-    Target:  []string{"avaliable"},
+    Target:  []string{"available"},
     Refresh: CustomRefreshFn,
     Timeout: 5 * time.Minute,
     Delay: 30 * time.Second,
