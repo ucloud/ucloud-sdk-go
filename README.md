@@ -1,6 +1,9 @@
 # UCloud Go SDK
 
 [![GoDoc](https://godoc.org/github.com/ucloud/ucloud-sdk-go?status.svg)](https://godoc.org/github.com/ucloud/ucloud-sdk-go)
+[![Google Groups](https://img.shields.io/badge/chat-google%20groups-brightgreen.svg)](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
+[![GitHub (pre-)release](https://img.shields.io/github/release/ucloud/ucloud-sdk-go/all.svg)](https://github.com/ucloud/ucloud-sdk-go/releases)
+[![GitHub](https://img.shields.io/github/license/ucloud/ucloud-sdk-go.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 - Website: https://www.ucloud.cn/
 - Mailing list: [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
@@ -70,7 +73,7 @@ func main(){
 To create a new uhost:
 
 ```go
-# build Request
+// build Request
 req := uhostClient.NewCreateUHostInstanceRequest()
 req.Name       = sdk.String("sdk-example-uhost")
 req.Zone       = sdk.String("cn-bj2-02")
@@ -82,7 +85,7 @@ req.CPU        = sdk.Int(1)
 req.Memory     = sdk.Int(1024)
 req.Tag        = sdk.String("sdk-example")
 
-# send request
+// send request
 newUHost,err := uhostClient.CreateUHostInstance(req)
 
 if err != nil{
@@ -96,6 +99,26 @@ fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 
 UHost created above cannot be accessed via Internet otherwise a EIP is created and bind to the UHost.
 
+### Complex structure in query
+
+You can also set array as query, such as:
+
+```go
+req.UHostIds = []string{"uhost-xxx", "uhost-yyy"}
+```
+
+will encoded as `UHostIds.0=uhost-xxx&UHostIds.1=uhost-yyy`
+
+```go
+dataDisk := uhost.UHostDisk{
+    Size: sdk.Int(20),
+    Type: sdk.String("CLOUD_NORMAL"),
+    IsBoot: sdk.Bool(false),
+}
+req.Disks = []uhost.UHostDisk{dataDisk}
+```
+
+will encoded as `Disks.0.Size=20&Disks.0.Type=CLOUD_NORMAL&Disks.0.IsBoot=false`
 
 ## Docs
 
