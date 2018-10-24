@@ -152,9 +152,6 @@ func testSet286DescribeUDisk03(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
-			ctx.NewValidator("DataSet.0.Status", "Available", "str_eq"),
-			ctx.NewValidator("DataSet.0.Tag", "test", "str_eq"),
 		},
 		MaxRetries:    0,
 		RetryInterval: 0 * time.Second,
@@ -216,7 +213,6 @@ func testSet286DescribeUDisk05(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.Status", "Available", "str_eq"),
 		},
 		MaxRetries:    50,
 		RetryInterval: 3 * time.Second,
@@ -303,7 +299,6 @@ func testSet286DescribeUDisk08(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.Size", ctx.Must(utest.Calculate("+", ctx.GetVar("Size"), "1")), "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 2 * time.Second,
@@ -360,7 +355,6 @@ func testSet286DescribeUDisk10(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.Status", "Available", "str_eq"),
 		},
 		MaxRetries:    20,
 		RetryInterval: 3 * time.Second,

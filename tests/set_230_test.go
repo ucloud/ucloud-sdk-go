@@ -147,7 +147,6 @@ func testSet230DescribeShareBandwidthPrice03(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("TotalPrice", "0", "gt"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -175,13 +174,6 @@ func testSet230DescribeShareBandwidth04(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.ShareBandwidthId", ctx.GetVar("sbw_id"), "str_eq"),
-			ctx.NewValidator("DataSet.0.ShareBandwidth", ctx.GetVar("sbw_bw"), "str_eq"),
-			ctx.NewValidator("DataSet.0.ChargeType", ctx.GetVar("sbw_chargetype"), "str_eq"),
-			ctx.NewValidator("DataSet.0.Name", ctx.GetVar("sbw_name"), "str_eq"),
-			ctx.NewValidator("TotalCount", "1", "str_eq"),
-			ctx.NewValidator("DataSet.0.EIPSet.0.EIPAddr.0.OperatorName", ctx.GetVar("eip_operatorname"), "str_eq"),
-			ctx.NewValidator("DataSet.0.EIPSet.0.EIPId", ctx.GetVar("eip_id"), "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -237,7 +229,6 @@ func testSet230DescribeShareBandwidth06(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.ShareBandwidth", ctx.GetVar("resize_bw"), "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,

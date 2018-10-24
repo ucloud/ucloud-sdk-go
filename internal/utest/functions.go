@@ -122,24 +122,37 @@ func joinAsString(sep string, input ...interface{}) (string, error) {
 }
 
 // Calculate will to calculate two number by operator
-func Calculate(op string, a, b interface{}) (int, error) {
-	aVal, err := toInt(a)
+func Calculate(op interface{}, opValues ...interface{}) (int, error) {
+	if len(opValues) == 0 {
+		v, err := toInt(op)
+		if err != nil {
+			return 0, err
+		}
+		return v, nil
+	}
+
+	sum := 0
+	for i := 0; i < len(opValues); i++ {
+		v, err := toInt(opValues[i])
+		if err != nil {
+			return 0, err
+		}
+
+		sum += v
+	}
+
+	opSymbol, err := toString(op)
 	if err != nil {
 		return 0, err
 	}
 
-	bVal, err := toInt(b)
-	if err != nil {
-		return 0, err
-	}
-
-	switch op {
+	switch opSymbol {
 	case "+":
-		return aVal + bVal, nil
+		return sum, nil
 	case "-":
-		return aVal - bVal, nil
+		return sum, nil
 	case "*":
-		return aVal * bVal, nil
+		return sum, nil
 	default:
 		return 0, errors.Errorf("function Calculate has not support %s", op)
 	}

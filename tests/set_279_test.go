@@ -68,7 +68,6 @@ func testSet279CreateUHostInstance00(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostIds", "0", "len_ge"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -475,7 +474,6 @@ func testSet279DescribeEIP14(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("TotalCount", "0", "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,

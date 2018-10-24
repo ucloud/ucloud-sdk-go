@@ -17,7 +17,7 @@ func TestSet687(t *testing.T) {
 	ctx.SetVar("Region", "cn-sh2")
 	ctx.SetVar("Zone", "cn-sh2-02")
 
-	ctx.SetVar("Zone", "cn-sh2-02")
+	ctx.SetVar("Zone", "cn-sh2-01")
 	ctx.SetVar("Region", "cn-sh2")
 	ctx.SetVar("VPC_name_1", "VPC_api_test_1")
 	ctx.SetVar("remark", "remark_api_test")
@@ -28,25 +28,26 @@ func TestSet687(t *testing.T) {
 	testSet687GetProjectList00(&ctx)
 	testSet687CreateVPC01(&ctx)
 	testSet687CreateSubnet02(&ctx)
-	testSet687DescribeSubnet03(&ctx)
-	testSet687CreateVPC04(&ctx)
-	testSet687CreateSubnet05(&ctx)
+	testSet687UpdateSubnetAttribute03(&ctx)
+	testSet687DescribeSubnet04(&ctx)
+	testSet687CreateVPC05(&ctx)
 	testSet687CreateSubnet06(&ctx)
-	testSet687DescribeSubnet07(&ctx)
-	testSet687AllocateVIP08(&ctx)
-	testSet687DescribeVIP09(&ctx)
-	testSet687DescribeSubnetResource10(&ctx)
-	testSet687ReleaseVIP11(&ctx)
-	testSet687DeleteSubnet12(&ctx)
+	testSet687CreateSubnet07(&ctx)
+	testSet687DescribeSubnet08(&ctx)
+	testSet687AllocateVIP09(&ctx)
+	testSet687DescribeVIP10(&ctx)
+	testSet687DescribeSubnetResource11(&ctx)
+	testSet687ReleaseVIP12(&ctx)
 	testSet687DeleteSubnet13(&ctx)
 	testSet687DeleteSubnet14(&ctx)
-	testSet687AddVPCNetwork15(&ctx)
-	testSet687DescribeVPC16(&ctx)
-	testSet687CreateVPCIntercom17(&ctx)
-	testSet687DescribeVPCIntercom18(&ctx)
-	testSet687DeleteVPCIntercom19(&ctx)
-	testSet687DeleteVPC20(&ctx)
+	testSet687DeleteSubnet15(&ctx)
+	testSet687AddVPCNetwork16(&ctx)
+	testSet687DescribeVPC17(&ctx)
+	testSet687CreateVPCIntercom18(&ctx)
+	testSet687DescribeVPCIntercom19(&ctx)
+	testSet687DeleteVPCIntercom20(&ctx)
 	testSet687DeleteVPC21(&ctx)
+	testSet687DeleteVPC22(&ctx)
 }
 
 func testSet687GetProjectList00(ctx *utest.TestContext) {
@@ -60,7 +61,6 @@ func testSet687GetProjectList00(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("Action", "GetProjectListResponse", "str_eq"),
 		},
 		MaxRetries:    0,
 		RetryInterval: 0 * time.Second,
@@ -140,7 +140,37 @@ func testSet687CreateSubnet02(ctx *utest.TestContext) {
 	ctx.Vars["SubnetId_1_1"] = ctx.Must(utest.GetValue(resp, "SubnetId"))
 }
 
-func testSet687DescribeSubnet03(ctx *utest.TestContext) {
+func testSet687UpdateSubnetAttribute03(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(2) * time.Second)
+
+	req := vpcClient.NewUpdateSubnetAttributeRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId_1_1")))
+
+	ctx.NoError(utest.SetReqValue(req, "Tag", "qa"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return vpcClient.UpdateSubnetAttribute(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet687DescribeSubnet04(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDescribeSubnetRequest()
@@ -171,7 +201,7 @@ func testSet687DescribeSubnet03(ctx *utest.TestContext) {
 
 }
 
-func testSet687CreateVPC04(ctx *utest.TestContext) {
+func testSet687CreateVPC05(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := vpcClient.NewCreateVPCRequest()
@@ -179,7 +209,6 @@ func testSet687CreateVPC04(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Name", "vpc_2"))
 	ctx.NoError(utest.SetReqValue(req, "Network", "192.168.16.0/20"))
-	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -199,13 +228,12 @@ func testSet687CreateVPC04(ctx *utest.TestContext) {
 	ctx.Vars["VPCId_2"] = ctx.Must(utest.GetValue(resp, "VPCId"))
 }
 
-func testSet687CreateSubnet05(ctx *utest.TestContext) {
+func testSet687CreateSubnet06(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewCreateSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId_2")))
 	ctx.NoError(utest.SetReqValue(req, "Subnet", "192.168.17.0"))
@@ -232,13 +260,12 @@ func testSet687CreateSubnet05(ctx *utest.TestContext) {
 	ctx.Vars["SubnetId_2_1"] = ctx.Must(utest.GetValue(resp, "SubnetId"))
 }
 
-func testSet687CreateSubnet06(ctx *utest.TestContext) {
+func testSet687CreateSubnet07(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := vpcClient.NewCreateSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId_2")))
 	ctx.NoError(utest.SetReqValue(req, "Subnet", "192.168.18.0"))
@@ -267,7 +294,7 @@ func testSet687CreateSubnet06(ctx *utest.TestContext) {
 	ctx.Vars["SubnetId_2_2"] = ctx.Must(utest.GetValue(resp, "SubnetId"))
 }
 
-func testSet687DescribeSubnet07(ctx *utest.TestContext) {
+func testSet687DescribeSubnet08(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDescribeSubnetRequest()
@@ -283,14 +310,6 @@ func testSet687DescribeSubnet07(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.VPCId", ctx.GetVar("VPCId_1"), "str_eq"),
-			ctx.NewValidator("DataSet.0.VPCName", ctx.GetVar("VPC_name_1"), "str_eq"),
-			ctx.NewValidator("DataSet.0.SubnetId", ctx.GetVar("SubnetId_1_1"), "str_eq"),
-			ctx.NewValidator("DataSet.0.SubnetName", ctx.GetVar("Subnet_name_1_1"), "str_eq"),
-			ctx.NewValidator("DataSet.0.Tag", ctx.GetVar("tag"), "str_eq"),
-			ctx.NewValidator("DataSet.0.Remark", ctx.GetVar("remark"), "str_eq"),
-			ctx.NewValidator("DataSet.0.SubnetType", "2", "str_eq"),
-			ctx.NewValidator("DataSet.0.Netmask", "24", "str_eq"),
 		},
 		MaxRetries:    0,
 		RetryInterval: 0 * time.Second,
@@ -304,7 +323,7 @@ func testSet687DescribeSubnet07(ctx *utest.TestContext) {
 
 }
 
-func testSet687AllocateVIP08(ctx *utest.TestContext) {
+func testSet687AllocateVIP09(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewAllocateVIPRequest()
@@ -339,7 +358,7 @@ func testSet687AllocateVIP08(ctx *utest.TestContext) {
 	ctx.Vars["VIPId_1"] = ctx.Must(utest.GetValue(resp, "VIPSet.0.VIPId"))
 }
 
-func testSet687DescribeVIP09(ctx *utest.TestContext) {
+func testSet687DescribeVIP10(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := unetClient.NewDescribeVIPRequest()
@@ -356,9 +375,6 @@ func testSet687DescribeVIP09(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("VIPSet.0.VPCId", ctx.GetVar("VPCId_1"), "str_eq"),
-			ctx.NewValidator("VIPSet.0.VIPId", ctx.GetVar("VIPId_1"), "str_eq"),
-			ctx.NewValidator("VIPSet.0.SubnetId", ctx.GetVar("SubnetId_1_1"), "str_eq"),
 		},
 		MaxRetries:    0,
 		RetryInterval: 0 * time.Second,
@@ -373,7 +389,7 @@ func testSet687DescribeVIP09(ctx *utest.TestContext) {
 	ctx.Vars["VIP_ip_1"] = ctx.Must(utest.GetValue(resp, "DataSet.0"))
 }
 
-func testSet687DescribeSubnetResource10(ctx *utest.TestContext) {
+func testSet687DescribeSubnetResource11(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := vpcClient.NewDescribeSubnetResourceRequest()
@@ -391,9 +407,6 @@ func testSet687DescribeSubnetResource10(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("TotalCount", "1", "str_eq"),
-			ctx.NewValidator("DataSet.0.ResourceId", ctx.GetVar("VIPId_1"), "str_eq"),
-			ctx.NewValidator("DataSet.0.IP", ctx.GetVar("VIP_ip_1"), "str_eq"),
 		},
 		MaxRetries:    0,
 		RetryInterval: 0 * time.Second,
@@ -407,7 +420,7 @@ func testSet687DescribeSubnetResource10(ctx *utest.TestContext) {
 
 }
 
-func testSet687ReleaseVIP11(ctx *utest.TestContext) {
+func testSet687ReleaseVIP12(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewReleaseVIPRequest()
@@ -436,7 +449,7 @@ func testSet687ReleaseVIP11(ctx *utest.TestContext) {
 
 }
 
-func testSet687DeleteSubnet12(ctx *utest.TestContext) {
+func testSet687DeleteSubnet13(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(1) * time.Second)
 
 	req := vpcClient.NewDeleteSubnetRequest()
@@ -464,13 +477,12 @@ func testSet687DeleteSubnet12(ctx *utest.TestContext) {
 
 }
 
-func testSet687DeleteSubnet13(ctx *utest.TestContext) {
+func testSet687DeleteSubnet14(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(1) * time.Second)
 
 	req := vpcClient.NewDeleteSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId_2_1")))
 
@@ -493,13 +505,12 @@ func testSet687DeleteSubnet13(ctx *utest.TestContext) {
 
 }
 
-func testSet687DeleteSubnet14(ctx *utest.TestContext) {
+func testSet687DeleteSubnet15(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(1) * time.Second)
 
 	req := vpcClient.NewDeleteSubnetRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId_2_2")))
 
@@ -522,7 +533,7 @@ func testSet687DeleteSubnet14(ctx *utest.TestContext) {
 
 }
 
-func testSet687AddVPCNetwork15(ctx *utest.TestContext) {
+func testSet687AddVPCNetwork16(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := vpcClient.NewAddVPCNetworkRequest()
@@ -550,7 +561,7 @@ func testSet687AddVPCNetwork15(ctx *utest.TestContext) {
 
 }
 
-func testSet687DescribeVPC16(ctx *utest.TestContext) {
+func testSet687DescribeVPC17(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDescribeVPCRequest()
@@ -577,7 +588,7 @@ func testSet687DescribeVPC16(ctx *utest.TestContext) {
 
 }
 
-func testSet687CreateVPCIntercom17(ctx *utest.TestContext) {
+func testSet687CreateVPCIntercom18(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := vpcClient.NewCreateVPCIntercomRequest()
@@ -607,7 +618,7 @@ func testSet687CreateVPCIntercom17(ctx *utest.TestContext) {
 
 }
 
-func testSet687DescribeVPCIntercom18(ctx *utest.TestContext) {
+func testSet687DescribeVPCIntercom19(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDescribeVPCIntercomRequest()
@@ -622,8 +633,6 @@ func testSet687DescribeVPCIntercom18(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.VPCId", ctx.GetVar("VPCId_2"), "str_eq"),
-			ctx.NewValidator("DataSet.0.DstRegion", ctx.GetVar("Region"), "str_eq"),
 		},
 		MaxRetries:    0,
 		RetryInterval: 0 * time.Second,
@@ -637,7 +646,7 @@ func testSet687DescribeVPCIntercom18(ctx *utest.TestContext) {
 
 }
 
-func testSet687DeleteVPCIntercom19(ctx *utest.TestContext) {
+func testSet687DeleteVPCIntercom20(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDeleteVPCIntercomRequest()
@@ -668,7 +677,7 @@ func testSet687DeleteVPCIntercom19(ctx *utest.TestContext) {
 
 }
 
-func testSet687DeleteVPC20(ctx *utest.TestContext) {
+func testSet687DeleteVPC21(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDeleteVPCRequest()
@@ -696,13 +705,12 @@ func testSet687DeleteVPC20(ctx *utest.TestContext) {
 
 }
 
-func testSet687DeleteVPC21(ctx *utest.TestContext) {
+func testSet687DeleteVPC22(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(2) * time.Second)
 
 	req := vpcClient.NewDeleteVPCRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "ProjectId", ctx.Must(utest.SearchValue(ctx.GetVar("project_list"), "IsDefault", "true", "ProjectId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId_2")))
 

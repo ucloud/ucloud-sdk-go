@@ -102,15 +102,6 @@ func testSet471DescribeUHostInstance01(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.CPU", ctx.GetVar("CreateCPU"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Memory", ctx.GetVar("CreateMem"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostId", ctx.GetVar("hostId"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Name", ctx.GetVar("Name"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.TotalDiskSpace", ctx.GetVar("CreateDiskspace"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.StorageType", "LocalDisk", "str_eq"),
-			// ctx.NewValidator("UHostSet.0.BasicImageId", ctx.GetVar("ImageID"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.BootDiskState", "Normal", "str_eq"),
-			ctx.NewValidator("UHostSet.0.State", "Running", "str_eq"),
 		},
 		MaxRetries:    120,
 		RetryInterval: 30 * time.Second,
@@ -139,7 +130,6 @@ func testSet471StopUHostInstance02(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("Action", "StopUHostInstanceResponse", "str_eq"),
 		},
 		MaxRetries:    5,
 		RetryInterval: 30 * time.Second,
@@ -168,8 +158,6 @@ func testSet471DescribeUHostInstance03(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
-			ctx.NewValidator("UHostSet.0.BootDiskState", "Normal", "str_eq"),
 		},
 		MaxRetries:    100,
 		RetryInterval: 60 * time.Second,
@@ -227,7 +215,6 @@ func testSet471DescribeUHostInstance05(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
 		},
 		MaxRetries:    60,
 		RetryInterval: 30 * time.Second,
@@ -284,7 +271,6 @@ func testSet471DescribeUHostInstance07(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
 		},
 		MaxRetries:    30,
 		RetryInterval: 10 * time.Second,

@@ -142,7 +142,6 @@ func testSet149DescribeULB02(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.ULBId", ctx.GetVar("ULBId"), "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -207,12 +206,6 @@ func testSet149DescribeVServer04(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.ListenType", "RequestProxy", "str_eq"),
-			ctx.NewValidator("DataSet.0.VServerName", "vserver-test", "str_eq"),
-			ctx.NewValidator("DataSet.0.Protocol", "HTTP", "str_eq"),
-			ctx.NewValidator("DataSet.0.FrontendPort", "80", "str_eq"),
-			ctx.NewValidator("DataSet.0.Method", "Roundrobin", "str_eq"),
-			ctx.NewValidator("DataSet.0.ClientTimeout", "60", "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -274,12 +267,6 @@ func testSet149DescribeVServer06(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.ListenType", "RequestProxy", "str_eq"),
-			ctx.NewValidator("DataSet.0.VServerName", "vserver-test", "str_eq"),
-			ctx.NewValidator("DataSet.0.Protocol", "HTTP", "str_eq"),
-			ctx.NewValidator("DataSet.0.FrontendPort", "80", "str_eq"),
-			ctx.NewValidator("DataSet.0.Method", "Roundrobin", "str_eq"),
-			ctx.NewValidator("DataSet.0.ClientTimeout", "60", "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -369,7 +356,6 @@ func testSet149DescribeVServer09(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.BackendSet", "0", "len_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -431,7 +417,6 @@ func testSet149DescribeVServer11(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("DataSet.0.BackendSet", "1", "len_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -489,8 +474,6 @@ func testSet149GetVServerMetricInfo13(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("TotalCount", "1", "str_eq"),
-			ctx.NewValidator("DataSet.0.VServerId", ctx.GetVar("VServerId"), "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -582,7 +565,6 @@ func testSet149DescribeVServer16(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("TotalCount", "1", "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
@@ -613,7 +595,7 @@ func testSet149DeleteVServer17(ctx *utest.TestContext) {
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "4103", "str_eq"),
 		},
-		MaxRetries:    10,
+		MaxRetries:    20,
 		RetryInterval: 10 * time.Second,
 		T:             ctx.T,
 	}
