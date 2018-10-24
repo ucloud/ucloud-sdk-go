@@ -4,6 +4,12 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
+)
+
+var (
+	errTimeoutConf = errors.New("timeout cannot be set zero")
 )
 
 // TimeoutError is returned when WaitForState times out

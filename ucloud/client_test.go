@@ -32,7 +32,7 @@ func testSetup() {
 	cfg.BaseUrl = "https://api.ucloud.cn"
 	cfg.Region = "cn-bj2"
 	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
-	cfg.LogLevel = log.DebugLevel
+	cfg.LogLevel = log.WarnLevel
 
 	credential := auth.NewCredential()
 	credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")

@@ -21,6 +21,7 @@ func TestWaitForState(t *testing.T) {
 				Refresh: func() (interface{}, string, error) {
 					return true, "ok", nil
 				},
+				Timeout: 2 * time.Second,
 			},
 			true,
 			false,
@@ -38,16 +39,28 @@ func TestWaitForState(t *testing.T) {
 			nil,
 			true,
 		},
+		{
+			"confTimeout",
+			&StateWaiter{
+				Pending: []string{"pending"},
+				Target:  []string{"ok"},
+				Refresh: func() (interface{}, string, error) {
+					return true, "ok", nil
+				},
+			},
+			nil,
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.conf.Wait()
 			if (err != nil) != tt.wantErr {
-				t.Errorf("StateChangeConf.WaitForState() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("StateWaiter.Wait() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("StateChangeConf.WaitForState() = %v, want %v", got, tt.want)
+				t.Errorf("StateWaiter.Wait() = %v, want %v", got, tt.want)
 			}
 		})
 	}

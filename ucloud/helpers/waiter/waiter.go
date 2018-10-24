@@ -27,8 +27,12 @@ type StateWaiter struct {
 
 // Wait watches an object and waits for it to achieve the state
 func (waiter *StateWaiter) Wait() (interface{}, error) {
+	if waiter.Timeout == 0 {
+		return nil, errTimeoutConf
+	}
+
 	// it is a re-implementation of terraform StateChangeConf
-	log.Debugf("Waiting for state: %s", waiter.Target)
+	log.Debugf("waiting for state: %s", waiter.Target)
 
 	resCh := make(chan refreshResult, 1)
 	cancelCh := make(chan struct{})
@@ -129,7 +133,7 @@ func (waiter *StateWaiter) Wait() (interface{}, error) {
 
 			lastRes = r
 		case <-timeout:
-			log.Printf("[WARN] WaitForState timeout after %s", waiter.Timeout)
+			log.Debugf("wait for state timeout after %s", waiter.Timeout)
 
 			// cancel the goroutine and start our grace period timer
 			close(cancelCh)
@@ -149,7 +153,7 @@ type refreshResult struct {
 func (waiter *StateWaiter) waitForTimeout(resCh <-chan refreshResult, last refreshResult) (interface{}, error) {
 	timeout := time.After(graceRefreshTimeout)
 
-	timoutError := &TimeoutError{
+	errTimeout := &TimeoutError{
 		LastError:      last.Error,
 		LastState:      last.State,
 		Timeout:        waiter.Timeout,
@@ -165,10 +169,10 @@ func (waiter *StateWaiter) waitForTimeout(resCh <-chan refreshResult, last refre
 		}
 
 		if !ok {
-			return nil, timoutError
+			return nil, errTimeout
 		}
 	case <-timeout:
-		return nil, timoutError
+		return nil, errTimeout
 	}
 
 	return nil, nil
