@@ -94,7 +94,7 @@ fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 
 **Note**
 
-UHost created above cannot be accessed via Internet unless a EIP is created and binded to the UHost.
+UHost created above cannot be accessed via Internet unless a EIP is created and bind to the UHost.
 
 
 ## Docs
