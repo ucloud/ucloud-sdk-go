@@ -8,6 +8,9 @@ package udisk
 */
 type UDiskDataSet struct {
 
+	// 可用区
+	Zone string
+
 	// UDisk实例Id
 	UDiskId string
 
