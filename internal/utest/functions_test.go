@@ -218,8 +218,8 @@ func TestSearchValue(t *testing.T) {
 			"ok",
 			args{
 				[]testStruct{
-					testStruct{Name: "foo", Data: 42},
-					testStruct{Name: "bar", Data: 142},
+					{Name: "foo", Data: 42},
+					{Name: "bar", Data: 142},
 				},
 				"Name",
 				"foo",

@@ -8,12 +8,12 @@ package unet
 */
 type EIPSetData struct {
 
-	// EIP带宽值
-	Badnwidth int
-
 	// EIP的IP信息，详情见EIPAddrSet
 	EIPAddr []EIPAddrSet
 
 	// EIP资源Id
 	EIPId string
+
+	// EIP带宽值
+	Bandwidth int
 }

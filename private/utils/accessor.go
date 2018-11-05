@@ -36,7 +36,7 @@ func ValueAtPath(v interface{}, path string) (interface{}, error) {
 		}
 
 		if len(components) > 1 {
-			return ValueAtPath(itemV.Interface(), strings.Join(components[1:len(components)], "."))
+			return ValueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
 		} else {
 			return itemV.Interface(), nil
 		}
@@ -49,7 +49,7 @@ func ValueAtPath(v interface{}, path string) (interface{}, error) {
 		}
 
 		if len(components) > 1 {
-			return ValueAtPath(itemV.Interface(), strings.Join(components[1:len(components)], "."))
+			return ValueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
 		} else {
 			return itemV.Interface(), nil
 		}
@@ -62,7 +62,7 @@ func ValueAtPath(v interface{}, path string) (interface{}, error) {
 		}
 
 		if len(components) > 1 {
-			return ValueAtPath(itemV.Interface(), strings.Join(components[1:len(components)], "."))
+			return ValueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
 		} else {
 			return itemV.Interface(), nil
 		}

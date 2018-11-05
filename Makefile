@@ -10,7 +10,7 @@ help:
 
 .PHONY: fmt
 fmt:
-	gofmt -w $(GOFMT_FILES)
+	gofmt -w -s $(GOFMT_FILES)
 
 .PHONY: fmtcheck
 fmtcheck:
