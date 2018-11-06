@@ -22,10 +22,13 @@ type DescribeUMemPriceRequest struct {
 	Type *string `required:"true"`
 
 	// Year， Month， Dynamic，Trial 如果不指定，则一次性获取三种计费
-	ChargeType *string `required:"false"`
+	ChargeType *string `required:"true"`
 
 	// 购买UMem的时长，默认值为1
-	Quantity *int `required:"false"`
+	Quantity *int `required:"true"`
+
+	//
+	RegionFlag *bool `required:"true"`
 }
 
 // DescribeUMemPriceResponse is response schema for DescribeUMemPrice action

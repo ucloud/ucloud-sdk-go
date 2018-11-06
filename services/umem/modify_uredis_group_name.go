@@ -12,6 +12,9 @@ import (
 type ModifyURedisGroupNameRequest struct {
 	request.CommonBase
 
+	// 可用区。参见 [可用区列表](../summary/regionlist.html)
+	Zone *string `required:"true"`
+
 	// 组的ID
 	GroupId *string `required:"true"`
 

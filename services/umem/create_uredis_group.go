@@ -18,11 +18,26 @@ type CreateURedisGroupRequest struct {
 	// 请求创建组的名称 (范围[6-63],只能包含英文、数字以及符号-和_)
 	Name *string `required:"true"`
 
+	//
+	Protocol *string `required:"true"`
+
 	// 是否开启高可用,enable或disable
 	HighAvailability *string `required:"true"`
 
 	// 每个节点的内存大小,单位GB,默认1GB,目前仅支持1/2/4/8/16/32,六种
-	Size *int `required:"false"`
+	Size *int `required:"true"`
+
+	// 配置ID,目前仅支持默认配置id 默认配置id:"03f58ca9-b64d-4bdd-abc7-c6b9a46fd801"
+	ConfigId *string `required:"true"`
+
+	// Redis版本信息(详见DescribeURedisVersion返回结果),默认版本3.0
+	Version *string `required:"true"`
+
+	// 计费模式，Year , Month, Dynamic 默认: Month
+	ChargeType *string `required:"true"`
+
+	// 业务组名称
+	Tag *string `required:"true"`
 
 	// 是否自动备份,enable或disable，默认disable
 	AutoBackup *string `required:"false"`
@@ -30,20 +45,8 @@ type CreateURedisGroupRequest struct {
 	// 自动备份开始时间,范围[0-23],默认3点
 	BackupTime *int `required:"false"`
 
-	// 配置ID,目前仅支持默认配置id 默认配置id:"03f58ca9-b64d-4bdd-abc7-c6b9a46fd801"
-	ConfigId *string `required:"false"`
-
-	// Redis版本信息(详见DescribeURedisVersion返回结果),默认版本3.0
-	Version *string `required:"false"`
-
-	// 计费模式，Year , Month, Dynamic 默认: Month
-	ChargeType *string `required:"false"`
-
 	// 购买时长，默认为1
 	Quantity *int `required:"false"`
-
-	// 业务组名称
-	Tag *string `required:"false"`
 
 	// 初始化密码
 	Password *string `required:"false"`
@@ -59,9 +62,6 @@ type CreateURedisGroupRequest struct {
 
 	// 代金券ID
 	CouponId *string `required:"false"`
-
-	//
-	Protocol *string `required:"false"`
 }
 
 // CreateURedisGroupResponse is response schema for CreateURedisGroup action

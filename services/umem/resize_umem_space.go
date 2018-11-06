@@ -13,13 +13,19 @@ type ResizeUMemSpaceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	Zone *string `required:"true"`
 
 	// UMem 内存空间Id
 	SpaceId *string `required:"true"`
 
 	// 内存大小, 单位:GB (需要大于原size,<= 1024)
 	Size *int `required:"true"`
+
+	//
+	ChargeType *string `required:"true"`
+
+	// 空间类型:single(无热备),double(热备)(默认: double)
+	Type *string `required:"true"`
 
 	// 使用的代金券Id
 	CouponId *string `required:"false"`

@@ -1,10 +1,10 @@
 package ulb
 
 /*
-	ULBPolicySet - 内容转发详细列表
+ULBPolicySet - 内容转发详细列表
 
-	this model is auto created by ucloud code generater for open api,
-	you can also see https://docs.ucloud.cn for detail.
+this model is auto created by ucloud code generater for open api,
+you can also see https://docs.ucloud.cn for detail.
 */
 type ULBPolicySet struct {
 

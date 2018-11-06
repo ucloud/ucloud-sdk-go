@@ -13,13 +13,16 @@ type DescribeURedisUpgradePriceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	Zone *string `required:"true"`
 
 	// 购买uredis大小,单位:GB,范围是[1-32]
 	Size *int `required:"true"`
 
 	// 要升级的空间的GroupId,请参考DescribeURedisGroup接口
 	GroupId *string `required:"true"`
+
+	//
+	Type *string `required:"true"`
 }
 
 // DescribeURedisUpgradePriceResponse is response schema for DescribeURedisUpgradePrice action

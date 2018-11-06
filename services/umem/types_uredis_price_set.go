@@ -1,10 +1,10 @@
 package umem
 
 /*
-	URedisPriceSet - 主备Redis价格
+URedisPriceSet - 主备Redis价格
 
-	this model is auto created by ucloud code generater for open api,
-	you can also see https://docs.ucloud.cn for detail.
+this model is auto created by ucloud code generater for open api,
+you can also see https://docs.ucloud.cn for detail.
 */
 type URedisPriceSet struct {
 

@@ -19,16 +19,19 @@ type DescribeURedisPriceRequest struct {
 	Size *int `required:"true"`
 
 	// 计费模式，Year， Month， Dynamic；如果不指定，则一次性获取三种计费
-	ChargeType *string `required:"false"`
+	ChargeType *string `required:"true"`
 
 	// 计费模式为Dynamic时，购买的时长, 默认为1
-	Quantity *int `required:"false"`
+	Quantity *int `required:"true"`
 
 	// 是否是跨机房URedis(默认false)
-	RegionFlag *bool `required:"false"`
+	RegionFlag *bool `required:"true"`
 
 	// 产品类型：MS_Redis（标准主备版），S_Redis（从库），默认为MS_Redis
-	ProductType *string `required:"false"`
+	ProductType *string `required:"true"`
+
+	//
+	Type *string `required:"true"`
 }
 
 // DescribeURedisPriceResponse is response schema for DescribeURedisPrice action

@@ -18,17 +18,20 @@ type CreateUMemSpaceRequest struct {
 	// 内存大小, 单位:GB, 范围[1~1024]
 	Size *int `required:"true"`
 
+	//
+	Tag *string `required:"true"`
+
 	// 空间名称,长度(6<=size<=63)
 	Name *string `required:"true"`
 
 	// 协议:memcache, redis (默认redis).注意:redis无single类型
-	Protocol *string `required:"false"`
+	Protocol *string `required:"true"`
+
+	// Year , Month, Dynamic, Trial 默认: Month
+	ChargeType *string `required:"true"`
 
 	// 空间类型:single(无热备),double(热备)(默认: double)
 	Type *string `required:"false"`
-
-	// Year , Month, Dynamic, Trial 默认: Month
-	ChargeType *string `required:"false"`
 
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`

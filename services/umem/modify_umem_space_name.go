@@ -13,7 +13,7 @@ type ModifyUMemSpaceNameRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	Zone *string `required:"true"`
 
 	// UMem内存空间ID
 	SpaceId *string `required:"true"`

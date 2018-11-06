@@ -1,10 +1,10 @@
 package uhost
 
 /*
-	UHostIPSet - DescribeUHostInstance
+UHostIPSet - DescribeUHostInstance
 
-	this model is auto created by ucloud code generater for open api,
-	you can also see https://docs.ucloud.cn for detail.
+this model is auto created by ucloud code generater for open api,
+you can also see https://docs.ucloud.cn for detail.
 */
 type UHostIPSet struct {
 
@@ -17,12 +17,12 @@ type UHostIPSet struct {
 	// IP地址
 	IP string
 
-	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
-	Bandwidth int
-
 	// VPC ID
 	VPCId string
 
 	// Subnet Id
 	SubnetId string
+
+	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	Bandwidth int
 }

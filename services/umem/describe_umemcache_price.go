@@ -18,11 +18,14 @@ type DescribeUMemcachePriceRequest struct {
 	// 容量大小,单位:GB 取值范围[1-32]
 	Size *int `required:"true"`
 
+	// 空间类型:single(无热备),double(热备)(默认: double)
+	Type *string `required:"true"`
+
 	// 计费模式，Year， Month， Dynamic，默认: Dynamic 默认: 获取所有计费模式的价格
-	ChargeType *string `required:"false"`
+	ChargeType *string `required:"true"`
 
 	// 购买umemcache的时长，默认值为1
-	Quantity *int `required:"false"`
+	Quantity *int `required:"true"`
 }
 
 // DescribeUMemcachePriceResponse is response schema for DescribeUMemcachePrice action

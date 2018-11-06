@@ -12,17 +12,23 @@ import (
 type ResizeURedisGroupRequest struct {
 	request.CommonBase
 
+	// 可用区。参见 [可用区列表](../summary/regionlist.html)
+	Zone *string `required:"true"`
+
 	// 组ID
 	GroupId *string `required:"true"`
 
 	// 内存大小, 单位:GB (需要大于原size,且小于等于32) 目前仅支持1/2/4/8/16/32 G 六种容量规格
 	Size *int `required:"true"`
 
+	//
+	ChargeType *string `required:"true"`
+
+	// 空间类型:single(无热备),double(热备)(默认: double)
+	Type *string `required:"true"`
+
 	// 代金券ID 请参考DescribeCoupon接口
 	CouponId *int `required:"false"`
-
-	//
-	Zone *string `required:"false"`
 }
 
 // ResizeURedisGroupResponse is response schema for ResizeURedisGroup action

@@ -179,7 +179,7 @@ func Calculate(op interface{}, rvL ...interface{}) (int, error) {
 	}
 
 	if l < 2 {
-		return 0, errors.Errorf("not enough arguments, expect least two item, got %s", op, len(rvL))
+		return 0, errors.Errorf("not enough arguments, expect least two item, got %s", len(rvL))
 	}
 
 	vL := make([]int, l)
