@@ -119,7 +119,7 @@ func Test_errorHandler(t *testing.T) {
 			},
 		},
 		{
-			name: "bussiness error",
+			name: "business error",
 			step: func() error {
 				resp := &response.CommonBase{Message: "Missing Action", RetCode: 160}
 				_, err := errorHandler(client, req, resp, nil)

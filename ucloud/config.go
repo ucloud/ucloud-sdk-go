@@ -6,6 +6,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 )
 
+// Config is the config of ucloud sdk, use for setting up client
 type Config struct {
 	// Region is the region of backend service
 	// See also <https://docs.ucloud.cn/api/summary/regionlist> ...

@@ -64,6 +64,7 @@ func TestMain(m *testing.M) {
 
 func testSetup() {
 	cfg := ucloud.NewConfig()
+	cfg.MaxRetries = 1
 	cfg.LogLevel = log.DebugLevel
 	cfg.Region = os.Getenv("UCLOUD_REGION")
 	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")

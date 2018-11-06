@@ -8,7 +8,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+// CompareFunc is the function definition of test comparator without type-system
 type CompareFunc func(interface{}, interface{}) (bool, error)
+
+// Comparators is a collection of compare functions
 type Comparators struct {
 	comparators map[string]CompareFunc
 }

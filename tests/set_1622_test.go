@@ -191,7 +191,7 @@ func testSet1622AllocateUDPN04(ctx *utest.TestContext) {
 }
 
 func testSet1622DescribeUDPN05(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+	time.Sleep(time.Duration(10) * time.Second)
 
 	req := udpnClient.NewDescribeUDPNRequest()
 

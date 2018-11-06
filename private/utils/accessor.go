@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ValueAtPath will get struct attribute value by recursive
 func ValueAtPath(v interface{}, path string) (interface{}, error) {
 	components := strings.Split(path, ".")
 
@@ -37,9 +38,9 @@ func ValueAtPath(v interface{}, path string) (interface{}, error) {
 
 		if len(components) > 1 {
 			return ValueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
-		} else {
-			return itemV.Interface(), nil
 		}
+
+		return itemV.Interface(), nil
 	}
 
 	if rv.Kind() == reflect.Map && !rv.IsNil() {
@@ -50,9 +51,9 @@ func ValueAtPath(v interface{}, path string) (interface{}, error) {
 
 		if len(components) > 1 {
 			return ValueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
-		} else {
-			return itemV.Interface(), nil
 		}
+
+		return itemV.Interface(), nil
 	}
 
 	if rv.Kind() == reflect.Struct {
@@ -63,9 +64,9 @@ func ValueAtPath(v interface{}, path string) (interface{}, error) {
 
 		if len(components) > 1 {
 			return ValueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
-		} else {
-			return itemV.Interface(), nil
 		}
+
+		return itemV.Interface(), nil
 	}
 
 	return nil, errors.Errorf("object %#v is invalid, need map or struct", v)

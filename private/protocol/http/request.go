@@ -13,6 +13,7 @@ import (
 
 var availableHTTPMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTION", "HEAD", "PATCH"}
 
+// HttpRequest is the internal http request of sdk, don't use it at your code
 type HttpRequest struct {
 	url         string
 	method      string

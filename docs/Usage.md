@@ -59,7 +59,7 @@ In general usage, you can serialize error to string for free, use ``err.Error()`
 fmt.Printf("got error: %s", err)
 ```
 
-For bussiness error with RetCode > 0 at the body of server response, you can check it easily, such as
+For business error with RetCode > 0 at the body of server response, you can check it easily, such as
 
 ```go
 if uerr.IsCodeError(err) {
