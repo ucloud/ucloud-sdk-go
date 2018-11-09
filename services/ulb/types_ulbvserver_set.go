@@ -1,12 +1,21 @@
 package ulb
 
 /*
-	ULBVServerSet - DescribeULB
+ULBVServerSet - DescribeULB
 
-	this model is auto created by ucloud code generater for open api,
-	you can also see https://docs.ucloud.cn for detail.
+this model is auto created by ucloud code generater for open api,
+you can also see https://docs.ucloud.cn for detail.
 */
 type ULBVServerSet struct {
+
+	// 健康检查类型，枚举值：Port -> 端口检查；Path -> 路径检查；
+	MonitorType string
+
+	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查路径
+	Domain string
+
+	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查域名
+	Path string
 
 	// VServer实例的Id
 	VServerId string
@@ -46,13 +55,4 @@ type ULBVServerSet struct {
 
 	// 内容转发信息列表，具体结构见下方 ULBPolicySet
 	PolicySet []ULBPolicySet
-
-	// 健康检查的类型，Port:端口,Path:路径
-	MonitorType string
-
-	// MonitorType 为 Path 时指定健康检查发送请求时HTTP HEADER 里的域名
-	Domain string
-
-	// MonitorType 为 Path 时指定健康检查发送请求时的路径，默认为 /
-	Path string
 }

@@ -167,27 +167,25 @@ func TestConcat(t *testing.T) {
 }
 
 func TestCalculate(t *testing.T) {
-	type args struct {
-		a  interface{}
-		b  interface{}
-		op string
-	}
+	type args []interface{}
 	tests := []struct {
 		name    string
 		args    args
 		want    int
 		wantErr bool
 	}{
-		{"sum", args{"1", "1", "+"}, 2, false},
-		{"sub", args{"2", "1", "-"}, 1, false},
-		{"multi", args{"1", "1", "*"}, 1, false},
+		{"sum", args{"+", "1", "1"}, 2, false},
+		{"sub", args{"-", "2", "1"}, 1, false},
+		{"multi", args{"*", "1", "3"}, 3, false},
 
-		{"number", args{"1", 1, "+"}, 2, false},
-		{"not number", args{"1", "x", "+"}, 0, true},
+		{"number", args{"+", "1", 1}, 2, false},
+		{"not number", args{"+", "1", "x"}, 0, true},
+
+		{"literal", args{"101010"}, 101010, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Calculate(tt.args.op, tt.args.a, tt.args.b)
+			got, err := Calculate(tt.args[0], tt.args[1:]...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Calculate() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -220,8 +218,8 @@ func TestSearchValue(t *testing.T) {
 			"ok",
 			args{
 				[]testStruct{
-					testStruct{Name: "foo", Data: 42},
-					testStruct{Name: "bar", Data: 142},
+					{Name: "foo", Data: 42},
+					{Name: "bar", Data: 142},
 				},
 				"Name",
 				"foo",
@@ -252,5 +250,33 @@ func TestGetUUID(t *testing.T) {
 	length := len(strings.Split(uuidS, "-"))
 	if length != 4 {
 		t.Errorf("GetUUID() length is %v, want %v", length, 4)
+	}
+}
+
+func TestGetNotEqual(t *testing.T) {
+	type args struct {
+		v  interface{}
+		vL []interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{"hit", args{1, []interface{}{1, 2}}, "2", false},
+		{"miss", args{1, []interface{}{1, 1}}, "1", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetNotEqual(tt.args.v, tt.args.vL...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetNotEqual() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("GetNotEqual() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

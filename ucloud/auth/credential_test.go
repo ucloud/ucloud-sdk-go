@@ -22,7 +22,7 @@ func TestCredential_CreateSign(t *testing.T) {
 		{
 			"standard",
 			fields{"ucloudsomeone@example.com1296235120854146120", "46f09bb9fab4f12dfc160dae12273d5332b5debe"},
-			args{testCredential_CreateSign_query00},
+			args{testCredentialCreateSignQuery00},
 			"4f9ef5df2abab2c6fccd1e9515cb7e2df8c6bb65",
 		},
 	}
@@ -39,7 +39,7 @@ func TestCredential_CreateSign(t *testing.T) {
 	}
 }
 
-var testCredential_CreateSign_query00 string = strings.Join(strings.Split(`Action=CreateUHostInstance
+var testCredentialCreateSignQuery00 = strings.Join(strings.Split(`Action=CreateUHostInstance
 &CPU=2
 &ChargeType=Month
 &DiskSpace=10

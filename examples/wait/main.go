@@ -42,7 +42,7 @@ func main() {
 
 	w := waiter.StateWaiter{
 		Pending: []string{"pending"},
-		Target:  []string{"avaliable"},
+		Target:  []string{"available"},
 		Refresh: func() (interface{}, string, error) {
 			inst, err := describeUHostByID(uhostID)
 			if err != nil {
@@ -53,7 +53,7 @@ func main() {
 				return nil, "pending", nil
 			}
 
-			return inst, "avaliable", nil
+			return inst, "available", nil
 		},
 		Timeout: 5 * time.Minute,
 	}

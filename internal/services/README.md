@@ -4,7 +4,7 @@ Internal services used for daily testing with acceptance test cases. It should n
 
 In general, it will include
 
-- describe action for statistics infomation of resource.
+- describe action for statistics information of resource.
 - validator action for monitoring program.
 - action to backup some thing.
 - action deprecated.

@@ -27,7 +27,7 @@ func TestFuncWaiter_WaitForCompletion(t *testing.T) {
 			false,
 		},
 		{
-			"MaxAttempsReached",
+			"MaxattemptsReached",
 			&FuncWaiter{
 				Checker: func() func() (bool, error) {
 					i := 0

@@ -5,12 +5,12 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
-// UDiskClient is the client of ucloud disk
+// UDiskClient is the client of UDisk
 type UDiskClient struct {
 	client *ucloud.Client
 }
 
-// NewClient will create an instance of UDiskClient
+// NewClient will return a instance of UDiskClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UDiskClient {
 	client := ucloud.NewClient(config, credential)
 	return &UDiskClient{

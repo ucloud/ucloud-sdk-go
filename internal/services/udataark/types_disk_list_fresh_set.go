@@ -1,10 +1,10 @@
 package udataark
 
 /*
-	DiskListFreshSet - 备份链秒级数据
+DiskListFreshSet - 备份链秒级数据
 
-	this model is auto created by ucloud code generater for open api,
-	you can also see https://docs.ucloud.cn for detail.
+this model is auto created by ucloud code generater for open api,
+you can also see https://docs.ucloud.cn for detail.
 */
 type DiskListFreshSet struct {
 

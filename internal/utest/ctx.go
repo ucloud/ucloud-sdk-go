@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestContext is the fixture of sdk acceptance testing
 type TestContext struct {
 	T *testing.T
 

@@ -42,10 +42,10 @@ type CreateVServerRequest struct {
 	// 健康检查类型，枚举值：Port -> 端口检查；Path -> 路径检查；
 	MonitorType *string `required:"false"`
 
-	// 健康检查的域名
+	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查路径
 	Domain *string `required:"false"`
 
-	// 健康检查的路径
+	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查域名
 	Path *string `required:"false"`
 }
 

@@ -30,7 +30,7 @@ func TestGetValue(t *testing.T) {
 		{
 			"ok",
 			args{
-				test{1, "some error", []testSet{testSet{"1"}}},
+				test{1, "some error", []testSet{{"1"}}},
 				"DataSet.0.Name",
 			},
 			"1",
@@ -39,7 +39,7 @@ func TestGetValue(t *testing.T) {
 		{
 			"ok",
 			args{
-				test{1, "some error", []testSet{testSet{"1"}}},
+				test{1, "some error", []testSet{{"1"}}},
 				"RetCode",
 			},
 			"1",
