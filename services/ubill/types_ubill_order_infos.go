@@ -1,6 +1,6 @@
-package ubillings
+package ubill
 
-type OrderInfos struct {
+type OrderInfo struct {
 	OrderNo string  `json:"OrderNo"`
 	ReourceId string
 	OrderType string

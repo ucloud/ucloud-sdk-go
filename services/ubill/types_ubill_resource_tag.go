@@ -1,4 +1,4 @@
-package ubillings
+package ubill
 
 type ResourceTag struct {
 	KeyId string //标识名,见下表
