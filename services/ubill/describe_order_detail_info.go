@@ -11,7 +11,7 @@ type DescribeOrderDetailInfoRequest struct {
 	//开始时间，UNIX time format
 	BeginTime *int `required:"true"`
 	//结束时间，时间跨度不超过3个月
-	EndTime *int `required:"true"`
+	EndTime *int     `required:"true"`
 	Regions []string `required:"true"`
 	//产品类型，默认全部的产品类型
 	ResourceTypes []string `required:"false"`
@@ -33,7 +33,6 @@ type DescribeOrderDetailInfoRequest struct {
 	TradeNos []string `required:"false"`
 	//true表示查询全部，默认全部，其他选项按照项目自查询
 	QueryAll *string `required:"false"`
-
 }
 
 type DescribeOrderDetailInfoResponse struct {
@@ -42,7 +41,6 @@ type DescribeOrderDetailInfoResponse struct {
 	//json格式的订单信息
 	OrderInfo []OrderInfo `json:"order_info"`
 }
-
 
 func (c *UBillClient) NewDescribeOrderDetailInfoRequest() *DescribeOrderDetailInfoRequest {
 	req := &DescribeOrderDetailInfoRequest{}

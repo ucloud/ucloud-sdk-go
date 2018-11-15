@@ -5,9 +5,6 @@ type ResourceTag struct {
 	Value string //标识信息
 }
 
-
-
-
 /*KeyId	Description
 name	名称(eg. “hello_vm”)
 hostname	主机名(eg. “uhost-0zjhzf”)
