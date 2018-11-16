@@ -10,6 +10,7 @@ import (
 
 	"github.com/ucloud/ucloud-sdk-go/services/pathx"
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
+	"github.com/ucloud/ucloud-sdk-go/services/ubill"
 	"github.com/ucloud/ucloud-sdk-go/services/udb"
 	"github.com/ucloud/ucloud-sdk-go/services/udisk"
 	"github.com/ucloud/ucloud-sdk-go/services/udpn"
@@ -43,6 +44,7 @@ var udiskClient *udisk.UDiskClient
 var udbClient *udb.UDBClient
 var umemClient *umem.UMemClient
 var udpnClient *udpn.UDPNClient
+var ubillClient *ubill.UBillClient
 
 var iuhostClient *iuhost.UHostClient
 var iunetClient *iunet.UNetClient
@@ -86,6 +88,7 @@ func testSetup() {
 	udbClient = udb.NewClient(&cfg, &credential)
 	umemClient = umem.NewClient(&cfg, &credential)
 	udpnClient = udpn.NewClient(&cfg, &credential)
+	ubillClient = ubill.NewClient(&cfg, &credential)
 
 	iudataarkClient = iudataark.NewClient(&cfg, &credential)
 	iudiskClient = iudisk.NewClient(&cfg, &credential)

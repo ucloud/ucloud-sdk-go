@@ -65,7 +65,7 @@ func loadConfig()(*sdk.Config, *auth.Credential){
 
 func main(){
     cfg, credentail := loadConfig()
-    uhostClient := uhost.Newclient(cfg, credential)
+    uhostClient := uhost.NewClient(cfg, credential)
 }
 ```
 
