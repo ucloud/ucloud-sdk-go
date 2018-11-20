@@ -50,7 +50,7 @@ func (c *UHostClient) NewImportCustomImageRequest() *ImportCustomImageRequest {
 	c.client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
+	req.SetRetryable(false)
 	return req
 }
 
