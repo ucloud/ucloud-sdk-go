@@ -123,10 +123,10 @@ will encoded as `Disks.0.Size=20&Disks.0.Type=CLOUD_NORMAL&Disks.0.IsBoot=false`
 
 ## Docs
 
-- [Configure Document](./docs/Configure.md)
-- [Usage Document](./docs/Usage.md)
-- [Retry Policy Document](./docs/Retry.md)
-- [State Waiter Document](./docs/Wait.md)
+- [Configure Document](./docs/en-us/Configure.md)
+- [Usage Document](./docs/en-us/Usage.md)
+- [Retry Policy Document](./docs/en-us/Retry.md)
+- [State Waiter Document](./docs/en-us/Wait.md)
 
 ## Feedback & Contribution
 
