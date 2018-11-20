@@ -18,7 +18,7 @@ func TestSet289(t *testing.T) {
 	ctx.SetVar("Zone", "cn-sh2-02")
 
 	ctx.SetVar("Region", "cn-bj2")
-	ctx.SetVar("Zone", "cn-bj2-05")
+	ctx.SetVar("Zone", "cn-bj2-03")
 	ctx.SetVar("DiskType", "DataDisk")
 	ctx.SetVar("Size", "1")
 	ctx.SetVar("UDataArkMode", "No")
@@ -249,7 +249,7 @@ func testSet289DescribeUDisk05(ctx *utest.TestContext) {
 func testSet289DescribeSnapshot06(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(120) * time.Second)
 
-	req := pudiskClient.NewDescribeSnapshotRequest()
+	req := puhostClient.NewDescribeSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -257,11 +257,11 @@ func testSet289DescribeSnapshot06(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DescribeSnapshot(req)
+			return puhostClient.DescribeSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSnapshotSet.0.DiskId", ctx.GetVar("udisk_nofz_id"), "str_eq"), // TODO: udisk nofz id
+			ctx.NewValidator("UHostSnapshotSet.0.DiskId", "udisk_nofz_id", "str_eq"),
 			ctx.NewValidator("UHostSnapshotSet.0.State", "Normal", "str_eq"),
 		},
 		MaxRetries:    50,
@@ -311,7 +311,7 @@ func testSet289CreateUDiskSnapshot07(ctx *utest.TestContext) {
 func testSet289DescribeSnapshot08(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(120) * time.Second)
 
-	req := pudiskClient.NewDescribeSnapshotRequest()
+	req := puhostClient.NewDescribeSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -319,11 +319,11 @@ func testSet289DescribeSnapshot08(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DescribeSnapshot(req)
+			return puhostClient.DescribeSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSnapshotSet.0.DiskId", ctx.GetVar("udisk_nofz_id"), "str_eq"),
+			ctx.NewValidator("UHostSnapshotSet.0.DiskId", "udisk_nofz_id", "str_eq"),
 			ctx.NewValidator("UHostSnapshotSet.0.State", "Normal", "str_eq"),
 		},
 		MaxRetries:    6,
@@ -373,7 +373,7 @@ func testSet289CreateUDiskSnapshot09(ctx *utest.TestContext) {
 func testSet289DescribeSnapshot10(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(120) * time.Second)
 
-	req := pudiskClient.NewDescribeSnapshotRequest()
+	req := puhostClient.NewDescribeSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -381,11 +381,11 @@ func testSet289DescribeSnapshot10(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DescribeSnapshot(req)
+			return puhostClient.DescribeSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSnapshotSet.0.DiskId", ctx.GetVar("udisk_nofz_id"), "str_eq"),
+			ctx.NewValidator("UHostSnapshotSet.0.DiskId", "udisk_nofz_id", "str_eq"),
 			ctx.NewValidator("UHostSnapshotSet.0.State", "Normal", "str_eq"),
 		},
 		MaxRetries:    6,
@@ -564,7 +564,7 @@ func testSet289DescribeUDisk15(ctx *utest.TestContext) {
 func testSet289DeleteSnapshot16(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := pudiskClient.NewDeleteSnapshotRequest()
+	req := puhostClient.NewDeleteSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -572,7 +572,7 @@ func testSet289DeleteSnapshot16(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DeleteSnapshot(req)
+			return puhostClient.DeleteSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -593,7 +593,7 @@ func testSet289DeleteSnapshot16(ctx *utest.TestContext) {
 func testSet289DescribeSnapshot17(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(1) * time.Second)
 
-	req := pudiskClient.NewDescribeSnapshotRequest()
+	req := puhostClient.NewDescribeSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -601,7 +601,7 @@ func testSet289DescribeSnapshot17(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DescribeSnapshot(req)
+			return puhostClient.DescribeSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -623,7 +623,7 @@ func testSet289DescribeSnapshot17(ctx *utest.TestContext) {
 func testSet289DeleteSnapshot18(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := pudiskClient.NewDeleteSnapshotRequest()
+	req := puhostClient.NewDeleteSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -631,7 +631,7 @@ func testSet289DeleteSnapshot18(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DeleteSnapshot(req)
+			return puhostClient.DeleteSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -652,7 +652,7 @@ func testSet289DeleteSnapshot18(ctx *utest.TestContext) {
 func testSet289DescribeSnapshot19(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(5) * time.Second)
 
-	req := pudiskClient.NewDescribeSnapshotRequest()
+	req := puhostClient.NewDescribeSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -660,7 +660,7 @@ func testSet289DescribeSnapshot19(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DescribeSnapshot(req)
+			return puhostClient.DescribeSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -682,7 +682,7 @@ func testSet289DescribeSnapshot19(ctx *utest.TestContext) {
 func testSet289DeleteSnapshot20(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := pudiskClient.NewDeleteSnapshotRequest()
+	req := puhostClient.NewDeleteSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -690,7 +690,7 @@ func testSet289DeleteSnapshot20(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DeleteSnapshot(req)
+			return puhostClient.DeleteSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -711,7 +711,7 @@ func testSet289DeleteSnapshot20(ctx *utest.TestContext) {
 func testSet289DescribeSnapshot21(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(5) * time.Second)
 
-	req := pudiskClient.NewDescribeSnapshotRequest()
+	req := puhostClient.NewDescribeSnapshotRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -719,7 +719,7 @@ func testSet289DescribeSnapshot21(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return pudiskClient.DescribeSnapshot(req)
+			return puhostClient.DescribeSnapshot(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
