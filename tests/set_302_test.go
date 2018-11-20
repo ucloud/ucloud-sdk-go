@@ -42,18 +42,19 @@ func TestSet302(t *testing.T) {
 	testSet302CreateUHostInstance00(&ctx)
 	testSet302CreateFirewall01(&ctx)
 	testSet302DescribeFirewall02(&ctx)
-	testSet302GrantFirewall03(&ctx)
-	testSet302DescribeFirewallResource04(&ctx)
-	testSet302UpdateFirewall05(&ctx)
-	testSet302UpdateFirewallAttribute06(&ctx)
-	testSet302DescribeFirewall07(&ctx)
+	testSet302DescribeFirewall03(&ctx)
+	testSet302GrantFirewall04(&ctx)
+	testSet302DescribeFirewallResource05(&ctx)
+	testSet302UpdateFirewall06(&ctx)
+	testSet302UpdateFirewallAttribute07(&ctx)
 	testSet302DescribeFirewall08(&ctx)
-	testSet302GrantFirewall09(&ctx)
-	testSet302PoweroffUHostInstance10(&ctx)
-	testSet302TerminateUHostInstance11(&ctx)
-	testSet302DescribeFirewall12(&ctx)
-	testSet302DeleteFirewall13(&ctx)
-	testSet302DescribeFirewall14(&ctx)
+	testSet302DescribeFirewall09(&ctx)
+	testSet302GrantFirewall10(&ctx)
+	testSet302PoweroffUHostInstance11(&ctx)
+	testSet302TerminateUHostInstance12(&ctx)
+	testSet302DescribeFirewall13(&ctx)
+	testSet302DeleteFirewall14(&ctx)
+	testSet302DescribeFirewall15(&ctx)
 }
 
 func testSet302CreateUHostInstance00(ctx *utest.TestContext) {
@@ -165,7 +166,33 @@ func testSet302DescribeFirewall02(ctx *utest.TestContext) {
 
 }
 
-func testSet302GrantFirewall03(ctx *utest.TestContext) {
+func testSet302DescribeFirewall03(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(3) * time.Second)
+
+	req := unetClient.NewDescribeFirewallRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return unetClient.DescribeFirewall(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet302GrantFirewall04(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := unetClient.NewGrantFirewallRequest()
@@ -194,7 +221,7 @@ func testSet302GrantFirewall03(ctx *utest.TestContext) {
 
 }
 
-func testSet302DescribeFirewallResource04(ctx *utest.TestContext) {
+func testSet302DescribeFirewallResource05(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := unetClient.NewDescribeFirewallResourceRequest()
@@ -226,7 +253,7 @@ func testSet302DescribeFirewallResource04(ctx *utest.TestContext) {
 
 }
 
-func testSet302UpdateFirewall05(ctx *utest.TestContext) {
+func testSet302UpdateFirewall06(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewUpdateFirewallRequest()
@@ -254,7 +281,7 @@ func testSet302UpdateFirewall05(ctx *utest.TestContext) {
 
 }
 
-func testSet302UpdateFirewallAttribute06(ctx *utest.TestContext) {
+func testSet302UpdateFirewallAttribute07(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewUpdateFirewallAttributeRequest()
@@ -284,7 +311,7 @@ func testSet302UpdateFirewallAttribute06(ctx *utest.TestContext) {
 
 }
 
-func testSet302DescribeFirewall07(ctx *utest.TestContext) {
+func testSet302DescribeFirewall08(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := unetClient.NewDescribeFirewallRequest()
@@ -322,7 +349,7 @@ func testSet302DescribeFirewall07(ctx *utest.TestContext) {
 
 }
 
-func testSet302DescribeFirewall08(ctx *utest.TestContext) {
+func testSet302DescribeFirewall09(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewDescribeFirewallRequest()
@@ -350,7 +377,7 @@ func testSet302DescribeFirewall08(ctx *utest.TestContext) {
 	ctx.Vars["fw_dataset"] = ctx.Must(utest.GetValue(resp, "DataSet"))
 }
 
-func testSet302GrantFirewall09(ctx *utest.TestContext) {
+func testSet302GrantFirewall10(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewGrantFirewallRequest()
@@ -379,7 +406,7 @@ func testSet302GrantFirewall09(ctx *utest.TestContext) {
 
 }
 
-func testSet302PoweroffUHostInstance10(ctx *utest.TestContext) {
+func testSet302PoweroffUHostInstance11(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(60) * time.Second)
 
 	req := uhostClient.NewPoweroffUHostInstanceRequest()
@@ -405,7 +432,7 @@ func testSet302PoweroffUHostInstance10(ctx *utest.TestContext) {
 
 }
 
-func testSet302TerminateUHostInstance11(ctx *utest.TestContext) {
+func testSet302TerminateUHostInstance12(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(90) * time.Second)
 
 	req := uhostClient.NewTerminateUHostInstanceRequest()
@@ -420,7 +447,7 @@ func testSet302TerminateUHostInstance11(ctx *utest.TestContext) {
 		},
 		Validators:    []utest.TestValidator{},
 		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
+		RetryInterval: 10 * time.Second,
 		T:             ctx.T,
 	}
 
@@ -431,7 +458,7 @@ func testSet302TerminateUHostInstance11(ctx *utest.TestContext) {
 
 }
 
-func testSet302DescribeFirewall12(ctx *utest.TestContext) {
+func testSet302DescribeFirewall13(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(30) * time.Second)
 
 	req := unetClient.NewDescribeFirewallRequest()
@@ -459,7 +486,7 @@ func testSet302DescribeFirewall12(ctx *utest.TestContext) {
 
 }
 
-func testSet302DeleteFirewall13(ctx *utest.TestContext) {
+func testSet302DeleteFirewall14(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(30) * time.Second)
 
 	req := unetClient.NewDeleteFirewallRequest()
@@ -486,7 +513,7 @@ func testSet302DeleteFirewall13(ctx *utest.TestContext) {
 
 }
 
-func testSet302DescribeFirewall14(ctx *utest.TestContext) {
+func testSet302DescribeFirewall15(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := unetClient.NewDescribeFirewallRequest()

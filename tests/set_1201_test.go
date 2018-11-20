@@ -117,6 +117,7 @@ func testSet1201DescribeUMem02(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Protocol", ctx.GetVar("Protocol")))
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceType", ctx.GetVar("ResourceType")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -180,6 +181,7 @@ func testSet1201DescribeUMem04(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Protocol", ctx.GetVar("Protocol")))
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceType", ctx.GetVar("ResourceType")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -243,6 +245,7 @@ func testSet1201DescribeUMem06(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Protocol", ctx.GetVar("Protocol")))
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceType", ctx.GetVar("ResourceType")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -305,6 +308,8 @@ func testSet1201DescribeUMem08(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Limit", "1000"))
 	ctx.NoError(utest.SetReqValue(req, "ResourceId", ctx.GetVar("group_id")))
 	ctx.NoError(utest.SetReqValue(req, "Protocol", ctx.GetVar("Protocol")))
+
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {

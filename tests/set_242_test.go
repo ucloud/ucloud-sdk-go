@@ -137,7 +137,7 @@ func testSet242DescribeUMem02(ctx *utest.TestContext) {
 func testSet242DescribeOrderDetailInfo03(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(100) * time.Second)
 
-	req := iubillClient.NewDescribeOrderDetailInfoRequest()
+	req := ubillClient.NewDescribeOrderDetailInfoRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "BeginTime", ctx.Must(utest.Calculate(ctx.Must(utest.GetTimestamp("10"))))))
 	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.Must(utest.Calculate(ctx.Must(utest.GetTimestamp("10"))))))
@@ -152,7 +152,7 @@ func testSet242DescribeOrderDetailInfo03(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iubillClient.DescribeOrderDetailInfo(req)
+			return ubillClient.DescribeOrderDetailInfo(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -231,7 +231,7 @@ func testSet242ResizeURedisGroup05(ctx *utest.TestContext) {
 func testSet242DescribeOrderDetailInfo06(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(100) * time.Second)
 
-	req := iubillClient.NewDescribeOrderDetailInfoRequest()
+	req := ubillClient.NewDescribeOrderDetailInfoRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "BeginTime", ctx.Must(utest.Calculate(ctx.Must(utest.GetTimestamp("10"))))))
 	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.Must(utest.GetTimestamp("10"))))
@@ -246,7 +246,7 @@ func testSet242DescribeOrderDetailInfo06(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iubillClient.DescribeOrderDetailInfo(req)
+			return ubillClient.DescribeOrderDetailInfo(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -325,7 +325,7 @@ func testSet242CreateRenew08(ctx *utest.TestContext) {
 func testSet242DescribeOrderDetailInfo09(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(60) * time.Second)
 
-	req := iubillClient.NewDescribeOrderDetailInfoRequest()
+	req := ubillClient.NewDescribeOrderDetailInfoRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "BeginTime", ctx.Must(utest.Calculate(ctx.Must(utest.GetTimestamp("10"))))))
 	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.Must(utest.GetTimestamp("10"))))
@@ -340,7 +340,7 @@ func testSet242DescribeOrderDetailInfo09(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iubillClient.DescribeOrderDetailInfo(req)
+			return ubillClient.DescribeOrderDetailInfo(req)
 		},
 		Validators: []utest.TestValidator{
 			// ctx.NewValidator("OrderInfos.0.Amount", ctx.GetVar("ReNewPrice"), "str_eq"),
