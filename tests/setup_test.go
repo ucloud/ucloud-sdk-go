@@ -20,6 +20,9 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 
+	pudisk "github.com/ucloud/ucloud-sdk-go/private/services/udisk"
+	puhost "github.com/ucloud/ucloud-sdk-go/private/services/uhost"
+
 	iubill "github.com/ucloud/ucloud-sdk-go/internal/services/ubill"
 	iudataark "github.com/ucloud/ucloud-sdk-go/internal/services/udataark"
 	iudb "github.com/ucloud/ucloud-sdk-go/internal/services/udb"
@@ -45,6 +48,9 @@ var udbClient *udb.UDBClient
 var umemClient *umem.UMemClient
 var udpnClient *udpn.UDPNClient
 var ubillClient *ubill.UBillClient
+
+var puhostClient *puhost.UHostClient
+var pudiskClient *pudisk.UDiskClient
 
 var iuhostClient *iuhost.UHostClient
 var iunetClient *iunet.UNetClient
@@ -100,6 +106,9 @@ func testSetup() {
 	iumemClient = iumem.NewClient(&cfg, &credential)
 	iudpnClient = iudpn.NewClient(&cfg, &credential)
 	iubillClient = iubill.NewClient(&cfg, &credential)
+
+	pudiskClient = pudisk.NewClient(&cfg, &credential)
+	puhostClient = puhost.NewClient(&cfg, &credential)
 
 	log.Info("setup test fixtures ...")
 }

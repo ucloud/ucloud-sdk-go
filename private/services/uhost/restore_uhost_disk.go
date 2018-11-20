@@ -36,7 +36,12 @@ type RestoreUHostDiskResponse struct {
 // NewRestoreUHostDiskRequest will create request of RestoreUHostDisk action.
 func (c *UHostClient) NewRestoreUHostDiskRequest() *RestoreUHostDiskRequest {
 	req := &RestoreUHostDiskRequest{}
+
+	// setup request with client config
 	c.client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
 	return req
 }
 

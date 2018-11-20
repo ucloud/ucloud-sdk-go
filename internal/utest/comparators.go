@@ -29,13 +29,13 @@ func NewComparators() Comparators {
 		"lt":        lt,
 		"less_than": lt,
 
-		"le": le,
+		"le":                  le,
 		"less_than_or_equals": le,
 
 		"gt":           gt,
 		"greater_than": gt,
 
-		"ge": ge,
+		"ge":                     ge,
 		"greater_than_or_equals": ge,
 
 		"ne":         ne,

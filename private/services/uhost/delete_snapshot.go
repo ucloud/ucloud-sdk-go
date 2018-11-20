@@ -30,7 +30,12 @@ type DeleteSnapshotResponse struct {
 // NewDeleteSnapshotRequest will create request of DeleteSnapshot action.
 func (c *UHostClient) NewDeleteSnapshotRequest() *DeleteSnapshotRequest {
 	req := &DeleteSnapshotRequest{}
+
+	// setup request with client config
 	c.client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
 	return req
 }
 

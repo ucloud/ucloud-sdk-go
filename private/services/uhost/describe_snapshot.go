@@ -57,7 +57,12 @@ type DescribeSnapshotResponse struct {
 // NewDescribeSnapshotRequest will create request of DescribeSnapshot action.
 func (c *UHostClient) NewDescribeSnapshotRequest() *DescribeSnapshotRequest {
 	req := &DescribeSnapshotRequest{}
+
+	// setup request with client config
 	c.client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
 	return req
 }
 
