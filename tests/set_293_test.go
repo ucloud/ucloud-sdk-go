@@ -313,7 +313,7 @@ func testSet293DescribeSnapshot08(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSnapshotSet.0.DiskId", "udisk_nofz_id", "str_eq"),
+			ctx.NewValidator("UHostSnapshotSet.0.DiskId", ctx.GetVar("udisk_nofz_id"), "str_eq"),
 			ctx.NewValidator("UHostSnapshotSet.0.State", "Normal", "str_eq"),
 		},
 		MaxRetries:    20,
