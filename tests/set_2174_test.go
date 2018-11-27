@@ -18,7 +18,7 @@ func TestSet2174(t *testing.T) {
 	ctx.SetVar("Zone", "cn-sh2-02")
 
 	ctx.SetVar("ConfigId", "03f58ca9-b64d-4bdd-abc7-c6b9a46fd801")
-	ctx.SetVar("Password", "Z3VhbmxpeXVhbm1pbWE=")
+	ctx.SetVar("Password", "2012_UClou")
 	ctx.SetVar("HighAvailability", "disable")
 	ctx.SetVar("Version", "3.2")
 	ctx.SetVar("Protocol", "redis")
@@ -53,7 +53,7 @@ func testSet2174CreateURedisGroup00(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "ChargeType", "Month"))
 	ctx.NoError(utest.SetReqValue(req, "Quantity", "1"))
 
-	ctx.NoError(utest.SetReqValue(req, "Protocol", ctx.GetVar("Protocol")))
+	// ctx.NoError(utest.SetReqValue(req, "Protocol", ctx.GetVar("Protocol")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {

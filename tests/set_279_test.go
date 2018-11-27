@@ -55,7 +55,7 @@ func testSet279CreateUHostInstance00(ctx *utest.TestContext) {
 
 	ctx.NoError(utest.SetReqValue(req, "ImageId", ctx.GetVar("Image_Id")))
 	ctx.NoError(utest.SetReqValue(req, "LoginMode", "Password"))
-	ctx.NoError(utest.SetReqValue(req, "Password", "Y2VzaGkxMjMrKw=="))
+	ctx.NoError(utest.SetReqValue(req, "Password", "2012_UClou"))
 
 	ctx.NoError(utest.SetReqValue(req, "DiskSpace", "0"))
 

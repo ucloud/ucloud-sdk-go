@@ -79,7 +79,7 @@ func testSet242CreateURedisGroup01(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "ChargeType", "Month"))
 	ctx.NoError(utest.SetReqValue(req, "Quantity", "1"))
 
-	ctx.NoError(utest.SetReqValue(req, "Protocol", "redis"))
+	// ctx.NoError(utest.SetReqValue(req, "Protocol", "redis"))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {

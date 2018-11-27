@@ -17,7 +17,7 @@ func TestSet1839(t *testing.T) {
 	ctx.SetVar("Region", "cn-sh2")
 	ctx.SetVar("Zone", "cn-sh2-02")
 
-	ctx.SetVar("Password", "Z3VhbmxpeXVhbm1pbWExMjMhQCM=")
+	ctx.SetVar("Password", "2012_UClou")
 	ctx.SetVar("CreateCPU", "1")
 	ctx.SetVar("CreateBootDisk", "20")
 	ctx.SetVar("ChargeType", "Month")

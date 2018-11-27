@@ -103,4 +103,7 @@ type UDBInstanceSet struct {
 
 	// 跨可用区高可用备库所在可用区
 	BackupZone string
+
+	// 业务组
+	Tag string
 }

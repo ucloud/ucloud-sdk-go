@@ -13,22 +13,13 @@ type CreateUMemcacheGroupRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	Zone *string `required:"false"`
 
 	// 请求创建组的名称 范围[6-60]
 	Name *string `required:"true"`
 
 	// 每个节点的内存大小,单位GB,默认1GB 目前仅支持1/2/4/8/16/32这几档
-	Size *int `required:"true"`
-
-	// 计费模式，Year , Month, Dynamic 默认: Month
-	ChargeType *string `required:"true"`
-
-	// 业务组 默认：Default
-	Tag *string `required:"true"`
-
-	//
-	Protocol *string `required:"true"`
+	Size *int `required:"false"`
 
 	// 配置ID,目前仅支持默认配置id 默认配置id:"9a891891-c245-4b66-bce8-67e59430d67c"
 	ConfigId *string `required:"false"`
@@ -36,11 +27,26 @@ type CreateUMemcacheGroupRequest struct {
 	// Memcache版本信息,默认为1.4.31
 	Version *string `required:"false"`
 
+	// 计费模式，Year , Month, Dynamic 默认: Month
+	ChargeType *string `required:"false"`
+
 	// 购买时长，默认为1
 	Quantity *int `required:"false"`
 
+	// 业务组 默认：Default
+	Tag *string `required:"false"`
+
+	//
+	Protocol *string `required:"false"`
+
 	// 代金券ID
 	CouponId *string `required:"false"`
+
+	// VPC 的 ID
+	VPCId *string `required:"false"`
+
+	// Subnet 的 ID
+	SubnetId *string `required:"false"`
 }
 
 // CreateUMemcacheGroupResponse is response schema for CreateUMemcacheGroup action

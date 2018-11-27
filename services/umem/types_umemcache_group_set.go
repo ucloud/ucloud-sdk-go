@@ -49,4 +49,10 @@ type UMemcacheGroupSet struct {
 
 	// 业务组名称
 	Tag string
+
+	// VPC ID
+	VPCId string
+
+	// Subnet ID
+	SubnetId string
 }
