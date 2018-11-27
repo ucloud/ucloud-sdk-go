@@ -17,7 +17,7 @@ func TestSet1840(t *testing.T) {
 	ctx.SetVar("Region", "cn-sh2")
 	ctx.SetVar("Zone", "cn-sh2-02")
 
-	ctx.SetVar("Password", "Z3VhbmxpeXVhbm1pbWExMjMhQCM=")
+	ctx.SetVar("Password", "2012_UClou")
 	ctx.SetVar("SnapshotSysName", "snapshot-ARK-SYS-01")
 	ctx.SetVar("SnapshotSysDesc", "snapshot-ARK-SYS-01-desc")
 	ctx.SetVar("SnapDiskType", "LocalBoot")

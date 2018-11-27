@@ -17,13 +17,13 @@ func TestSet449(t *testing.T) {
 	ctx.SetVar("Region", "cn-sh2")
 	ctx.SetVar("Zone", "cn-sh2-02")
 
-	ctx.SetVar("Password", "Z3VhbmxpeXVhbm1pbWExMjMhQCM=")
+	ctx.SetVar("Password", "2012_UClou")
 	ctx.SetVar("CreateBootDisk", "20")
 	ctx.SetVar("ChargeType", "Month")
 	ctx.SetVar("CreateCPU", "1")
 	ctx.SetVar("CreateMem", "1024")
 	ctx.SetVar("CreateDiskspace", "0")
-	ctx.SetVar("NewPassword", "Z3VhbmxpeXVhbm1pbWExMjMhQCM=")
+	ctx.SetVar("NewPassword", "2020_UClou")
 	ctx.SetVar("Name", "uhost-basic-api")
 	ctx.SetVar("ImageID", ctx.Must(utest.GetImageResource(ctx.GetVar("Region"), ctx.GetVar("Zone"))))
 

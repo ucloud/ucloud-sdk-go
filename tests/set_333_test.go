@@ -17,7 +17,7 @@ func TestSet333(t *testing.T) {
 	ctx.SetVar("Region", "cn-sh2")
 	ctx.SetVar("Zone", "cn-sh2-02")
 
-	ctx.SetVar("Password", "Z3VhbmxpeXVhbm1pbWExMjMhQCM=")
+	ctx.SetVar("Password", "2012_UClou")
 	ctx.SetVar("ImageName", "ImageTest")
 	ctx.SetVar("TargetImageName", "ImageCopyTest")
 	ctx.SetVar("TargetRegion", "cn-sh2")

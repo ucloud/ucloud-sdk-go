@@ -419,7 +419,7 @@ func testSet488ModifyUDBInstancePassword11(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("DBId")))
-	ctx.NoError(utest.SetReqValue(req, "Password", "Guanliyuanmima"))
+	ctx.NoError(utest.SetReqValue(req, "Password", "2012_UClou"))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {

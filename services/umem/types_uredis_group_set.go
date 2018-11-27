@@ -64,4 +64,10 @@ type URedisGroupSet struct {
 
 	// 跨机房URedis，slave redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	SlaveZone string
+
+	// VPC ID
+	VPCId string
+
+	// Subnet ID
+	SubnetId string
 }

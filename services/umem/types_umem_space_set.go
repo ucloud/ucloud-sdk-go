@@ -43,4 +43,13 @@ type UMemSpaceSet struct {
 
 	// IP端口信息请参见 UMemSpaceAddressSet
 	Address []UMemSpaceAddressSet
+
+	// VPC ID
+	VPCId string
+
+	// Subnet ID
+	SubnetId string
+
+	// 业务组
+	Tag string
 }

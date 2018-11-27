@@ -18,7 +18,7 @@ func TestSet1201(t *testing.T) {
 	ctx.SetVar("Zone", "cn-sh2-02")
 
 	ctx.SetVar("ConfigId", "03f58ca9-b64d-4bdd-abc7-c6b9a46fd801")
-	ctx.SetVar("Password", "Z3VhbmxpeXVhbm1pbWE=")
+	ctx.SetVar("Password", "2012_UClou")
 	ctx.SetVar("HighAvailability", "disable")
 	ctx.SetVar("Version", "3.2")
 	ctx.SetVar("Protocol", "redis")

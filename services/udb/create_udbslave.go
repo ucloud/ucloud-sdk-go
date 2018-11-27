@@ -47,6 +47,9 @@ type CreateUDBSlaveRequest struct {
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
+
+	// 配置参数组 ID
+	ParamGroupId *string `required:"false"`
 }
 
 // CreateUDBSlaveResponse is response schema for CreateUDBSlave action
