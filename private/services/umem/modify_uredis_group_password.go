@@ -4,6 +4,9 @@
 package umem
 
 import (
+	"encoding/base64"
+
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
@@ -46,6 +49,7 @@ func (c *UMemClient) NewModifyURedisGroupPasswordRequest() *ModifyURedisGroupPas
 func (c *UMemClient) ModifyURedisGroupPassword(req *ModifyURedisGroupPasswordRequest) (*ModifyURedisGroupPasswordResponse, error) {
 	var err error
 	var res ModifyURedisGroupPasswordResponse
+	req.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
 	err = c.client.InvokeAction("ModifyURedisGroupPassword", req, &res)
 	if err != nil {
