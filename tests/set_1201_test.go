@@ -267,7 +267,7 @@ func testSet1201DescribeUMem06(ctx *utest.TestContext) {
 func testSet1201ModifyURedisGroupPassword07(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(60) * time.Second)
 
-	req := iumemClient.NewModifyURedisGroupPasswordRequest()
+	req := pumemClient.NewModifyURedisGroupPasswordRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "GroupId", ctx.GetVar("group_id")))
 
@@ -278,7 +278,7 @@ func testSet1201ModifyURedisGroupPassword07(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iumemClient.ModifyURedisGroupPassword(req)
+			return pumemClient.ModifyURedisGroupPassword(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
