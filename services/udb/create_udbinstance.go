@@ -89,6 +89,9 @@ type CreateUDBInstanceRequest struct {
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
+
+	// 业务组
+	Tag *string `required:"false"`
 }
 
 // CreateUDBInstanceResponse is response schema for CreateUDBInstance action

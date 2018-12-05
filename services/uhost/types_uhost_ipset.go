@@ -8,7 +8,7 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type UHostIPSet struct {
 
-	// 电信: China-telecom，联通: China-unicom， 国际: Internationl，BGP: Bgp，内网: Private 双线: Duplet
+	// 电信: China-telecom，联通: China-unicom， 国际: International，BGP: Bgp，内网: Private 双线: Duplet
 	Type string
 
 	// IP资源ID (内网IP无对应的资源ID)

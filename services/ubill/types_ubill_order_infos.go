@@ -1,5 +1,8 @@
 package ubill
 
+/*
+OrderInfo - DescribeOrderDetailInfo
+*/
 type OrderInfo struct {
 	OrderNo      string `json:"OrderNo"`
 	OrderType    string
