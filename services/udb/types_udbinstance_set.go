@@ -106,4 +106,10 @@ type UDBInstanceSet struct {
 
 	// 业务组
 	Tag string
+
+	// VPC ID
+	VPCId string
+
+	// Subnet Id
+	SubnetId string
 }

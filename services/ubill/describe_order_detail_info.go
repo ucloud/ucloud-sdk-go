@@ -5,6 +5,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
+// DescribeOrderDetailInfoRequest is request schema for DescribeOrderDetailInfo action
 type DescribeOrderDetailInfoRequest struct {
 	request.CommonBase
 
