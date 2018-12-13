@@ -25,15 +25,16 @@ go get github.com/ucloud/ucloud-sdk-go
 
 ### via dep
 
-```
+```bash
 dep ensure -add github.com/ucloud/ucloud-sdk-go
 ```
+
 ## Usage
 
-```golang
-import {
+```go
+import (
    "github.com/ucloud/ucloud-sdk-go"
-} 
+)
 ```
 
 Create a new UCloud client of each service to access the different parts of the UCloud API.
@@ -48,13 +49,13 @@ You can then use your keys to create a new client of uhost service:
 package main
 
 import (
-    "github.com/ucloud/ucloud-sdk-go/sdk"
-    "github.com/ucloud/ucloud-sdk-go/sdk/auth"
+    "github.com/ucloud/ucloud-sdk-go/ucloud"
+    "github.com/ucloud/ucloud-sdk-go/ucloud/auth"
     "github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
-func loadConfig()(*sdk.Config, *auth.Credential){
-    cfg := sdk.NewConfig()
+func loadConfig() (*ucloud.Config, *auth.Credential) {
+    cfg := ucloud.NewConfig()
 
     credential := auth.NewCredential()
     credential.PrivateKey ="my_privatekey"
@@ -63,7 +64,7 @@ func loadConfig()(*sdk.Config, *auth.Credential){
     return &cfg, &credential
 }
 
-func main(){
+func main() {
     cfg, credentail := loadConfig()
     uhostClient := uhost.NewClient(cfg, credential)
 }
@@ -76,20 +77,19 @@ To create a new uhost:
 ```go
 // build Request
 req := uhostClient.NewCreateUHostInstanceRequest()
-req.Name       = sdk.String("sdk-example-uhost")
-req.Zone       = sdk.String("cn-bj2-05")
-req.ImageId    = sdk.String("uimage-ixczxu")
-req.LoginMode  = sdk.String("Password")
-req.Password   = sdk.String("my_uhost_password")
-req.ChargeType = sdk.String("Dynamic")
-req.CPU        = sdk.Int(1)
-req.Memory     = sdk.Int(1024)
-req.Tag        = sdk.String("sdk-example")
+req.Name       = ucloud.String("sdk-example-uhost")
+req.Zone       = ucloud.String("cn-bj2-05")
+req.ImageId    = ucloud.String("uimage-ixczxu")
+req.LoginMode  = ucloud.String("Password")
+req.Password   = ucloud.String("my_uhost_password")
+req.ChargeType = ucloud.String("Dynamic")
+req.CPU        = ucloud.Int(1)
+req.Memory     = ucloud.Int(1024)
+req.Tag        = ucloud.String("sdk-example")
 
 // send request
 newUHost,err := uhostClient.CreateUHostInstance(req)
-
-if err != nil{
+if err != nil {
     fmt.Printf("something bad happened: %s\n", err)
 }
 
@@ -112,9 +112,9 @@ will encoded as `UHostIds.0=uhost-xxx&UHostIds.1=uhost-yyy`
 
 ```go
 dataDisk := uhost.UHostDisk{
-    Size: sdk.Int(20),
-    Type: sdk.String("CLOUD_NORMAL"),
-    IsBoot: sdk.Bool(false),
+    Size: ucloud.Int(20),
+    Type: ucloud.String("CLOUD_NORMAL"),
+    IsBoot: ucloud.Bool(false),
 }
 req.Disks = []uhost.UHostDisk{dataDisk}
 ```
