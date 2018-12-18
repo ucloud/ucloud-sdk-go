@@ -19,8 +19,8 @@ func TestSet230(t *testing.T) {
 
 	ctx.SetVar("sbw_name", "sbw_api_auto")
 	ctx.SetVar("sbw_chargetype", "Month")
-	ctx.SetVar("sbw_bw", "22")
-	ctx.SetVar("resize_bw", "25")
+	ctx.SetVar("sbw_bw", "20")
+	ctx.SetVar("resize_bw", "22")
 	ctx.SetVar("Region", "cn-bj2")
 	ctx.SetVar("eip_operatorname", "Bgp")
 	ctx.SetVar("eip_bw", "2")
@@ -180,7 +180,6 @@ func testSet230DescribeShareBandwidth04(ctx *utest.TestContext) {
 			ctx.NewValidator("DataSet.0.ChargeType", ctx.GetVar("sbw_chargetype"), "str_eq"),
 			ctx.NewValidator("DataSet.0.Name", ctx.GetVar("sbw_name"), "str_eq"),
 			ctx.NewValidator("TotalCount", "1", "str_eq"),
-			ctx.NewValidator("DataSet.0.EIPSet.0.EIPAddr.0.OperatorName", ctx.GetVar("eip_operatorname"), "str_eq"),
 			ctx.NewValidator("DataSet.0.EIPSet.0.EIPId", ctx.GetVar("eip_id"), "str_eq"),
 		},
 		MaxRetries:    10,
