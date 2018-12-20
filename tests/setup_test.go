@@ -85,6 +85,9 @@ func testSetup() {
 	credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
 	credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
 
+	ucloud.SetLogLevelByAction("DescribeImage", log.WarnLevel)
+	ucloud.SetLogLevelByAction("GetRegion", log.WarnLevel)
+
 	client = ucloud.NewClient(&cfg, &credential)
 	uhostClient = uhost.NewClient(&cfg, &credential)
 	unetClient = unet.NewClient(&cfg, &credential)

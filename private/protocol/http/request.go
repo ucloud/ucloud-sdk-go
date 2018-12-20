@@ -135,6 +135,14 @@ func (h *HttpRequest) SetQuery(k, v string) error {
 	return nil
 }
 
+// GetQuery will get value by key from map
+func (h *HttpRequest) GetQuery(k string) string {
+	if v, ok := h.queryMap[k]; ok {
+		return v
+	}
+	return ""
+}
+
 // GetQueryMap will get all of query as a map
 func (h *HttpRequest) GetQueryMap() map[string]string {
 	return h.queryMap
