@@ -17,10 +17,15 @@ import (
 
 // Client 客户端
 type Client struct {
+	// configurations
 	credential *auth.Credential
 	config     *Config
-	httpClient *http.HttpClient
 
+	// composited instances
+	httpClient *http.HttpClient
+	logger     *log.Logger
+
+	// internal properties
 	responseHandlers     []ReponseHandler
 	httpResponseHandlers []HttpReponseHandler
 }
@@ -34,7 +39,10 @@ func NewClient(config *Config, credential *auth.Credential) *Client {
 
 	client.responseHandlers = append(client.responseHandlers, defaultResponseHandlers...)
 	client.httpResponseHandlers = append(client.httpResponseHandlers, defaultHttpResponseHandlers...)
-	log.Init(config.LogLevel)
+
+	client.logger = log.New()
+	client.logger.SetLevel(config.LogLevel)
+
 	return &client
 }
 

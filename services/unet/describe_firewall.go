@@ -15,7 +15,7 @@ type DescribeFirewallRequest struct {
 	// 防火墙ID，默认为返回所有防火墙
 	FWId *string `required:"false"`
 
-	// 绑定防火墙组的资源类型，如uhost
+	// 绑定防火墙组的资源类型，默认为全部资源类型。枚举值为："unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计.
 	ResourceType *string `required:"false"`
 
 	// 绑定防火墙组的资源ID
@@ -34,6 +34,9 @@ type DescribeFirewallResponse struct {
 
 	// 获取的防火墙组详细信息 参见 FirewallDataSet
 	DataSet []FirewallDataSet
+
+	// 数量
+	TotalCount int
 }
 
 // NewDescribeFirewallRequest will create request of DescribeFirewall action.

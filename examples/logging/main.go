@@ -30,8 +30,7 @@ func main() {
 
 	// excepted logging
 	uhostClient.DescribeUHostInstance(req)
-
-	ucloud.SetLogLevelByAction("DescribeImage", log.WarnLevel)
+	cfg.SetActionLevel("DescribeImage", log.WarnLevel)
 
 	noLogReq := uhostClient.NewDescribeImageRequest()
 	noLogReq.Region = ucloud.String(region)

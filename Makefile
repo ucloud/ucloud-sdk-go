@@ -34,4 +34,4 @@ test-cov: fmtcheck vet
 
 .PHONY: cyclo
 cyclo:
-	gocyclo -over 10 sdk/ service/ private/cli/
+	gocyclo -over 15 ucloud/ services/

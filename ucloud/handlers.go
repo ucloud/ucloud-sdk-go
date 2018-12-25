@@ -84,16 +84,12 @@ func logHandler(c *Client, req request.Common, resp response.Common, err error) 
 	action := req.GetAction()
 
 	// get strictest logging level
-	level := log.GetLevel()
-	actionLevel, ok := actionsLoggingLevels[action]
-	if ok && actionLevel < level {
-		level = actionLevel
-	}
+	level := c.config.GetActionLevel(action)
 
 	if err != nil && level >= log.WarnLevel {
-		log.Warnf("do %s failed, %s", action, err)
+		c.logger.Warnf("do %s failed, %s", action, err)
 	} else if level >= log.InfoLevel {
-		log.Infof("do %s successful!", action)
+		c.logger.Infof("do %s successful!", action)
 	}
 	return resp, err
 }
@@ -102,24 +98,20 @@ func logDebugHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpRespon
 	action := req.GetQuery("Action")
 
 	// get strictest logging level
-	level := log.GetLevel()
-	actionLevel, ok := actionsLoggingLevels[action]
-	if ok && actionLevel < level {
-		level = actionLevel
-	}
+	level := c.config.GetActionLevel(action)
 
 	// logging request
 	if level >= log.DebugLevel {
-		log.Debugf("%s", req)
+		c.logger.Debugf("%s", req)
 	}
 
 	// logging response
 	if err != nil && level >= log.ErrorLevel {
-		log.Errorf("%s", err)
+		c.logger.Errorf("%s", err)
 	} else if resp.GetStatusCode() > 400 && level >= log.WarnLevel {
-		log.Warnf("%s", resp.GetStatusCode())
+		c.logger.Warnf("%s", resp.GetStatusCode())
 	} else if level >= log.DebugLevel {
-		log.Debugf("%s - %v", resp.GetBody(), resp.GetStatusCode())
+		c.logger.Debugf("%s - %v", resp.GetBody(), resp.GetStatusCode())
 	}
 
 	return resp, err
