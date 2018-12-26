@@ -38,10 +38,10 @@ func newTestClient() *Client {
 	cfg.Region = "cn-bj2"
 	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
 	cfg.LogLevel = log.WarnLevel
+	cfg.Timeout = 5 * time.Second
+	cfg.MaxRetries = 1
 
 	credential := auth.NewCredential()
-	credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
-	credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
 
 	log.Infof("config: %#v, credential: %#v", cfg, credential)
 	return NewClient(&cfg, &credential)
@@ -61,7 +61,10 @@ type MockResponse struct {
 func TestCommonInvokeAction(t *testing.T) {
 	req := &MockRequest{}
 	resp := &MockResponse{}
+
 	client := newTestClient()
+	client.credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
+	client.credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
 
 	err := client.InvokeAction(testDefaultAction, client.SetupRequest(req), resp)
 	assert.Nil(t, err)
@@ -71,7 +74,10 @@ func TestCommonInvokeAction(t *testing.T) {
 func TestCommonInvokeActionNotFound(t *testing.T) {
 	req := &MockRequest{}
 	resp := &MockResponse{}
+
 	client := newTestClient()
+	client.credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
+	client.credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
 
 	err := client.InvokeAction("TestApi", client.SetupRequest(req), resp)
 	assert.NotNil(t, err)
@@ -80,6 +86,24 @@ func TestCommonInvokeActionNotFound(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, 161, uErr.Code())
 	assert.Contains(t, uErr.Message(), "not found")
+}
+
+func TestClientTimeout(t *testing.T) {
+	req := &MockRequest{}
+	resp := &MockResponse{}
+
+	client := newTestClient()
+	client.config.BaseUrl = "https://httpbim.org/delay/2"
+	client.config.Timeout = 1 * time.Second
+	client.config.MaxRetries = 1
+	client.SetupRequest(req)
+
+	err := client.InvokeAction("foo", req, resp)
+	uErr, ok := err.(uerr.ClientError)
+	assert.True(t, ok)
+	assert.Equal(t, uErr.Name(), uerr.ErrNetwork)
+	assert.Equal(t, req.GetRetryCount(), 1)
+	assert.Equal(t, req.GetMaxretries(), 1)
 }
 
 func Test_errorHandler(t *testing.T) {
@@ -112,7 +136,7 @@ func Test_errorHandler(t *testing.T) {
 			},
 		},
 		{
-			name: "timeout error",
+			name: "server timeout error",
 			step: func() error {
 				httpClient := &http.Client{Timeout: time.Duration(1)}
 				httpReq, err := http.NewRequest("GET", "https://httpbin.org/delay/2", nil)

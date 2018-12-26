@@ -21,18 +21,18 @@ var defaultResponseHandlers = []ReponseHandler{errorHandler, logHandler, retryHa
 var defaultHttpResponseHandlers = []HttpReponseHandler{errorHTTPHandler, logDebugHTTPHandler}
 
 func retryHandler(c *Client, req request.Common, resp response.Common, err error) (response.Common, error) {
-	retryCount := req.GetRetryCount()
-	retryCount++
-	req.SetRetryCount(retryCount)
-
 	if !req.GetRetryable() || err == nil || !err.(uerr.Error).Retryable() {
 		return resp, err
 	}
 
+	retryCount := req.GetRetryCount()
+
 	// if max retries number is reached, stop and raise last error
-	if req.GetRetryCount() > req.GetMaxretries() {
+	if retryCount >= req.GetMaxretries() {
 		return resp, err
 	}
+
+	req.SetRetryCount(retryCount + 1)
 
 	// use exponential backoff constant as retry delay
 	delay := getExpBackoffDelay(retryCount)
@@ -74,9 +74,14 @@ func errorHandler(c *Client, req request.Common, resp response.Common, err error
 }
 
 func errorHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpResponse, err error) (*http.HttpResponse, error) {
+	if err == nil {
+		return resp, err
+	}
+
 	if statusErr, ok := err.(http.StatusError); ok {
 		return resp, uerr.NewServerStatusError(statusErr.StatusCode, statusErr.Message)
 	}
+
 	return resp, err
 }
 
