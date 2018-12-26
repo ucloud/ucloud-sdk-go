@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+// Client is the interface of http client
+type Client interface {
+	Send(*HttpRequest) (*HttpResponse, error)
+}
+
 // HttpClient used to send a real request via http to server
 type HttpClient struct {
 }

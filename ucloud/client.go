@@ -23,7 +23,7 @@ type Client struct {
 	config     *Config
 
 	// composited instances
-	httpClient *http.HttpClient
+	httpClient http.Client
 	logger     *log.Logger
 
 	// internal properties
@@ -85,6 +85,7 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		// use patch object to resolve the http response body
 		// in general, it will be fix common server error before server bugfix is released.
 		body := httpResp.GetBody()
+
 		for _, patch := range patches {
 			body = patch.Patch(body)
 		}
