@@ -42,6 +42,7 @@ func newTestClient() *Client {
 	cfg.MaxRetries = 1
 
 	credential := auth.NewCredential()
+
 	return NewClient(&cfg, &credential)
 }
 
@@ -91,24 +92,7 @@ func TestClientTimeout(t *testing.T) {
 	resp := &MockResponse{}
 
 	client := newTestClient()
-	client.config.BaseUrl = "https://httpbim.org/delay/2"
-	client.config.Timeout = 1 * time.Second
-	client.config.MaxRetries = 1
-	client.SetupRequest(req)
-
-	err := client.InvokeAction("foo", req, resp)
-	uErr, ok := err.(uerr.ClientError)
-	assert.True(t, ok)
-	assert.Equal(t, uErr.Name(), uerr.ErrNetwork)
-	assert.Equal(t, req.GetRetryCount(), 1)
-	assert.Equal(t, req.GetMaxretries(), 1)
-}
-
-func TestClientUnmarshal(t *testing.T) {
-	req := &MockRequest{}
-	resp := &MockResponse{}
-
-	client := newTestClient()
+	client.config.BaseUrl = "https://httpbin.org/delay/2"
 	client.config.Timeout = 1 * time.Second
 	client.config.MaxRetries = 1
 	client.SetupRequest(req)
