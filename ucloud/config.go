@@ -59,18 +59,15 @@ func NewConfig() Config {
 		LogLevel:            log.WarnLevel,
 		actionLoggingLevels: make(map[string]log.Level),
 	}
-
 	return cfg
 }
 
 // GetActionLevel will return the log level of action
 func (c *Config) GetActionLevel(action string) log.Level {
-	level := c.LogLevel
-	actionLevel, ok := c.actionLoggingLevels[action]
-	if ok && actionLevel < level {
-		level = actionLevel
+	if level, ok := c.actionLoggingLevels[action]; ok {
+		return level
 	}
-	return level
+	return c.LogLevel
 }
 
 // SetActionLevel will return the log level of action

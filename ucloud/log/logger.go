@@ -10,8 +10,34 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-// Logger is the logger (wrapper for logrus)
-type Logger struct {
+// Logger is the interface of SDK
+type Logger interface {
+	Debug(...interface{})
+	Print(...interface{})
+	Info(...interface{})
+	Warn(...interface{})
+	Warning(...interface{})
+	Error(...interface{})
+	Panic(...interface{})
+	Fatal(...interface{})
+
+	Debugf(string, ...interface{})
+	Printf(string, ...interface{})
+	Infof(string, ...interface{})
+	Warnf(string, ...interface{})
+	Warningf(string, ...interface{})
+	Errorf(string, ...interface{})
+	Panicf(string, ...interface{})
+	Fatalf(string, ...interface{})
+
+	SetOutput(io.Writer)
+	SetFormatter(Formatter)
+	SetLevel(Level)
+	GetLevel() Level
+}
+
+// BasicLogger is the logger (wrapper for logrus)
+type BasicLogger struct {
 	*logrus.Logger
 }
 
@@ -22,8 +48,8 @@ type Level logrus.Level
 type Formatter logrus.Formatter
 
 // New will return a logger pointer
-func New() *Logger {
-	logger := &Logger{logrus.New()}
+func New() *BasicLogger {
+	logger := &BasicLogger{logrus.New()}
 	logger.Out = os.Stdout
 	logger.Level = logrus.Level(DebugLevel)
 	logger.Formatter = &logrus.TextFormatter{
@@ -34,22 +60,22 @@ func New() *Logger {
 }
 
 // SetOutput sets the logger output.
-func (logger *Logger) SetOutput(out io.Writer) {
+func (logger *BasicLogger) SetOutput(out io.Writer) {
 	logger.Out = out
 }
 
 // SetFormatter sets the logger formatter.
-func (logger *Logger) SetFormatter(formatter Formatter) {
+func (logger *BasicLogger) SetFormatter(formatter Formatter) {
 	logger.Formatter = logrus.Formatter(formatter)
 }
 
 // SetLevel sets the logger level.
-func (logger *Logger) SetLevel(level Level) {
+func (logger *BasicLogger) SetLevel(level Level) {
 	logger.Level = logrus.Level(level)
 }
 
 // GetLevel returns the logger level.
-func (logger *Logger) GetLevel() Level {
+func (logger *BasicLogger) GetLevel() Level {
 	return Level(logger.Level)
 }
 

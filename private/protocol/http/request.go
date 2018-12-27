@@ -51,12 +51,7 @@ func (h *HttpRequest) SetURL(val string) error {
 		return err
 	}
 
-	if len(uri.Port()) == 0 {
-		h.url = fmt.Sprintf("%s://%s%s", uri.Scheme, uri.Host, uri.Path)
-	} else {
-		h.url = fmt.Sprintf("%s://%s:%s%s", uri.Scheme, uri.Host, uri.Port(), uri.Path)
-	}
-
+	h.url = fmt.Sprintf("%s://%s%s", uri.Scheme, uri.Host, uri.Path)
 	return nil
 }
 

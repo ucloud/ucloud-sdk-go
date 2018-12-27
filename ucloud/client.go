@@ -24,7 +24,7 @@ type Client struct {
 
 	// composited instances
 	httpClient http.Client
-	logger     *log.Logger
+	logger     log.Logger
 
 	// internal properties
 	responseHandlers     []ReponseHandler
