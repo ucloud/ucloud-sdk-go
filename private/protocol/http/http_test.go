@@ -34,6 +34,13 @@ func TestHTTPRequest(t *testing.T) {
 
 	req.SetURL("http://api.ucloud.cn?foo2=bar")
 	assert.Equal(t, req.GetQueryMap()["foo2"], "bar")
+	assert.Equal(t, req.GetURL(), "http://api.ucloud.cn")
+	assert.Equal(t, req.GetQuery("foo2"), "bar")
+
+	req.SetURL("http://api.ucloud.cn:12345?foo2=bar")
+	assert.Equal(t, req.GetQueryMap()["foo2"], "bar")
+	assert.Equal(t, req.GetURL(), "http://api.ucloud.cn:12345")
+	assert.Equal(t, req.GetQuery("foo2"), "bar")
 
 	body := []byte("data")
 	req.SetRequestBody(body)

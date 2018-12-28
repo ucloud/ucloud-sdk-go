@@ -10,6 +10,7 @@ import (
 
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
@@ -17,10 +18,15 @@ import (
 
 // Client 客户端
 type Client struct {
+	// configurations
 	credential *auth.Credential
 	config     *Config
-	httpClient *http.HttpClient
 
+	// composited instances
+	httpClient http.Client
+	logger     log.Logger
+
+	// internal properties
 	responseHandlers     []ReponseHandler
 	httpResponseHandlers []HttpReponseHandler
 }
@@ -34,7 +40,10 @@ func NewClient(config *Config, credential *auth.Credential) *Client {
 
 	client.responseHandlers = append(client.responseHandlers, defaultResponseHandlers...)
 	client.httpResponseHandlers = append(client.httpResponseHandlers, defaultHttpResponseHandlers...)
-	log.Init(config.LogLevel)
+
+	client.logger = log.New()
+	client.logger.SetLevel(config.LogLevel)
+
 	return &client
 }
 
@@ -60,14 +69,11 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 
 	httpReq, err := c.buildHTTPRequest(req)
 	if err != nil {
-		return err
+		return uerr.NewClientError(uerr.ErrInvalidRequest, err)
 	}
 
 	httpClient := http.NewHttpClient()
 	httpResp, err := httpClient.Send(httpReq)
-	if err != nil {
-		return err
-	}
 
 	// use response middleware to handle http response
 	// such as convert some http status to error
@@ -75,16 +81,16 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		httpResp, err = handler(c, httpReq, httpResp, err)
 	}
 
-	// use patch object to resolve the http response body
-	// in general, it will be fix common server error before server bugfix is released.
-	body := httpResp.GetBody()
-	for _, patch := range patches {
-		body = patch.Patch(body)
-	}
+	if err == nil {
+		// use patch object to resolve the http response body
+		// in general, it will be fix common server error before server bugfix is released.
+		body := httpResp.GetBody()
 
-	err = c.unmarshalHTTPReponse(body, resp)
-	if err != nil {
-		return err
+		for _, patch := range patches {
+			body = patch.Patch(body)
+		}
+
+		err = c.unmarshalHTTPReponse(body, resp)
 	}
 
 	// use response middle to build and convert response when response has been created.

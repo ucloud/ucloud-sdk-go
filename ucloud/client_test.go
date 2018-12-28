@@ -16,7 +16,9 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-var client *Client
+const (
+	testDefaultAction = "DescribeUHostInstance"
+)
 
 func TestMain(m *testing.M) {
 	testSetup()
@@ -25,23 +27,24 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-func testSetup() {
+func testSetup() {}
+
+func testTeardown() {}
+
+func newTestClient() *Client {
 	cfg := NewConfig()
 	// cfg.BaseUrl = "https://api-mock.pre.ucloudadmin.com/?_user=yufei.li%40ucloud.cn"
 	cfg.BaseUrl = "https://api.ucloud.cn"
 	cfg.Region = "cn-bj2"
 	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
 	cfg.LogLevel = log.WarnLevel
+	cfg.Timeout = 5 * time.Second
+	cfg.MaxRetries = 1
 
 	credential := auth.NewCredential()
-	credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
-	credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
 
-	log.Infof("config: %#v, credential: %#v", cfg, credential)
-	client = NewClient(&cfg, &credential)
+	return NewClient(&cfg, &credential)
 }
-
-func testTeardown() {}
 
 type MockRequest struct {
 	request.CommonBase
@@ -58,7 +61,11 @@ func TestCommonInvokeAction(t *testing.T) {
 	req := &MockRequest{}
 	resp := &MockResponse{}
 
-	err := client.InvokeAction("DescribeUHostInstance", client.SetupRequest(req), resp)
+	client := newTestClient()
+	client.credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
+	client.credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
+
+	err := client.InvokeAction(testDefaultAction, client.SetupRequest(req), resp)
 	assert.Nil(t, err)
 	assert.Condition(t, func() bool { return resp.TotalCount >= 0 })
 }
@@ -66,17 +73,42 @@ func TestCommonInvokeAction(t *testing.T) {
 func TestCommonInvokeActionNotFound(t *testing.T) {
 	req := &MockRequest{}
 	resp := &MockResponse{}
+
+	client := newTestClient()
+	client.credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
+	client.credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
+
 	err := client.InvokeAction("TestApi", client.SetupRequest(req), resp)
 	assert.NotNil(t, err)
+
 	uErr, ok := err.(uerr.Error)
 	assert.True(t, ok)
 	assert.Equal(t, 161, uErr.Code())
 	assert.Contains(t, uErr.Message(), "not found")
 }
 
+func TestClientTimeout(t *testing.T) {
+	req := &MockRequest{}
+	resp := &MockResponse{}
+
+	client := newTestClient()
+	client.config.BaseUrl = "https://httpbin.org/delay/2"
+	client.config.Timeout = 1 * time.Second
+	client.config.MaxRetries = 1
+	client.SetupRequest(req)
+
+	err := client.InvokeAction("foo", req, resp)
+	uErr, ok := err.(uerr.ClientError)
+	assert.True(t, ok)
+	assert.Equal(t, uErr.Name(), uerr.ErrNetwork)
+	assert.Equal(t, req.GetRetryCount(), 1)
+	assert.Equal(t, req.GetMaxretries(), 1)
+}
+
 func Test_errorHandler(t *testing.T) {
 	req := &MockRequest{}
 	resp := &MockResponse{}
+	client := newTestClient()
 
 	steps := []struct {
 		name string
@@ -103,7 +135,7 @@ func Test_errorHandler(t *testing.T) {
 			},
 		},
 		{
-			name: "timeout error",
+			name: "server timeout error",
 			step: func() error {
 				httpClient := &http.Client{Timeout: time.Duration(1)}
 				httpReq, err := http.NewRequest("GET", "https://httpbin.org/delay/2", nil)
@@ -138,4 +170,17 @@ func Test_errorHandler(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLoggingLevel(t *testing.T) {
+	client := newTestClient() // level: WarnLevel
+
+	assert.Equal(t, client.logger.GetLevel(), log.WarnLevel)
+	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.WarnLevel)
+
+	client.config.SetActionLevel(testDefaultAction, log.InfoLevel)
+	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.WarnLevel)
+
+	client.config.SetActionLevel(testDefaultAction, log.ErrorLevel)
+	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.ErrorLevel)
 }

@@ -7,9 +7,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"github.com/pkg/errors"
 )
+
+// Client is the interface of http client
+type Client interface {
+	Send(*HttpRequest) (*HttpResponse, error)
+}
 
 // HttpClient used to send a real request via http to server
 type HttpClient struct {
@@ -54,7 +57,7 @@ func (c *HttpClient) doHTTPRequest(client *http.Client, req *http.Request) (*Htt
 	// send request
 	httpResp, err := client.Do(req)
 	if err != nil {
-		return nil, errors.Errorf("cannot send request, %s", err)
+		return nil, err
 	}
 	defer httpResp.Body.Close()
 
@@ -66,7 +69,7 @@ func (c *HttpClient) doHTTPRequest(client *http.Client, req *http.Request) (*Htt
 	// read content
 	body, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
-		return nil, errors.Errorf("cannot read response, %s", err)
+		return nil, err
 	}
 
 	// build response wrapper
@@ -74,9 +77,4 @@ func (c *HttpClient) doHTTPRequest(client *http.Client, req *http.Request) (*Htt
 	resp.setHttpReponse(httpResp)
 	resp.setBody(body)
 	return resp, nil
-}
-
-func (c *HttpClient) buildHTTPRequestWithTracer(req *http.Request) (*http.Request, error) {
-	// TODO: implement trace via httptrace
-	return req, nil
 }

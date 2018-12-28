@@ -51,7 +51,7 @@ func (h *HttpRequest) SetURL(val string) error {
 		return err
 	}
 
-	h.url = val
+	h.url = fmt.Sprintf("%s://%s%s", uri.Scheme, uri.Host, uri.Path)
 	return nil
 }
 
@@ -133,6 +133,14 @@ func (h *HttpRequest) SetQuery(k, v string) error {
 	}
 	h.queryMap[k] = v
 	return nil
+}
+
+// GetQuery will get value by key from map
+func (h *HttpRequest) GetQuery(k string) string {
+	if v, ok := h.queryMap[k]; ok {
+		return v
+	}
+	return ""
 }
 
 // GetQueryMap will get all of query as a map
