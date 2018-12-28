@@ -6,6 +6,8 @@ language: go
 go:
 - "1.11.1"
 
+go_import_path: github.com/ucloud/ucloud-sdk-go
+
 git:
   depth: 1
 
@@ -13,9 +15,11 @@ install:
 - go get github.com/fzipp/gocyclo
 
 script:
+- echo $GOPATH
+- pwd
 - make fmtcheck
 - make test
-- make cyclo
+# - make cyclo
 
 # branches:
 #   only:
