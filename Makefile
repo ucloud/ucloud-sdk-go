@@ -14,7 +14,7 @@ fmt:
 
 .PHONY: fmtcheck
 fmtcheck:
-	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
+	@sh $(CURDIR)/scripts/gofmtcheck.sh
 
 .PHONY: vet
 vet:
