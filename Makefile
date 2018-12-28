@@ -22,7 +22,7 @@ vet:
 
 .PHONY: test
 test: fmtcheck vet
-	go test -v ./ucloud/... --parallel=4
+	go test -v ./ucloud/... --parallel=16
 
 .PHONY: test-acc
 test-acc: fmtcheck vet
