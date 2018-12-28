@@ -14,7 +14,7 @@ fmt:
 
 .PHONY: fmtcheck
 fmtcheck:
-	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
+	@bash $(CURDIR)/scripts/gofmtcheck.sh
 
 .PHONY: vet
 vet:
@@ -22,7 +22,7 @@ vet:
 
 .PHONY: test
 test: fmtcheck vet
-	go test -v ./ucloud/... --parallel=4
+	go test -v ./ucloud/... --parallel=16
 
 .PHONY: test-acc
 test-acc: fmtcheck vet

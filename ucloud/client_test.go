@@ -1,7 +1,8 @@
 package ucloud
 
 import (
-	"net/http"
+	"fmt"
+	stdhttp "net/http"
 	"os"
 	"testing"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
@@ -57,13 +59,24 @@ type MockResponse struct {
 	UHostSet   []map[string]interface{}
 }
 
+type mockClient struct{}
+
+func (c *mockClient) Send(req *http.HttpRequest) (*http.HttpResponse, error) {
+	resp := &http.HttpResponse{}
+	resp.SetBody([]byte(fmt.Sprintf(`{"Action": "%sResponse", "RetCode": 0, "Message": ""}`, testDefaultAction)))
+	resp.SetStatusCode(200)
+	return resp, nil
+}
+
 func TestCommonInvokeAction(t *testing.T) {
 	req := &MockRequest{}
 	resp := &MockResponse{}
 
 	client := newTestClient()
-	client.credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
-	client.credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
+	client.credential.PrivateKey = "mocked"
+	client.credential.PublicKey = "mocked"
+
+	client.httpClient = &mockClient{}
 
 	err := client.InvokeAction(testDefaultAction, client.SetupRequest(req), resp)
 	assert.Nil(t, err)
@@ -137,8 +150,8 @@ func Test_errorHandler(t *testing.T) {
 		{
 			name: "server timeout error",
 			step: func() error {
-				httpClient := &http.Client{Timeout: time.Duration(1)}
-				httpReq, err := http.NewRequest("GET", "https://httpbin.org/delay/2", nil)
+				httpClient := &stdhttp.Client{Timeout: time.Duration(1)}
+				httpReq, err := stdhttp.NewRequest("GET", "https://httpbin.org/delay/2", nil)
 				if err != nil {
 					return err
 				}
@@ -179,7 +192,7 @@ func TestLoggingLevel(t *testing.T) {
 	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.WarnLevel)
 
 	client.config.SetActionLevel(testDefaultAction, log.InfoLevel)
-	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.WarnLevel)
+	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.InfoLevel)
 
 	client.config.SetActionLevel(testDefaultAction, log.ErrorLevel)
 	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.ErrorLevel)

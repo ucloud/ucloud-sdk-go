@@ -72,8 +72,12 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		return uerr.NewClientError(uerr.ErrInvalidRequest, err)
 	}
 
-	httpClient := http.NewHttpClient()
-	httpResp, err := httpClient.Send(httpReq)
+	if c.httpClient == nil {
+		httpClient := http.NewHttpClient()
+		c.httpClient = &httpClient
+	}
+
+	httpResp, err := c.httpClient.Send(httpReq)
 
 	// use response middleware to handle http response
 	// such as convert some http status to error
