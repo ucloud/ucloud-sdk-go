@@ -15,15 +15,9 @@ install:
 - go get github.com/fzipp/gocyclo
 
 script:
-- echo $GOPATH
-- pwd
 - make fmtcheck
 - make test
 # - make cyclo
-
-# branches:
-#   only:
-#   - master
 
 matrix:
   fast_finish: true
