@@ -25,8 +25,13 @@ func NewRegexpPatcher(regex string, repl string) *RegexpPatcher {
 
 // Patch will convert a bytes to another bytes with patch rules
 func (p *RegexpPatcher) Patch(body []byte) []byte {
-	// TODO: ensure why the pattern will be disabled when there are multiple goroutines
-	return p.pattern.Copy().ReplaceAll(body, []byte(p.replacement))
+	// TODO: ensure why the pattern will be disabled when there are multiple goroutines for bytes replacement
+	return []byte(p.PatchString(string(body)))
+}
+
+// PatchString will convert a string to another string with patch rules
+func (p *RegexpPatcher) PatchString(body string) string {
+	return p.pattern.ReplaceAllString(body, p.replacement)
 }
 
 // RetCodePatcher will convert `RetCode` as integer
