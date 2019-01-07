@@ -66,7 +66,7 @@ func loadConfig() (*ucloud.Config, *auth.Credential) {
 }
 
 func main() {
-    cfg, credentail := loadConfig()
+    cfg, credential := loadConfig()
     uhostClient := uhost.NewClient(cfg, credential)
 }
 ```

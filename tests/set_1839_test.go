@@ -594,13 +594,13 @@ func testSet1839GetUHostInstanceVncInfo16(ctx *utest.TestContext) {
 func testSet1839DescribeResourceMetric17(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := iumonClient.NewDescribeResourceMetricRequest()
+	req := pumonClient.NewDescribeResourceMetricRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceType", "uhost"))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iumonClient.DescribeResourceMetric(req)
+			return pumonClient.DescribeResourceMetric(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -620,7 +620,7 @@ func testSet1839DescribeResourceMetric17(ctx *utest.TestContext) {
 func testSet1839GetMetric18(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := iumonClient.NewGetMetricRequest()
+	req := pumonClient.NewGetMetricRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceType", "uhost"))
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
@@ -631,7 +631,7 @@ func testSet1839GetMetric18(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iumonClient.GetMetric(req)
+			return pumonClient.GetMetric(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
