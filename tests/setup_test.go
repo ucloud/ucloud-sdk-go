@@ -22,6 +22,7 @@ import (
 
 	pudisk "github.com/ucloud/ucloud-sdk-go/private/services/udisk"
 	puhost "github.com/ucloud/ucloud-sdk-go/private/services/uhost"
+	pulb "github.com/ucloud/ucloud-sdk-go/private/services/ulb"
 	pumem "github.com/ucloud/ucloud-sdk-go/private/services/umem"
 	pumon "github.com/ucloud/ucloud-sdk-go/private/services/umon"
 
@@ -55,6 +56,7 @@ var puhostClient *puhost.UHostClient
 var pudiskClient *pudisk.UDiskClient
 var pumemClient *pumem.UMemClient
 var pumonClient *pumon.UMonClient
+var pulbClient *pulb.ULBClient
 
 var iuhostClient *iuhost.UHostClient
 var iunetClient *iunet.UNetClient
@@ -119,6 +121,7 @@ func testSetup() {
 	puhostClient = puhost.NewClient(&cfg, &credential)
 	pumemClient = pumem.NewClient(&cfg, &credential)
 	pumonClient = pumon.NewClient(&cfg, &credential)
+	pulbClient = pulb.NewClient(&cfg, &credential)
 
 	log.Info("setup test fixtures ...")
 }
