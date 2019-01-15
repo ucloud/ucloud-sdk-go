@@ -1,6 +1,7 @@
 package http
 
 import (
+	"io/ioutil"
 	"testing"
 	"time"
 
@@ -45,6 +46,18 @@ func TestHTTPRequest(t *testing.T) {
 	body := []byte("data")
 	req.SetRequestBody(body)
 	assert.Equal(t, req.GetRequestBody(), body)
+
+	req = NewHttpRequest()
+	req.SetQuery("key1", "value1")
+	req.SetQuery("key2", "value2")
+
+	httpReq, err := req.buildHTTPRequest()
+	assert.NoError(t, err)
+
+	body, err = ioutil.ReadAll(httpReq.Body)
+	assert.NoError(t, err)
+
+	assert.Equal(t, body, []byte("key1=value1&key2=value2"))
 }
 
 func TestClientSend(t *testing.T) {
