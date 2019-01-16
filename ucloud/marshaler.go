@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"runtime"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -59,7 +60,7 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 	config := c.GetConfig()
 	httpReq := http.NewHttpRequest()
 	httpReq.SetURL(config.BaseUrl)
-	httpReq.SetMethod("GET")
+	httpReq.SetMethod("POST")
 
 	// set timeout with client configuration
 	httpReq.SetTimeout(config.Timeout)
@@ -68,7 +69,7 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 	httpReq.SetQueryString(credential.BuildCredentialedQuery(query))
 
 	ua := fmt.Sprintf("GO/%s GO-SDK/%s %s", runtime.Version(), version.Version, config.UserAgent)
-	httpReq.SetHeader("User-Agent", ua)
+	httpReq.SetHeader("User-Agent", strings.TrimSpace(ua))
 
 	return &httpReq, nil
 }

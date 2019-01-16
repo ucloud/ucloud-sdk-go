@@ -11,3 +11,4 @@ if [[ -n ${gofmt_files} ]]; then
 fi
 
 exit 0
+

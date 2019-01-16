@@ -197,9 +197,7 @@ func (h *HttpRequest) buildHTTPRequest() (*http.Request, error) {
 		return nil, errors.Errorf("cannot build query string, %s", err)
 	}
 
-	// NOTE: api.ucloud.cn has been supported request via form urlencoded data
-	url := fmt.Sprintf("%s?%s", h.GetURL(), qs)
-	httpReq, err := http.NewRequest(h.GetMethod(), url, nil)
+	httpReq, err := http.NewRequest(h.GetMethod(), h.GetURL(), strings.NewReader(qs))
 	if err != nil {
 		return nil, errors.Errorf("cannot build request, %s", err)
 	}
