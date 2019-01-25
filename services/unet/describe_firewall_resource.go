@@ -22,10 +22,10 @@ type DescribeFirewallResourceRequest struct {
 	FWId *string `required:"true"`
 
 	// 返回数据长度，默认为20，最大10000000
-	Limit *int `required:"false"`
+	Limit *string `required:"false"`
 
 	// 列表起始位置偏移量，默认为0
-	Offset *int `required:"false"`
+	Offset *string `required:"false"`
 }
 
 // DescribeFirewallResourceResponse is response schema for DescribeFirewallResource action
