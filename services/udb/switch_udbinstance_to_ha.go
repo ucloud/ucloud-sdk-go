@@ -12,8 +12,23 @@ import (
 type SwitchUDBInstanceToHARequest struct {
 	request.CommonBase
 
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
+
 	// 实例的Id,该值可以通过DescribeUDBInstance获取
 	DBId *string `required:"true"`
+
+	// Year， Month， Dynamic，Trial，不填则按现在单点计费执行
+	ChargeType *string `required:"false"`
+
+	// 购买时长，需要和 ChargeType 搭配使用，否则使用单点计费策略的值
+	Quantity *string `required:"false"`
+
+	// 业务组
+	Tag *string `required:"false"`
 }
 
 // SwitchUDBInstanceToHAResponse is response schema for SwitchUDBInstanceToHA action

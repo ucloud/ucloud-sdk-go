@@ -31,7 +31,7 @@ func (t *TestCase) Run() (interface{}, error) {
 			if err := validator(resp, err); err != nil {
 				isFailed = true
 				if i != t.MaxRetries {
-					t.T.Logf("skip validate error for retry, %s", err)
+					t.T.Logf("skip validate error for retring, %s", err)
 					continue
 				}
 				assert.NoError(t.T, err)

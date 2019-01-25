@@ -12,8 +12,14 @@ import (
 type ResizeURedisGroupRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"false"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
 
 	// 组ID
 	GroupId *string `required:"true"`
@@ -22,10 +28,10 @@ type ResizeURedisGroupRequest struct {
 	Size *int `required:"true"`
 
 	//
-	ChargeType *string `required:"true"`
+	ChargeType *string `required:"false"`
 
 	// 空间类型:single(无热备),double(热备)(默认: double)
-	Type *string `required:"true"`
+	Type *string `required:"false"`
 
 	// 代金券ID 请参考DescribeCoupon接口
 	CouponId *int `required:"false"`

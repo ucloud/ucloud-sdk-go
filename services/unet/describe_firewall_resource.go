@@ -12,14 +12,20 @@ import (
 type DescribeFirewallResourceRequest struct {
 	request.CommonBase
 
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
+
 	// 防火墙ID
 	FWId *string `required:"true"`
 
 	// 返回数据长度，默认为20，最大10000000
-	Limit *string `required:"false"`
+	Limit *int `required:"false"`
 
 	// 列表起始位置偏移量，默认为0
-	Offset *string `required:"false"`
+	Offset *int `required:"false"`
 }
 
 // DescribeFirewallResourceResponse is response schema for DescribeFirewallResource action
