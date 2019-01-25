@@ -12,23 +12,29 @@ import (
 type DescribeUMemPriceRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"false"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"true"`
 
 	// 购买umem大小,单位:GB,范围[1~1024]
 	Size *int `required:"true"`
 
 	// 空间类型:single(无热备),double(热备)(默认: double)
-	Type *string `required:"true"`
+	Type *string `required:"false"`
 
 	// Year， Month， Dynamic，Trial 如果不指定，则一次性获取三种计费
-	ChargeType *string `required:"true"`
+	ChargeType *string `required:"false"`
 
 	// 购买UMem的时长，默认值为1
-	Quantity *int `required:"true"`
+	Quantity *int `required:"false"`
 
 	//
-	RegionFlag *bool `required:"true"`
+	RegionFlag *bool `required:"false"`
 }
 
 // DescribeUMemPriceResponse is response schema for DescribeUMemPrice action

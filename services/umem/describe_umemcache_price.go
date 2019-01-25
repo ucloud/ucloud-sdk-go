@@ -12,20 +12,26 @@ import (
 type DescribeUMemcachePriceRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
 
 	// 容量大小,单位:GB 取值范围[1-32]
 	Size *int `required:"true"`
 
-	// 空间类型:single(无热备),double(热备)(默认: double)
-	Type *string `required:"true"`
-
 	// 计费模式，Year， Month， Dynamic，默认: Dynamic 默认: 获取所有计费模式的价格
-	ChargeType *string `required:"true"`
+	ChargeType *string `required:"false"`
 
 	// 购买umemcache的时长，默认值为1
-	Quantity *int `required:"true"`
+	Quantity *int `required:"false"`
+
+	// 空间类型:single(无热备),double(热备)(默认: double)
+	Type *string `required:"false"`
 }
 
 // DescribeUMemcachePriceResponse is response schema for DescribeUMemcachePrice action

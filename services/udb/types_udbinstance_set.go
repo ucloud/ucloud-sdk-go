@@ -8,6 +8,12 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type UDBInstanceSet struct {
 
+	// DB实例所在可用区
+	Zone string
+
+	// 当DB类型为mongodb时，返回该实例所在集群中的角色，包括：mongos、configsrv_sccc、configsrv_csrs、shardsrv_datanode、shardsrv_arbiter，其中congfigsrv分为sccc和csrs两种模式，shardsrv分为datanode和arbiter两种模式
+	CluserRole string
+
 	// DB实例id
 	DBId string
 
@@ -97,9 +103,6 @@ type UDBInstanceSet struct {
 
 	// 如果列表操作，则有从库DB实例信息列表 参数同UDBSlaveInstanceSet
 	DataSet []UDBSlaveInstanceSet
-
-	// DB实例所在可用区
-	Zone string
 
 	// 跨可用区高可用备库所在可用区
 	BackupZone string

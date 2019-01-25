@@ -12,8 +12,14 @@ import (
 type CreateUDBInstanceRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
 
 	// 实例名称，至少6位
 	Name *string `required:"true"`
@@ -35,6 +41,9 @@ type CreateUDBInstanceRequest struct {
 
 	// 内存限制(MB)，目前支持以下几档 1000M/2000M/4000M/ 6000M/8000M/12000M/16000M/ 24000M/32000M/48000M/ 64000M/96000M
 	MemoryLimit *int `required:"true"`
+
+	// 当DB类型(DBTypeId)为mongodb时，需要指定mongo的角色，可选值为configsrv (配置节点)，shardsrv (数据节点)
+	ClusterRole *string `required:"false"`
 
 	// Year， Month， Dynamic，Trial，默认: Month
 	ChargeType *string `required:"false"`

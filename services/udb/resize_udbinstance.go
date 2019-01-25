@@ -12,8 +12,14 @@ import (
 type ResizeUDBInstanceRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"false"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *int `required:"false"`
 
 	// 实例的Id
 	DBId *string `required:"true"`
@@ -38,6 +44,9 @@ type ResizeUDBInstanceRequest struct {
 
 	// UDB实例模式类型, 可选值如下: "Normal": 普通版UDB实例 "HA": 高可用版UDB实例 默认是"Normal"
 	InstanceMode *string `required:"false"`
+
+	// DB关闭状态下升降级，升降级后是否启动DB，默认为false
+	StartAfterUpgrade *bool `required:"false"`
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`

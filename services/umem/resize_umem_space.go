@@ -12,8 +12,14 @@ import (
 type ResizeUMemSpaceRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"false"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
 
 	// UMem 内存空间Id
 	SpaceId *string `required:"true"`
@@ -21,11 +27,11 @@ type ResizeUMemSpaceRequest struct {
 	// 内存大小, 单位:GB (需要大于原size,<= 1024)
 	Size *int `required:"true"`
 
-	//
-	ChargeType *string `required:"true"`
-
 	// 空间类型:single(无热备),double(热备)(默认: double)
-	Type *string `required:"true"`
+	Type *string `required:"false"`
+
+	//
+	ChargeType *string `required:"false"`
 
 	// 使用的代金券Id
 	CouponId *string `required:"false"`
