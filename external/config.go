@@ -2,63 +2,115 @@ package external
 
 import (
 	"fmt"
-	"reflect"
+	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
-var configLoaders = []ConfigLoader{
-	LoadEnvConfig,
-	LoadSharedConfig,
+const (
+	UCloudPublicKeyEnvVar = "UCLOUD_PUBLIC_KEY"
+
+	UCloudPrivateKeyEnvVar = "UCLOUD_PRIVATE_KEY"
+
+	UCloudProjectIdEnvVar = "UCLOUD_PROJECT_ID"
+
+	UCloudRegionEnvVar = "UCLOUD_REGION"
+
+	UCloudSharedProfileEnvVar = "UCLOUD_PROFILE"
+
+	UCloudSharedConfigFileEnvVar = "UCLOUD_SHARED_CONFIG_FILE"
+
+	UCloudSharedCredentialFileEnvVar = "UCLOUD_SHARED_CREDENTIAL_FILE"
+)
+
+// DefaultSharedConfigFile will return the default shared config filename
+func DefaultSharedConfigFile() string {
+	return filepath.Join(userHomeDir(), ".ucloud", "config.json")
 }
 
-// Config is the configuration block from any config loader
-type Config interface{}
-
-// ConfigLoader is the external configuration loader to load credential and client config from external storag
-type ConfigLoader func(...Config) (ConfigProvider, error)
-
-// ConfigProvider is the provider to store and provide config/credential instance
-type ConfigProvider interface {
-	Credential() *auth.Credential
-
-	Config() *ucloud.Config
+// DefaultSharedCredentialsFile will return the default shared credential filename
+func DefaultSharedCredentialsFile() string {
+	return filepath.Join(userHomeDir(), ".ucloud", "credential.json")
 }
 
-// ProfileProvider is the interface to provide named profile
-type ProfileProvider interface {
-	SharedConfigProfile() string
+// config will read configuration
+type config struct {
+	// Named profile
+	profile              string
+	sharedConfigFile     string
+	sharedCredentialFile string
+
+	// Credential configuration
+	PublicKey  string
+	PrivateKey string
+
+	// Client configuration
+	ProjectId string
+	Zone      string
+	Region    string
+	BaseUrl   string
+	Timeout   time.Duration
 }
 
-// ConfigFileProvider is the
-type ConfigFileProvider interface {
-	SharedConfigFilename() string
+func newConfig() *config {
+	return &config{}
+}
 
-	SharedCredentialFilename() string
+func (c *config) loadEnv() error {
+	c.PublicKey = os.Getenv(UCloudPublicKeyEnvVar)
+	c.PrivateKey = os.Getenv(UCloudPrivateKeyEnvVar)
+	c.ProjectId = os.Getenv(UCloudProjectIdEnvVar)
+	c.Region = os.Getenv(UCloudRegionEnvVar)
+
+	c.profile = os.Getenv(UCloudSharedProfileEnvVar)
+	c.sharedConfigFile = os.Getenv(UCloudSharedConfigFileEnvVar)
+	c.sharedCredentialFile = os.Getenv(UCloudSharedCredentialFileEnvVar)
+	return nil
+}
+
+func (c *config) loadFile() error {
+	return nil
+}
+
+// Config is the configuration of ucloud client
+func (c *config) Config() *ucloud.Config {
+	return &ucloud.Config{
+		ProjectId: c.ProjectId,
+		Zone:      c.Zone,
+		Region:    c.Region,
+		BaseUrl:   c.BaseUrl,
+		Timeout:   c.Timeout,
+	}
+}
+
+// Credential is the configuration of ucloud authorization information
+func (c *config) Credential() *auth.Credential {
+	return &auth.Credential{
+		PublicKey:  c.PublicKey,
+		PrivateKey: c.PrivateKey,
+	}
 }
 
 // LoadDefaultUCloudConfig is the default loader to load config
 func LoadDefaultUCloudConfig() (ConfigProvider, error) {
-	cfgs := make([]Config, len(configLoaders))
-	for _, load := range configLoaders {
-		cfg, err := load(cfgs...)
-		if err != nil {
-			return nil, err
-		}
+	cfg := newConfig()
 
-		if !reflect.ValueOf(cfg).IsNil() {
-			cfgs = append(cfgs, cfg)
-		}
+	if err := cfg.loadEnv(); err != nil {
+		return nil, fmt.Errorf("error on loading env, %s", err)
 	}
 
-	if len(cfgs) == 0 {
-		return NewNullConfig(), nil
+	if err := cfg.loadFile(); err != nil {
+		return nil, fmt.Errorf("error on loading shared config file, %s", err)
 	}
 
-	if cfg, ok := cfgs[len(cfgs)-1].(ConfigProvider); !ok {
-		return nil, fmt.Errorf("excepted the configuration from external storage should has .Client() and .Credential() method")
-	} else {
-		return cfg, nil
+	return cfg, nil
+}
+
+func setStringify(p *string, s string) {
+	if len(s) != 0 {
+		*p = s
 	}
 }
