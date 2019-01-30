@@ -16,6 +16,7 @@ bin/
 
 # Build
 coverage.out
+c.out
 
-# Test Data
-# autotest/set_*
+# Debug Data
+examples/debug

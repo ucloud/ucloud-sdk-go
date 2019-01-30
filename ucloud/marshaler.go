@@ -71,7 +71,7 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 	ua := fmt.Sprintf("GO/%s GO-SDK/%s %s", runtime.Version(), version.Version, config.UserAgent)
 	httpReq.SetHeader("User-Agent", strings.TrimSpace(ua))
 
-	return &httpReq, nil
+	return httpReq, nil
 }
 
 // unmarshalHTTPReponse will get body from http response and unmarshal it's data into response struct

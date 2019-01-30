@@ -11,12 +11,20 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
+// RequestHandler receive request and write data into this request memory area
+type RequestHandler func(c *Client, req request.Common) (request.Common, error)
+
+// HttpRequestHandler receive http request and return a new http request
+type HttpRequestHandler func(c *Client, req *http.HttpRequest) (*http.HttpRequest, error)
+
 // ReponseHandler receive response and write data into this response memory area
 type ReponseHandler func(c *Client, req request.Common, resp response.Common, err error) (response.Common, error)
 
 // HttpReponseHandler receive http response and return a new http response
 type HttpReponseHandler func(c *Client, req *http.HttpRequest, resp *http.HttpResponse, err error) (*http.HttpResponse, error)
 
+var defaultRequestHandlers = []RequestHandler{}
+var defaultHttpRequestHandlers = []HttpRequestHandler{}
 var defaultResponseHandlers = []ReponseHandler{errorHandler, logHandler, retryHandler}
 var defaultHttpResponseHandlers = []HttpReponseHandler{errorHTTPHandler, logDebugHTTPHandler}
 
