@@ -130,7 +130,7 @@ func LoadDefaultUCloudConfig() (ConfigProvider, error) {
 }
 
 func setStringify(p *string, s string) {
-	if len(s) != 0 {
+	if p != nil && len(s) != 0 {
 		*p = s
 	}
 }
