@@ -27,6 +27,8 @@ type Client struct {
 	logger     log.Logger
 
 	// internal properties
+	requestHandlers      []RequestHandler
+	httpRequestHandlers  []HttpRequestHandler
 	responseHandlers     []ReponseHandler
 	httpResponseHandlers []HttpReponseHandler
 }
@@ -38,6 +40,8 @@ func NewClient(config *Config, credential *auth.Credential) *Client {
 		config:     config,
 	}
 
+	client.requestHandlers = append(client.requestHandlers, defaultRequestHandlers...)
+	client.httpRequestHandlers = append(client.httpRequestHandlers, defaultHttpRequestHandlers...)
 	client.responseHandlers = append(client.responseHandlers, defaultResponseHandlers...)
 	client.httpResponseHandlers = append(client.httpResponseHandlers, defaultHttpResponseHandlers...)
 
@@ -45,6 +49,12 @@ func NewClient(config *Config, credential *auth.Credential) *Client {
 	client.logger.SetLevel(config.LogLevel)
 
 	return &client
+}
+
+// SetHttpClient will setup a http client
+func (c *Client) SetHttpClient(httpClient http.Client) error {
+	c.httpClient = httpClient
+	return nil
 }
 
 // GetCredential will return the creadential config of client.
@@ -64,12 +74,27 @@ func (c *Client) InvokeAction(action string, req request.Common, resp response.C
 
 // InvokeActionWithPatcher will invoke action by patchers
 func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp response.Common, patches ...utils.Patch) error {
+	var err error
 	req.SetAction(action)
 	req.SetRequestTime(time.Now())
+
+	for _, handler := range c.requestHandlers {
+		req, err = handler(c, req)
+		if err != nil {
+			return uerr.NewClientError(uerr.ErrInvalidRequest, err)
+		}
+	}
 
 	httpReq, err := c.buildHTTPRequest(req)
 	if err != nil {
 		return uerr.NewClientError(uerr.ErrInvalidRequest, err)
+	}
+
+	for _, handler := range c.httpRequestHandlers {
+		httpReq, err = handler(c, httpReq)
+		if err != nil {
+			return uerr.NewClientError(uerr.ErrInvalidRequest, err)
+		}
 	}
 
 	if c.httpClient == nil {
@@ -104,4 +129,28 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 	}
 
 	return err
+}
+
+// AddHttpRequestHandler will append a reponse handler to client
+func (c *Client) AddHttpRequestHandler(h HttpRequestHandler) error {
+	c.httpRequestHandlers = append([]HttpRequestHandler{h}, c.httpRequestHandlers...)
+	return nil
+}
+
+// AddRequestHandler will append a reponse handler to client
+func (c *Client) AddRequestHandler(h RequestHandler) error {
+	c.requestHandlers = append([]RequestHandler{h}, c.requestHandlers...)
+	return nil
+}
+
+// AddHttpResponseHandler will append a http reponse handler to client
+func (c *Client) AddHttpResponseHandler(h HttpReponseHandler) error {
+	c.httpResponseHandlers = append(c.httpResponseHandlers, h)
+	return nil
+}
+
+// AddResponseHandler will append a reponse handler to client
+func (c *Client) AddResponseHandler(h ReponseHandler) error {
+	c.responseHandlers = append(c.responseHandlers, h)
+	return nil
 }

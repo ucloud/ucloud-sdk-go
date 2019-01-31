@@ -39,10 +39,10 @@ func main() {
 	// custom User-Agent for any request
 	cfg.UserAgent = "UCloud-CLI/0.1.0"
 
-	credential := auth.NewCredential()
+	cred := auth.NewCredential()
 
 	// set credential info for any request
 	// it is required
-	credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
-	credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
+	cred.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
+	cred.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
 }

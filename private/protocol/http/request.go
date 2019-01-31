@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -20,22 +21,22 @@ type HttpRequest struct {
 	queryMap    map[string]string
 	queryString string
 	headers     map[string]string
-
-	// body payload
-	formData    map[string]string
 	requestBody []byte
-
-	timeout time.Duration
+	timeout     time.Duration
 }
 
 // NewHttpRequest will create a http request
-func NewHttpRequest() HttpRequest {
-	return HttpRequest{
+func NewHttpRequest() *HttpRequest {
+	r := &HttpRequest{
 		queryMap: make(map[string]string),
 		headers:  make(map[string]string),
-		formData: make(map[string]string),
 		timeout:  DefaultTimeout,
 	}
+
+	for k, v := range DefaultHeaders {
+		r.headers[k] = v
+	}
+	return r
 }
 
 // SetURL will set url into request
@@ -191,13 +192,26 @@ func (h *HttpRequest) String() string {
 	return h.GetURL()
 }
 
+func (h *HttpRequest) getContentType() string {
+	if v, ok := h.headers["Content-Type"]; ok {
+		return v
+	}
+	return string(mimeFormURLEncoded)
+}
+
 func (h *HttpRequest) buildHTTPRequest() (*http.Request, error) {
 	qs, err := h.BuildQueryString()
 	if err != nil {
 		return nil, errors.Errorf("cannot build query string, %s", err)
 	}
 
-	httpReq, err := http.NewRequest(h.GetMethod(), h.GetURL(), strings.NewReader(qs))
+	var httpReq *http.Request
+	if h.getContentType() == string(mimeFormURLEncoded) && len(h.GetRequestBody()) == 0 {
+		httpReq, err = http.NewRequest(h.GetMethod(), h.GetURL(), strings.NewReader(qs))
+	} else {
+		httpReq, err = http.NewRequest(h.GetMethod(), h.String(), bytes.NewReader(h.GetRequestBody()))
+	}
+
 	if err != nil {
 		return nil, errors.Errorf("cannot build request, %s", err)
 	}
