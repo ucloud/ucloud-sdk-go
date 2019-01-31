@@ -2,46 +2,25 @@ package external
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
-const (
-	UCloudPublicKeyEnvVar = "UCLOUD_PUBLIC_KEY"
+// ConfigProvider is the provider to store and provide config/credential instance
+type ConfigProvider interface {
+	Credential() *auth.Credential
 
-	UCloudPrivateKeyEnvVar = "UCLOUD_PRIVATE_KEY"
-
-	UCloudProjectIdEnvVar = "UCLOUD_PROJECT_ID"
-
-	UCloudRegionEnvVar = "UCLOUD_REGION"
-
-	UCloudSharedProfileEnvVar = "UCLOUD_PROFILE"
-
-	UCloudSharedConfigFileEnvVar = "UCLOUD_SHARED_CONFIG_FILE"
-
-	UCloudSharedCredentialFileEnvVar = "UCLOUD_SHARED_CREDENTIAL_FILE"
-)
-
-// DefaultSharedConfigFile will return the default shared config filename
-func DefaultSharedConfigFile() string {
-	return filepath.Join(userHomeDir(), ".ucloud", "config.json")
-}
-
-// DefaultSharedCredentialsFile will return the default shared credential filename
-func DefaultSharedCredentialsFile() string {
-	return filepath.Join(userHomeDir(), ".ucloud", "credential.json")
+	Config() *ucloud.Config
 }
 
 // config will read configuration
 type config struct {
 	// Named profile
-	profile              string
-	sharedConfigFile     string
-	sharedCredentialFile string
+	Profile              string
+	SharedConfigFile     string
+	SharedCredentialFile string
 
 	// Credential configuration
 	PublicKey  string
@@ -60,38 +39,79 @@ func newConfig() *config {
 }
 
 func (c *config) loadEnv() error {
-	c.PublicKey = os.Getenv(UCloudPublicKeyEnvVar)
-	c.PrivateKey = os.Getenv(UCloudPrivateKeyEnvVar)
-	c.ProjectId = os.Getenv(UCloudProjectIdEnvVar)
-	c.Region = os.Getenv(UCloudRegionEnvVar)
+	cfg, err := loadEnvConfig()
+	if err != nil {
+		return err
+	}
 
-	c.profile = os.Getenv(UCloudSharedProfileEnvVar)
-	c.sharedConfigFile = os.Getenv(UCloudSharedConfigFileEnvVar)
-	c.sharedCredentialFile = os.Getenv(UCloudSharedCredentialFileEnvVar)
+	err = c.merge(cfg)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (c *config) loadFile() error {
+	cfgFile := c.SharedConfigFile
+	if len(cfgFile) == 0 {
+		cfgFile = DefaultSharedConfigFile()
+	}
+
+	credFile := c.SharedCredentialFile
+	if len(credFile) == 0 {
+		credFile = DefaultSharedCredentialsFile()
+	}
+
+	cfg, err := loadSharedConfigFile(cfgFile, credFile, c.Profile)
+	if err != nil {
+		return err
+	}
+
+	err = c.merge(cfg)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *config) merge(other *config) error {
+	if other == nil {
+		return nil
+	}
+
+	c.Profile = other.Profile
+	c.SharedConfigFile = other.SharedConfigFile
+	c.SharedCredentialFile = other.SharedCredentialFile
+	c.PublicKey = other.PublicKey
+	c.PrivateKey = other.PrivateKey
+	c.ProjectId = other.ProjectId
+	c.Zone = other.Zone
+	c.Region = other.Region
+	c.BaseUrl = other.BaseUrl
+	c.Timeout = other.Timeout
 	return nil
 }
 
 // Config is the configuration of ucloud client
 func (c *config) Config() *ucloud.Config {
-	return &ucloud.Config{
-		ProjectId: c.ProjectId,
-		Zone:      c.Zone,
-		Region:    c.Region,
-		BaseUrl:   c.BaseUrl,
-		Timeout:   c.Timeout,
+	cfg := ucloud.NewConfig()
+	setStringify(&cfg.ProjectId, c.ProjectId)
+	setStringify(&cfg.Zone, c.Zone)
+	setStringify(&cfg.Region, c.Region)
+	setStringify(&cfg.BaseUrl, c.BaseUrl)
+
+	if c.Timeout != time.Duration(0) {
+		cfg.Timeout = c.Timeout
 	}
+	return &cfg
 }
 
 // Credential is the configuration of ucloud authorization information
 func (c *config) Credential() *auth.Credential {
-	return &auth.Credential{
-		PublicKey:  c.PublicKey,
-		PrivateKey: c.PrivateKey,
-	}
+	cred := auth.NewCredential()
+	setStringify(&cred.PublicKey, c.PublicKey)
+	setStringify(&cred.PrivateKey, c.PrivateKey)
+	return &cred
 }
 
 // LoadDefaultUCloudConfig is the default loader to load config

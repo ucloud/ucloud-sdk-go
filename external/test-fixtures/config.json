@@ -9,10 +9,10 @@
         "active": false
     },
     {
-        "project_id": "org-3kopqz",
+        "project_id": "org-0qakla",
         "region": "cn-sh2",
         "zone": "cn-sh2-02",
-        "base_url": "https://internal.api.ucloud.cn",
+        "base_url": "https://api.ucloud.cn",
         "timeout_sec": 30,
         "profile": "ucloud",
         "active": true

@@ -1,23 +1,27 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/ucloud/ucloud-sdk-go/external"
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
 func main() {
 	c, err := external.LoadDefaultUCloudConfig()
 	if err != nil {
-		panic(err)
+		fmt.Printf("[ERROR] %s\n", err)
 	}
+	fmt.Printf("[INFO] Config: %+v\n", c)
 
 	cfg, cred := c.Config(), c.Credential()
 
-	bs, _ := json.MarshalIndent(cfg, "", "  ")
-	fmt.Printf("[Config] %s\n", string(bs))
+	uhostClient := uhost.NewClient(cfg, cred)
 
-	bs, _ = json.MarshalIndent(cred, "", "  ")
-	fmt.Printf("[Credential] %s\n", string(bs))
+	req := uhostClient.NewDescribeUHostInstanceRequest()
+	resp, err := uhostClient.DescribeUHostInstance(req)
+	if err != nil {
+		fmt.Printf("[ERROR] %s\n", err)
+	}
+	fmt.Printf("[INFO] Response: %+v\n", resp)
 }

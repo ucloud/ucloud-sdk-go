@@ -6,22 +6,90 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSharedConfigFile_active(t *testing.T) {
-	scf := defaultTestSharedConfigFile()
-	scf.Profile = TestValueSharedProfile
+func TestSharedConfigFile(t *testing.T) {
+	type args struct {
+	}
 
-	cfg, cred, err := scf.Load()
-	assert.NoError(t, err)
-	assert.Equal(t, TestValueUCloudPublicKey, cred.PublicKey)
-	assert.Equal(t, TestValueUCloudPrivateKey, cred.PrivateKey)
-	assert.Equal(t, TestValueUCloudProjectId, cfg.ProjectID)
-	assert.Equal(t, TestValueUCloudRegion, cfg.Region)
-	assert.Equal(t, TestValueSharedProfile, cfg.Profile)
-	assert.Equal(t, 15, cfg.Timeout)
-	assert.Equal(t, TestValueUCloudBaseUrl, cfg.BaseURL)
-	assert.Equal(t, TestValueUCloudZone, cfg.Zone)
+	tests := []struct {
+		name    string
+		prepare func([]sharedConfig)
+		wantErr bool
+	}{
+		{
+			"oneActive",
+			func(cfgMaps []sharedConfig) {
+				cfgMaps[0].Active = false
+				cfgMaps[1].Active = true
+			},
+			false,
+		},
+		{
+			"multiActive",
+			func(cfgMaps []sharedConfig) {
+				cfgMaps[0].Active = true
+				cfgMaps[1].Active = true
+			},
+			true,
+		},
+		{
+			"noActive",
+			func(cfgMaps []sharedConfig) {
+				cfgMaps[0].Active = false
+				cfgMaps[1].Active = false
+			},
+			true,
+		},
+		{
+			"uniqueProfile",
+			func(cfgMaps []sharedConfig) {
+				cfgMaps[0].Profile = TestValueEnvUCloudProfile
+				cfgMaps[1].Profile = TestValueEnvUCloudProfile
+			},
+			true,
+		},
+	}
 
-	profile, err := scf.LoadProfile()
-	assert.NoError(t, err)
-	assert.Equal(t, TestValueSharedProfile, profile)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cfgMaps, _, err := loadFile(
+				TestValueEnvUCloudSharedConfigFile,
+				TestValueEnvUCloudSharedCredentialFile,
+			)
+			assert.NoError(t, err)
+
+			tt.prepare(cfgMaps)
+
+			cfgPath, err := writeTestTempConfigFile(cfgMaps)
+			assert.NoError(t, err)
+
+			_, err = loadSharedConfigFile(
+				cfgPath,
+				TestValueEnvUCloudSharedCredentialFile,
+				"",
+			)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestLoadSharedConfigFile_not_exists(t *testing.T) {
+	cfg, err := loadSharedConfigFile(
+		"not_exists",
+		TestValueEnvUCloudSharedCredentialFile,
+		"",
+	)
+	assert.Nil(t, cfg)
+	assert.Nil(t, err)
+
+	_, err = loadSharedConfigFile(
+		TestValueEnvUCloudSharedConfigFile,
+		"",
+		"",
+	)
+	assert.Nil(t, cfg)
+	assert.Nil(t, err)
 }
