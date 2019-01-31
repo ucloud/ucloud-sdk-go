@@ -197,7 +197,3 @@ func TestLoggingLevel(t *testing.T) {
 	client.config.SetActionLevel(testDefaultAction, log.ErrorLevel)
 	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.ErrorLevel)
 }
-
-func TestRequestHandler(t *testing.T) {
-
-}

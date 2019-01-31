@@ -43,13 +43,8 @@ func TestLoadEnvConfig(t *testing.T) {
 
 	c := &config{}
 	c.loadEnv()
-	assert.Equal(t, TestValueEnvUCloudPublicKey, c.PublicKey)
-	assert.Equal(t, TestValueEnvUCloudPrivateKey, c.PrivateKey)
-	assert.Equal(t, TestValueEnvUCloudProjectId, c.ProjectId)
-	assert.Equal(t, TestValueEnvUCloudRegion, c.Region)
-	assert.Equal(t, TestValueEnvUCloudProfile, c.Profile)
-	assert.Equal(t, TestValueEnvUCloudSharedConfigFile, c.SharedConfigFile)
-	assert.Equal(t, TestValueEnvUCloudSharedCredentialFile, c.SharedCredentialFile)
+
+	checkTestEnvConfig(t, c)
 }
 
 func TestLoadSharedFile(t *testing.T) {
@@ -60,6 +55,16 @@ func TestLoadSharedFile(t *testing.T) {
 	c.loadFile()
 
 	checkTestConfig(t, c)
+}
+
+func checkTestEnvConfig(t *testing.T, c *config) {
+	assert.Equal(t, TestValueEnvUCloudPublicKey, c.PublicKey)
+	assert.Equal(t, TestValueEnvUCloudPrivateKey, c.PrivateKey)
+	assert.Equal(t, TestValueEnvUCloudProjectId, c.ProjectId)
+	assert.Equal(t, TestValueEnvUCloudRegion, c.Region)
+	assert.Equal(t, TestValueEnvUCloudProfile, c.Profile)
+	assert.Equal(t, TestValueEnvUCloudSharedConfigFile, c.SharedConfigFile)
+	assert.Equal(t, TestValueEnvUCloudSharedCredentialFile, c.SharedCredentialFile)
 }
 
 func checkTestConfig(t *testing.T, c ConfigProvider) {
