@@ -22,7 +22,7 @@ vet:
 
 .PHONY: test
 test: fmtcheck vet
-	go test -v ./ucloud/... --parallel=16
+	go test -v ./ucloud/... ./external/... --parallel=16
 
 .PHONY: test-acc
 test-acc: fmtcheck vet
@@ -34,4 +34,4 @@ test-cov: fmtcheck vet
 
 .PHONY: cyclo
 cyclo:
-	gocyclo -over 15 ucloud/ services/
+	gocyclo -over 15 ucloud/ services/ external/
