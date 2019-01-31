@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // Logger is the interface of SDK
