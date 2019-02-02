@@ -52,17 +52,11 @@ func (c *config) loadEnv() error {
 }
 
 func (c *config) loadFile() error {
-	cfgFile := c.SharedConfigFile
-	if len(cfgFile) == 0 {
-		cfgFile = DefaultSharedConfigFile()
-	}
-
-	credFile := c.SharedCredentialFile
-	if len(credFile) == 0 {
-		credFile = DefaultSharedCredentialsFile()
-	}
-
-	cfg, err := loadSharedConfigFile(cfgFile, credFile, c.Profile)
+	cfg, err := loadSharedConfigFile(
+		c.SharedConfigFile,
+		c.SharedCredentialFile,
+		c.Profile,
+	)
 	if err != nil {
 		return err
 	}
@@ -79,16 +73,18 @@ func (c *config) merge(other *config) error {
 		return nil
 	}
 
-	c.Profile = other.Profile
-	c.SharedConfigFile = other.SharedConfigFile
-	c.SharedCredentialFile = other.SharedCredentialFile
-	c.PublicKey = other.PublicKey
-	c.PrivateKey = other.PrivateKey
-	c.ProjectId = other.ProjectId
-	c.Zone = other.Zone
-	c.Region = other.Region
-	c.BaseUrl = other.BaseUrl
-	c.Timeout = other.Timeout
+	setStringify(&c.Profile, other.Profile)
+	setStringify(&c.SharedConfigFile, other.SharedConfigFile)
+	setStringify(&c.SharedCredentialFile, other.SharedCredentialFile)
+	setStringify(&c.PublicKey, other.PublicKey)
+	setStringify(&c.PrivateKey, other.PrivateKey)
+	setStringify(&c.ProjectId, other.ProjectId)
+	setStringify(&c.Zone, other.Zone)
+	setStringify(&c.Region, other.Region)
+	setStringify(&c.BaseUrl, other.BaseUrl)
+	if other.Timeout != time.Duration(0) {
+		c.Timeout = other.Timeout
+	}
 	return nil
 }
 

@@ -5,7 +5,7 @@
         "zone": "cn-bj2-02",
         "base_url": "https://api.ucloud.cn",
         "timeout_sec": 15,
-        "profile": "default",
+        "profile": "ucloud",
         "active": false
     },
     {
@@ -14,7 +14,7 @@
         "zone": "cn-sh2-02",
         "base_url": "https://api.ucloud.cn",
         "timeout_sec": 30,
-        "profile": "ucloud",
+        "profile": "default",
         "active": true
     }
 ]

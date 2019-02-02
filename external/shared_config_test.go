@@ -4,92 +4,56 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
-func TestSharedConfigFile(t *testing.T) {
-	type args struct {
-	}
+func TestLoadSharedConfig(t *testing.T) {
+	cfg, err := LoadUCloudConfigFile(
+		TestValueEnvUCloudSharedConfigFile,
+		TestValueEnvUCloudProfile,
+	)
+	assert.NoError(t, err)
+	checkTestClientConfig(t, cfg)
 
-	tests := []struct {
-		name    string
-		prepare func([]sharedConfig)
-		wantErr bool
-	}{
-		{
-			"oneActive",
-			func(cfgMaps []sharedConfig) {
-				cfgMaps[0].Active = false
-				cfgMaps[1].Active = true
-			},
-			false,
-		},
-		{
-			"multiActive",
-			func(cfgMaps []sharedConfig) {
-				cfgMaps[0].Active = true
-				cfgMaps[1].Active = true
-			},
-			true,
-		},
-		{
-			"noActive",
-			func(cfgMaps []sharedConfig) {
-				cfgMaps[0].Active = false
-				cfgMaps[1].Active = false
-			},
-			true,
-		},
-		{
-			"uniqueProfile",
-			func(cfgMaps []sharedConfig) {
-				cfgMaps[0].Profile = TestValueEnvUCloudProfile
-				cfgMaps[1].Profile = TestValueEnvUCloudProfile
-			},
-			true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			cfgMaps, _, err := loadFile(
-				TestValueEnvUCloudSharedConfigFile,
-				TestValueEnvUCloudSharedCredentialFile,
-			)
-			assert.NoError(t, err)
-
-			tt.prepare(cfgMaps)
-
-			cfgPath, err := writeTestTempConfigFile(cfgMaps)
-			assert.NoError(t, err)
-
-			_, err = loadSharedConfigFile(
-				cfgPath,
-				TestValueEnvUCloudSharedCredentialFile,
-				"",
-			)
-			if tt.wantErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
-		})
-	}
+	cred, err := LoadUCloudCredentialFile(
+		TestValueEnvUCloudSharedCredentialFile,
+		TestValueEnvUCloudProfile,
+	)
+	assert.NoError(t, err)
+	checkTestCredential(t, cred)
 }
 
-func TestLoadSharedConfigFile_not_exists(t *testing.T) {
-	cfg, err := loadSharedConfigFile(
-		"not_exists",
-		TestValueEnvUCloudSharedCredentialFile,
-		"",
-	)
-	assert.Nil(t, cfg)
-	assert.Nil(t, err)
+func checkTestDefaultCredential(t *testing.T, cred *auth.Credential) {
+	assert.Equal(t, TestValueFileUCloudDefaultPublicKey, cred.PublicKey)
+	assert.Equal(t, TestValueFileUCloudDefaultPrivateKey, cred.PrivateKey)
+}
 
-	_, err = loadSharedConfigFile(
-		TestValueEnvUCloudSharedConfigFile,
-		"",
-		"",
-	)
-	assert.Nil(t, cfg)
-	assert.Nil(t, err)
+func checkTestCredential(t *testing.T, cred *auth.Credential) {
+	assert.Equal(t, TestValueFileUCloudPublicKey, cred.PublicKey)
+	assert.Equal(t, TestValueFileUCloudPrivateKey, cred.PrivateKey)
+}
+
+func checkTestCredentialEmpty(t *testing.T, cred *auth.Credential) {
+	empty := auth.NewCredential()
+	assert.Equal(t, empty.PublicKey, cred.PublicKey)
+	assert.Equal(t, empty.PrivateKey, cred.PrivateKey)
+}
+
+func checkTestClientConfig(t *testing.T, cfg *ucloud.Config) {
+	assert.Equal(t, TestValueFileUCloudProjectId, cfg.ProjectId)
+	assert.Equal(t, TestValueFileUCloudRegion, cfg.Region)
+	assert.Equal(t, TestValueFileUCloudTimeout, cfg.Timeout)
+	assert.Equal(t, TestValueFileUCloudBaseUrl, cfg.BaseUrl)
+	assert.Equal(t, TestValueFileUCloudZone, cfg.Zone)
+}
+
+func checkTestClientConfigEmpty(t *testing.T, cfg *ucloud.Config) {
+	empty := ucloud.NewConfig()
+	assert.Equal(t, empty.ProjectId, cfg.ProjectId)
+	assert.Equal(t, empty.Region, cfg.Region)
+	assert.Equal(t, empty.Timeout, cfg.Timeout)
+	assert.Equal(t, empty.BaseUrl, cfg.BaseUrl)
+	assert.Equal(t, empty.Zone, cfg.Zone)
 }
