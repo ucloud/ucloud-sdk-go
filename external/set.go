@@ -30,7 +30,7 @@ type set struct {
 	idMap  map[int]interface{}
 }
 
-// newSet will excepted a list, reserving only one item with same id and return a set-collection
+// newSet will expected a list, reserving only one item with same id and return a set-collection
 func newSet(idFunc setIDFunc, vL []interface{}) *set {
 	s := &set{
 		idMap:  make(map[int]interface{}, len(vL)),

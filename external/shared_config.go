@@ -26,7 +26,7 @@ func DefaultSharedCredentialsFile() string {
 // LoadUCloudConfigFile will load ucloud client config from config file
 func LoadUCloudConfigFile(cfgFile, profile string) (*ucloud.Config, error) {
 	if len(profile) == 0 {
-		return nil, fmt.Errorf("excepted ucloud named profile is not empty")
+		return nil, fmt.Errorf("expected ucloud named profile is not empty")
 	}
 
 	cfgMaps, err := loadConfigFile(cfgFile)
@@ -41,7 +41,7 @@ func LoadUCloudConfigFile(cfgFile, profile string) (*ucloud.Config, error) {
 // LoadUCloudCredentialFile will load ucloud credential config from config file
 func LoadUCloudCredentialFile(credFile, profile string) (*auth.Credential, error) {
 	if len(profile) == 0 {
-		return nil, fmt.Errorf("excepted ucloud named profile is not empty")
+		return nil, fmt.Errorf("expected ucloud named profile is not empty")
 	}
 
 	credMaps, err := loadCredFile(credFile)
