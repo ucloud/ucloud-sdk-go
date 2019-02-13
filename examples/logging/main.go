@@ -26,13 +26,13 @@ func main() {
 
 	uhostClient := uhost.NewClient(&cfg, &credential)
 
-	// excepted logging
+	// included logging
 	req1 := uhostClient.NewDescribeUHostInstanceRequest()
 	req1.Region = ucloud.String(region)
 
 	uhostClient.DescribeUHostInstance(req1)
 
-	// unexcepted logging
+	// excepted logging
 	cfg.SetActionLevel("DescribeImage", log.WarnLevel)
 	req2 := uhostClient.NewDescribeImageRequest()
 	req2.Region = ucloud.String(region)

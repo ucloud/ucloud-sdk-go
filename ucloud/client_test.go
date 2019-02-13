@@ -128,11 +128,11 @@ func Test_errorHandler(t *testing.T) {
 		step func() error
 	}{
 		{
-			name: "unexcepted error",
+			name: "unexpected error",
 			step: func() error {
-				_, err := errorHandler(client, req, resp, errors.New("unexcepted error"))
+				_, err := errorHandler(client, req, resp, errors.New("unexpected error"))
 				if uErr, ok := err.(uerr.ClientError); !ok || uErr.Name() != uerr.ErrSendRequest {
-					return errors.New("unexcepted error should be convert to unknown client error")
+					return errors.New("unexpected error should be convert to unknown client error")
 				}
 				return nil
 			},

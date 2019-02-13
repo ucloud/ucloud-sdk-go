@@ -9,9 +9,9 @@ import (
 
 func TestClientError(t *testing.T) {
 	originErr := errors.New("o")
-	err := NewClientError(ErrUnexcepted, originErr)
+	err := NewClientError(ErrUnexpected, originErr)
 
-	assert.Equal(t, err.Name(), ErrUnexcepted)
+	assert.Equal(t, err.Name(), ErrUnexpected)
 	assert.Equal(t, err.Code(), -1)
 	assert.Equal(t, err.OriginError(), originErr)
 	assert.Equal(t, err.Retryable(), false)
@@ -39,7 +39,7 @@ func TestServerError(t *testing.T) {
 func TestRetryableError(t *testing.T) {
 	err := NewRetryableError(errors.New("o"))
 
-	assert.Equal(t, err.Name(), ErrUnexcepted)
+	assert.Equal(t, err.Name(), ErrUnexpected)
 	assert.Equal(t, err.Code(), -1)
 	assert.Error(t, err.OriginError())
 	assert.Equal(t, err.Retryable(), true)
