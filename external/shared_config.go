@@ -2,10 +2,16 @@ package external
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 )
+
+// DefaultProfile is the default named profile for ucloud sdk
+const DefaultProfile = "default"
 
 // DefaultSharedConfigFile will return the default shared config filename
 func DefaultSharedConfigFile() string {
@@ -15,6 +21,36 @@ func DefaultSharedConfigFile() string {
 // DefaultSharedCredentialsFile will return the default shared credential filename
 func DefaultSharedCredentialsFile() string {
 	return filepath.Join(userHomeDir(), ".ucloud", "credential.json")
+}
+
+// LoadUCloudConfigFile will load ucloud client config from config file
+func LoadUCloudConfigFile(cfgFile, profile string) (*ucloud.Config, error) {
+	if len(profile) == 0 {
+		return nil, fmt.Errorf("excepted ucloud named profile is not empty")
+	}
+
+	cfgMaps, err := loadConfigFile(cfgFile)
+	if err != nil {
+		return nil, err
+	}
+
+	c := getSharedConfig(cfgMaps, profile)
+	return c.Config(), nil
+}
+
+// LoadUCloudCredentialFile will load ucloud credential config from config file
+func LoadUCloudCredentialFile(credFile, profile string) (*auth.Credential, error) {
+	if len(profile) == 0 {
+		return nil, fmt.Errorf("excepted ucloud named profile is not empty")
+	}
+
+	credMaps, err := loadCredFile(credFile)
+	if err != nil {
+		return nil, err
+	}
+
+	c := getSharedCredential(credMaps, profile)
+	return c.Credential(), nil
 }
 
 type sharedConfig struct {
@@ -33,105 +69,108 @@ type sharedCredential struct {
 	Profile    string `json:"profile"`
 }
 
-func loadFile(cfgFile, credFile string) ([]sharedConfig, []sharedCredential, error) {
-	var err error
+func loadConfigFile(cfgFile string) ([]sharedConfig, error) {
+	realCfgFile := cfgFile
 	cfgMaps := make([]sharedConfig, 0)
-	credMaps := make([]sharedCredential, 0)
+
+	// try to load default config
+	if len(realCfgFile) == 0 {
+		realCfgFile = DefaultSharedConfigFile()
+	}
 
 	// load config file
-	err = loadJSONFile(cfgFile, &cfgMaps)
+	err := loadJSONFile(realCfgFile, &cfgMaps)
 	if err != nil {
-		return nil, nil, err
+		// skip error for loading default config
+		if len(cfgFile) == 0 {
+			log.Debugf("config file is empty")
+		} else {
+			return nil, err
+		}
+	}
+
+	return cfgMaps, nil
+}
+
+func loadCredFile(credFile string) ([]sharedCredential, error) {
+	realCredFile := credFile
+	credMaps := make([]sharedCredential, 0)
+
+	// try to load default credential
+	if len(credFile) == 0 {
+		realCredFile = DefaultSharedCredentialsFile()
 	}
 
 	// load credential file
-	err = loadJSONFile(credFile, &credMaps)
+	err := loadJSONFile(realCredFile, &credMaps)
 	if err != nil {
-		return nil, nil, err
+		// skip error for loading default credential
+		if len(credFile) == 0 {
+			log.Debugf("credential file is empty")
+		} else {
+			return nil, err
+		}
 	}
 
-	return cfgMaps, credMaps, nil
+	return credMaps, nil
 }
 
 func loadSharedConfigFile(cfgFile, credFile, profile string) (*config, error) {
-	cfgMaps, credMaps, err := loadFile(cfgFile, credFile)
+	cfgMaps, err := loadConfigFile(cfgFile)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, nil
-		}
 		return nil, err
 	}
 
-	// validate config file
-	activeProfile, err := validateConfig(cfgMaps)
+	credMaps, err := loadCredFile(credFile)
 	if err != nil {
 		return nil, err
 	}
 
 	// load configured profile
 	if len(profile) == 0 {
-		profile = activeProfile
+		profile = DefaultProfile
 	}
 
-	var cfg *sharedConfig
+	c := &config{
+		Profile:              profile,
+		SharedConfigFile:     cfgFile,
+		SharedCredentialFile: credFile,
+	}
+	c.merge(getSharedConfig(cfgMaps, profile))
+	c.merge(getSharedCredential(credMaps, profile))
+
+	return c, nil
+}
+
+func getSharedConfig(cfgMaps []sharedConfig, profile string) *config {
+	cfg := &sharedConfig{}
+
 	for i := 0; i < len(cfgMaps); i++ {
 		if cfgMaps[i].Profile == profile {
 			cfg = &cfgMaps[i]
 		}
 	}
 
-	var cred *sharedCredential
+	return &config{
+		ProjectId: cfg.ProjectID,
+		Region:    cfg.Region,
+		Zone:      cfg.Zone,
+		BaseUrl:   cfg.BaseURL,
+		Timeout:   time.Duration(cfg.Timeout) * time.Second,
+	}
+}
+
+func getSharedCredential(credMaps []sharedCredential, profile string) *config {
+	cred := &sharedCredential{}
+
 	for i := 0; i < len(credMaps); i++ {
 		if credMaps[i].Profile == profile {
 			cred = &credMaps[i]
 		}
 	}
 
-	if cfg == nil {
-		return nil, fmt.Errorf("excepted shared config with %s profile, but not found", profile)
-	}
-
-	if cred == nil {
-		return nil, fmt.Errorf("excepted shared credential with %s profile, but not found", profile)
-	}
-
 	return &config{
-		PublicKey:            cred.PublicKey,
-		PrivateKey:           cred.PrivateKey,
-		ProjectId:            cfg.ProjectID,
-		Region:               cfg.Region,
-		Zone:                 cfg.Zone,
-		BaseUrl:              cfg.BaseURL,
-		Timeout:              time.Duration(cfg.Timeout) * time.Second,
-		Profile:              profile,
-		SharedConfigFile:     cfgFile,
-		SharedCredentialFile: credFile,
-	}, nil
-}
-
-func validateConfig(cfgMaps []sharedConfig) (string, error) {
-	profiles := newSet(hashString, nil)
-	var active sharedConfig
-	var activeCount int
-	for _, cfg := range cfgMaps {
-		if cfg.Active {
-			activeCount++
-			active = cfg
-		}
-		profiles.Add(cfg.Profile)
+		PublicKey:  cred.PublicKey,
+		PrivateKey: cred.PrivateKey,
 	}
-
-	if profiles.Len() != len(cfgMaps) {
-		return "", fmt.Errorf("excepted the named profile is unique")
-	}
-
-	if activeCount > 1 {
-		return "", fmt.Errorf("excepted exactly one named profile is actived, got %d", activeCount)
-	}
-
-	if activeCount == 0 {
-		return "", fmt.Errorf("excepted exactly one named profile is actived, but not found")
-	}
-
-	return active.Profile, nil
 }

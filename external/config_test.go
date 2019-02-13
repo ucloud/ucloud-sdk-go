@@ -16,17 +16,19 @@ var (
 	TestValueEnvUCloudPrivateKey           = "c45f9bec5fa4c6c47fd871fadd97dd2e"
 	TestValueEnvUCloudProjectId            = "org-3kopqz"
 	TestValueEnvUCloudRegion               = "cn-bj2"
-	TestValueEnvUCloudProfile              = "" // use actived profile
+	TestValueEnvUCloudProfile              = "default"
 	TestValueEnvUCloudSharedConfigFile     = filepath.Join("test-fixtures", "config.json")
 	TestValueEnvUCloudSharedCredentialFile = filepath.Join("test-fixtures", "credential.json")
 
-	TestValueFileUCloudPublicKey  = "18ce27e79596c5adc986f66707b3fd55"
-	TestValueFileUCloudPrivateKey = "2c125558f9004b73751e3a4658e2f52b"
-	TestValueFileUCloudProjectId  = "org-0qakla"
-	TestValueFileUCloudRegion     = "cn-sh2"
-	TestValueFileUCloudZone       = "cn-sh2-02"
-	TestValueFileUCloudTimeout    = time.Duration(30) * time.Second
-	TestValueFileUCloudBaseUrl    = "https://api.ucloud.cn"
+	TestValueFileUCloudDefaultPublicKey  = "f05816ca02feec1b3fc38b80a1c450cc"
+	TestValueFileUCloudDefaultPrivateKey = "c45f9bec5fa4c6c47fd871fadd97dd2e"
+	TestValueFileUCloudPublicKey         = "18ce27e79596c5adc986f66707b3fd55"
+	TestValueFileUCloudPrivateKey        = "2c125558f9004b73751e3a4658e2f52b"
+	TestValueFileUCloudProjectId         = "org-0qakla"
+	TestValueFileUCloudRegion            = "cn-sh2"
+	TestValueFileUCloudZone              = "cn-sh2-02"
+	TestValueFileUCloudTimeout           = time.Duration(30) * time.Second
+	TestValueFileUCloudBaseUrl           = "https://api.ucloud.cn"
 )
 
 func TestLoadConfig(t *testing.T) {
@@ -69,13 +71,9 @@ func checkTestEnvConfig(t *testing.T, c *config) {
 
 func checkTestConfig(t *testing.T, c ConfigProvider) {
 	cfg, cred := c.Config(), c.Credential()
-	assert.Equal(t, TestValueFileUCloudPublicKey, cred.PublicKey)
-	assert.Equal(t, TestValueFileUCloudPrivateKey, cred.PrivateKey)
-	assert.Equal(t, TestValueFileUCloudProjectId, cfg.ProjectId)
-	assert.Equal(t, TestValueFileUCloudRegion, cfg.Region)
-	assert.Equal(t, TestValueFileUCloudTimeout, cfg.Timeout)
-	assert.Equal(t, TestValueFileUCloudBaseUrl, cfg.BaseUrl)
-	assert.Equal(t, TestValueFileUCloudZone, cfg.Zone)
+
+	checkTestCredential(t, cred)
+	checkTestClientConfig(t, cfg)
 }
 
 func setTestEnv() {
