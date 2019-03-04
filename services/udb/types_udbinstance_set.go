@@ -115,4 +115,7 @@ type UDBInstanceSet struct {
 
 	// Subnet Id
 	SubnetId string
+
+	// DB实例磁盘类型
+	InstanceType string
 }
