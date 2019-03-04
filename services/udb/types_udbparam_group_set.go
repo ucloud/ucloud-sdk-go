@@ -25,4 +25,10 @@ type UDBParamGroupSet struct {
 
 	// 参数的键值对表 UDBParamMemberSet
 	ParamMember []UDBParamMemberSet
+
+	// 参数组所在可用区，如果是跨可用区参数组则其值为 null
+	Zone string
+
+	// true 表示取跨可用区参数，false 表示单可用区参数组
+	RegionFlag bool
 }
