@@ -35,7 +35,10 @@ func (p *RegexpPatcher) PatchString(body string) string {
 }
 
 // RetCodePatcher will convert `RetCode` as integer
-var RetCodePatcher = NewRegexpPatcher(`"RetCode":\s*"(\d+)"`, `"RetCode": $1`)
+var RetCodePatcher = NewRegexpPatcher(`"RetCode":\s?"(\d+)"`, `"RetCode": $1`)
 
 // PortPatcher will convert `Port` as integer
-var PortPatcher = NewRegexpPatcher(`"Port":\s*"(\d+)"`, `"Port": $1`)
+var PortPatcher = NewRegexpPatcher(`"Port":\s?"(\d+)"`, `"Port": $1`)
+
+// FrequencePatcher will convert `Frequence` as float64
+var FrequencePatcher = NewRegexpPatcher(`"Frequence":\s?"([\d.]+)"`, `"Frequence": $1`)
