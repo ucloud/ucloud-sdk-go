@@ -24,7 +24,7 @@ type PHostMachineTypeSet struct {
 	Disks []PHostDiskSet
 
 	// 其他组件信息
-	Components []PHostComponentSet
+	Components PHostComponentSet
 
 	// 集群库存信息
 	Clusters []PHostClusterSet
