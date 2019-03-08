@@ -54,7 +54,7 @@ type PHostSet struct {
 	Memory int
 
 	// CPU信息，见 PHostCPUSet
-	CPUSet []PHostCPUSet
+	CPUSet PHostCPUSet
 
 	// 磁盘信息，见 PHostDiskSet
 	DiskSet []PHostDiskSet
