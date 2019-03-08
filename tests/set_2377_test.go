@@ -14,8 +14,8 @@ func TestSet2377(t *testing.T) {
 	ctx.T = t
 	ctx.Vars = map[string]interface{}{}
 
-	ctx.SetVar("Region", "cn-sh2")
-	ctx.SetVar("Zone", "cn-sh2-02")
+	ctx.SetVar("Region", "cn-bj2")
+	ctx.SetVar("Zone", "cn-bj2-03")
 
 	ctx.SetVar("Password", "YW4mODE1MDI5")
 	ctx.SetVar("Type", "DISK-48T-V4")
