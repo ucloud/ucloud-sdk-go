@@ -49,11 +49,11 @@ func (ctx *TestContext) NewValidator(valuePath string, expected interface{}, com
 
 		ok, err := compratorFunc(v, expected)
 		if err != nil {
-			return errors.Errorf("want %#v %s %#v, %s", v, comparator, expected, err)
+			return errors.Errorf("want %s: %#v %s %#v, %s", valuePath, v, comparator, expected, err)
 		}
 
 		if !ok {
-			return errors.Errorf("want %#v %s %#v, but false", v, comparator, expected)
+			return errors.Errorf("want %s %#v %s %#v, but false", valuePath, v, comparator, expected)
 		}
 
 		return nil

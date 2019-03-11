@@ -268,6 +268,8 @@ func testSet2377DescribePHost07(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
+	ctx.NoError(utest.SetReqValue(req, "PHostId", ctx.GetVar("PHost")))
+
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
 			return uphostClient.DescribePHost(req)
