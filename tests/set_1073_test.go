@@ -18,7 +18,7 @@ func TestSet1073(t *testing.T) {
 	ctx.SetVar("Zone", "cn-bj2-04")
 
 	ctx.SetVar("Password", "dXFhQHVjbG91ZA==")
-	ctx.SetVar("Type", "SSD-2")
+	ctx.SetVar("Type", "DB-2")
 	ctx.SetVar("Name", "test123123")
 	ctx.SetVar("Remark", "test123123")
 	ctx.SetVar("ChargeType", "Month")
