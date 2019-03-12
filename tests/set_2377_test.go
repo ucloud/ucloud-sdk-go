@@ -278,7 +278,7 @@ func testSet2377DescribePHost07(ctx *utest.TestContext) {
 			ctx.NewValidator("RetCode", "0", "str_eq"),
 			ctx.NewValidator("Action", "DescribePHostResponse", "str_eq"),
 			ctx.NewValidator("PHostSet.0.Name", ctx.GetVar("ModifyName"), "str_eq"),
-			ctx.NewValidator("PHostSet.0.Remark", ctx.GetVar("$ModifyRemark"), "str_eq"),
+			ctx.NewValidator("PHostSet.0.Remark", ctx.GetVar("ModifyRemark"), "str_eq"),
 		},
 		MaxRetries:    3,
 		RetryInterval: 1 * time.Second,
