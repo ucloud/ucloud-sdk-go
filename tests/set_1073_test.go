@@ -22,7 +22,7 @@ func TestSet1073(t *testing.T) {
 	ctx.SetVar("Name", "test123123")
 	ctx.SetVar("Remark", "test123123")
 	ctx.SetVar("ChargeType", "Month")
-	ctx.SetVar("ProjectId", "org-xbbyex")
+	ctx.SetVar("ProjectId", "org-fthbzm")
 
 	testSet1073DescribePHostImage00(&ctx)
 	testSet1073GetPHostPrice01(&ctx)
