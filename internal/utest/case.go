@@ -1,6 +1,7 @@
 package utest
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -31,7 +32,7 @@ func (t *TestCase) Run() (interface{}, error) {
 			if err := validator(resp, err); err != nil {
 				isFailed = true
 				if i != t.MaxRetries {
-					t.T.Logf("skip validate error for retring, %s", err)
+					fmt.Printf("skip validate error for retring, %s\n", err)
 					continue
 				}
 				assert.NoError(t.T, err)
