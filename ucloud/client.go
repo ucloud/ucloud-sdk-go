@@ -4,7 +4,6 @@ Package ucloud is a package of utilities to setup ucloud sdk and improve using e
 package ucloud
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/private/utils"
@@ -119,9 +118,6 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		for _, patch := range patches {
 			body = patch.Patch(body)
 		}
-
-		c.logActionWarnf(action, "[DEBUG] %s", body)
-		fmt.Printf("[DEBUG] %s", body)
 
 		err = c.unmarshalHTTPReponse(body, resp)
 	}
