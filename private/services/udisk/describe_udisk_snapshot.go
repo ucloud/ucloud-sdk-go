@@ -13,7 +13,7 @@ type DescribeUDiskSnapshotRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	// Zone *string `required:"false"`
 
 	// 数据偏移量, 默认为0
 	Offset *int `required:"false"`

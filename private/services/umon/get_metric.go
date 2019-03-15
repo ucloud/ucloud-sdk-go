@@ -13,7 +13,7 @@ type GetMetricRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	// Zone *string `required:"false"`
 
 	// 资源类型
 	ResourceType *string `required:"true"`

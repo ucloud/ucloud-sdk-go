@@ -13,7 +13,7 @@ type DescribeSnapshotRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 快照的资源ID，例如SnapshotIds.0代表希望获取信息的快照1，SnapshotIds.2代表快照2。 如果不传，则返回当前Region所有符合条件的快照。
 	SnapshotIds []string `required:"false"`

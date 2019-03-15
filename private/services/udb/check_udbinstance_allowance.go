@@ -13,7 +13,7 @@ type CheckUDBInstanceAllowanceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// DB种类，分为SQL和NOSQL,取值分别为sql、nosql、postgresql
 	ClassType *string `required:"true"`

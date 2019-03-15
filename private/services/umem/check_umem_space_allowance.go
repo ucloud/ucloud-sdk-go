@@ -13,7 +13,7 @@ type CheckUMemSpaceAllowanceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 创建实例的容量大小；分布式memcache最低8G， 分布式redis最低16G，两者最高都是1000G
 	Size *int `required:"true"`

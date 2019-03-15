@@ -13,7 +13,7 @@ type RestoreUHostDiskRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 快照所属主机.仅当网盘数据盘未挂载时才可以不传。
 	UHostId *string `required:"false"`

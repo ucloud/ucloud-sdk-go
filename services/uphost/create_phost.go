@@ -13,7 +13,7 @@ type CreatePHostRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 镜像ID。 请通过 [DescribePHostImage]获取
 	ImageId *string `required:"true"`
