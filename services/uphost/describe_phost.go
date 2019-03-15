@@ -12,7 +12,7 @@ type DescribePHostRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	// Zone *string `required:"false"`
 
 	// PHost资源ID，若为空，则返回当前Region所有PHost。
 	PHostId []string `required:"false"`

@@ -13,7 +13,7 @@ type DeleteSnapshotRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 快照Id
 	SnapshotId *string `required:"true"`

@@ -16,7 +16,7 @@ type ReinstallUHostInstanceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	// Zone *string `required:"false"`
 
 	// UHost实例资源ID 参见 [DescribeUHostInstance](describe_uhost_instance.html)
 	UHostId *string `required:"true"`

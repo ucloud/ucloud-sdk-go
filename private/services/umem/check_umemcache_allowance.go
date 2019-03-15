@@ -13,7 +13,7 @@ type CheckUMemcacheAllowanceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 创建实例的容量大小, 单位:GB 目前仅支持1/2/4/8/16五种规格
 	Size *int `required:"true"`

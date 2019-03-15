@@ -16,7 +16,7 @@ type ModifyURedisGroupPasswordRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"false"`
+	// Zone *string `required:"false"`
 
 	// 组的ID
 	GroupId *string `required:"true"`

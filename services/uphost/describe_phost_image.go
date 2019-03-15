@@ -13,7 +13,7 @@ type DescribePHostImageRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 镜像类别，枚举为：Base,标准镜像；默认为标准镜像。
 	ImageType *string `required:"false"`

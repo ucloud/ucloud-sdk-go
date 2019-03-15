@@ -13,7 +13,7 @@ type CheckUDiskAllowanceRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 购买UDisk大小,单位:GB,范围[1~2000], 权限位控制可达8T,若需要请申请开通相关权限。
 	Size *int `required:"true"`

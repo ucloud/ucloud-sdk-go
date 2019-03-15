@@ -13,7 +13,7 @@ type DescribeURedisConfigRequest struct {
 	request.CommonBase
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// Zone *string `required:"true"`
 
 	// 是否是跨机房URedis(默认false)
 	RegionFlag *bool `required:"true"`
