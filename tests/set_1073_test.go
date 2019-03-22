@@ -14,11 +14,11 @@ func TestSet1073(t *testing.T) {
 	ctx.T = t
 	ctx.Vars = map[string]interface{}{}
 
-	ctx.SetVar("Region", "cn-bj2")
-	ctx.SetVar("Zone", "cn-bj2-04")
+	ctx.SetVar("Region", "cn-sh2")
+	ctx.SetVar("Zone", "cn-sh2-02")
 
 	ctx.SetVar("Password", "dXFhQHVjbG91ZA==")
-	ctx.SetVar("Type", "DB-2")
+	ctx.SetVar("Type", "SSD-2")
 	ctx.SetVar("Name", "test123123")
 	ctx.SetVar("Remark", "test123123")
 	ctx.SetVar("ChargeType", "Month")
