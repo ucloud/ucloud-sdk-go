@@ -25,10 +25,10 @@ type DescribeVServerRequest struct {
 	VServerId *string `required:"false"`
 
 	// 数据分页值
-	Limit *string `required:"false"`
+	Limit *int `required:"false"`
 
 	// 数据偏移量
-	Offset *string `required:"false"`
+	Offset *int `required:"false"`
 }
 
 // DescribeVServerResponse is response schema for DescribeVServer action
