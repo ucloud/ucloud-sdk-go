@@ -12,8 +12,14 @@ import (
 type DescribeVDiskTmListRequest struct {
 	request.CommonBase
 
-	// 可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
 
 	// 磁盘ID
 	VDiskId *string `required:"true"`
@@ -27,7 +33,7 @@ type DescribeVDiskTmListResponse struct {
 	response.CommonBase
 
 	// 返回数量
-	TotalCount string
+	TotalCount int
 
 	// 备份链信息
 	DataSet []DiskListDataSet
@@ -39,7 +45,12 @@ type DescribeVDiskTmListResponse struct {
 // NewDescribeVDiskTmListRequest will create request of DescribeVDiskTmList action.
 func (c *UDataArkClient) NewDescribeVDiskTmListRequest() *DescribeVDiskTmListRequest {
 	req := &DescribeVDiskTmListRequest{}
+
+	// setup request with client config
 	c.client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
 	return req
 }
 
