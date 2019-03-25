@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-
-	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 )
 
 // TestValidator is the validator function
@@ -27,10 +25,10 @@ func (t *TestCase) Run() (interface{}, error) {
 	for i := 0; i < t.MaxRetries+1; i++ {
 		resp, err := t.Invoker()
 
-		isFailed := false
+		isValidateFailed := false
 		for _, validator := range t.Validators {
 			if err := validator(resp, err); err != nil {
-				isFailed = true
+				isValidateFailed = true
 				if i != t.MaxRetries {
 					fmt.Printf("skip validate error for retring, %s\n", err)
 					continue
@@ -39,12 +37,16 @@ func (t *TestCase) Run() (interface{}, error) {
 			}
 		}
 
-		if i == t.MaxRetries || !isFailed {
-			if err != nil && !uerr.IsCodeError(err) {
-				assert.NoError(t.T, err)
-				return resp, err
-			}
+		if !isValidateFailed {
 			return resp, nil
+		}
+
+		if i == t.MaxRetries && isValidateFailed {
+			if err != nil {
+				// log and fail now
+				t.T.Fatal(err)
+			}
+			t.T.FailNow()
 		}
 
 		<-time.After(t.RetryInterval)

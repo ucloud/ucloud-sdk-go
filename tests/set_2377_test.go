@@ -15,7 +15,7 @@ func TestSet2377(t *testing.T) {
 	ctx.Vars = map[string]interface{}{}
 
 	ctx.SetVar("Region", "cn-bj2")
-	ctx.SetVar("Zone", "cn-bj2-04")
+	ctx.SetVar("Zone", "cn-bj2-05")
 
 	ctx.SetVar("Password", "YW4mODE1MDI5")
 	ctx.SetVar("Type", "DISK-48T-V4")
@@ -68,7 +68,10 @@ func testSet2377DescribePHostImage00(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 	ctx.Vars["ImageID1"] = ctx.Must(utest.GetValue(resp, "ImageSet.0.ImageId"))
@@ -97,7 +100,10 @@ func testSet2377DescribePHostMachineType01(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -125,7 +131,9 @@ func testSet2377DescribePHostResourceInfo02(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -161,7 +169,10 @@ func testSet2377CreatePHost03(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 	ctx.Vars["phostId"] = ctx.Must(utest.GetValue(resp, "PHostId.0"))
@@ -193,7 +204,10 @@ func testSet2377DescribePHost04(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -223,7 +237,9 @@ func testSet2377GetPHostKVMInfo05(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -255,7 +271,10 @@ func testSet2377ModifyPHostInfo06(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -287,7 +306,9 @@ func testSet2377DescribePHost07(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -317,7 +338,10 @@ func testSet2377StopPHost08(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -348,7 +372,10 @@ func testSet2377DescribePHost09(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -380,7 +407,9 @@ func testSet2377ReinstallPHost10(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -411,7 +440,10 @@ func testSet2377DescribePHost11(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -441,7 +473,9 @@ func testSet2377PoweroffPHost12(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -472,7 +506,10 @@ func testSet2377DescribePHost13(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -502,7 +539,10 @@ func testSet2377StartPHost14(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -533,7 +573,10 @@ func testSet2377DescribePHost15(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }
@@ -563,7 +606,10 @@ func testSet2377TerminatePHost16(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
+
 		ctx.T.Fatal(err)
+		ctx.T.FailNow()
+
 	}
 
 }

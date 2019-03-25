@@ -8,6 +8,18 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type UMemDataSet struct {
 
+	// 实例所在可用区，或者master redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
+	Zone string
+
+	// 表示实例是主库还是从库,master,slave
+	Role string
+
+	// UMEM实例列表 UMemSlaveDataSet 如果没有slave，则没有该字段
+	DataSet []UMemSlaveDataSet
+
+	// 是否拥有只读Slave
+	OwnSlave string
+
 	// 资源ID
 	ResourceId string
 
@@ -67,16 +79,4 @@ type UMemDataSet struct {
 
 	// 跨机房URedis，slave redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	SlaveZone string
-
-	// 实例所在可用区，或者master redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
-	Zone string
-
-	// 是否拥有只读Slave
-	OwnSlave string
-
-	//角色
-	Role string
-
-	//从节点
-	DataSet []UMemSlaveDataSet
 }
