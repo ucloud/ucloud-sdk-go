@@ -49,9 +49,10 @@ func (c *UMemClient) NewModifyURedisGroupPasswordRequest() *ModifyURedisGroupPas
 func (c *UMemClient) ModifyURedisGroupPassword(req *ModifyURedisGroupPasswordRequest) (*ModifyURedisGroupPasswordResponse, error) {
 	var err error
 	var res ModifyURedisGroupPasswordResponse
-	req.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
+	var reqImmutable = *req
+	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("ModifyURedisGroupPassword", req, &res)
+	err = c.client.InvokeAction("ModifyURedisGroupPassword", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}
