@@ -55,9 +55,10 @@ func (c *UHostClient) NewResetUHostInstancePasswordRequest() *ResetUHostInstance
 func (c *UHostClient) ResetUHostInstancePassword(req *ResetUHostInstancePasswordRequest) (*ResetUHostInstancePasswordResponse, error) {
 	var err error
 	var res ResetUHostInstancePasswordResponse
-	req.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
+	var reqImmutable = *req
+	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("ResetUHostInstancePassword", req, &res)
+	err = c.client.InvokeAction("ResetUHostInstancePassword", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}

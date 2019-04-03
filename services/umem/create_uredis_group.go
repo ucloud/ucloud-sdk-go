@@ -100,9 +100,10 @@ func (c *UMemClient) NewCreateURedisGroupRequest() *CreateURedisGroupRequest {
 func (c *UMemClient) CreateURedisGroup(req *CreateURedisGroupRequest) (*CreateURedisGroupResponse, error) {
 	var err error
 	var res CreateURedisGroupResponse
-	req.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
+	var reqImmutable = *req
+	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("CreateURedisGroup", req, &res)
+	err = c.client.InvokeAction("CreateURedisGroup", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}

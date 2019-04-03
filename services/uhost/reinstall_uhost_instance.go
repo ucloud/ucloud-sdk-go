@@ -64,9 +64,10 @@ func (c *UHostClient) NewReinstallUHostInstanceRequest() *ReinstallUHostInstance
 func (c *UHostClient) ReinstallUHostInstance(req *ReinstallUHostInstanceRequest) (*ReinstallUHostInstanceResponse, error) {
 	var err error
 	var res ReinstallUHostInstanceResponse
-	req.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
+	var reqImmutable = *req
+	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("ReinstallUHostInstance", req, &res)
+	err = c.client.InvokeAction("ReinstallUHostInstance", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}
