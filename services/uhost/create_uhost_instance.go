@@ -133,9 +133,10 @@ func (c *UHostClient) NewCreateUHostInstanceRequest() *CreateUHostInstanceReques
 func (c *UHostClient) CreateUHostInstance(req *CreateUHostInstanceRequest) (*CreateUHostInstanceResponse, error) {
 	var err error
 	var res CreateUHostInstanceResponse
-	req.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
+	var reqImmutable = *req
+	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("CreateUHostInstance", req, &res)
+	err = c.client.InvokeAction("CreateUHostInstance", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}
