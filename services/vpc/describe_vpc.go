@@ -23,6 +23,12 @@ type DescribeVPCRequest struct {
 
 	// 业务组名称
 	Tag *string `required:"false"`
+
+	// 偏移量
+	Offset *int `required:"false"`
+
+	// 列表长度
+	Limit *int `required:"false"`
 }
 
 // DescribeVPCResponse is response schema for DescribeVPC action

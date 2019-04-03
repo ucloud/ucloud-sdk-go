@@ -28,10 +28,10 @@ type DescribeFirewallRequest struct {
 	ResourceId *string `required:"false"`
 
 	// 返回数据长度，默认为20，最大10000000
-	Limit *string `required:"false"`
+	Limit *int `required:"false"`
 
 	// 列表起始位置偏移量，默认为0
-	Offset *string `required:"false"`
+	Offset *int `required:"false"`
 }
 
 // DescribeFirewallResponse is response schema for DescribeFirewall action
