@@ -51,7 +51,7 @@ func (c *config) loadEnv() error {
 	return nil
 }
 
-func (c *config) loadFile() error {
+func (c *config) loadFileIfExist() error {
 	cfg, err := loadSharedConfigFile(
 		c.SharedConfigFile,
 		c.SharedCredentialFile,
@@ -118,7 +118,7 @@ func LoadDefaultUCloudConfig() (ConfigProvider, error) {
 		return nil, fmt.Errorf("error on loading env, %s", err)
 	}
 
-	if err := cfg.loadFile(); err != nil {
+	if err := cfg.loadFileIfExist(); err != nil {
 		return nil, fmt.Errorf("error on loading shared config file, %s", err)
 	}
 

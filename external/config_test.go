@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -16,7 +17,10 @@ var (
 	TestValueEnvUCloudPrivateKey           = "c45f9bec5fa4c6c47fd871fadd97dd2e"
 	TestValueEnvUCloudProjectId            = "org-3kopqz"
 	TestValueEnvUCloudRegion               = "cn-bj2"
+	TestValueEnvUCloudZone                 = "cn-bj2-02"
 	TestValueEnvUCloudProfile              = "default"
+	TestValueEnvUCloudTimeout              = time.Duration(30) * time.Second
+	TestValueEnvUCloudBaseUrl              = "https://api.ucloud.cn"
 	TestValueEnvUCloudSharedConfigFile     = filepath.Join("test-fixtures", "config.json")
 	TestValueEnvUCloudSharedCredentialFile = filepath.Join("test-fixtures", "credential.json")
 
@@ -54,7 +58,7 @@ func TestLoadSharedFile(t *testing.T) {
 		SharedConfigFile:     TestValueEnvUCloudSharedConfigFile,
 		SharedCredentialFile: TestValueEnvUCloudSharedCredentialFile,
 	}
-	c.loadFile()
+	c.loadFileIfExist()
 
 	checkTestConfig(t, c)
 }
@@ -64,6 +68,9 @@ func checkTestEnvConfig(t *testing.T, c *config) {
 	assert.Equal(t, TestValueEnvUCloudPrivateKey, c.PrivateKey)
 	assert.Equal(t, TestValueEnvUCloudProjectId, c.ProjectId)
 	assert.Equal(t, TestValueEnvUCloudRegion, c.Region)
+	assert.Equal(t, TestValueEnvUCloudZone, c.Zone)
+	assert.Equal(t, TestValueEnvUCloudBaseUrl, c.BaseUrl)
+	assert.Equal(t, TestValueEnvUCloudTimeout, c.Timeout)
 	assert.Equal(t, TestValueEnvUCloudProfile, c.Profile)
 	assert.Equal(t, TestValueEnvUCloudSharedConfigFile, c.SharedConfigFile)
 	assert.Equal(t, TestValueEnvUCloudSharedCredentialFile, c.SharedCredentialFile)
@@ -81,9 +88,13 @@ func setTestEnv() {
 	os.Setenv(UCloudPrivateKeyEnvVar, TestValueEnvUCloudPrivateKey)
 	os.Setenv(UCloudProjectIdEnvVar, TestValueEnvUCloudProjectId)
 	os.Setenv(UCloudRegionEnvVar, TestValueEnvUCloudRegion)
+	os.Setenv(UCloudZoneEnvVar, TestValueEnvUCloudZone)
+	os.Setenv(UCloudAPIBaseURLEnvVar, TestValueEnvUCloudBaseUrl)
 	os.Setenv(UCloudSharedProfileEnvVar, TestValueEnvUCloudProfile)
 	os.Setenv(UCloudSharedConfigFileEnvVar, TestValueEnvUCloudSharedConfigFile)
 	os.Setenv(UCloudSharedCredentialFileEnvVar, TestValueEnvUCloudSharedCredentialFile)
+	durstr := strings.TrimSuffix(TestValueEnvUCloudTimeout.String(), "s")
+	os.Setenv(UCloudTimeoutSecondEnvVar, durstr)
 }
 
 func writeTestTempConfigFile(vL []sharedConfig) (string, error) {

@@ -2,6 +2,7 @@ package external
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -71,7 +72,7 @@ type sharedCredential struct {
 
 func loadConfigFile(cfgFile string) ([]sharedConfig, error) {
 	realCfgFile := cfgFile
-	cfgMaps := make([]sharedConfig, 0)
+	cfgs := make([]sharedConfig, 0)
 
 	// try to load default config
 	if len(realCfgFile) == 0 {
@@ -79,22 +80,23 @@ func loadConfigFile(cfgFile string) ([]sharedConfig, error) {
 	}
 
 	// load config file
-	err := loadJSONFile(realCfgFile, &cfgMaps)
+	err := loadJSONFile(realCfgFile, &cfgs)
+
 	if err != nil {
 		// skip error for loading default config
-		if len(cfgFile) == 0 {
+		if len(cfgFile) == 0 && os.IsNotExist(err) {
 			log.Debugf("config file is empty")
 		} else {
 			return nil, err
 		}
 	}
 
-	return cfgMaps, nil
+	return cfgs, nil
 }
 
 func loadCredFile(credFile string) ([]sharedCredential, error) {
 	realCredFile := credFile
-	credMaps := make([]sharedCredential, 0)
+	creds := make([]sharedCredential, 0)
 
 	// try to load default credential
 	if len(credFile) == 0 {
@@ -102,33 +104,29 @@ func loadCredFile(credFile string) ([]sharedCredential, error) {
 	}
 
 	// load credential file
-	err := loadJSONFile(realCredFile, &credMaps)
+	err := loadJSONFile(realCredFile, &creds)
+
 	if err != nil {
 		// skip error for loading default credential
-		if len(credFile) == 0 {
+		if len(credFile) == 0 && os.IsNotExist(err) {
 			log.Debugf("credential file is empty")
 		} else {
 			return nil, err
 		}
 	}
 
-	return credMaps, nil
+	return creds, nil
 }
 
 func loadSharedConfigFile(cfgFile, credFile, profile string) (*config, error) {
-	cfgMaps, err := loadConfigFile(cfgFile)
+	cfgs, err := loadConfigFile(cfgFile)
 	if err != nil {
 		return nil, err
 	}
 
-	credMaps, err := loadCredFile(credFile)
+	creds, err := loadCredFile(credFile)
 	if err != nil {
 		return nil, err
-	}
-
-	// load configured profile
-	if len(profile) == 0 {
-		profile = DefaultProfile
 	}
 
 	c := &config{
@@ -136,22 +134,31 @@ func loadSharedConfigFile(cfgFile, credFile, profile string) (*config, error) {
 		SharedConfigFile:     cfgFile,
 		SharedCredentialFile: credFile,
 	}
-	c.merge(getSharedConfig(cfgMaps, profile))
-	c.merge(getSharedCredential(credMaps, profile))
+	c.merge(getSharedConfig(cfgs, profile))
+	c.merge(getSharedCredential(creds, c.Profile))
 
 	return c, nil
 }
 
-func getSharedConfig(cfgMaps []sharedConfig, profile string) *config {
+func getSharedConfig(cfgs []sharedConfig, profile string) *config {
 	cfg := &sharedConfig{}
 
-	for i := 0; i < len(cfgMaps); i++ {
-		if cfgMaps[i].Profile == profile {
-			cfg = &cfgMaps[i]
+	if profile != "" {
+		for i := 0; i < len(cfgs); i++ {
+			if cfgs[i].Profile == profile {
+				cfg = &cfgs[i]
+			}
+		}
+	} else {
+		for i := 0; i < len(cfgs); i++ {
+			if cfgs[i].Active {
+				cfg = &cfgs[i]
+			}
 		}
 	}
 
 	return &config{
+		Profile:   cfg.Profile,
 		ProjectId: cfg.ProjectID,
 		Region:    cfg.Region,
 		Zone:      cfg.Zone,
@@ -160,12 +167,12 @@ func getSharedConfig(cfgMaps []sharedConfig, profile string) *config {
 	}
 }
 
-func getSharedCredential(credMaps []sharedCredential, profile string) *config {
+func getSharedCredential(creds []sharedCredential, profile string) *config {
 	cred := &sharedCredential{}
 
-	for i := 0; i < len(credMaps); i++ {
-		if credMaps[i].Profile == profile {
-			cred = &credMaps[i]
+	for i := 0; i < len(creds); i++ {
+		if creds[i].Profile == profile {
+			cred = &creds[i]
 		}
 	}
 
