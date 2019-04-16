@@ -1,6 +1,11 @@
 package external
 
-import "os"
+import (
+	"fmt"
+	"os"
+	"strconv"
+	"time"
+)
 
 const (
 	UCloudPublicKeyEnvVar = "UCLOUD_PUBLIC_KEY"
@@ -11,6 +16,12 @@ const (
 
 	UCloudRegionEnvVar = "UCLOUD_REGION"
 
+	UCloudZoneEnvVar = "UCLOUD_ZONE"
+
+	UCloudAPIBaseURLEnvVar = "UCLOUD_API_BASE_URL"
+
+	UCloudTimeoutSecondEnvVar = "UCLOUD_TIMEOUT_SECOND"
+
 	UCloudSharedProfileEnvVar = "UCLOUD_PROFILE"
 
 	UCloudSharedConfigFileEnvVar = "UCLOUD_SHARED_CONFIG_FILE"
@@ -19,13 +30,25 @@ const (
 )
 
 func loadEnvConfig() (*config, error) {
-	return &config{
+	cfg := &config{
 		PublicKey:            os.Getenv(UCloudPublicKeyEnvVar),
 		PrivateKey:           os.Getenv(UCloudPrivateKeyEnvVar),
 		ProjectId:            os.Getenv(UCloudProjectIdEnvVar),
 		Region:               os.Getenv(UCloudRegionEnvVar),
-		Profile:              os.Getenv(UCloudSharedProfileEnvVar),
+		Zone:                 os.Getenv(UCloudZoneEnvVar),
+		BaseUrl:              os.Getenv(UCloudAPIBaseURLEnvVar),
 		SharedConfigFile:     os.Getenv(UCloudSharedConfigFileEnvVar),
 		SharedCredentialFile: os.Getenv(UCloudSharedCredentialFileEnvVar),
-	}, nil
+		Profile:              os.Getenv(UCloudSharedProfileEnvVar),
+	}
+
+	durstr, ok := os.LookupEnv(UCloudTimeoutSecondEnvVar)
+	if ok {
+		durnum, err := strconv.Atoi(durstr)
+		if err != nil {
+			return nil, fmt.Errorf("parse environment variable UCLOUD_TIMEOUT_SECOND [%s] error : %v", durstr, err)
+		}
+		cfg.Timeout = time.Second * time.Duration(durnum)
+	}
+	return cfg, nil
 }
