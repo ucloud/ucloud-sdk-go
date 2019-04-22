@@ -16,7 +16,7 @@ var zoneImages = map[string]string{
 	"cn-bj2-02":   "uimage-csarne", // origin is uimage-u0k3m3
 	"cn-bj2-03":   "b2689fc412ee5fa108fa5b23ed2e00e6",
 	"cn-bj2-04":   "uimage-rq2kat",
-	"cn-bj2-05":   "uimage-kg0w4u",
+	"cn-bj2-05":   "uimage-5rqi0y",
 	"cn-sh-01":    "uimage-65fa28",
 	"cn-sh2-01":   "uimage-p0c51y",
 	"cn-sh2-02":   "uimage-0ycp1z",
