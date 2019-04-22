@@ -19,7 +19,7 @@ var zoneImages = map[string]string{
 	"cn-bj2-05":   "uimage-5rqi0y",
 	"cn-sh-01":    "uimage-65fa28",
 	"cn-sh2-01":   "uimage-p0c51y",
-	"cn-sh2-02":   "uimage-0ycp1z",
+	"cn-sh2-02":   "uimage-qnrtyc",
 	"cn-gd-02":    "uimage-b54e21",
 	"hk-01":       "uimage-g3hvlg",
 	"hk-02":       "uimage-gcs1cr",
