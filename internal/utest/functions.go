@@ -13,13 +13,13 @@ import (
 
 var zoneImages = map[string]string{
 	"cn-bj1-01":   "uimage-zf2xoa",
-	"cn-bj2-02":   "uimage-ixczxu", // origin is uimage-u0k3m3
+	"cn-bj2-02":   "uimage-csarne", // origin is uimage-u0k3m3
 	"cn-bj2-03":   "b2689fc412ee5fa108fa5b23ed2e00e6",
 	"cn-bj2-04":   "uimage-rq2kat",
 	"cn-bj2-05":   "uimage-kg0w4u",
 	"cn-sh-01":    "uimage-65fa28",
 	"cn-sh2-01":   "uimage-p0c51y",
-	"cn-sh2-02":   "uimage-of3pac",
+	"cn-sh2-02":   "uimage-0ycp1z",
 	"cn-gd-02":    "uimage-b54e21",
 	"hk-01":       "uimage-g3hvlg",
 	"hk-02":       "uimage-gcs1cr",
