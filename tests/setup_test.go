@@ -22,6 +22,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 
 	pudisk "github.com/ucloud/ucloud-sdk-go/private/services/udisk"
+	pufs "github.com/ucloud/ucloud-sdk-go/private/services/ufs"
 	puhost "github.com/ucloud/ucloud-sdk-go/private/services/uhost"
 	pulb "github.com/ucloud/ucloud-sdk-go/private/services/ulb"
 	pumem "github.com/ucloud/ucloud-sdk-go/private/services/umem"
@@ -32,6 +33,7 @@ import (
 	iudb "github.com/ucloud/ucloud-sdk-go/internal/services/udb"
 	iudisk "github.com/ucloud/ucloud-sdk-go/internal/services/udisk"
 	iudpn "github.com/ucloud/ucloud-sdk-go/internal/services/udpn"
+	iufs "github.com/ucloud/ucloud-sdk-go/internal/services/ufs"
 	iuhost "github.com/ucloud/ucloud-sdk-go/internal/services/uhost"
 	iulb "github.com/ucloud/ucloud-sdk-go/internal/services/ulb"
 	iumem "github.com/ucloud/ucloud-sdk-go/internal/services/umem"
@@ -60,6 +62,7 @@ var pudiskClient *pudisk.UDiskClient
 var pumemClient *pumem.UMemClient
 var pumonClient *pumon.UMonClient
 var pulbClient *pulb.ULBClient
+var pufsClient *pufs.UFSClient
 
 var iuhostClient *iuhost.UHostClient
 var iunetClient *iunet.UNetClient
@@ -72,6 +75,7 @@ var iumemClient *iumem.UMemClient
 var iudpnClient *iudpn.UDPNClient
 var iubillClient *iubill.UBillClient
 var iuphostClient *iuphost.UPHostClient
+var iufsClient *iufs.UFSClient
 
 func TestMain(m *testing.M) {
 	testSetup()
@@ -122,12 +126,14 @@ func testSetup() {
 	iudpnClient = iudpn.NewClient(&cfg, &credential)
 	iubillClient = iubill.NewClient(&cfg, &credential)
 	iuphostClient = iuphost.NewClient(&cfg, &credential)
+	iufsClient = iufs.NewClient(&cfg, &credential)
 
 	pudiskClient = pudisk.NewClient(&cfg, &credential)
 	puhostClient = puhost.NewClient(&cfg, &credential)
 	pumemClient = pumem.NewClient(&cfg, &credential)
 	pumonClient = pumon.NewClient(&cfg, &credential)
 	pulbClient = pulb.NewClient(&cfg, &credential)
+	pufsClient = pufs.NewClient(&cfg, &credential)
 
 	log.Info("setup test fixtures ...")
 }
