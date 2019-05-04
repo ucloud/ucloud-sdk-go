@@ -17,16 +17,16 @@ type RequestHandler func(c *Client, req request.Common) (request.Common, error)
 // HttpRequestHandler receive http request and return a new http request
 type HttpRequestHandler func(c *Client, req *http.HttpRequest) (*http.HttpRequest, error)
 
-// ReponseHandler receive response and write data into this response memory area
-type ReponseHandler func(c *Client, req request.Common, resp response.Common, err error) (response.Common, error)
+// ResponseHandler receive response and write data into this response memory area
+type ResponseHandler func(c *Client, req request.Common, resp response.Common, err error) (response.Common, error)
 
-// HttpReponseHandler receive http response and return a new http response
-type HttpReponseHandler func(c *Client, req *http.HttpRequest, resp *http.HttpResponse, err error) (*http.HttpResponse, error)
+// HttpResponseHandler receive http response and return a new http response
+type HttpResponseHandler func(c *Client, req *http.HttpRequest, resp *http.HttpResponse, err error) (*http.HttpResponse, error)
 
 var defaultRequestHandlers = []RequestHandler{}
 var defaultHttpRequestHandlers = []HttpRequestHandler{}
-var defaultResponseHandlers = []ReponseHandler{errorHandler, logHandler, retryHandler}
-var defaultHttpResponseHandlers = []HttpReponseHandler{errorHTTPHandler, logDebugHTTPHandler}
+var defaultResponseHandlers = []ResponseHandler{errorHandler, logHandler, retryHandler}
+var defaultHttpResponseHandlers = []HttpResponseHandler{errorHTTPHandler, logDebugHTTPHandler}
 
 func retryHandler(c *Client, req request.Common, resp response.Common, err error) (response.Common, error) {
 	if !req.GetRetryable() || err == nil || !err.(uerr.Error).Retryable() {

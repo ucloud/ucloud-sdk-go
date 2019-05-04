@@ -64,9 +64,8 @@ func (c *HttpClient) MockData(fn DataFunc) error {
 		if err != nil {
 			return err
 		}
-		resp.SetBody(body)
 
-		return err
+		return resp.SetBody(body)
 	})
 	return nil
 }
