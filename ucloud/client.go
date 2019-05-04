@@ -79,6 +79,7 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 	var err error
 	req.SetAction(action)
 	req.SetRequestTime(time.Now())
+	resp.SetRequest(req)
 
 	for _, handler := range c.requestHandlers {
 		req, err = handler(c, req)
@@ -112,6 +113,12 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		httpResp, err = handler(c, httpReq, httpResp, err)
 	}
 
+	if httpResp != nil {
+		if v := httpResp.GetHeaders().Get(defaultHeaderRequestUUID); v != "" {
+			req.SetRequestUUID(v)
+		}
+	}
+
 	if err == nil {
 		// use patch object to resolve the http response body
 		// in general, it will be fix common server error before server bugfix is released.
@@ -122,12 +129,6 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		}
 
 		err = c.unmarshalHTTPResponse(body, resp)
-	}
-
-	if resp != nil {
-		if v := httpResp.GetHeaders().Get(defaultHeaderRequestUUID); v != "" {
-			req.SetRequestUUID(v)
-		}
 	}
 
 	// use response middle to build and convert response when response has been created.

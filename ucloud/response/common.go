@@ -15,6 +15,7 @@ type Common interface {
 	GetAction() string
 
 	GetRequest() request.Common
+	SetRequest(request.Common)
 }
 
 // CommonBase has common attribute and method,
@@ -46,4 +47,9 @@ func (c *CommonBase) GetAction() string {
 // GetRequest will return the latest retried request of current action
 func (c *CommonBase) GetRequest() request.Common {
 	return c.request
+}
+
+// GetRequest will return the latest retried request of current action
+func (c *CommonBase) SetRequest(req request.Common) {
+	c.request = req
 }
