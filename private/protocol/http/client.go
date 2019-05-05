@@ -74,7 +74,7 @@ func (c *HttpClient) doHTTPRequest(client *http.Client, req *http.Request) (*Htt
 
 	// build response wrapper
 	resp := NewHttpResponse()
-	resp.setHttpReponse(httpResp)
+	resp.setHttpResponse(httpResp)
 	resp.SetBody(body)
 	return resp, nil
 }

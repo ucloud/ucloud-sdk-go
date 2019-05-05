@@ -21,6 +21,13 @@ func (h *HttpResponse) GetBody() []byte {
 	return h.body
 }
 
+func (h *HttpResponse) GetHeaders() http.Header {
+	if h.originHttpResponse == nil {
+		return http.Header{}
+	}
+	return h.originHttpResponse.Header
+}
+
 // SetBody will set body into http response
 // it usually used for restore the body already read from an stream
 // it will also cause extra memory usage
@@ -39,7 +46,7 @@ func (h *HttpResponse) SetStatusCode(code int) {
 	h.statusCode = code
 }
 
-func (h *HttpResponse) setHttpReponse(resp *http.Response) {
+func (h *HttpResponse) setHttpResponse(resp *http.Response) {
 	h.statusCode = resp.StatusCode
 	h.originHttpResponse = resp
 }

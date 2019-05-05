@@ -74,8 +74,8 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 	return httpReq, nil
 }
 
-// unmarshalHTTPReponse will get body from http response and unmarshal it's data into response struct
-func (c *Client) unmarshalHTTPReponse(body []byte, resp response.Common) error {
+// unmarshalHTTPResponse will get body from http response and unmarshal it's data into response struct
+func (c *Client) unmarshalHTTPResponse(body []byte, resp response.Common) error {
 	if len(body) == 0 {
 		return nil
 	}

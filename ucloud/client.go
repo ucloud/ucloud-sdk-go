@@ -16,6 +16,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
+const defaultHeaderRequestUUID = "Request_uuid"
+
 // Client 客户端
 type Client struct {
 	// configurations
@@ -29,8 +31,8 @@ type Client struct {
 	// internal properties
 	requestHandlers      []RequestHandler
 	httpRequestHandlers  []HttpRequestHandler
-	responseHandlers     []ReponseHandler
-	httpResponseHandlers []HttpReponseHandler
+	responseHandlers     []ResponseHandler
+	httpResponseHandlers []HttpResponseHandler
 }
 
 // NewClient will create an client of ucloud sdk
@@ -77,6 +79,7 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 	var err error
 	req.SetAction(action)
 	req.SetRequestTime(time.Now())
+	resp.SetRequest(req)
 
 	for _, handler := range c.requestHandlers {
 		req, err = handler(c, req)
@@ -110,6 +113,12 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		httpResp, err = handler(c, httpReq, httpResp, err)
 	}
 
+	if httpResp != nil {
+		if v := httpResp.GetHeaders().Get(defaultHeaderRequestUUID); v != "" {
+			req.SetRequestUUID(v)
+		}
+	}
+
 	if err == nil {
 		// use patch object to resolve the http response body
 		// in general, it will be fix common server error before server bugfix is released.
@@ -119,7 +128,7 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 			body = patch.Patch(body)
 		}
 
-		err = c.unmarshalHTTPReponse(body, resp)
+		err = c.unmarshalHTTPResponse(body, resp)
 	}
 
 	// use response middle to build and convert response when response has been created.
@@ -131,26 +140,26 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 	return err
 }
 
-// AddHttpRequestHandler will append a reponse handler to client
+// AddHttpRequestHandler will append a response handler to client
 func (c *Client) AddHttpRequestHandler(h HttpRequestHandler) error {
 	c.httpRequestHandlers = append([]HttpRequestHandler{h}, c.httpRequestHandlers...)
 	return nil
 }
 
-// AddRequestHandler will append a reponse handler to client
+// AddRequestHandler will append a response handler to client
 func (c *Client) AddRequestHandler(h RequestHandler) error {
 	c.requestHandlers = append([]RequestHandler{h}, c.requestHandlers...)
 	return nil
 }
 
-// AddHttpResponseHandler will append a http reponse handler to client
-func (c *Client) AddHttpResponseHandler(h HttpReponseHandler) error {
+// AddHttpResponseHandler will append a http response handler to client
+func (c *Client) AddHttpResponseHandler(h HttpResponseHandler) error {
 	c.httpResponseHandlers = append(c.httpResponseHandlers, h)
 	return nil
 }
 
-// AddResponseHandler will append a reponse handler to client
-func (c *Client) AddResponseHandler(h ReponseHandler) error {
+// AddResponseHandler will append a response handler to client
+func (c *Client) AddResponseHandler(h ResponseHandler) error {
 	c.responseHandlers = append(c.responseHandlers, h)
 	return nil
 }
