@@ -35,7 +35,7 @@ func (c *UMemClient) NewResizeUMemcacheGroupRequest() *ResizeUMemcacheGroupReque
 	req := &ResizeUMemcacheGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UMemClient) ResizeUMemcacheGroup(req *ResizeUMemcacheGroupRequest) (*Re
 	var err error
 	var res ResizeUMemcacheGroupResponse
 
-	err = c.client.InvokeAction("ResizeUMemcacheGroup", req, &res)
+	err = c.Client.InvokeAction("ResizeUMemcacheGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

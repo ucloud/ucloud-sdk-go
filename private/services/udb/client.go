@@ -7,13 +7,13 @@ import (
 
 // UDBClient is the client of UDB
 type UDBClient struct {
-	client *ucloud.Client
+	*ucloud.Client
 }
 
 // NewClient will return a instance of UDBClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UDBClient {
 	client := ucloud.NewClient(config, credential)
 	return &UDBClient{
-		client: client,
+		client,
 	}
 }

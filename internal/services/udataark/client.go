@@ -7,13 +7,13 @@ import (
 
 // UDataArkClient is the client of UDataArk
 type UDataArkClient struct {
-	client *ucloud.Client
+	*ucloud.Client
 }
 
 // NewClient will return a instance of UDataArkClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UDataArkClient {
 	client := ucloud.NewClient(config, credential)
 	return &UDataArkClient{
-		client: client,
+		client,
 	}
 }

@@ -39,7 +39,7 @@ type DescribeUHostRecycleResponse struct {
 // NewDescribeUHostRecycleRequest will create request of DescribeUHostRecycle action.
 func (c *UHostClient) NewDescribeUHostRecycleRequest() *DescribeUHostRecycleRequest {
 	req := &DescribeUHostRecycleRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -48,7 +48,7 @@ func (c *UHostClient) DescribeUHostRecycle(req *DescribeUHostRecycleRequest) (*D
 	var err error
 	var res DescribeUHostRecycleResponse
 
-	err = c.client.InvokeAction("DescribeUHostRecycle", req, &res)
+	err = c.Client.InvokeAction("DescribeUHostRecycle", req, &res)
 	if err != nil {
 		return &res, err
 	}

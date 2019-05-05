@@ -65,7 +65,7 @@ func (c *UFSClient) NewCreateUFSVolumeRequest() *CreateUFSVolumeRequest {
 	req := &CreateUFSVolumeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -77,7 +77,7 @@ func (c *UFSClient) CreateUFSVolume(req *CreateUFSVolumeRequest) (*CreateUFSVolu
 	var err error
 	var res CreateUFSVolumeResponse
 
-	err = c.client.InvokeAction("CreateUFSVolume", req, &res)
+	err = c.Client.InvokeAction("CreateUFSVolume", req, &res)
 	if err != nil {
 		return &res, err
 	}

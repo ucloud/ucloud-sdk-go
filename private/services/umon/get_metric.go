@@ -46,7 +46,7 @@ func (c *UMonClient) NewGetMetricRequest() *GetMetricRequest {
 	req := &GetMetricRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -58,7 +58,7 @@ func (c *UMonClient) GetMetric(req *GetMetricRequest) (*GetMetricResponse, error
 	var err error
 	var res GetMetricResponse
 
-	err = c.client.InvokeAction("GetMetric", req, &res)
+	err = c.Client.InvokeAction("GetMetric", req, &res)
 	if err != nil {
 		return &res, err
 	}

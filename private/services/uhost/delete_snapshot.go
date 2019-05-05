@@ -32,7 +32,7 @@ func (c *UHostClient) NewDeleteSnapshotRequest() *DeleteSnapshotRequest {
 	req := &DeleteSnapshotRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UHostClient) DeleteSnapshot(req *DeleteSnapshotRequest) (*DeleteSnapsho
 	var err error
 	var res DeleteSnapshotResponse
 
-	err = c.client.InvokeAction("DeleteSnapshot", req, &res)
+	err = c.Client.InvokeAction("DeleteSnapshot", req, &res)
 	if err != nil {
 		return &res, err
 	}

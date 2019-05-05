@@ -44,7 +44,7 @@ func (c *UFSClient) NewDescribeUFSVolumePriceRequest() *DescribeUFSVolumePriceRe
 	req := &DescribeUFSVolumePriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UFSClient) DescribeUFSVolumePrice(req *DescribeUFSVolumePriceRequest) (
 	var err error
 	var res DescribeUFSVolumePriceResponse
 
-	err = c.client.InvokeAction("DescribeUFSVolumePrice", req, &res)
+	err = c.Client.InvokeAction("DescribeUFSVolumePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

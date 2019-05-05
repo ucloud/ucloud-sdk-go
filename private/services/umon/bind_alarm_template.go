@@ -41,7 +41,7 @@ func (c *UMonClient) NewBindAlarmTemplateRequest() *BindAlarmTemplateRequest {
 	req := &BindAlarmTemplateRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UMonClient) BindAlarmTemplate(req *BindAlarmTemplateRequest) (*BindAlar
 	var err error
 	var res BindAlarmTemplateResponse
 
-	err = c.client.InvokeAction("BindAlarmTemplate", req, &res)
+	err = c.Client.InvokeAction("BindAlarmTemplate", req, &res)
 	if err != nil {
 		return &res, err
 	}

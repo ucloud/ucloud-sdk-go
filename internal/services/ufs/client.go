@@ -7,13 +7,13 @@ import (
 
 // UFSClient is the client of UFS
 type UFSClient struct {
-	client *ucloud.Client
+	*ucloud.Client
 }
 
 // NewClient will return a instance of UFSClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UFSClient {
 	client := ucloud.NewClient(config, credential)
 	return &UFSClient{
-		client: client,
+		client,
 	}
 }

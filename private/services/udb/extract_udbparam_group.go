@@ -38,7 +38,7 @@ func (c *UDBClient) NewExtractUDBParamGroupRequest() *ExtractUDBParamGroupReques
 	req := &ExtractUDBParamGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) ExtractUDBParamGroup(req *ExtractUDBParamGroupRequest) (*Ext
 	var err error
 	var res ExtractUDBParamGroupResponse
 
-	err = c.client.InvokeAction("ExtractUDBParamGroup", req, &res)
+	err = c.Client.InvokeAction("ExtractUDBParamGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

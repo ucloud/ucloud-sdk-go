@@ -35,7 +35,7 @@ func (c *UMemClient) NewCreateURedisBackupRequest() *CreateURedisBackupRequest {
 	req := &CreateURedisBackupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UMemClient) CreateURedisBackup(req *CreateURedisBackupRequest) (*Create
 	var err error
 	var res CreateURedisBackupResponse
 
-	err = c.client.InvokeAction("CreateURedisBackup", req, &res)
+	err = c.Client.InvokeAction("CreateURedisBackup", req, &res)
 	if err != nil {
 		return &res, err
 	}

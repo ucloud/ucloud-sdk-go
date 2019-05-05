@@ -7,13 +7,13 @@ import (
 
 // UMonClient is the client of UMon
 type UMonClient struct {
-	client *ucloud.Client
+	*ucloud.Client
 }
 
 // NewClient will return a instance of UMonClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UMonClient {
 	client := ucloud.NewClient(config, credential)
 	return &UMonClient{
-		client: client,
+		client,
 	}
 }

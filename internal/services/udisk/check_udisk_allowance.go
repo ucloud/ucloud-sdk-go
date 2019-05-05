@@ -33,7 +33,7 @@ type CheckUDiskAllowanceResponse struct {
 // NewCheckUDiskAllowanceRequest will create request of CheckUDiskAllowance action.
 func (c *UDiskClient) NewCheckUDiskAllowanceRequest() *CheckUDiskAllowanceRequest {
 	req := &CheckUDiskAllowanceRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -42,7 +42,7 @@ func (c *UDiskClient) CheckUDiskAllowance(req *CheckUDiskAllowanceRequest) (*Che
 	var err error
 	var res CheckUDiskAllowanceResponse
 
-	err = c.client.InvokeAction("CheckUDiskAllowance", req, &res)
+	err = c.Client.InvokeAction("CheckUDiskAllowance", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -38,7 +38,7 @@ func (c *UFSClient) NewUpdateUFSVolumeInfoRequest() *UpdateUFSVolumeInfoRequest 
 	req := &UpdateUFSVolumeInfoRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UFSClient) UpdateUFSVolumeInfo(req *UpdateUFSVolumeInfoRequest) (*Updat
 	var err error
 	var res UpdateUFSVolumeInfoResponse
 
-	err = c.client.InvokeAction("UpdateUFSVolumeInfo", req, &res)
+	err = c.Client.InvokeAction("UpdateUFSVolumeInfo", req, &res)
 	if err != nil {
 		return &res, err
 	}

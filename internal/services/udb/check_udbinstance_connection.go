@@ -29,7 +29,7 @@ func (c *UDBClient) NewCheckUDBInstanceConnectionRequest() *CheckUDBInstanceConn
 	req := &CheckUDBInstanceConnectionRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -41,7 +41,7 @@ func (c *UDBClient) CheckUDBInstanceConnection(req *CheckUDBInstanceConnectionRe
 	var err error
 	var res CheckUDBInstanceConnectionResponse
 
-	err = c.client.InvokeAction("CheckUDBInstanceConnection", req, &res)
+	err = c.Client.InvokeAction("CheckUDBInstanceConnection", req, &res)
 	if err != nil {
 		return &res, err
 	}

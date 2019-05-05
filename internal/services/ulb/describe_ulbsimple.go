@@ -45,7 +45,7 @@ type DescribeULBSimpleResponse struct {
 // NewDescribeULBSimpleRequest will create request of DescribeULBSimple action.
 func (c *ULBClient) NewDescribeULBSimpleRequest() *DescribeULBSimpleRequest {
 	req := &DescribeULBSimpleRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -54,7 +54,7 @@ func (c *ULBClient) DescribeULBSimple(req *DescribeULBSimpleRequest) (*DescribeU
 	var err error
 	var res DescribeULBSimpleResponse
 
-	err = c.client.InvokeAction("DescribeULBSimple", req, &res)
+	err = c.Client.InvokeAction("DescribeULBSimple", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -42,7 +42,7 @@ type GetMetricResponse struct {
 // NewGetMetricRequest will create request of GetMetric action.
 func (c *UMonClient) NewGetMetricRequest() *GetMetricRequest {
 	req := &GetMetricRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -51,7 +51,7 @@ func (c *UMonClient) GetMetric(req *GetMetricRequest) (*GetMetricResponse, error
 	var err error
 	var res GetMetricResponse
 
-	err = c.client.InvokeAction("GetMetric", req, &res)
+	err = c.Client.InvokeAction("GetMetric", req, &res)
 	if err != nil {
 		return &res, err
 	}

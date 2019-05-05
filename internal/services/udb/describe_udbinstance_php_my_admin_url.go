@@ -32,7 +32,7 @@ func (c *UDBClient) NewDescribeUDBInstancePhpMyAdminURLRequest() *DescribeUDBIns
 	req := &DescribeUDBInstancePhpMyAdminURLRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UDBClient) DescribeUDBInstancePhpMyAdminURL(req *DescribeUDBInstancePhp
 	var err error
 	var res DescribeUDBInstancePhpMyAdminURLResponse
 
-	err = c.client.InvokeAction("DescribeUDBInstancePhpMyAdminURL", req, &res)
+	err = c.Client.InvokeAction("DescribeUDBInstancePhpMyAdminURL", req, &res)
 	if err != nil {
 		return &res, err
 	}

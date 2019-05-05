@@ -39,7 +39,7 @@ func (c *UPHostClient) NewDescribePHostMachineTypeRequest() *DescribePHostMachin
 	req := &DescribePHostMachineTypeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -51,7 +51,7 @@ func (c *UPHostClient) DescribePHostMachineType(req *DescribePHostMachineTypeReq
 	var err error
 	var res DescribePHostMachineTypeResponse
 
-	err = c.client.InvokeActionWithPatcher("DescribePHostMachineType", req, &res, utils.FrequencePatcher)
+	err = c.Client.InvokeActionWithPatcher("DescribePHostMachineType", req, &res, utils.FrequencePatcher)
 	if err != nil {
 		return &res, err
 	}

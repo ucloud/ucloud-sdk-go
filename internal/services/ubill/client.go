@@ -7,13 +7,13 @@ import (
 
 // UBillClient is the client of UBill
 type UBillClient struct {
-	client *ucloud.Client
+	*ucloud.Client
 }
 
 // NewClient will return a instance of UBillClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UBillClient {
 	client := ucloud.NewClient(config, credential)
 	return &UBillClient{
-		client: client,
+		client,
 	}
 }

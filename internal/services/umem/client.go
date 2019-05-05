@@ -7,13 +7,13 @@ import (
 
 // UMemClient is the client of UMem
 type UMemClient struct {
-	client *ucloud.Client
+	*ucloud.Client
 }
 
 // NewClient will return a instance of UMemClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UMemClient {
 	client := ucloud.NewClient(config, credential)
 	return &UMemClient{
-		client: client,
+		client,
 	}
 }

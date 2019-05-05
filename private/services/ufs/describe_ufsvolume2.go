@@ -47,7 +47,7 @@ func (c *UFSClient) NewDescribeUFSVolume2Request() *DescribeUFSVolume2Request {
 	req := &DescribeUFSVolume2Request{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *UFSClient) DescribeUFSVolume2(req *DescribeUFSVolume2Request) (*Describ
 	var err error
 	var res DescribeUFSVolume2Response
 
-	err = c.client.InvokeAction("DescribeUFSVolume2", req, &res)
+	err = c.Client.InvokeAction("DescribeUFSVolume2", req, &res)
 	if err != nil {
 		return &res, err
 	}

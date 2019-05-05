@@ -48,7 +48,7 @@ type GetRestResourceResponse struct {
 // NewGetRestResourceRequest will create request of GetRestResource action.
 func (c *UHostClient) NewGetRestResourceRequest() *GetRestResourceRequest {
 	req := &GetRestResourceRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -57,7 +57,7 @@ func (c *UHostClient) GetRestResource(req *GetRestResourceRequest) (*GetRestReso
 	var err error
 	var res GetRestResourceResponse
 
-	err = c.client.InvokeAction("GetRestResource", req, &res)
+	err = c.Client.InvokeAction("GetRestResource", req, &res)
 	if err != nil {
 		return &res, err
 	}

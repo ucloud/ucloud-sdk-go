@@ -50,7 +50,7 @@ func (c *VPCClient) NewAllocateSecondaryIpRequest() *AllocateSecondaryIpRequest 
 	req := &AllocateSecondaryIpRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -62,7 +62,7 @@ func (c *VPCClient) AllocateSecondaryIp(req *AllocateSecondaryIpRequest) (*Alloc
 	var err error
 	var res AllocateSecondaryIpResponse
 
-	err = c.client.InvokeAction("AllocateSecondaryIp", req, &res)
+	err = c.Client.InvokeAction("AllocateSecondaryIp", req, &res)
 	if err != nil {
 		return &res, err
 	}

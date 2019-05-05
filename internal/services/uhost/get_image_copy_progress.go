@@ -30,7 +30,7 @@ type GetImageCopyProgressResponse struct {
 // NewGetImageCopyProgressRequest will create request of GetImageCopyProgress action.
 func (c *UHostClient) NewGetImageCopyProgressRequest() *GetImageCopyProgressRequest {
 	req := &GetImageCopyProgressRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -39,7 +39,7 @@ func (c *UHostClient) GetImageCopyProgress(req *GetImageCopyProgressRequest) (*G
 	var err error
 	var res GetImageCopyProgressResponse
 
-	err = c.client.InvokeAction("GetImageCopyProgress", req, &res)
+	err = c.Client.InvokeAction("GetImageCopyProgress", req, &res)
 	if err != nil {
 		return &res, err
 	}

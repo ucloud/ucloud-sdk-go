@@ -29,7 +29,7 @@ func (c *UMemClient) NewRestartURedisGroupRequest() *RestartURedisGroupRequest {
 	req := &RestartURedisGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -41,7 +41,7 @@ func (c *UMemClient) RestartURedisGroup(req *RestartURedisGroupRequest) (*Restar
 	var err error
 	var res RestartURedisGroupResponse
 
-	err = c.client.InvokeAction("RestartURedisGroup", req, &res)
+	err = c.Client.InvokeAction("RestartURedisGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

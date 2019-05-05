@@ -39,7 +39,7 @@ type DescribeUhostTmMetaResponse struct {
 // NewDescribeUhostTmMetaRequest will create request of DescribeUhostTmMeta action.
 func (c *UDataArkClient) NewDescribeUhostTmMetaRequest() *DescribeUhostTmMetaRequest {
 	req := &DescribeUhostTmMetaRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -48,7 +48,7 @@ func (c *UDataArkClient) DescribeUhostTmMeta(req *DescribeUhostTmMetaRequest) (*
 	var err error
 	var res DescribeUhostTmMetaResponse
 
-	err = c.client.InvokeAction("DescribeUhostTmMeta", req, &res)
+	err = c.Client.InvokeAction("DescribeUhostTmMeta", req, &res)
 	if err != nil {
 		return &res, err
 	}

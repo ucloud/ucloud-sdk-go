@@ -38,7 +38,7 @@ func (c *UMonClient) NewGetResourceAlarmTemplateRequest() *GetResourceAlarmTempl
 	req := &GetResourceAlarmTemplateRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UMonClient) GetResourceAlarmTemplate(req *GetResourceAlarmTemplateReque
 	var err error
 	var res GetResourceAlarmTemplateResponse
 
-	err = c.client.InvokeAction("GetResourceAlarmTemplate", req, &res)
+	err = c.Client.InvokeAction("GetResourceAlarmTemplate", req, &res)
 	if err != nil {
 		return &res, err
 	}

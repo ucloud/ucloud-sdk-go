@@ -41,7 +41,7 @@ func (c *UFSClient) NewDescribeUFSVolumeMountpointRequest() *DescribeUFSVolumeMo
 	req := &DescribeUFSVolumeMountpointRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UFSClient) DescribeUFSVolumeMountpoint(req *DescribeUFSVolumeMountpoint
 	var err error
 	var res DescribeUFSVolumeMountpointResponse
 
-	err = c.client.InvokeAction("DescribeUFSVolumeMountpoint", req, &res)
+	err = c.Client.InvokeAction("DescribeUFSVolumeMountpoint", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -71,7 +71,7 @@ func (c *UBillClient) NewDescribeOrderDetailInfoRequest() *DescribeOrderDetailIn
 	req := &DescribeOrderDetailInfoRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -83,7 +83,7 @@ func (c *UBillClient) DescribeOrderDetailInfo(req *DescribeOrderDetailInfoReques
 	var err error
 	var res DescribeOrderDetailInfoResponse
 
-	err = c.client.InvokeAction("DescribeOrderDetailInfo", req, &res)
+	err = c.Client.InvokeAction("DescribeOrderDetailInfo", req, &res)
 	if err != nil {
 		return &res, err
 	}

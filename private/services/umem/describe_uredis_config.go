@@ -47,7 +47,7 @@ func (c *UMemClient) NewDescribeURedisConfigRequest() *DescribeURedisConfigReque
 	req := &DescribeURedisConfigRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *UMemClient) DescribeURedisConfig(req *DescribeURedisConfigRequest) (*De
 	var err error
 	var res DescribeURedisConfigResponse
 
-	err = c.client.InvokeAction("DescribeURedisConfig", req, &res)
+	err = c.Client.InvokeAction("DescribeURedisConfig", req, &res)
 	if err != nil {
 		return &res, err
 	}
