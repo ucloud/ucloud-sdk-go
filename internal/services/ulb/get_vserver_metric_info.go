@@ -39,7 +39,7 @@ type GetVServerMetricInfoResponse struct {
 // NewGetVServerMetricInfoRequest will create request of GetVServerMetricInfo action.
 func (c *ULBClient) NewGetVServerMetricInfoRequest() *GetVServerMetricInfoRequest {
 	req := &GetVServerMetricInfoRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -48,7 +48,7 @@ func (c *ULBClient) GetVServerMetricInfo(req *GetVServerMetricInfoRequest) (*Get
 	var err error
 	var res GetVServerMetricInfoResponse
 
-	err = c.client.InvokeAction("GetVServerMetricInfo", req, &res)
+	err = c.Client.InvokeAction("GetVServerMetricInfo", req, &res)
 	if err != nil {
 		return &res, err
 	}

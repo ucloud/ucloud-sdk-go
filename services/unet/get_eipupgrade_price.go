@@ -38,7 +38,7 @@ func (c *UNetClient) NewGetEIPUpgradePriceRequest() *GetEIPUpgradePriceRequest {
 	req := &GetEIPUpgradePriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UNetClient) GetEIPUpgradePrice(req *GetEIPUpgradePriceRequest) (*GetEIP
 	var err error
 	var res GetEIPUpgradePriceResponse
 
-	err = c.client.InvokeAction("GetEIPUpgradePrice", req, &res)
+	err = c.Client.InvokeAction("GetEIPUpgradePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -38,7 +38,7 @@ func (c *UDBClient) NewEditUDBBackupBlacklistRequest() *EditUDBBackupBlacklistRe
 	req := &EditUDBBackupBlacklistRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) EditUDBBackupBlacklist(req *EditUDBBackupBlacklistRequest) (
 	var err error
 	var res EditUDBBackupBlacklistResponse
 
-	err = c.client.InvokeAction("EditUDBBackupBlacklist", req, &res)
+	err = c.Client.InvokeAction("EditUDBBackupBlacklist", req, &res)
 	if err != nil {
 		return &res, err
 	}

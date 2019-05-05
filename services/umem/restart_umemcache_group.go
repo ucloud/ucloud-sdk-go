@@ -35,7 +35,7 @@ func (c *UMemClient) NewRestartUMemcacheGroupRequest() *RestartUMemcacheGroupReq
 	req := &RestartUMemcacheGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UMemClient) RestartUMemcacheGroup(req *RestartUMemcacheGroupRequest) (*
 	var err error
 	var res RestartUMemcacheGroupResponse
 
-	err = c.client.InvokeAction("RestartUMemcacheGroup", req, &res)
+	err = c.Client.InvokeAction("RestartUMemcacheGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

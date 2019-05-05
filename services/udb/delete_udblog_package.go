@@ -38,7 +38,7 @@ func (c *UDBClient) NewDeleteUDBLogPackageRequest() *DeleteUDBLogPackageRequest 
 	req := &DeleteUDBLogPackageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) DeleteUDBLogPackage(req *DeleteUDBLogPackageRequest) (*Delet
 	var err error
 	var res DeleteUDBLogPackageResponse
 
-	err = c.client.InvokeAction("DeleteUDBLogPackage", req, &res)
+	err = c.Client.InvokeAction("DeleteUDBLogPackage", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -38,7 +38,7 @@ func (c *UDBClient) NewFetchUDBInstanceEarliestRecoverTimeRequest() *FetchUDBIns
 	req := &FetchUDBInstanceEarliestRecoverTimeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) FetchUDBInstanceEarliestRecoverTime(req *FetchUDBInstanceEar
 	var err error
 	var res FetchUDBInstanceEarliestRecoverTimeResponse
 
-	err = c.client.InvokeAction("FetchUDBInstanceEarliestRecoverTime", req, &res)
+	err = c.Client.InvokeAction("FetchUDBInstanceEarliestRecoverTime", req, &res)
 	if err != nil {
 		return &res, err
 	}

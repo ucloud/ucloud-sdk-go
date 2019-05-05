@@ -42,7 +42,7 @@ func (c *UMemClient) NewDescribeUMemRequest() *DescribeUMemRequest {
 	req := &DescribeUMemRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -54,7 +54,7 @@ func (c *UMemClient) DescribeUMem(req *DescribeUMemRequest) (*DescribeUMemRespon
 	var err error
 	var res DescribeUMemResponse
 
-	err = c.client.InvokeActionWithPatcher("DescribeUMem", req, &res, utils.PortPatcher)
+	err = c.Client.InvokeActionWithPatcher("DescribeUMem", req, &res, utils.PortPatcher)
 	if err != nil {
 		return &res, err
 	}

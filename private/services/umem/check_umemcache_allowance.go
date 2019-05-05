@@ -35,7 +35,7 @@ func (c *UMemClient) NewCheckUMemcacheAllowanceRequest() *CheckUMemcacheAllowanc
 	req := &CheckUMemcacheAllowanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UMemClient) CheckUMemcacheAllowance(req *CheckUMemcacheAllowanceRequest
 	var err error
 	var res CheckUMemcacheAllowanceResponse
 
-	err = c.client.InvokeAction("CheckUMemcacheAllowance", req, &res)
+	err = c.Client.InvokeAction("CheckUMemcacheAllowance", req, &res)
 	if err != nil {
 		return &res, err
 	}

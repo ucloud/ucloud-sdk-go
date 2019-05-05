@@ -35,7 +35,7 @@ func (c *UDBClient) NewRestartUDBInstanceRequest() *RestartUDBInstanceRequest {
 	req := &RestartUDBInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UDBClient) RestartUDBInstance(req *RestartUDBInstanceRequest) (*Restart
 	var err error
 	var res RestartUDBInstanceResponse
 
-	err = c.client.InvokeAction("RestartUDBInstance", req, &res)
+	err = c.Client.InvokeAction("RestartUDBInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

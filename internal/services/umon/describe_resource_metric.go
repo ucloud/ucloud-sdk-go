@@ -29,7 +29,7 @@ func (c *UMonClient) NewDescribeResourceMetricRequest() *DescribeResourceMetricR
 	req := &DescribeResourceMetricRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -41,7 +41,7 @@ func (c *UMonClient) DescribeResourceMetric(req *DescribeResourceMetricRequest) 
 	var err error
 	var res DescribeResourceMetricResponse
 
-	err = c.client.InvokeAction("DescribeResourceMetric", req, &res)
+	err = c.Client.InvokeAction("DescribeResourceMetric", req, &res)
 	if err != nil {
 		return &res, err
 	}

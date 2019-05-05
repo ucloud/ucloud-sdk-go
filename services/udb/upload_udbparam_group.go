@@ -53,7 +53,7 @@ func (c *UDBClient) NewUploadUDBParamGroupRequest() *UploadUDBParamGroupRequest 
 	req := &UploadUDBParamGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -65,7 +65,7 @@ func (c *UDBClient) UploadUDBParamGroup(req *UploadUDBParamGroupRequest) (*Uploa
 	var err error
 	var res UploadUDBParamGroupResponse
 
-	err = c.client.InvokeAction("UploadUDBParamGroup", req, &res)
+	err = c.Client.InvokeAction("UploadUDBParamGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

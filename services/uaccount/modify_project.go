@@ -29,7 +29,7 @@ func (c *UAccountClient) NewModifyProjectRequest() *ModifyProjectRequest {
 	req := &ModifyProjectRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -41,7 +41,7 @@ func (c *UAccountClient) ModifyProject(req *ModifyProjectRequest) (*ModifyProjec
 	var err error
 	var res ModifyProjectResponse
 
-	err = c.client.InvokeAction("ModifyProject", req, &res)
+	err = c.Client.InvokeAction("ModifyProject", req, &res)
 	if err != nil {
 		return &res, err
 	}

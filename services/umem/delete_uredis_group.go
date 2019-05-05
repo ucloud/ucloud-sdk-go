@@ -32,7 +32,7 @@ func (c *UMemClient) NewDeleteURedisGroupRequest() *DeleteURedisGroupRequest {
 	req := &DeleteURedisGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UMemClient) DeleteURedisGroup(req *DeleteURedisGroupRequest) (*DeleteUR
 	var err error
 	var res DeleteURedisGroupResponse
 
-	err = c.client.InvokeAction("DeleteURedisGroup", req, &res)
+	err = c.Client.InvokeAction("DeleteURedisGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

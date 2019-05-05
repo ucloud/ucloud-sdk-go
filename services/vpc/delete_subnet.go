@@ -32,7 +32,7 @@ func (c *VPCClient) NewDeleteSubnetRequest() *DeleteSubnetRequest {
 	req := &DeleteSubnetRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *VPCClient) DeleteSubnet(req *DeleteSubnetRequest) (*DeleteSubnetRespons
 	var err error
 	var res DeleteSubnetResponse
 
-	err = c.client.InvokeAction("DeleteSubnet", req, &res)
+	err = c.Client.InvokeAction("DeleteSubnet", req, &res)
 	if err != nil {
 		return &res, err
 	}

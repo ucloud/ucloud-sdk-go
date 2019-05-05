@@ -36,7 +36,7 @@ type GetBackendMetricInfoResponse struct {
 // NewGetBackendMetricInfoRequest will create request of GetBackendMetricInfo action.
 func (c *ULBClient) NewGetBackendMetricInfoRequest() *GetBackendMetricInfoRequest {
 	req := &GetBackendMetricInfoRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -45,7 +45,7 @@ func (c *ULBClient) GetBackendMetricInfo(req *GetBackendMetricInfoRequest) (*Get
 	var err error
 	var res GetBackendMetricInfoResponse
 
-	err = c.client.InvokeAction("GetBackendMetricInfo", req, &res)
+	err = c.Client.InvokeAction("GetBackendMetricInfo", req, &res)
 	if err != nil {
 		return &res, err
 	}

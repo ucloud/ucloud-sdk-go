@@ -47,7 +47,7 @@ func (c *VPCClient) NewDeleteSecondaryIpRequest() *DeleteSecondaryIpRequest {
 	req := &DeleteSecondaryIpRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *VPCClient) DeleteSecondaryIp(req *DeleteSecondaryIpRequest) (*DeleteSec
 	var err error
 	var res DeleteSecondaryIpResponse
 
-	err = c.client.InvokeAction("DeleteSecondaryIp", req, &res)
+	err = c.Client.InvokeAction("DeleteSecondaryIp", req, &res)
 	if err != nil {
 		return &res, err
 	}

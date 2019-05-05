@@ -38,7 +38,7 @@ func (c *UDBClient) NewBackupUDBInstanceErrorLogRequest() *BackupUDBInstanceErro
 	req := &BackupUDBInstanceErrorLogRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) BackupUDBInstanceErrorLog(req *BackupUDBInstanceErrorLogRequ
 	var err error
 	var res BackupUDBInstanceErrorLogResponse
 
-	err = c.client.InvokeAction("BackupUDBInstanceErrorLog", req, &res)
+	err = c.Client.InvokeAction("BackupUDBInstanceErrorLog", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -32,7 +32,7 @@ func (c *UNetClient) NewReleaseEIPRequest() *ReleaseEIPRequest {
 	req := &ReleaseEIPRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UNetClient) ReleaseEIP(req *ReleaseEIPRequest) (*ReleaseEIPResponse, er
 	var err error
 	var res ReleaseEIPResponse
 
-	err = c.client.InvokeAction("ReleaseEIP", req, &res)
+	err = c.Client.InvokeAction("ReleaseEIP", req, &res)
 	if err != nil {
 		return &res, err
 	}

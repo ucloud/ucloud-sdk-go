@@ -38,7 +38,7 @@ func (c *ULBClient) NewBindSSLRequest() *BindSSLRequest {
 	req := &BindSSLRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *ULBClient) BindSSL(req *BindSSLRequest) (*BindSSLResponse, error) {
 	var err error
 	var res BindSSLResponse
 
-	err = c.client.InvokeAction("BindSSL", req, &res)
+	err = c.Client.InvokeAction("BindSSL", req, &res)
 	if err != nil {
 		return &res, err
 	}

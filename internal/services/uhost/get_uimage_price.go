@@ -36,7 +36,7 @@ type GetUImagePriceResponse struct {
 // NewGetUImagePriceRequest will create request of GetUImagePrice action.
 func (c *UHostClient) NewGetUImagePriceRequest() *GetUImagePriceRequest {
 	req := &GetUImagePriceRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -45,7 +45,7 @@ func (c *UHostClient) GetUImagePrice(req *GetUImagePriceRequest) (*GetUImagePric
 	var err error
 	var res GetUImagePriceResponse
 
-	err = c.client.InvokeAction("GetUImagePrice", req, &res)
+	err = c.Client.InvokeAction("GetUImagePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

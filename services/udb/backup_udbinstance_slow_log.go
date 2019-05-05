@@ -41,7 +41,7 @@ func (c *UDBClient) NewBackupUDBInstanceSlowLogRequest() *BackupUDBInstanceSlowL
 	req := &BackupUDBInstanceSlowLogRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UDBClient) BackupUDBInstanceSlowLog(req *BackupUDBInstanceSlowLogReques
 	var err error
 	var res BackupUDBInstanceSlowLogResponse
 
-	err = c.client.InvokeAction("BackupUDBInstanceSlowLog", req, &res)
+	err = c.Client.InvokeAction("BackupUDBInstanceSlowLog", req, &res)
 	if err != nil {
 		return &res, err
 	}

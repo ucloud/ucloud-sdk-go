@@ -38,7 +38,7 @@ func (c *UNetClient) NewUpdateFirewallRequest() *UpdateFirewallRequest {
 	req := &UpdateFirewallRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UNetClient) UpdateFirewall(req *UpdateFirewallRequest) (*UpdateFirewall
 	var err error
 	var res UpdateFirewallResponse
 
-	err = c.client.InvokeAction("UpdateFirewall", req, &res)
+	err = c.Client.InvokeAction("UpdateFirewall", req, &res)
 	if err != nil {
 		return &res, err
 	}

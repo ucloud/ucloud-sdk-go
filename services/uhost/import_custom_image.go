@@ -53,7 +53,7 @@ func (c *UHostClient) NewImportCustomImageRequest() *ImportCustomImageRequest {
 	req := &ImportCustomImageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -65,7 +65,7 @@ func (c *UHostClient) ImportCustomImage(req *ImportCustomImageRequest) (*ImportC
 	var err error
 	var res ImportCustomImageResponse
 
-	err = c.client.InvokeAction("ImportCustomImage", req, &res)
+	err = c.Client.InvokeAction("ImportCustomImage", req, &res)
 	if err != nil {
 		return &res, err
 	}

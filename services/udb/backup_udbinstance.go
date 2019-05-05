@@ -41,7 +41,7 @@ func (c *UDBClient) NewBackupUDBInstanceRequest() *BackupUDBInstanceRequest {
 	req := &BackupUDBInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -53,7 +53,7 @@ func (c *UDBClient) BackupUDBInstance(req *BackupUDBInstanceRequest) (*BackupUDB
 	var err error
 	var res BackupUDBInstanceResponse
 
-	err = c.client.InvokeAction("BackupUDBInstance", req, &res)
+	err = c.Client.InvokeAction("BackupUDBInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

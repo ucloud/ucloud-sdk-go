@@ -32,7 +32,7 @@ func (c *UNetClient) NewDeleteBandwidthPackageRequest() *DeleteBandwidthPackageR
 	req := &DeleteBandwidthPackageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UNetClient) DeleteBandwidthPackage(req *DeleteBandwidthPackageRequest) 
 	var err error
 	var res DeleteBandwidthPackageResponse
 
-	err = c.client.InvokeAction("DeleteBandwidthPackage", req, &res)
+	err = c.Client.InvokeAction("DeleteBandwidthPackage", req, &res)
 	if err != nil {
 		return &res, err
 	}

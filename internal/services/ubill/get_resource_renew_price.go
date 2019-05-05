@@ -35,7 +35,7 @@ func (c *UBillClient) NewGetResourceRenewPriceRequest() *GetResourceRenewPriceRe
 	req := &GetResourceRenewPriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UBillClient) GetResourceRenewPrice(req *GetResourceRenewPriceRequest) (
 	var err error
 	var res GetResourceRenewPriceResponse
 
-	err = c.client.InvokeAction("GetResourceRenewPrice", req, &res)
+	err = c.Client.InvokeAction("GetResourceRenewPrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

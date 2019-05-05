@@ -44,7 +44,7 @@ func (c *UHostClient) NewCreateCustomImageRequest() *CreateCustomImageRequest {
 	req := &CreateCustomImageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -56,7 +56,7 @@ func (c *UHostClient) CreateCustomImage(req *CreateCustomImageRequest) (*CreateC
 	var err error
 	var res CreateCustomImageResponse
 
-	err = c.client.InvokeAction("CreateCustomImage", req, &res)
+	err = c.Client.InvokeAction("CreateCustomImage", req, &res)
 	if err != nil {
 		return &res, err
 	}

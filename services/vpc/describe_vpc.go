@@ -44,7 +44,7 @@ func (c *VPCClient) NewDescribeVPCRequest() *DescribeVPCRequest {
 	req := &DescribeVPCRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *VPCClient) DescribeVPC(req *DescribeVPCRequest) (*DescribeVPCResponse, 
 	var err error
 	var res DescribeVPCResponse
 
-	err = c.client.InvokeAction("DescribeVPC", req, &res)
+	err = c.Client.InvokeAction("DescribeVPC", req, &res)
 	if err != nil {
 		return &res, err
 	}

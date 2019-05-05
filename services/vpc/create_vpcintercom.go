@@ -41,7 +41,7 @@ func (c *VPCClient) NewCreateVPCIntercomRequest() *CreateVPCIntercomRequest {
 	req := &CreateVPCIntercomRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -53,7 +53,7 @@ func (c *VPCClient) CreateVPCIntercom(req *CreateVPCIntercomRequest) (*CreateVPC
 	var err error
 	var res CreateVPCIntercomResponse
 
-	err = c.client.InvokeAction("CreateVPCIntercom", req, &res)
+	err = c.Client.InvokeAction("CreateVPCIntercom", req, &res)
 	if err != nil {
 		return &res, err
 	}

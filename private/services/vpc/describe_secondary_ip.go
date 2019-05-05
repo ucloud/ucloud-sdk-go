@@ -41,7 +41,7 @@ func (c *VPCClient) NewDescribeSecondaryIpRequest() *DescribeSecondaryIpRequest 
 	req := &DescribeSecondaryIpRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *VPCClient) DescribeSecondaryIp(req *DescribeSecondaryIpRequest) (*Descr
 	var err error
 	var res DescribeSecondaryIpResponse
 
-	err = c.client.InvokeAction("DescribeSecondaryIp", req, &res)
+	err = c.Client.InvokeAction("DescribeSecondaryIp", req, &res)
 	if err != nil {
 		return &res, err
 	}

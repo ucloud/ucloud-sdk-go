@@ -44,7 +44,7 @@ func (c *UDBClient) NewDescribeUDBInstanceBinlogRequest() *DescribeUDBInstanceBi
 	req := &DescribeUDBInstanceBinlogRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UDBClient) DescribeUDBInstanceBinlog(req *DescribeUDBInstanceBinlogRequ
 	var err error
 	var res DescribeUDBInstanceBinlogResponse
 
-	err = c.client.InvokeAction("DescribeUDBInstanceBinlog", req, &res)
+	err = c.Client.InvokeAction("DescribeUDBInstanceBinlog", req, &res)
 	if err != nil {
 		return &res, err
 	}

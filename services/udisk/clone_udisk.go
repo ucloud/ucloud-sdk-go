@@ -56,7 +56,7 @@ func (c *UDiskClient) NewCloneUDiskRequest() *CloneUDiskRequest {
 	req := &CloneUDiskRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -68,7 +68,7 @@ func (c *UDiskClient) CloneUDisk(req *CloneUDiskRequest) (*CloneUDiskResponse, e
 	var err error
 	var res CloneUDiskResponse
 
-	err = c.client.InvokeAction("CloneUDisk", req, &res)
+	err = c.Client.InvokeAction("CloneUDisk", req, &res)
 	if err != nil {
 		return &res, err
 	}

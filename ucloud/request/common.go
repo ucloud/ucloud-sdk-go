@@ -43,9 +43,6 @@ type Common interface {
 	SetRequestTime(time.Time)
 	GetRequestTime() time.Time
 
-	GetRequestUUID() string
-	SetRequestUUID(string)
-
 	SetRetryable(retryable bool)
 	GetRetryable() bool
 }
@@ -114,16 +111,6 @@ func (c *CommonBase) SetRequestTime(requestTime time.Time) {
 // GetRequestTime will get timeout of request
 func (c *CommonBase) GetRequestTime() time.Time {
 	return c.requestTime
-}
-
-// GetAction will return action of request
-func (c *CommonBase) GetRequestUUID() string {
-	return c.requestUUID
-}
-
-// SetAction will set action of request
-func (c *CommonBase) SetRequestUUID(val string) {
-	c.requestUUID = val
 }
 
 // GetAction will return action of request

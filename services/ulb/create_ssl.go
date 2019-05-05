@@ -50,7 +50,7 @@ func (c *ULBClient) NewCreateSSLRequest() *CreateSSLRequest {
 	req := &CreateSSLRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -62,7 +62,7 @@ func (c *ULBClient) CreateSSL(req *CreateSSLRequest) (*CreateSSLResponse, error)
 	var err error
 	var res CreateSSLResponse
 
-	err = c.client.InvokeAction("CreateSSL", req, &res)
+	err = c.Client.InvokeAction("CreateSSL", req, &res)
 	if err != nil {
 		return &res, err
 	}

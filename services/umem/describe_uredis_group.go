@@ -44,7 +44,7 @@ func (c *UMemClient) NewDescribeURedisGroupRequest() *DescribeURedisGroupRequest
 	req := &DescribeURedisGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UMemClient) DescribeURedisGroup(req *DescribeURedisGroupRequest) (*Desc
 	var err error
 	var res DescribeURedisGroupResponse
 
-	err = c.client.InvokeAction("DescribeURedisGroup", req, &res)
+	err = c.Client.InvokeAction("DescribeURedisGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

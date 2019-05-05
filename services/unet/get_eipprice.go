@@ -44,7 +44,7 @@ func (c *UNetClient) NewGetEIPPriceRequest() *GetEIPPriceRequest {
 	req := &GetEIPPriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UNetClient) GetEIPPrice(req *GetEIPPriceRequest) (*GetEIPPriceResponse,
 	var err error
 	var res GetEIPPriceResponse
 
-	err = c.client.InvokeAction("GetEIPPrice", req, &res)
+	err = c.Client.InvokeAction("GetEIPPrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

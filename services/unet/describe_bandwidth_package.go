@@ -41,7 +41,7 @@ func (c *UNetClient) NewDescribeBandwidthPackageRequest() *DescribeBandwidthPack
 	req := &DescribeBandwidthPackageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UNetClient) DescribeBandwidthPackage(req *DescribeBandwidthPackageReque
 	var err error
 	var res DescribeBandwidthPackageResponse
 
-	err = c.client.InvokeAction("DescribeBandwidthPackage", req, &res)
+	err = c.Client.InvokeAction("DescribeBandwidthPackage", req, &res)
 	if err != nil {
 		return &res, err
 	}

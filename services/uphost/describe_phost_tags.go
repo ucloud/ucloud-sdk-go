@@ -32,7 +32,7 @@ func (c *UPHostClient) NewDescribePHostTagsRequest() *DescribePHostTagsRequest {
 	req := &DescribePHostTagsRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UPHostClient) DescribePHostTags(req *DescribePHostTagsRequest) (*Descri
 	var err error
 	var res DescribePHostTagsResponse
 
-	err = c.client.InvokeAction("DescribePHostTags", req, &res)
+	err = c.Client.InvokeAction("DescribePHostTags", req, &res)
 	if err != nil {
 		return &res, err
 	}

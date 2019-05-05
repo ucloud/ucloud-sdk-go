@@ -41,7 +41,7 @@ func (c *VPCClient) NewDeleteVPCIntercomRequest() *DeleteVPCIntercomRequest {
 	req := &DeleteVPCIntercomRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *VPCClient) DeleteVPCIntercom(req *DeleteVPCIntercomRequest) (*DeleteVPC
 	var err error
 	var res DeleteVPCIntercomResponse
 
-	err = c.client.InvokeAction("DeleteVPCIntercom", req, &res)
+	err = c.Client.InvokeAction("DeleteVPCIntercom", req, &res)
 	if err != nil {
 		return &res, err
 	}

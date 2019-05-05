@@ -53,7 +53,7 @@ func (c *UNetClient) NewDescribeVIPRequest() *DescribeVIPRequest {
 	req := &DescribeVIPRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -65,7 +65,7 @@ func (c *UNetClient) DescribeVIP(req *DescribeVIPRequest) (*DescribeVIPResponse,
 	var err error
 	var res DescribeVIPResponse
 
-	err = c.client.InvokeAction("DescribeVIP", req, &res)
+	err = c.Client.InvokeAction("DescribeVIP", req, &res)
 	if err != nil {
 		return &res, err
 	}

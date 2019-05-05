@@ -45,7 +45,7 @@ type DescribeUHostLiteResponse struct {
 // NewDescribeUHostLiteRequest will create request of DescribeUHostLite action.
 func (c *UHostClient) NewDescribeUHostLiteRequest() *DescribeUHostLiteRequest {
 	req := &DescribeUHostLiteRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -54,7 +54,7 @@ func (c *UHostClient) DescribeUHostLite(req *DescribeUHostLiteRequest) (*Describ
 	var err error
 	var res DescribeUHostLiteResponse
 
-	err = c.client.InvokeAction("DescribeUHostLite", req, &res)
+	err = c.Client.InvokeAction("DescribeUHostLite", req, &res)
 	if err != nil {
 		return &res, err
 	}

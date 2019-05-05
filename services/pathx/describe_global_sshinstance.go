@@ -29,7 +29,7 @@ func (c *PathXClient) NewDescribeGlobalSSHInstanceRequest() *DescribeGlobalSSHIn
 	req := &DescribeGlobalSSHInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -41,7 +41,7 @@ func (c *PathXClient) DescribeGlobalSSHInstance(req *DescribeGlobalSSHInstanceRe
 	var err error
 	var res DescribeGlobalSSHInstanceResponse
 
-	err = c.client.InvokeAction("DescribeGlobalSSHInstance", req, &res)
+	err = c.Client.InvokeAction("DescribeGlobalSSHInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

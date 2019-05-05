@@ -32,7 +32,7 @@ func (c *UAccountClient) NewCreateProjectRequest() *CreateProjectRequest {
 	req := &CreateProjectRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -44,7 +44,7 @@ func (c *UAccountClient) CreateProject(req *CreateProjectRequest) (*CreateProjec
 	var err error
 	var res CreateProjectResponse
 
-	err = c.client.InvokeAction("CreateProject", req, &res)
+	err = c.Client.InvokeAction("CreateProject", req, &res)
 	if err != nil {
 		return &res, err
 	}

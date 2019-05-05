@@ -30,7 +30,7 @@ type GetUHostRenewPriceResponse struct {
 // NewGetUHostRenewPriceRequest will create request of GetUHostRenewPrice action.
 func (c *UHostClient) NewGetUHostRenewPriceRequest() *GetUHostRenewPriceRequest {
 	req := &GetUHostRenewPriceRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -39,7 +39,7 @@ func (c *UHostClient) GetUHostRenewPrice(req *GetUHostRenewPriceRequest) (*GetUH
 	var err error
 	var res GetUHostRenewPriceResponse
 
-	err = c.client.InvokeAction("GetUHostRenewPrice", req, &res)
+	err = c.Client.InvokeAction("GetUHostRenewPrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

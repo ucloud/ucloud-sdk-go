@@ -47,7 +47,7 @@ func (c *UMemClient) NewResizeURedisGroupRequest() *ResizeURedisGroupRequest {
 	req := &ResizeURedisGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *UMemClient) ResizeURedisGroup(req *ResizeURedisGroupRequest) (*ResizeUR
 	var err error
 	var res ResizeURedisGroupResponse
 
-	err = c.client.InvokeAction("ResizeURedisGroup", req, &res)
+	err = c.Client.InvokeAction("ResizeURedisGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

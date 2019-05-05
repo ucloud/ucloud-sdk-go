@@ -16,8 +16,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-const defaultHeaderRequestUUID = "Request_uuid"
-
 // Client 客户端
 type Client struct {
 	// configurations
@@ -111,12 +109,6 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 	// such as convert some http status to error
 	for _, handler := range c.httpResponseHandlers {
 		httpResp, err = handler(c, httpReq, httpResp, err)
-	}
-
-	if httpResp != nil {
-		if v := httpResp.GetHeaders().Get(defaultHeaderRequestUUID); v != "" {
-			req.SetRequestUUID(v)
-		}
 	}
 
 	if err == nil {

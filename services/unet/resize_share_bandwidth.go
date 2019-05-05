@@ -35,7 +35,7 @@ func (c *UNetClient) NewResizeShareBandwidthRequest() *ResizeShareBandwidthReque
 	req := &ResizeShareBandwidthRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UNetClient) ResizeShareBandwidth(req *ResizeShareBandwidthRequest) (*Re
 	var err error
 	var res ResizeShareBandwidthResponse
 
-	err = c.client.InvokeAction("ResizeShareBandwidth", req, &res)
+	err = c.Client.InvokeAction("ResizeShareBandwidth", req, &res)
 	if err != nil {
 		return &res, err
 	}

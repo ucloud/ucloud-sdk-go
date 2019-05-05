@@ -32,7 +32,7 @@ func (c *UPHostClient) NewStopPHostRequest() *StopPHostRequest {
 	req := &StopPHostRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UPHostClient) StopPHost(req *StopPHostRequest) (*StopPHostResponse, err
 	var err error
 	var res StopPHostResponse
 
-	err = c.client.InvokeAction("StopPHost", req, &res)
+	err = c.Client.InvokeAction("StopPHost", req, &res)
 	if err != nil {
 		return &res, err
 	}

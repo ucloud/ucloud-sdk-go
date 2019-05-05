@@ -53,7 +53,7 @@ func (c *UDBClient) NewCreateUDBReplicationInstanceRequest() *CreateUDBReplicati
 	req := &CreateUDBReplicationInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -65,7 +65,7 @@ func (c *UDBClient) CreateUDBReplicationInstance(req *CreateUDBReplicationInstan
 	var err error
 	var res CreateUDBReplicationInstanceResponse
 
-	err = c.client.InvokeAction("CreateUDBReplicationInstance", req, &res)
+	err = c.Client.InvokeAction("CreateUDBReplicationInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

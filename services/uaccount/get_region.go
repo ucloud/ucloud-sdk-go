@@ -26,7 +26,7 @@ func (c *UAccountClient) NewGetRegionRequest() *GetRegionRequest {
 	req := &GetRegionRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -38,7 +38,7 @@ func (c *UAccountClient) GetRegion(req *GetRegionRequest) (*GetRegionResponse, e
 	var err error
 	var res GetRegionResponse
 
-	err = c.client.InvokeAction("GetRegion", req, &res)
+	err = c.Client.InvokeAction("GetRegion", req, &res)
 	if err != nil {
 		return &res, err
 	}

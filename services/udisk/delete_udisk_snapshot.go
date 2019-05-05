@@ -38,7 +38,7 @@ func (c *UDiskClient) NewDeleteUDiskSnapshotRequest() *DeleteUDiskSnapshotReques
 	req := &DeleteUDiskSnapshotRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDiskClient) DeleteUDiskSnapshot(req *DeleteUDiskSnapshotRequest) (*Del
 	var err error
 	var res DeleteUDiskSnapshotResponse
 
-	err = c.client.InvokeAction("DeleteUDiskSnapshot", req, &res)
+	err = c.Client.InvokeAction("DeleteUDiskSnapshot", req, &res)
 	if err != nil {
 		return &res, err
 	}

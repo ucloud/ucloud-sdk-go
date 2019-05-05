@@ -38,7 +38,7 @@ func (c *UHostClient) NewRestoreUHostDiskRequest() *RestoreUHostDiskRequest {
 	req := &RestoreUHostDiskRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -50,7 +50,7 @@ func (c *UHostClient) RestoreUHostDisk(req *RestoreUHostDiskRequest) (*RestoreUH
 	var err error
 	var res RestoreUHostDiskResponse
 
-	err = c.client.InvokeAction("RestoreUHostDisk", req, &res)
+	err = c.Client.InvokeAction("RestoreUHostDisk", req, &res)
 	if err != nil {
 		return &res, err
 	}

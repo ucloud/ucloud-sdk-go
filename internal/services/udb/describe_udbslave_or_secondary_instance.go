@@ -35,7 +35,7 @@ func (c *UDBClient) NewDescribeUDBSlaveOrSecondaryInstanceRequest() *DescribeUDB
 	req := &DescribeUDBSlaveOrSecondaryInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UDBClient) DescribeUDBSlaveOrSecondaryInstance(req *DescribeUDBSlaveOrS
 	var err error
 	var res DescribeUDBSlaveOrSecondaryInstanceResponse
 
-	err = c.client.InvokeAction("DescribeUDBSlaveOrSecondaryInstance", req, &res)
+	err = c.Client.InvokeAction("DescribeUDBSlaveOrSecondaryInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -35,7 +35,7 @@ func (c *UMonClient) NewUnbindAlarmTemplateRequest() *UnbindAlarmTemplateRequest
 	req := &UnbindAlarmTemplateRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UMonClient) UnbindAlarmTemplate(req *UnbindAlarmTemplateRequest) (*Unbi
 	var err error
 	var res UnbindAlarmTemplateResponse
 
-	err = c.client.InvokeAction("UnbindAlarmTemplate", req, &res)
+	err = c.Client.InvokeAction("UnbindAlarmTemplate", req, &res)
 	if err != nil {
 		return &res, err
 	}

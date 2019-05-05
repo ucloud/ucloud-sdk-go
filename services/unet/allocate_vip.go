@@ -59,7 +59,7 @@ func (c *UNetClient) NewAllocateVIPRequest() *AllocateVIPRequest {
 	req := &AllocateVIPRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -71,7 +71,7 @@ func (c *UNetClient) AllocateVIP(req *AllocateVIPRequest) (*AllocateVIPResponse,
 	var err error
 	var res AllocateVIPResponse
 
-	err = c.client.InvokeAction("AllocateVIP", req, &res)
+	err = c.Client.InvokeAction("AllocateVIP", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -32,7 +32,7 @@ func (c *UPHostClient) NewPoweroffPHostRequest() *PoweroffPHostRequest {
 	req := &PoweroffPHostRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UPHostClient) PoweroffPHost(req *PoweroffPHostRequest) (*PoweroffPHostR
 	var err error
 	var res PoweroffPHostResponse
 
-	err = c.client.InvokeAction("PoweroffPHost", req, &res)
+	err = c.Client.InvokeAction("PoweroffPHost", req, &res)
 	if err != nil {
 		return &res, err
 	}

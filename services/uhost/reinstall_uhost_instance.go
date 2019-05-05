@@ -53,7 +53,7 @@ func (c *UHostClient) NewReinstallUHostInstanceRequest() *ReinstallUHostInstance
 	req := &ReinstallUHostInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -67,7 +67,7 @@ func (c *UHostClient) ReinstallUHostInstance(req *ReinstallUHostInstanceRequest)
 	var reqImmutable = *req
 	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("ReinstallUHostInstance", &reqImmutable, &res)
+	err = c.Client.InvokeAction("ReinstallUHostInstance", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}

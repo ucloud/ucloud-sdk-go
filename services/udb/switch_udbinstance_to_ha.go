@@ -44,7 +44,7 @@ func (c *UDBClient) NewSwitchUDBInstanceToHARequest() *SwitchUDBInstanceToHARequ
 	req := &SwitchUDBInstanceToHARequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UDBClient) SwitchUDBInstanceToHA(req *SwitchUDBInstanceToHARequest) (*S
 	var err error
 	var res SwitchUDBInstanceToHAResponse
 
-	err = c.client.InvokeAction("SwitchUDBInstanceToHA", req, &res)
+	err = c.Client.InvokeAction("SwitchUDBInstanceToHA", req, &res)
 	if err != nil {
 		return &res, err
 	}

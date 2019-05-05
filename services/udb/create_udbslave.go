@@ -71,7 +71,7 @@ func (c *UDBClient) NewCreateUDBSlaveRequest() *CreateUDBSlaveRequest {
 	req := &CreateUDBSlaveRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -83,7 +83,7 @@ func (c *UDBClient) CreateUDBSlave(req *CreateUDBSlaveRequest) (*CreateUDBSlaveR
 	var err error
 	var res CreateUDBSlaveResponse
 
-	err = c.client.InvokeAction("CreateUDBSlave", req, &res)
+	err = c.Client.InvokeAction("CreateUDBSlave", req, &res)
 	if err != nil {
 		return &res, err
 	}

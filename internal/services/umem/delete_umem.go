@@ -32,7 +32,7 @@ func (c *UMemClient) NewDeleteUMemRequest() *DeleteUMemRequest {
 	req := &DeleteUMemRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UMemClient) DeleteUMem(req *DeleteUMemRequest) (*DeleteUMemResponse, er
 	var err error
 	var res DeleteUMemResponse
 
-	err = c.client.InvokeAction("DeleteUMem", req, &res)
+	err = c.Client.InvokeAction("DeleteUMem", req, &res)
 	if err != nil {
 		return &res, err
 	}

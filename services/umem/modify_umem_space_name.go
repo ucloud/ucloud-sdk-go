@@ -38,7 +38,7 @@ func (c *UMemClient) NewModifyUMemSpaceNameRequest() *ModifyUMemSpaceNameRequest
 	req := &ModifyUMemSpaceNameRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UMemClient) ModifyUMemSpaceName(req *ModifyUMemSpaceNameRequest) (*Modi
 	var err error
 	var res ModifyUMemSpaceNameResponse
 
-	err = c.client.InvokeAction("ModifyUMemSpaceName", req, &res)
+	err = c.Client.InvokeAction("ModifyUMemSpaceName", req, &res)
 	if err != nil {
 		return &res, err
 	}

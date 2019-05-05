@@ -41,7 +41,7 @@ func (c *UDBClient) NewUpdateUDBInstanceSlaveBackupSwitchRequest() *UpdateUDBIns
 	req := &UpdateUDBInstanceSlaveBackupSwitchRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UDBClient) UpdateUDBInstanceSlaveBackupSwitch(req *UpdateUDBInstanceSla
 	var err error
 	var res UpdateUDBInstanceSlaveBackupSwitchResponse
 
-	err = c.client.InvokeAction("UpdateUDBInstanceSlaveBackupSwitch", req, &res)
+	err = c.Client.InvokeAction("UpdateUDBInstanceSlaveBackupSwitch", req, &res)
 	if err != nil {
 		return &res, err
 	}

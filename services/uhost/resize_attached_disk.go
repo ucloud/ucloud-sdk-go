@@ -44,7 +44,7 @@ func (c *UHostClient) NewResizeAttachedDiskRequest() *ResizeAttachedDiskRequest 
 	req := &ResizeAttachedDiskRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UHostClient) ResizeAttachedDisk(req *ResizeAttachedDiskRequest) (*Resiz
 	var err error
 	var res ResizeAttachedDiskResponse
 
-	err = c.client.InvokeAction("ResizeAttachedDisk", req, &res)
+	err = c.Client.InvokeAction("ResizeAttachedDisk", req, &res)
 	if err != nil {
 		return &res, err
 	}

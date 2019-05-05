@@ -36,7 +36,7 @@ type DescribeShareBandwidthPriceResponse struct {
 // NewDescribeShareBandwidthPriceRequest will create request of DescribeShareBandwidthPrice action.
 func (c *UNetClient) NewDescribeShareBandwidthPriceRequest() *DescribeShareBandwidthPriceRequest {
 	req := &DescribeShareBandwidthPriceRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -45,7 +45,7 @@ func (c *UNetClient) DescribeShareBandwidthPrice(req *DescribeShareBandwidthPric
 	var err error
 	var res DescribeShareBandwidthPriceResponse
 
-	err = c.client.InvokeAction("DescribeShareBandwidthPrice", req, &res)
+	err = c.Client.InvokeAction("DescribeShareBandwidthPrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

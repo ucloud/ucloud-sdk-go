@@ -44,7 +44,7 @@ func (c *UMemClient) NewDescribeURedisUpgradePriceRequest() *DescribeURedisUpgra
 	req := &DescribeURedisUpgradePriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UMemClient) DescribeURedisUpgradePrice(req *DescribeURedisUpgradePriceR
 	var err error
 	var res DescribeURedisUpgradePriceResponse
 
-	err = c.client.InvokeAction("DescribeURedisUpgradePrice", req, &res)
+	err = c.Client.InvokeAction("DescribeURedisUpgradePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

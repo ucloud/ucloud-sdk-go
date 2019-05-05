@@ -38,7 +38,7 @@ func (c *UDBClient) NewDeleteUDBParamGroupRequest() *DeleteUDBParamGroupRequest 
 	req := &DeleteUDBParamGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) DeleteUDBParamGroup(req *DeleteUDBParamGroupRequest) (*Delet
 	var err error
 	var res DeleteUDBParamGroupResponse
 
-	err = c.client.InvokeAction("DeleteUDBParamGroup", req, &res)
+	err = c.Client.InvokeAction("DeleteUDBParamGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

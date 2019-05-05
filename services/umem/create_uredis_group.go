@@ -89,7 +89,7 @@ func (c *UMemClient) NewCreateURedisGroupRequest() *CreateURedisGroupRequest {
 	req := &CreateURedisGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -103,7 +103,7 @@ func (c *UMemClient) CreateURedisGroup(req *CreateURedisGroupRequest) (*CreateUR
 	var reqImmutable = *req
 	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("CreateURedisGroup", &reqImmutable, &res)
+	err = c.Client.InvokeAction("CreateURedisGroup", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}

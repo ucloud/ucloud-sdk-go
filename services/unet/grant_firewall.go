@@ -38,7 +38,7 @@ func (c *UNetClient) NewGrantFirewallRequest() *GrantFirewallRequest {
 	req := &GrantFirewallRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UNetClient) GrantFirewall(req *GrantFirewallRequest) (*GrantFirewallRes
 	var err error
 	var res GrantFirewallResponse
 
-	err = c.client.InvokeAction("GrantFirewall", req, &res)
+	err = c.Client.InvokeAction("GrantFirewall", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -50,7 +50,7 @@ func (c *VPCClient) NewCreateSubnetRequest() *CreateSubnetRequest {
 	req := &CreateSubnetRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -62,7 +62,7 @@ func (c *VPCClient) CreateSubnet(req *CreateSubnetRequest) (*CreateSubnetRespons
 	var err error
 	var res CreateSubnetResponse
 
-	err = c.client.InvokeAction("CreateSubnet", req, &res)
+	err = c.Client.InvokeAction("CreateSubnet", req, &res)
 	if err != nil {
 		return &res, err
 	}

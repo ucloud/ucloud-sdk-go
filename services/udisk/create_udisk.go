@@ -59,7 +59,7 @@ func (c *UDiskClient) NewCreateUDiskRequest() *CreateUDiskRequest {
 	req := &CreateUDiskRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -71,7 +71,7 @@ func (c *UDiskClient) CreateUDisk(req *CreateUDiskRequest) (*CreateUDiskResponse
 	var err error
 	var res CreateUDiskResponse
 
-	err = c.client.InvokeAction("CreateUDisk", req, &res)
+	err = c.Client.InvokeAction("CreateUDisk", req, &res)
 	if err != nil {
 		return &res, err
 	}

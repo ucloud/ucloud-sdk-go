@@ -50,7 +50,7 @@ func (c *UDBClient) NewCreateUDBParamGroupRequest() *CreateUDBParamGroupRequest 
 	req := &CreateUDBParamGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -62,7 +62,7 @@ func (c *UDBClient) CreateUDBParamGroup(req *CreateUDBParamGroupRequest) (*Creat
 	var err error
 	var res CreateUDBParamGroupResponse
 
-	err = c.client.InvokeAction("CreateUDBParamGroup", req, &res)
+	err = c.Client.InvokeAction("CreateUDBParamGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -53,7 +53,7 @@ func (c *ULBClient) NewDescribeULBRequest() *DescribeULBRequest {
 	req := &DescribeULBRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -65,7 +65,7 @@ func (c *ULBClient) DescribeULB(req *DescribeULBRequest) (*DescribeULBResponse, 
 	var err error
 	var res DescribeULBResponse
 
-	err = c.client.InvokeAction("DescribeULB", req, &res)
+	err = c.Client.InvokeAction("DescribeULB", req, &res)
 	if err != nil {
 		return &res, err
 	}

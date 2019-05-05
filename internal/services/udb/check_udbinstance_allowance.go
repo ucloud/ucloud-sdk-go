@@ -62,7 +62,7 @@ func (c *UDBClient) NewCheckUDBInstanceAllowanceRequest() *CheckUDBInstanceAllow
 	req := &CheckUDBInstanceAllowanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -74,7 +74,7 @@ func (c *UDBClient) CheckUDBInstanceAllowance(req *CheckUDBInstanceAllowanceRequ
 	var err error
 	var res CheckUDBInstanceAllowanceResponse
 
-	err = c.client.InvokeAction("CheckUDBInstanceAllowance", req, &res)
+	err = c.Client.InvokeAction("CheckUDBInstanceAllowance", req, &res)
 	if err != nil {
 		return &res, err
 	}

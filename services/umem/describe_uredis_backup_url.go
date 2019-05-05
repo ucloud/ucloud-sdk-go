@@ -44,7 +44,7 @@ func (c *UMemClient) NewDescribeURedisBackupURLRequest() *DescribeURedisBackupUR
 	req := &DescribeURedisBackupURLRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UMemClient) DescribeURedisBackupURL(req *DescribeURedisBackupURLRequest
 	var err error
 	var res DescribeURedisBackupURLResponse
 
-	err = c.client.InvokeAction("DescribeURedisBackupURL", req, &res)
+	err = c.Client.InvokeAction("DescribeURedisBackupURL", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -41,7 +41,7 @@ func (c *UNetClient) NewUpdateEIPAttributeRequest() *UpdateEIPAttributeRequest {
 	req := &UpdateEIPAttributeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UNetClient) UpdateEIPAttribute(req *UpdateEIPAttributeRequest) (*Update
 	var err error
 	var res UpdateEIPAttributeResponse
 
-	err = c.client.InvokeAction("UpdateEIPAttribute", req, &res)
+	err = c.Client.InvokeAction("UpdateEIPAttribute", req, &res)
 	if err != nil {
 		return &res, err
 	}

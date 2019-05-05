@@ -32,7 +32,7 @@ func (c *UNetClient) NewDeleteFirewallRequest() *DeleteFirewallRequest {
 	req := &DeleteFirewallRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UNetClient) DeleteFirewall(req *DeleteFirewallRequest) (*DeleteFirewall
 	var err error
 	var res DeleteFirewallResponse
 
-	err = c.client.InvokeAction("DeleteFirewall", req, &res)
+	err = c.Client.InvokeAction("DeleteFirewall", req, &res)
 	if err != nil {
 		return &res, err
 	}

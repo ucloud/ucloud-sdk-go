@@ -51,7 +51,7 @@ type CloneUDiskSnapshotResponse struct {
 // NewCloneUDiskSnapshotRequest will create request of CloneUDiskSnapshot action.
 func (c *UDiskClient) NewCloneUDiskSnapshotRequest() *CloneUDiskSnapshotRequest {
 	req := &CloneUDiskSnapshotRequest{}
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 	return req
 }
 
@@ -60,7 +60,7 @@ func (c *UDiskClient) CloneUDiskSnapshot(req *CloneUDiskSnapshotRequest) (*Clone
 	var err error
 	var res CloneUDiskSnapshotResponse
 
-	err = c.client.InvokeAction("CloneUDiskSnapshot", req, &res)
+	err = c.Client.InvokeAction("CloneUDiskSnapshot", req, &res)
 	if err != nil {
 		return &res, err
 	}

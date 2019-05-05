@@ -41,7 +41,7 @@ func (c *UFSClient) NewAddUFSVolumeMountPointRequest() *AddUFSVolumeMountPointRe
 	req := &AddUFSVolumeMountPointRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UFSClient) AddUFSVolumeMountPoint(req *AddUFSVolumeMountPointRequest) (
 	var err error
 	var res AddUFSVolumeMountPointResponse
 
-	err = c.client.InvokeAction("AddUFSVolumeMountPoint", req, &res)
+	err = c.Client.InvokeAction("AddUFSVolumeMountPoint", req, &res)
 	if err != nil {
 		return &res, err
 	}

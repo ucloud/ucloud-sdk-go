@@ -59,7 +59,7 @@ func (c *UDBClient) NewCreateUDBInstanceByRecoveryRequest() *CreateUDBInstanceBy
 	req := &CreateUDBInstanceByRecoveryRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -71,7 +71,7 @@ func (c *UDBClient) CreateUDBInstanceByRecovery(req *CreateUDBInstanceByRecovery
 	var err error
 	var res CreateUDBInstanceByRecoveryResponse
 
-	err = c.client.InvokeAction("CreateUDBInstanceByRecovery", req, &res)
+	err = c.Client.InvokeAction("CreateUDBInstanceByRecovery", req, &res)
 	if err != nil {
 		return &res, err
 	}

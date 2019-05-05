@@ -38,7 +38,7 @@ func (c *UDBClient) NewModifyUDBInstanceNameRequest() *ModifyUDBInstanceNameRequ
 	req := &ModifyUDBInstanceNameRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) ModifyUDBInstanceName(req *ModifyUDBInstanceNameRequest) (*M
 	var err error
 	var res ModifyUDBInstanceNameResponse
 
-	err = c.client.InvokeAction("ModifyUDBInstanceName", req, &res)
+	err = c.Client.InvokeAction("ModifyUDBInstanceName", req, &res)
 	if err != nil {
 		return &res, err
 	}
