@@ -50,7 +50,7 @@ func (c *UDPNClient) NewAllocateUDPNRequest() *AllocateUDPNRequest {
 	req := &AllocateUDPNRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -62,7 +62,7 @@ func (c *UDPNClient) AllocateUDPN(req *AllocateUDPNRequest) (*AllocateUDPNRespon
 	var err error
 	var res AllocateUDPNResponse
 
-	err = c.client.InvokeAction("AllocateUDPN", req, &res)
+	err = c.Client.InvokeAction("AllocateUDPN", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -44,7 +44,7 @@ func (c *ULBClient) NewUpdateBackendAttributeRequest() *UpdateBackendAttributeRe
 	req := &UpdateBackendAttributeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *ULBClient) UpdateBackendAttribute(req *UpdateBackendAttributeRequest) (
 	var err error
 	var res UpdateBackendAttributeResponse
 
-	err = c.client.InvokeAction("UpdateBackendAttribute", req, &res)
+	err = c.Client.InvokeAction("UpdateBackendAttribute", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -47,7 +47,7 @@ func (c *VPCClient) NewCreateVPCRequest() *CreateVPCRequest {
 	req := &CreateVPCRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -59,7 +59,7 @@ func (c *VPCClient) CreateVPC(req *CreateVPCRequest) (*CreateVPCResponse, error)
 	var err error
 	var res CreateVPCResponse
 
-	err = c.client.InvokeAction("CreateVPC", req, &res)
+	err = c.Client.InvokeAction("CreateVPC", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -44,7 +44,7 @@ func (c *UDPNClient) NewDescribeUDPNRequest() *DescribeUDPNRequest {
 	req := &DescribeUDPNRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UDPNClient) DescribeUDPN(req *DescribeUDPNRequest) (*DescribeUDPNRespon
 	var err error
 	var res DescribeUDPNResponse
 
-	err = c.client.InvokeAction("DescribeUDPN", req, &res)
+	err = c.Client.InvokeAction("DescribeUDPN", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -53,7 +53,7 @@ func (c *UHostClient) NewResizeUHostInstanceRequest() *ResizeUHostInstanceReques
 	req := &ResizeUHostInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -65,7 +65,7 @@ func (c *UHostClient) ResizeUHostInstance(req *ResizeUHostInstanceRequest) (*Res
 	var err error
 	var res ResizeUHostInstanceResponse
 
-	err = c.client.InvokeAction("ResizeUHostInstance", req, &res)
+	err = c.Client.InvokeAction("ResizeUHostInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

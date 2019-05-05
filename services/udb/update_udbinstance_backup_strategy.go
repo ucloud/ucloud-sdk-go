@@ -44,7 +44,7 @@ func (c *UDBClient) NewUpdateUDBInstanceBackupStrategyRequest() *UpdateUDBInstan
 	req := &UpdateUDBInstanceBackupStrategyRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UDBClient) UpdateUDBInstanceBackupStrategy(req *UpdateUDBInstanceBackup
 	var err error
 	var res UpdateUDBInstanceBackupStrategyResponse
 
-	err = c.client.InvokeAction("UpdateUDBInstanceBackupStrategy", req, &res)
+	err = c.Client.InvokeAction("UpdateUDBInstanceBackupStrategy", req, &res)
 	if err != nil {
 		return &res, err
 	}

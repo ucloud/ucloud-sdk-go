@@ -38,7 +38,7 @@ func (c *VPCClient) NewUpdateVPCNetworkRequest() *UpdateVPCNetworkRequest {
 	req := &UpdateVPCNetworkRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *VPCClient) UpdateVPCNetwork(req *UpdateVPCNetworkRequest) (*UpdateVPCNe
 	var err error
 	var res UpdateVPCNetworkResponse
 
-	err = c.client.InvokeAction("UpdateVPCNetwork", req, &res)
+	err = c.Client.InvokeAction("UpdateVPCNetwork", req, &res)
 	if err != nil {
 		return &res, err
 	}

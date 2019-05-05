@@ -35,7 +35,7 @@ func (c *UPHostClient) NewTerminatePHostRequest() *TerminatePHostRequest {
 	req := &TerminatePHostRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UPHostClient) TerminatePHost(req *TerminatePHostRequest) (*TerminatePHo
 	var err error
 	var res TerminatePHostResponse
 
-	err = c.client.InvokeAction("TerminatePHost", req, &res)
+	err = c.Client.InvokeAction("TerminatePHost", req, &res)
 	if err != nil {
 		return &res, err
 	}

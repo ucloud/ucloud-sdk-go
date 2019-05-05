@@ -50,7 +50,7 @@ func (c *UDiskClient) NewDescribeUDiskPriceRequest() *DescribeUDiskPriceRequest 
 	req := &DescribeUDiskPriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -62,7 +62,7 @@ func (c *UDiskClient) DescribeUDiskPrice(req *DescribeUDiskPriceRequest) (*Descr
 	var err error
 	var res DescribeUDiskPriceResponse
 
-	err = c.client.InvokeAction("DescribeUDiskPrice", req, &res)
+	err = c.Client.InvokeAction("DescribeUDiskPrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -41,7 +41,7 @@ func (c *UHostClient) NewModifyUHostInstanceTagRequest() *ModifyUHostInstanceTag
 	req := &ModifyUHostInstanceTagRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UHostClient) ModifyUHostInstanceTag(req *ModifyUHostInstanceTagRequest)
 	var err error
 	var res ModifyUHostInstanceTagResponse
 
-	err = c.client.InvokeAction("ModifyUHostInstanceTag", req, &res)
+	err = c.Client.InvokeAction("ModifyUHostInstanceTag", req, &res)
 	if err != nil {
 		return &res, err
 	}

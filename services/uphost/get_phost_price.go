@@ -44,7 +44,7 @@ func (c *UPHostClient) NewGetPHostPriceRequest() *GetPHostPriceRequest {
 	req := &GetPHostPriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *UPHostClient) GetPHostPrice(req *GetPHostPriceRequest) (*GetPHostPriceR
 	var err error
 	var res GetPHostPriceResponse
 
-	err = c.client.InvokeAction("GetPHostPrice", req, &res)
+	err = c.Client.InvokeAction("GetPHostPrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -29,7 +29,7 @@ func (c *PathXClient) NewDeleteGlobalSSHInstanceRequest() *DeleteGlobalSSHInstan
 	req := &DeleteGlobalSSHInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -41,7 +41,7 @@ func (c *PathXClient) DeleteGlobalSSHInstance(req *DeleteGlobalSSHInstanceReques
 	var err error
 	var res DeleteGlobalSSHInstanceResponse
 
-	err = c.client.InvokeAction("DeleteGlobalSSHInstance", req, &res)
+	err = c.Client.InvokeAction("DeleteGlobalSSHInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

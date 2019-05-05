@@ -68,7 +68,7 @@ func (c *ULBClient) NewCreateVServerRequest() *CreateVServerRequest {
 	req := &CreateVServerRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -80,7 +80,7 @@ func (c *ULBClient) CreateVServer(req *CreateVServerRequest) (*CreateVServerResp
 	var err error
 	var res CreateVServerResponse
 
-	err = c.client.InvokeAction("CreateVServer", req, &res)
+	err = c.Client.InvokeAction("CreateVServer", req, &res)
 	if err != nil {
 		return &res, err
 	}

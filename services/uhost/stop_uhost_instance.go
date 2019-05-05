@@ -38,7 +38,7 @@ func (c *UHostClient) NewStopUHostInstanceRequest() *StopUHostInstanceRequest {
 	req := &StopUHostInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UHostClient) StopUHostInstance(req *StopUHostInstanceRequest) (*StopUHo
 	var err error
 	var res StopUHostInstanceResponse
 
-	err = c.client.InvokeAction("StopUHostInstance", req, &res)
+	err = c.Client.InvokeAction("StopUHostInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

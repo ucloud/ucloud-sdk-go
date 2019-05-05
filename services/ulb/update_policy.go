@@ -50,7 +50,7 @@ func (c *ULBClient) NewUpdatePolicyRequest() *UpdatePolicyRequest {
 	req := &UpdatePolicyRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -62,7 +62,7 @@ func (c *ULBClient) UpdatePolicy(req *UpdatePolicyRequest) (*UpdatePolicyRespons
 	var err error
 	var res UpdatePolicyResponse
 
-	err = c.client.InvokeAction("UpdatePolicy", req, &res)
+	err = c.Client.InvokeAction("UpdatePolicy", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -32,7 +32,7 @@ func (c *UDPNClient) NewReleaseUDPNRequest() *ReleaseUDPNRequest {
 	req := &ReleaseUDPNRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UDPNClient) ReleaseUDPN(req *ReleaseUDPNRequest) (*ReleaseUDPNResponse,
 	var err error
 	var res ReleaseUDPNResponse
 
-	err = c.client.InvokeAction("ReleaseUDPN", req, &res)
+	err = c.Client.InvokeAction("ReleaseUDPN", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -38,7 +38,7 @@ func (c *UNetClient) NewUnBindEIPRequest() *UnBindEIPRequest {
 	req := &UnBindEIPRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UNetClient) UnBindEIP(req *UnBindEIPRequest) (*UnBindEIPResponse, error
 	var err error
 	var res UnBindEIPResponse
 
-	err = c.client.InvokeAction("UnBindEIP", req, &res)
+	err = c.Client.InvokeAction("UnBindEIP", req, &res)
 	if err != nil {
 		return &res, err
 	}

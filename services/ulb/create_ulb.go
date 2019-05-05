@@ -62,7 +62,7 @@ func (c *ULBClient) NewCreateULBRequest() *CreateULBRequest {
 	req := &CreateULBRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -74,7 +74,7 @@ func (c *ULBClient) CreateULB(req *CreateULBRequest) (*CreateULBResponse, error)
 	var err error
 	var res CreateULBResponse
 
-	err = c.client.InvokeAction("CreateULB", req, &res)
+	err = c.Client.InvokeAction("CreateULB", req, &res)
 	if err != nil {
 		return &res, err
 	}

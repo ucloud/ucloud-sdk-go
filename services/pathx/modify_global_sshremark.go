@@ -32,7 +32,7 @@ func (c *PathXClient) NewModifyGlobalSSHRemarkRequest() *ModifyGlobalSSHRemarkRe
 	req := &ModifyGlobalSSHRemarkRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *PathXClient) ModifyGlobalSSHRemark(req *ModifyGlobalSSHRemarkRequest) (
 	var err error
 	var res ModifyGlobalSSHRemarkResponse
 
-	err = c.client.InvokeAction("ModifyGlobalSSHRemark", req, &res)
+	err = c.Client.InvokeAction("ModifyGlobalSSHRemark", req, &res)
 	if err != nil {
 		return &res, err
 	}

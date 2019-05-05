@@ -35,7 +35,7 @@ func (c *ULBClient) NewDeleteVServerRequest() *DeleteVServerRequest {
 	req := &DeleteVServerRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *ULBClient) DeleteVServer(req *DeleteVServerRequest) (*DeleteVServerResp
 	var err error
 	var res DeleteVServerResponse
 
-	err = c.client.InvokeAction("DeleteVServer", req, &res)
+	err = c.Client.InvokeAction("DeleteVServer", req, &res)
 	if err != nil {
 		return &res, err
 	}

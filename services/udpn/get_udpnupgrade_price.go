@@ -38,7 +38,7 @@ func (c *UDPNClient) NewGetUDPNUpgradePriceRequest() *GetUDPNUpgradePriceRequest
 	req := &GetUDPNUpgradePriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDPNClient) GetUDPNUpgradePrice(req *GetUDPNUpgradePriceRequest) (*GetU
 	var err error
 	var res GetUDPNUpgradePriceResponse
 
-	err = c.client.InvokeAction("GetUDPNUpgradePrice", req, &res)
+	err = c.Client.InvokeAction("GetUDPNUpgradePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

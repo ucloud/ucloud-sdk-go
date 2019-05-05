@@ -38,7 +38,7 @@ func (c *UDBClient) NewStopUDBInstanceRequest() *StopUDBInstanceRequest {
 	req := &StopUDBInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) StopUDBInstance(req *StopUDBInstanceRequest) (*StopUDBInstan
 	var err error
 	var res StopUDBInstanceResponse
 
-	err = c.client.InvokeAction("StopUDBInstance", req, &res)
+	err = c.Client.InvokeAction("StopUDBInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

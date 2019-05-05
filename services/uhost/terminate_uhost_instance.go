@@ -50,7 +50,7 @@ func (c *UHostClient) NewTerminateUHostInstanceRequest() *TerminateUHostInstance
 	req := &TerminateUHostInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -62,7 +62,7 @@ func (c *UHostClient) TerminateUHostInstance(req *TerminateUHostInstanceRequest)
 	var err error
 	var res TerminateUHostInstanceResponse
 
-	err = c.client.InvokeAction("TerminateUHostInstance", req, &res)
+	err = c.Client.InvokeAction("TerminateUHostInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

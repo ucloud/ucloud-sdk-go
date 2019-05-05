@@ -35,7 +35,7 @@ func (c *UDBClient) NewPromoteUDBInstanceToHARequest() *PromoteUDBInstanceToHARe
 	req := &PromoteUDBInstanceToHARequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UDBClient) PromoteUDBInstanceToHA(req *PromoteUDBInstanceToHARequest) (
 	var err error
 	var res PromoteUDBInstanceToHAResponse
 
-	err = c.client.InvokeAction("PromoteUDBInstanceToHA", req, &res)
+	err = c.Client.InvokeAction("PromoteUDBInstanceToHA", req, &res)
 	if err != nil {
 		return &res, err
 	}

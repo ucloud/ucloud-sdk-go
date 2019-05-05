@@ -38,7 +38,7 @@ func (c *UMemClient) NewGetUMemSpaceStateRequest() *GetUMemSpaceStateRequest {
 	req := &GetUMemSpaceStateRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UMemClient) GetUMemSpaceState(req *GetUMemSpaceStateRequest) (*GetUMemS
 	var err error
 	var res GetUMemSpaceStateResponse
 
-	err = c.client.InvokeAction("GetUMemSpaceState", req, &res)
+	err = c.Client.InvokeAction("GetUMemSpaceState", req, &res)
 	if err != nil {
 		return &res, err
 	}

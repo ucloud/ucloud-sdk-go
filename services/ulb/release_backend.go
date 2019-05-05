@@ -35,7 +35,7 @@ func (c *ULBClient) NewReleaseBackendRequest() *ReleaseBackendRequest {
 	req := &ReleaseBackendRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *ULBClient) ReleaseBackend(req *ReleaseBackendRequest) (*ReleaseBackendR
 	var err error
 	var res ReleaseBackendResponse
 
-	err = c.client.InvokeAction("ReleaseBackend", req, &res)
+	err = c.Client.InvokeAction("ReleaseBackend", req, &res)
 	if err != nil {
 		return &res, err
 	}

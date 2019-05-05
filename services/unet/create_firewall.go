@@ -44,7 +44,7 @@ func (c *UNetClient) NewCreateFirewallRequest() *CreateFirewallRequest {
 	req := &CreateFirewallRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -56,7 +56,7 @@ func (c *UNetClient) CreateFirewall(req *CreateFirewallRequest) (*CreateFirewall
 	var err error
 	var res CreateFirewallResponse
 
-	err = c.client.InvokeAction("CreateFirewall", req, &res)
+	err = c.Client.InvokeAction("CreateFirewall", req, &res)
 	if err != nil {
 		return &res, err
 	}

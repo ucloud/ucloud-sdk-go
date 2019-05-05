@@ -122,7 +122,7 @@ func (c *UHostClient) NewCreateUHostInstanceRequest() *CreateUHostInstanceReques
 	req := &CreateUHostInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -136,7 +136,7 @@ func (c *UHostClient) CreateUHostInstance(req *CreateUHostInstanceRequest) (*Cre
 	var reqImmutable = *req
 	reqImmutable.Password = ucloud.String(base64.StdEncoding.EncodeToString([]byte(ucloud.StringValue(req.Password))))
 
-	err = c.client.InvokeAction("CreateUHostInstance", &reqImmutable, &res)
+	err = c.Client.InvokeAction("CreateUHostInstance", &reqImmutable, &res)
 	if err != nil {
 		return &res, err
 	}

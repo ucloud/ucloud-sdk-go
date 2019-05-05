@@ -35,7 +35,7 @@ func (c *UMemClient) NewDeleteUMemSpaceRequest() *DeleteUMemSpaceRequest {
 	req := &DeleteUMemSpaceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UMemClient) DeleteUMemSpace(req *DeleteUMemSpaceRequest) (*DeleteUMemSp
 	var err error
 	var res DeleteUMemSpaceResponse
 
-	err = c.client.InvokeAction("DeleteUMemSpace", req, &res)
+	err = c.Client.InvokeAction("DeleteUMemSpace", req, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -50,7 +50,7 @@ func (c *UDBClient) NewDescribeUDBInstanceUpgradePriceRequest() *DescribeUDBInst
 	req := &DescribeUDBInstanceUpgradePriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -62,7 +62,7 @@ func (c *UDBClient) DescribeUDBInstanceUpgradePrice(req *DescribeUDBInstanceUpgr
 	var err error
 	var res DescribeUDBInstanceUpgradePriceResponse
 
-	err = c.client.InvokeAction("DescribeUDBInstanceUpgradePrice", req, &res)
+	err = c.Client.InvokeAction("DescribeUDBInstanceUpgradePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

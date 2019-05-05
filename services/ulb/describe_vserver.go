@@ -47,7 +47,7 @@ func (c *ULBClient) NewDescribeVServerRequest() *DescribeVServerRequest {
 	req := &DescribeVServerRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *ULBClient) DescribeVServer(req *DescribeVServerRequest) (*DescribeVServ
 	var err error
 	var res DescribeVServerResponse
 
-	err = c.client.InvokeAction("DescribeVServer", req, &res)
+	err = c.Client.InvokeAction("DescribeVServer", req, &res)
 	if err != nil {
 		return &res, err
 	}

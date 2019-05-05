@@ -50,7 +50,7 @@ func (c *UHostClient) NewCopyCustomImageRequest() *CopyCustomImageRequest {
 	req := &CopyCustomImageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -62,7 +62,7 @@ func (c *UHostClient) CopyCustomImage(req *CopyCustomImageRequest) (*CopyCustomI
 	var err error
 	var res CopyCustomImageResponse
 
-	err = c.client.InvokeAction("CopyCustomImage", req, &res)
+	err = c.Client.InvokeAction("CopyCustomImage", req, &res)
 	if err != nil {
 		return &res, err
 	}

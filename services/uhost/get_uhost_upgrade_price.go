@@ -59,7 +59,7 @@ func (c *UHostClient) NewGetUHostUpgradePriceRequest() *GetUHostUpgradePriceRequ
 	req := &GetUHostUpgradePriceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -71,7 +71,7 @@ func (c *UHostClient) GetUHostUpgradePrice(req *GetUHostUpgradePriceRequest) (*G
 	var err error
 	var res GetUHostUpgradePriceResponse
 
-	err = c.client.InvokeAction("GetUHostUpgradePrice", req, &res)
+	err = c.Client.InvokeAction("GetUHostUpgradePrice", req, &res)
 	if err != nil {
 		return &res, err
 	}

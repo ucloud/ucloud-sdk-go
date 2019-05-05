@@ -68,7 +68,7 @@ func (c *UDBClient) NewCreateUDBRouteInstanceRequest() *CreateUDBRouteInstanceRe
 	req := &CreateUDBRouteInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -80,7 +80,7 @@ func (c *UDBClient) CreateUDBRouteInstance(req *CreateUDBRouteInstanceRequest) (
 	var err error
 	var res CreateUDBRouteInstanceResponse
 
-	err = c.client.InvokeAction("CreateUDBRouteInstance", req, &res)
+	err = c.Client.InvokeAction("CreateUDBRouteInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

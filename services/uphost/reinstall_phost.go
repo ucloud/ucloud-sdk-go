@@ -53,7 +53,7 @@ func (c *UPHostClient) NewReinstallPHostRequest() *ReinstallPHostRequest {
 	req := &ReinstallPHostRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -65,7 +65,7 @@ func (c *UPHostClient) ReinstallPHost(req *ReinstallPHostRequest) (*ReinstallPHo
 	var err error
 	var res ReinstallPHostResponse
 
-	err = c.client.InvokeAction("ReinstallPHost", req, &res)
+	err = c.Client.InvokeAction("ReinstallPHost", req, &res)
 	if err != nil {
 		return &res, err
 	}

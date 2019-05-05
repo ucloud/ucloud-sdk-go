@@ -35,7 +35,7 @@ func (c *UNetClient) NewModifyEIPBandwidthRequest() *ModifyEIPBandwidthRequest {
 	req := &ModifyEIPBandwidthRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UNetClient) ModifyEIPBandwidth(req *ModifyEIPBandwidthRequest) (*Modify
 	var err error
 	var res ModifyEIPBandwidthResponse
 
-	err = c.client.InvokeAction("ModifyEIPBandwidth", req, &res)
+	err = c.Client.InvokeAction("ModifyEIPBandwidth", req, &res)
 	if err != nil {
 		return &res, err
 	}

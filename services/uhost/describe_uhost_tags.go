@@ -39,7 +39,7 @@ func (c *UHostClient) NewDescribeUHostTagsRequest() *DescribeUHostTagsRequest {
 	req := &DescribeUHostTagsRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -51,7 +51,7 @@ func (c *UHostClient) DescribeUHostTags(req *DescribeUHostTagsRequest) (*Describ
 	var err error
 	var res DescribeUHostTagsResponse
 
-	err = c.client.InvokeAction("DescribeUHostTags", req, &res)
+	err = c.Client.InvokeAction("DescribeUHostTags", req, &res)
 	if err != nil {
 		return &res, err
 	}

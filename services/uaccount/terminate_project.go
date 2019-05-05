@@ -27,7 +27,7 @@ func (c *UAccountClient) NewTerminateProjectRequest() *TerminateProjectRequest {
 	req := &TerminateProjectRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -39,7 +39,7 @@ func (c *UAccountClient) TerminateProject(req *TerminateProjectRequest) (*Termin
 	var err error
 	var res TerminateProjectResponse
 
-	err = c.client.InvokeAction("TerminateProject", req, &res)
+	err = c.Client.InvokeAction("TerminateProject", req, &res)
 	if err != nil {
 		return &res, err
 	}

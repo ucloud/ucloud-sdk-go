@@ -41,7 +41,7 @@ func (c *UDBClient) NewModifyUDBInstancePasswordRequest() *ModifyUDBInstancePass
 	req := &ModifyUDBInstancePasswordRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UDBClient) ModifyUDBInstancePassword(req *ModifyUDBInstancePasswordRequ
 	var err error
 	var res ModifyUDBInstancePasswordResponse
 
-	err = c.client.InvokeAction("ModifyUDBInstancePassword", req, &res)
+	err = c.Client.InvokeAction("ModifyUDBInstancePassword", req, &res)
 	if err != nil {
 		return &res, err
 	}

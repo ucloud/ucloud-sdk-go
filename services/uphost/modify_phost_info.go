@@ -41,7 +41,7 @@ func (c *UPHostClient) NewModifyPHostInfoRequest() *ModifyPHostInfoRequest {
 	req := &ModifyPHostInfoRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UPHostClient) ModifyPHostInfo(req *ModifyPHostInfoRequest) (*ModifyPHos
 	var err error
 	var res ModifyPHostInfoResponse
 
-	err = c.client.InvokeAction("ModifyPHostInfo", req, &res)
+	err = c.Client.InvokeAction("ModifyPHostInfo", req, &res)
 	if err != nil {
 		return &res, err
 	}

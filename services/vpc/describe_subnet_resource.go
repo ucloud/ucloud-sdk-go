@@ -47,7 +47,7 @@ func (c *VPCClient) NewDescribeSubnetResourceRequest() *DescribeSubnetResourceRe
 	req := &DescribeSubnetResourceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *VPCClient) DescribeSubnetResource(req *DescribeSubnetResourceRequest) (
 	var err error
 	var res DescribeSubnetResourceResponse
 
-	err = c.client.InvokeAction("DescribeSubnetResource", req, &res)
+	err = c.Client.InvokeAction("DescribeSubnetResource", req, &res)
 	if err != nil {
 		return &res, err
 	}

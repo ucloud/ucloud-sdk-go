@@ -38,7 +38,7 @@ func (c *UNetClient) NewDescribeShareBandwidthRequest() *DescribeShareBandwidthR
 	req := &DescribeShareBandwidthRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UNetClient) DescribeShareBandwidth(req *DescribeShareBandwidthRequest) 
 	var err error
 	var res DescribeShareBandwidthResponse
 
-	err = c.client.InvokeAction("DescribeShareBandwidth", req, &res)
+	err = c.Client.InvokeAction("DescribeShareBandwidth", req, &res)
 	if err != nil {
 		return &res, err
 	}

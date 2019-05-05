@@ -41,7 +41,7 @@ func (c *UHostClient) NewModifyUHostInstanceNameRequest() *ModifyUHostInstanceNa
 	req := &ModifyUHostInstanceNameRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UHostClient) ModifyUHostInstanceName(req *ModifyUHostInstanceNameReques
 	var err error
 	var res ModifyUHostInstanceNameResponse
 
-	err = c.client.InvokeAction("ModifyUHostInstanceName", req, &res)
+	err = c.Client.InvokeAction("ModifyUHostInstanceName", req, &res)
 	if err != nil {
 		return &res, err
 	}

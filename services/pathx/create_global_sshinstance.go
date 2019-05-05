@@ -56,7 +56,7 @@ func (c *PathXClient) NewCreateGlobalSSHInstanceRequest() *CreateGlobalSSHInstan
 	req := &CreateGlobalSSHInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -68,7 +68,7 @@ func (c *PathXClient) CreateGlobalSSHInstance(req *CreateGlobalSSHInstanceReques
 	var err error
 	var res CreateGlobalSSHInstanceResponse
 
-	err = c.client.InvokeAction("CreateGlobalSSHInstance", req, &res)
+	err = c.Client.InvokeAction("CreateGlobalSSHInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

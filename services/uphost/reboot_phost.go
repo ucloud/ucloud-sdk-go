@@ -32,7 +32,7 @@ func (c *UPHostClient) NewRebootPHostRequest() *RebootPHostRequest {
 	req := &RebootPHostRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -44,7 +44,7 @@ func (c *UPHostClient) RebootPHost(req *RebootPHostRequest) (*RebootPHostRespons
 	var err error
 	var res RebootPHostResponse
 
-	err = c.client.InvokeAction("RebootPHost", req, &res)
+	err = c.Client.InvokeAction("RebootPHost", req, &res)
 	if err != nil {
 		return &res, err
 	}

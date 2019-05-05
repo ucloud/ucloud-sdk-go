@@ -62,7 +62,7 @@ func (c *UDBClient) NewResizeUDBInstanceRequest() *ResizeUDBInstanceRequest {
 	req := &ResizeUDBInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -74,7 +74,7 @@ func (c *UDBClient) ResizeUDBInstance(req *ResizeUDBInstanceRequest) (*ResizeUDB
 	var err error
 	var res ResizeUDBInstanceResponse
 
-	err = c.client.InvokeAction("ResizeUDBInstance", req, &res)
+	err = c.Client.InvokeAction("ResizeUDBInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

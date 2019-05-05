@@ -35,7 +35,7 @@ func (c *UNetClient) NewAssociateEIPWithShareBandwidthRequest() *AssociateEIPWit
 	req := &AssociateEIPWithShareBandwidthRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UNetClient) AssociateEIPWithShareBandwidth(req *AssociateEIPWithShareBa
 	var err error
 	var res AssociateEIPWithShareBandwidthResponse
 
-	err = c.client.InvokeAction("AssociateEIPWithShareBandwidth", req, &res)
+	err = c.Client.InvokeAction("AssociateEIPWithShareBandwidth", req, &res)
 	if err != nil {
 		return &res, err
 	}

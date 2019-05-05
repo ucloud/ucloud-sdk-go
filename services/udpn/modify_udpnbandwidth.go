@@ -38,7 +38,7 @@ func (c *UDPNClient) NewModifyUDPNBandwidthRequest() *ModifyUDPNBandwidthRequest
 	req := &ModifyUDPNBandwidthRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDPNClient) ModifyUDPNBandwidth(req *ModifyUDPNBandwidthRequest) (*Modi
 	var err error
 	var res ModifyUDPNBandwidthResponse
 
-	err = c.client.InvokeAction("ModifyUDPNBandwidth", req, &res)
+	err = c.Client.InvokeAction("ModifyUDPNBandwidth", req, &res)
 	if err != nil {
 		return &res, err
 	}

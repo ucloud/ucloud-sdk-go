@@ -44,7 +44,7 @@ func (c *ULBClient) NewAllocateBackendBatchRequest() *AllocateBackendBatchReques
 	req := &AllocateBackendBatchRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *ULBClient) AllocateBackendBatch(req *AllocateBackendBatchRequest) (*All
 	var err error
 	var res AllocateBackendBatchResponse
 
-	err = c.client.InvokeAction("AllocateBackendBatch", req, &res)
+	err = c.Client.InvokeAction("AllocateBackendBatch", req, &res)
 	if err != nil {
 		return &res, err
 	}

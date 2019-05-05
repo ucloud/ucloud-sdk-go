@@ -44,7 +44,7 @@ func (c *ULBClient) NewDescribeSSLRequest() *DescribeSSLRequest {
 	req := &DescribeSSLRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -56,7 +56,7 @@ func (c *ULBClient) DescribeSSL(req *DescribeSSLRequest) (*DescribeSSLResponse, 
 	var err error
 	var res DescribeSSLResponse
 
-	err = c.client.InvokeAction("DescribeSSL", req, &res)
+	err = c.Client.InvokeAction("DescribeSSL", req, &res)
 	if err != nil {
 		return &res, err
 	}

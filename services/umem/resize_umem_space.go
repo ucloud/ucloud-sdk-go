@@ -47,7 +47,7 @@ func (c *UMemClient) NewResizeUMemSpaceRequest() *ResizeUMemSpaceRequest {
 	req := &ResizeUMemSpaceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *UMemClient) ResizeUMemSpace(req *ResizeUMemSpaceRequest) (*ResizeUMemSp
 	var err error
 	var res ResizeUMemSpaceResponse
 
-	err = c.client.InvokeAction("ResizeUMemSpace", req, &res)
+	err = c.Client.InvokeAction("ResizeUMemSpace", req, &res)
 	if err != nil {
 		return &res, err
 	}

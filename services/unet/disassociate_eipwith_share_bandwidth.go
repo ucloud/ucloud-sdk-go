@@ -41,7 +41,7 @@ func (c *UNetClient) NewDisassociateEIPWithShareBandwidthRequest() *Disassociate
 	req := &DisassociateEIPWithShareBandwidthRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -53,7 +53,7 @@ func (c *UNetClient) DisassociateEIPWithShareBandwidth(req *DisassociateEIPWithS
 	var err error
 	var res DisassociateEIPWithShareBandwidthResponse
 
-	err = c.client.InvokeAction("DisassociateEIPWithShareBandwidth", req, &res)
+	err = c.Client.InvokeAction("DisassociateEIPWithShareBandwidth", req, &res)
 	if err != nil {
 		return &res, err
 	}

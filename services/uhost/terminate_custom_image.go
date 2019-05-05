@@ -35,7 +35,7 @@ func (c *UHostClient) NewTerminateCustomImageRequest() *TerminateCustomImageRequ
 	req := &TerminateCustomImageRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -47,7 +47,7 @@ func (c *UHostClient) TerminateCustomImage(req *TerminateCustomImageRequest) (*T
 	var err error
 	var res TerminateCustomImageResponse
 
-	err = c.client.InvokeAction("TerminateCustomImage", req, &res)
+	err = c.Client.InvokeAction("TerminateCustomImage", req, &res)
 	if err != nil {
 		return &res, err
 	}

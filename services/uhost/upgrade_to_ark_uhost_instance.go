@@ -38,7 +38,7 @@ func (c *UHostClient) NewUpgradeToArkUHostInstanceRequest() *UpgradeToArkUHostIn
 	req := &UpgradeToArkUHostInstanceRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UHostClient) UpgradeToArkUHostInstance(req *UpgradeToArkUHostInstanceRe
 	var err error
 	var res UpgradeToArkUHostInstanceResponse
 
-	err = c.client.InvokeAction("UpgradeToArkUHostInstance", req, &res)
+	err = c.Client.InvokeAction("UpgradeToArkUHostInstance", req, &res)
 	if err != nil {
 		return &res, err
 	}

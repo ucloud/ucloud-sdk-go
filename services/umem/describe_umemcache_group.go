@@ -47,7 +47,7 @@ func (c *UMemClient) NewDescribeUMemcacheGroupRequest() *DescribeUMemcacheGroupR
 	req := &DescribeUMemcacheGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -59,7 +59,7 @@ func (c *UMemClient) DescribeUMemcacheGroup(req *DescribeUMemcacheGroupRequest) 
 	var err error
 	var res DescribeUMemcacheGroupResponse
 
-	err = c.client.InvokeAction("DescribeUMemcacheGroup", req, &res)
+	err = c.Client.InvokeAction("DescribeUMemcacheGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

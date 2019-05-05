@@ -62,7 +62,7 @@ func (c *UNetClient) NewAllocateEIPRequest() *AllocateEIPRequest {
 	req := &AllocateEIPRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -74,7 +74,7 @@ func (c *UNetClient) AllocateEIP(req *AllocateEIPRequest) (*AllocateEIPResponse,
 	var err error
 	var res AllocateEIPResponse
 
-	err = c.client.InvokeAction("AllocateEIP", req, &res)
+	err = c.Client.InvokeAction("AllocateEIP", req, &res)
 	if err != nil {
 		return &res, err
 	}

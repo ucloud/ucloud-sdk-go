@@ -68,7 +68,7 @@ func (c *UMemClient) NewCreateUMemcacheGroupRequest() *CreateUMemcacheGroupReque
 	req := &CreateUMemcacheGroupRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(false)
@@ -80,7 +80,7 @@ func (c *UMemClient) CreateUMemcacheGroup(req *CreateUMemcacheGroupRequest) (*Cr
 	var err error
 	var res CreateUMemcacheGroupResponse
 
-	err = c.client.InvokeAction("CreateUMemcacheGroup", req, &res)
+	err = c.Client.InvokeAction("CreateUMemcacheGroup", req, &res)
 	if err != nil {
 		return &res, err
 	}

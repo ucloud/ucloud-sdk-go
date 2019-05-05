@@ -38,7 +38,7 @@ func (c *UDiskClient) NewSetUDiskUDataArkModeRequest() *SetUDiskUDataArkModeRequ
 	req := &SetUDiskUDataArkModeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDiskClient) SetUDiskUDataArkMode(req *SetUDiskUDataArkModeRequest) (*S
 	var err error
 	var res SetUDiskUDataArkModeResponse
 
-	err = c.client.InvokeAction("SetUDiskUDataArkMode", req, &res)
+	err = c.Client.InvokeAction("SetUDiskUDataArkMode", req, &res)
 	if err != nil {
 		return &res, err
 	}

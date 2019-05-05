@@ -38,7 +38,7 @@ func (c *UDBClient) NewDescribeUDBLogBackupURLRequest() *DescribeUDBLogBackupURL
 	req := &DescribeUDBLogBackupURLRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *UDBClient) DescribeUDBLogBackupURL(req *DescribeUDBLogBackupURLRequest)
 	var err error
 	var res DescribeUDBLogBackupURLResponse
 
-	err = c.client.InvokeAction("DescribeUDBLogBackupURL", req, &res)
+	err = c.Client.InvokeAction("DescribeUDBLogBackupURL", req, &res)
 	if err != nil {
 		return &res, err
 	}

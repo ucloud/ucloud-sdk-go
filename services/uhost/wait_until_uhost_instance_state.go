@@ -23,7 +23,7 @@ type WaitUntilUHostInstanceStateRequest struct {
 
 // NewWaitUntilUHostInstanceStateRequest will create request of WaitUntilUHostInstanceState action.
 func (c *UHostClient) NewWaitUntilUHostInstanceStateRequest() *WaitUntilUHostInstanceStateRequest {
-	cfg := c.client.GetConfig()
+	cfg := c.Client.GetConfig()
 
 	return &WaitUntilUHostInstanceStateRequest{
 		CommonBase: request.CommonBase{

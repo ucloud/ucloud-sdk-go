@@ -38,7 +38,7 @@ func (c *VPCClient) NewUpdateSubnetAttributeRequest() *UpdateSubnetAttributeRequ
 	req := &UpdateSubnetAttributeRequest{}
 
 	// setup request with client config
-	c.client.SetupRequest(req)
+	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
 	req.SetRetryable(true)
@@ -50,7 +50,7 @@ func (c *VPCClient) UpdateSubnetAttribute(req *UpdateSubnetAttributeRequest) (*U
 	var err error
 	var res UpdateSubnetAttributeResponse
 
-	err = c.client.InvokeAction("UpdateSubnetAttribute", req, &res)
+	err = c.Client.InvokeAction("UpdateSubnetAttribute", req, &res)
 	if err != nil {
 		return &res, err
 	}
