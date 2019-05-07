@@ -67,6 +67,16 @@ func (c *Client) GetConfig() *Config {
 	return c.config
 }
 
+// SetLogger will set the logger of client
+func (c *Client) SetLogger(logger log.Logger) {
+	c.logger = logger
+}
+
+// GetLogger will set the logger of client
+func (c *Client) GetLogger() log.Logger {
+	return c.logger
+}
+
 // InvokeAction will do an action request from a request struct and set response value into res struct pointer
 func (c *Client) InvokeAction(action string, req request.Common, resp response.Common) error {
 	return c.InvokeActionWithPatcher(action, req, resp, utils.RetCodePatcher)
