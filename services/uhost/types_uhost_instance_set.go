@@ -104,7 +104,7 @@ type UHostInstanceSet struct {
 	// 系统盘状态 Normal表示初始化完成；Initializing表示在初始化。仍在初始化的系统盘无法制作镜像。
 	BootDiskState string
 
-	// 总的存储空间。包含系统盘与全部数据盘的总容量。
+	// 总的数据盘存储空间。
 	TotalDiskSpace int
 
 	// 隔离组id，不在隔离组则返回""
