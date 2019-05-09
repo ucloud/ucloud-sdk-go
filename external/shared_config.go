@@ -96,7 +96,10 @@ func loadConfigFile(cfgFile string) ([]sharedConfig, error) {
 }
 
 func getCredFilePath(credFile string) string {
-	realCredFile := strings.Replace(credFile, "~", userHomeDir(), 1)
+	var realCredFile string
+	if strings.HasPrefix(credFile, fmt.Sprintf("~%s",string(os.PathSeparator))){
+		realCredFile = strings.Replace(credFile, "~", userHomeDir(), 1)
+	}
 	// try to load default credential
 	if len(credFile) == 0 {
 		realCredFile = DefaultSharedCredentialsFile()
