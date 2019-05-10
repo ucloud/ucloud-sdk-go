@@ -38,6 +38,12 @@ type DescribeUHostInstanceRequest struct {
 
 	// 硬件隔离组id
 	IsolationGroup *string `required:"false"`
+
+	// 云主机ip对应的vpc id
+	VPCId *string `required:"false"`
+
+	// 云主机ip对应的子网id
+	SubnetId *string `required:"false"`
 }
 
 // DescribeUHostInstanceResponse is response schema for DescribeUHostInstance action

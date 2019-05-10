@@ -8,7 +8,16 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type UHostDiskSet struct {
 
-	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// true: 加密盘 false：非加密盘
+	Encrypted bool
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
 
 	// 磁盘ID
@@ -25,10 +34,4 @@ type UHostDiskSet struct {
 
 	// 备份方案。若开通了数据方舟，则为DataArk
 	BackupType string
-
-	// 是否是系统盘
-	IsBoot string
-
-	// 磁盘类型
-	DiskType string
 }

@@ -26,6 +26,9 @@ type AttachUDiskRequest struct {
 
 	// 需要挂载的UDisk实例ID.
 	UDiskId *string `required:"true"`
+
+	// 是否允许多点挂载（Yes: 允许多点挂载， No: 不允许多点挂载， 不填默认Yes ）
+	MultiAttach *string `required:"false"`
 }
 
 // AttachUDiskResponse is response schema for AttachUDisk action

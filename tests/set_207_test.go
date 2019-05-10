@@ -40,13 +40,13 @@ func TestSet207(t *testing.T) {
 	testSet207CheckUDBInstanceAllowance09(&ctx)
 	testSet207ResizeUDBInstance10(&ctx)
 	testSet207DescribeUDBInstance11(&ctx)
-	testSet207StartUDBInstance12(&ctx)
-	testSet207DescribeUDBInstanceState13(&ctx)
-	testSet207CheckUDBInstanceToHAAllowance14(&ctx)
-	testSet207DescribePromoteToHAPrice15(&ctx)
-	testSet207PromoteUDBInstanceToHA16(&ctx)
-	testSet207DescribeUDBInstanceState17(&ctx)
-	testSet207SwitchUDBInstanceToHA18(&ctx)
+	testSet207CheckUDBInstanceToHAAllowance12(&ctx)
+	testSet207DescribePromoteToHAPrice13(&ctx)
+	testSet207PromoteUDBInstanceToHA14(&ctx)
+	testSet207DescribeUDBInstanceState15(&ctx)
+	testSet207SwitchUDBInstanceToHA16(&ctx)
+	testSet207DescribeUDBInstance17(&ctx)
+	testSet207StopUDBInstance18(&ctx)
 	testSet207DescribeUDBInstance19(&ctx)
 	testSet207DeleteUDBInstance20(&ctx)
 }
@@ -73,7 +73,9 @@ func testSet207DescribeUDBType00(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -103,7 +105,9 @@ func testSet207DescribeUDBParamGroup01(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 	ctx.Vars["DataSet_paramGroup"] = ctx.Must(utest.GetValue(resp, "DataSet"))
@@ -137,7 +141,9 @@ func testSet207DescribeUDBInstancePrice02(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -145,7 +151,7 @@ func testSet207DescribeUDBInstancePrice02(ctx *utest.TestContext) {
 func testSet207CheckUDBInstanceAllowance03(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := iudbClient.NewCheckUDBInstanceAllowanceRequest()
+	req := pudbClient.NewCheckUDBInstanceAllowanceRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -159,7 +165,7 @@ func testSet207CheckUDBInstanceAllowance03(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iudbClient.CheckUDBInstanceAllowance(req)
+			return pudbClient.CheckUDBInstanceAllowance(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -171,7 +177,9 @@ func testSet207CheckUDBInstanceAllowance03(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -214,14 +222,16 @@ func testSet207CreateUDBInstance04(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 	ctx.Vars["DBId"] = ctx.Must(utest.GetValue(resp, "DBId"))
 }
 
 func testSet207DescribeUDBInstanceState05(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+	time.Sleep(time.Duration(30) * time.Second)
 
 	req := udbClient.NewDescribeUDBInstanceStateRequest()
 
@@ -238,14 +248,16 @@ func testSet207DescribeUDBInstanceState05(ctx *utest.TestContext) {
 			ctx.NewValidator("RetCode", "0", "str_eq"),
 			ctx.NewValidator("State", "Running", "str_eq"),
 		},
-		MaxRetries:    100,
-		RetryInterval: 3 * time.Second,
+		MaxRetries:    50,
+		RetryInterval: 10 * time.Second,
 		T:             ctx.T,
 	}
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -274,7 +286,9 @@ func testSet207StopUDBInstance06(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -309,7 +323,9 @@ func testSet207DescribeUDBInstance07(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 	ctx.Vars["VirtualIP"] = ctx.Must(utest.GetValue(resp, "DataSet.0.VirtualIP"))
@@ -341,7 +357,9 @@ func testSet207DescribeUDBInstanceUpgradePrice08(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -349,7 +367,7 @@ func testSet207DescribeUDBInstanceUpgradePrice08(ctx *utest.TestContext) {
 func testSet207CheckUDBInstanceAllowance09(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
-	req := iudbClient.NewCheckUDBInstanceAllowanceRequest()
+	req := pudbClient.NewCheckUDBInstanceAllowanceRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -363,7 +381,7 @@ func testSet207CheckUDBInstanceAllowance09(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return iudbClient.CheckUDBInstanceAllowance(req)
+			return pudbClient.CheckUDBInstanceAllowance(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
@@ -375,13 +393,15 @@ func testSet207CheckUDBInstanceAllowance09(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
 func testSet207ResizeUDBInstance10(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(time.Duration(2) * time.Second)
 
 	req := udbClient.NewResizeUDBInstanceRequest()
 
@@ -391,8 +411,9 @@ func testSet207ResizeUDBInstance10(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("DBId")))
 	ctx.NoError(utest.SetReqValue(req, "MemoryLimit", ctx.Must(utest.Calculate("+", ctx.GetVar("MemoryLimit"), "1"))))
 	ctx.NoError(utest.SetReqValue(req, "DiskSpace", ctx.Must(utest.Calculate("+", ctx.GetVar("DiskSpace"), "1"))))
-
 	ctx.NoError(utest.SetReqValue(req, "UseSSD", ctx.GetVar("UseSSD")))
+
+	ctx.NoError(utest.SetReqValue(req, "StartAfterUpgrade", "true"))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -400,15 +421,18 @@ func testSet207ResizeUDBInstance10(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "ResizeUDBInstanceResponse", "str_eq"),
 		},
-		MaxRetries:    0,
-		RetryInterval: 0 * time.Second,
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
 		T:             ctx.T,
 	}
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
@@ -434,7 +458,7 @@ func testSet207DescribeUDBInstance11(ctx *utest.TestContext) {
 			ctx.NewValidator("RetCode", "0", "str_eq"),
 			ctx.NewValidator("DataSet.0.Name", ctx.Must(utest.Concat(ctx.GetVar("DBName"), ctx.GetVar("DBTypeId"))), "str_eq"),
 			ctx.NewValidator("DataSet.0.DBTypeId", ctx.GetVar("DBTypeId"), "str_eq"),
-			ctx.NewValidator("DataSet.0.State", "Shutoff", "str_eq"),
+			ctx.NewValidator("DataSet.0.State", "Running", "str_eq"),
 			ctx.NewValidator("DataSet.0.MemoryLimit", ctx.Must(utest.Calculate("+", ctx.GetVar("MemoryLimit"), "1")), "str_eq"),
 			ctx.NewValidator("DataSet.0.DiskSpace", ctx.Must(utest.Calculate("+", ctx.GetVar("DiskSpace"), "10")), "str_eq"),
 		},
@@ -445,72 +469,14 @@ func testSet207DescribeUDBInstance11(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
-func testSet207StartUDBInstance12(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
-
-	req := udbClient.NewStartUDBInstanceRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-
-	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("DBId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return udbClient.StartUDBInstance(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("Action", "StartUDBInstanceResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
-	}
-
-}
-
-func testSet207DescribeUDBInstanceState13(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
-
-	req := udbClient.NewDescribeUDBInstanceStateRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-
-	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("DBId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return udbClient.DescribeUDBInstanceState(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("State", "Running", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
-	}
-
-}
-
-func testSet207CheckUDBInstanceToHAAllowance14(ctx *utest.TestContext) {
+func testSet207CheckUDBInstanceToHAAllowance12(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := udbClient.NewCheckUDBInstanceToHAAllowanceRequest()
@@ -535,12 +501,14 @@ func testSet207CheckUDBInstanceToHAAllowance14(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
-func testSet207DescribePromoteToHAPrice15(ctx *utest.TestContext) {
+func testSet207DescribePromoteToHAPrice13(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(10) * time.Second)
 
 	req := iudbClient.NewDescribePromoteToHAPriceRequest()
@@ -564,12 +532,14 @@ func testSet207DescribePromoteToHAPrice15(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
-func testSet207PromoteUDBInstanceToHA16(ctx *utest.TestContext) {
+func testSet207PromoteUDBInstanceToHA14(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := udbClient.NewPromoteUDBInstanceToHARequest()
@@ -593,12 +563,14 @@ func testSet207PromoteUDBInstanceToHA16(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
-func testSet207DescribeUDBInstanceState17(ctx *utest.TestContext) {
+func testSet207DescribeUDBInstanceState15(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(10) * time.Second)
 
 	req := udbClient.NewDescribeUDBInstanceStateRequest()
@@ -624,13 +596,15 @@ func testSet207DescribeUDBInstanceState17(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
-func testSet207SwitchUDBInstanceToHA18(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+func testSet207SwitchUDBInstanceToHA16(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(20) * time.Second)
 
 	req := udbClient.NewSwitchUDBInstanceToHARequest()
 
@@ -647,18 +621,21 @@ func testSet207SwitchUDBInstanceToHA18(ctx *utest.TestContext) {
 			ctx.NewValidator("Action", "SwitchUDBInstanceToHAResponse", "str_eq"),
 		},
 		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
+		RetryInterval: 10 * time.Second,
 		T:             ctx.T,
 	}
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
+	ctx.Vars["HADBId"] = ctx.Must(utest.GetValue(resp, "DBId"))
 }
 
-func testSet207DescribeUDBInstance19(ctx *utest.TestContext) {
+func testSet207DescribeUDBInstance17(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(60) * time.Second)
 
 	req := udbClient.NewDescribeUDBInstanceRequest()
@@ -688,34 +665,109 @@ func testSet207DescribeUDBInstance19(ctx *utest.TestContext) {
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
+	}
+
+}
+
+func testSet207StopUDBInstance18(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(10) * time.Second)
+
+	req := udbClient.NewStopUDBInstanceRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+
+	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("HADBId")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return udbClient.StopUDBInstance(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "StopUDBInstanceResponse", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+}
+
+func testSet207DescribeUDBInstance19(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(10) * time.Second)
+
+	req := udbClient.NewDescribeUDBInstanceRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+
+	ctx.NoError(utest.SetReqValue(req, "ClassType", "sql"))
+	ctx.NoError(utest.SetReqValue(req, "Offset", "0"))
+	ctx.NoError(utest.SetReqValue(req, "Limit", "100"))
+	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("HADBId")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return udbClient.DescribeUDBInstance(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "DescribeUDBInstanceResponse", "str_eq"),
+			ctx.NewValidator("DataSet.0.State", "Shutoff", "str_eq"),
+		},
+		MaxRetries:    6,
+		RetryInterval: 10 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
 	}
 
 }
 
 func testSet207DeleteUDBInstance20(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
+	time.Sleep(time.Duration(0) * time.Second)
 
 	req := udbClient.NewDeleteUDBInstanceRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("DBId")))
+	ctx.NoError(utest.SetReqValue(req, "DBId", ctx.GetVar("HADBId")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
 			return udbClient.DeleteUDBInstance(req)
 		},
-		Validators:    []utest.TestValidator{},
-		MaxRetries:    0,
-		RetryInterval: 0 * time.Second,
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "DeleteUDBInstanceResponse", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
 		T:             ctx.T,
 	}
 
 	resp, err := testCase.Run()
 	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
+
+		ctx.T.Error(err)
+
 	}
 
 }

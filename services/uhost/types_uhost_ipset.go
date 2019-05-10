@@ -8,24 +8,30 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type UHostIPSet struct {
 
-	// 国际: Internation，BGP: BGP，内网: Private
+	// 【暂未支持】是否为默认网卡。True: 是默认网卡；其他值：不是。
+	Default string
+
+	// 当前网卡的Mac。
+	Mac string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
+
+	// 国际: Internation，BGP: Bgp，内网: Private
 	Type string
 
-	// IP资源ID (内网IP无对应的资源ID)
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
 	IPId string
 
 	// IP地址
 	IP string
 
-	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
 	Bandwidth int
 
-	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
-	Default string
-
-	// VPC ID
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
 	VPCId string
 
-	// Subnet Id
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
 	SubnetId string
 }

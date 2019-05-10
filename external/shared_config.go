@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
@@ -94,14 +95,22 @@ func loadConfigFile(cfgFile string) ([]sharedConfig, error) {
 	return cfgs, nil
 }
 
-func loadCredFile(credFile string) ([]sharedCredential, error) {
+func getCredFilePath(credFile string) string {
 	realCredFile := credFile
-	creds := make([]sharedCredential, 0)
-
+	homePath := fmt.Sprintf("~%s", string(os.PathSeparator))
+	if strings.HasPrefix(credFile, homePath) {
+		realCredFile = strings.Replace(credFile, "~", userHomeDir(), 1)
+	}
 	// try to load default credential
 	if len(credFile) == 0 {
 		realCredFile = DefaultSharedCredentialsFile()
 	}
+	return realCredFile
+}
+
+func loadCredFile(credFile string) ([]sharedCredential, error) {
+	realCredFile := getCredFilePath(credFile)
+	creds := make([]sharedCredential, 0)
 
 	// load credential file
 	err := loadJSONFile(realCredFile, &creds)

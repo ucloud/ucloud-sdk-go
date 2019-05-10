@@ -4,17 +4,16 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
-	"runtime"
+	"os/user"
 )
 
 func userHomeDir() string {
-	// get user home directory for windows: %USERPROFILE%
-	if runtime.GOOS == "windows" {
-		return os.Getenv("USERPROFILE")
+	//get user home directory
+	usr, err := user.Current()
+	if err != nil {
+		return "~"
 	}
-
-	// get user home directory for *nix: $HOME
-	return os.Getenv("HOME")
+	return usr.HomeDir
 }
 
 func loadJSONFile(path string, p interface{}) error {
