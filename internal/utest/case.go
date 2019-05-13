@@ -2,6 +2,7 @@ package utest
 
 import (
 	"fmt"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"testing"
 	"time"
 
@@ -24,6 +25,11 @@ type TestCase struct {
 func (t *TestCase) Run() (interface{}, error) {
 	for i := 0; i < t.MaxRetries+1; i++ {
 		resp, err := t.Invoker()
+		if e, ok := err.(uerr.Error); ok && e.Name() == uerr.ErrSendRequest {
+			assert.NoError(t.T, err)
+			assert.FailNow(t.T, "got unexcepted error")
+			return nil, nil
+		}
 
 		isValidateFailed := false
 		for _, validator := range t.Validators {
