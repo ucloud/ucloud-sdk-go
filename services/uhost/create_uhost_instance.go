@@ -24,7 +24,7 @@ type CreateUHostInstanceRequest struct {
 	// 磁盘列表
 	Disks []UHostDisk `required:"true"`
 
-	// UHost实例名称。默认：UHost
+	// UHost实例名称。默认：UHost。请遵照[[api:uhost-api:specification|字段规范]]设定实例名称。
 	Name *string `required:"false"`
 
 	// 业务组。默认：Default（Default即为未分组）
@@ -36,13 +36,13 @@ type CreateUHostInstanceRequest struct {
 	// 购买时长。默认: 1。按小时购买(Dynamic)时无需此参数。 月付时，此参数传0，代表了购买至月末。
 	Quantity *int `required:"false"`
 
-	// 云主机机型。枚举值：N1：系列1标准型；N2：系列2标准型；I1: 系列1高IO型；I2，系列2高IO型； D1: 系列1大数据机型；G1: 系列1GPU型，型号为K80；G2：系列2GPU型，型号为P40；G3：系列2GPU型，型号为V100；北京A、北京C、上海二A、香港A可用区默认N1，其他机房默认N2。不同机房的主机类型支持情况不同。详情请参考控制台。
+	// 云主机机型。枚举值：N1：系列1标准型；N2：系列2标准型；I1: 系列1高IO型；I2，系列2高IO型； D1: 系列1大数据机型；G1: 系列1GPU型，型号为K80；G2：系列2GPU型，型号为P40；G3：系列2GPU型，型号为V100；北京A、北京C、上海二A、香港A可用区默认N1，其他机房默认N2。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
 
-	// 虚拟CPU核数。 单位：个。可选参数：{1,2,4,8,12,16,24,32}。默认值: 4
+	// 虚拟CPU核数。可选参数：1-32（可选范围与UHostType相关）。默认值: 4
 	CPU *int `required:"false"`
 
-	// 内存大小。单位：MB。范围 ：[1024, 131072]， 取值为2的幂次方。默认值：8192。
+	// 内存大小。单位：MB。范围 ：[1024, 262144]，取值为1024的倍数（可选范围与UHostType相关）。默认值：8192
 	Memory *int `required:"false"`
 
 	// GPU卡核心数。仅GPU机型支持此字段；系列1可选1,2；系列2可选1,2,3,4。GPU可选数量与CPU有关联，详情请参考控制台。
@@ -104,6 +104,12 @@ type CreateUHostInstanceRequest struct {
 
 	// 代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
 	CouponId *string `required:"false"`
+
+	// 云主机类型，枚举值["N", "C", "G", "O"]
+	MachineType *string `required:"false"`
+
+	// 最低cpu平台，枚举值["Intel/Auto", "Intel/LvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"(只有O型云主机可选)]
+	MinimalCpuPlatform *string `required:"false"`
 }
 
 // CreateUHostInstanceResponse is response schema for CreateUHostInstance action
