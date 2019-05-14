@@ -16,7 +16,7 @@ type UHostInstanceSet struct {
 
 	// 【建议不再使用】云主机机型（旧）。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType string
-	
+
 	// 云主机机型（新）。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType string
 
