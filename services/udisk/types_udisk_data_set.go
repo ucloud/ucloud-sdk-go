@@ -62,7 +62,7 @@ type UDiskDataSet struct {
 	// 该盘快照上限
 	SnapshotLimit int
 
-	// 云硬盘类型: 普通数据盘:DataDisk,普通系统盘:SystemDisk,SSD数据盘:SSDDataDisk
+	// 云硬盘类型: 普通数据盘:DataDisk,普通系统盘:SystemDisk,SSD数据盘:SSDDataDisk,RSSD数据盘:RSSDDataDisk
 	DiskType string
 
 	// 是否支持克隆，1支持 ，0不支持

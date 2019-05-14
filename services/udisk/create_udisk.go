@@ -39,7 +39,7 @@ type CreateUDiskRequest struct {
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// 使用的代金券id
