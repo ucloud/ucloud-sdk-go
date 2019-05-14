@@ -30,7 +30,7 @@ type DescribeUDiskRequest struct {
 	// 返回数据长度, 默认为20
 	Limit *int `required:"false"`
 
-	// 普通数据盘:DataDisk|普通系统盘:SystemDisk|SSD数据盘:SSDDataDisk; 为空拉取所有
+	// 普通数据盘:DataDisk; 普通系统盘:SystemDisk; SSD数据盘:SSDDataDisk; RSSD数据盘:RSSDDataDisk; 为空拉取所有
 	DiskType *string `required:"false"`
 }
 
