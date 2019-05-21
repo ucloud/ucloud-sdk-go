@@ -4,6 +4,7 @@
 package umem
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/private/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
@@ -65,7 +66,7 @@ func (c *UMemClient) DescribeUMem(req *DescribeUMemRequest) (*DescribeUMemRespon
 	var err error
 	var res DescribeUMemResponse
 
-	err = c.Client.InvokeAction("DescribeUMem", req, &res)
+	err = c.Client.InvokeActionWithPatcher("DescribeUMem", req, &res, utils.PortPatcher)
 	if err != nil {
 		return &res, err
 	}
