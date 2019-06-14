@@ -79,10 +79,10 @@ func TestToQueryMap(t *testing.T) {
 					Composite
 				}{
 					CommonBase{},
-					Composite{Region: "cn-bj-2"},
+					Composite{Region: "cn-bj2"},
 				},
 			},
-			map[string]string{"Region": "cn-bj-2"},
+			map[string]string{"Composite.Region": "cn-bj2"},
 			false,
 		},
 		{
@@ -102,6 +102,22 @@ func TestToQueryMap(t *testing.T) {
 			map[string]string{
 				"Arr.0.Region": "cn-bj2",
 				"Arr.1.Region": "cn-sh1",
+			},
+			false,
+		},
+		{
+			"PointerStruct",
+			args{
+				req: &struct {
+					CommonBase
+					Ptr *Composite
+				}{
+					CommonBase{},
+					&Composite{Region: "cn-bj2"},
+				},
+			},
+			map[string]string{
+				"Ptr.Region": "cn-bj2",
 			},
 			false,
 		},
