@@ -12,6 +12,10 @@ func TestToQueryMap(t *testing.T) {
 		unexported string
 	}
 
+	type compositedRequest struct {
+		CommonBase
+	}
+
 	type args struct {
 		req Common
 	}
@@ -79,10 +83,10 @@ func TestToQueryMap(t *testing.T) {
 					Composite
 				}{
 					CommonBase{},
-					Composite{Region: "cn-bj-2"},
+					Composite{Region: "cn-bj2"},
 				},
 			},
-			map[string]string{"Region": "cn-bj-2"},
+			map[string]string{"Composite.Region": "cn-bj2"},
 			false,
 		},
 		{
@@ -102,6 +106,36 @@ func TestToQueryMap(t *testing.T) {
 			map[string]string{
 				"Arr.0.Region": "cn-bj2",
 				"Arr.1.Region": "cn-sh1",
+			},
+			false,
+		},
+		{
+			"PointerStruct",
+			args{
+				req: &struct {
+					CommonBase
+					Ptr *Composite
+				}{
+					CommonBase{},
+					&Composite{Region: "cn-bj2"},
+				},
+			},
+			map[string]string{
+				"Ptr.Region": "cn-bj2",
+			},
+			false,
+		},
+		{
+			"CommonRegion",
+			args{
+				req: func() Common {
+					req := &compositedRequest{}
+					_ = req.SetRegion("cn-bj2")
+					return req
+				}(),
+			},
+			map[string]string{
+				"Region": "cn-bj2",
 			},
 			false,
 		},
