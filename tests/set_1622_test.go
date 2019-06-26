@@ -14,8 +14,8 @@ func TestSet1622(t *testing.T) {
 	ctx.T = t
 	ctx.Vars = map[string]interface{}{}
 
-	ctx.SetVar("Region", "cn-sh2")
-	ctx.SetVar("Zone", "cn-sh2-02")
+	ctx.SetVar("Region", "cn-gd")
+	ctx.SetVar("Zone", "cn-gd-02")
 
 	ctx.SetVar("v_peer2", ctx.Must(utest.GetUDPNRegionResource(ctx.GetVar("Region"))))
 	ctx.SetVar("create_udpn_bw", "2")
