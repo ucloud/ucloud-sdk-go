@@ -90,6 +90,9 @@ type CreateUHostInstanceRequest struct {
 	// 防火墙Id，默认：Web推荐防火墙。如何查询SecurityGroupId请参见 [DescribeSecurityGroup](../unet-api/describe_security_group.html)
 	SecurityGroupId *string `required:"false"`
 
+	// 硬件隔离组id。可通过DescribeIsolationGroup获取。
+	IsolationGroup *string `required:"false"`
+
 	// 【暂不支持】cloudinit方式下，用户初始化脚本
 	UserDataScript *string `required:"false"`
 
