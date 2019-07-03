@@ -99,7 +99,7 @@ func testSet2301DescribeOrderDetailInfo02(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "BeginTime", ctx.GetVar("begin_time")))
 	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.Must(utest.GetTimestamp("10"))))
 
-	ctx.NoError(utest.SetReqValue(req, "ResourceTypes", "EIP"))
+	ctx.NoError(utest.SetReqValue(req, "ResourceTypes", "eip"))
 	ctx.NoError(utest.SetReqValue(req, "OrderTypes", "OT_BUY"))
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceIds", ctx.GetVar("eip_id")))
@@ -189,7 +189,7 @@ func testSet2301DescribeOrderDetailInfo05(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "BeginTime", ctx.GetVar("begin_time")))
 	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.Must(utest.GetTimestamp("10"))))
 
-	ctx.NoError(utest.SetReqValue(req, "ResourceTypes", "EIP"))
+	ctx.NoError(utest.SetReqValue(req, "ResourceTypes", "eip"))
 	ctx.NoError(utest.SetReqValue(req, "OrderTypes", "OT_UPGRADE"))
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceIds", ctx.GetVar("eip_id")))
@@ -279,7 +279,7 @@ func testSet2301DescribeOrderDetailInfo08(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "BeginTime", ctx.GetVar("begin_time")))
 	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.Must(utest.GetTimestamp("10"))))
 
-	ctx.NoError(utest.SetReqValue(req, "ResourceTypes", "EIP"))
+	ctx.NoError(utest.SetReqValue(req, "ResourceTypes", "eip"))
 	ctx.NoError(utest.SetReqValue(req, "OrderTypes", "OT_DOWNGRADE"))
 
 	ctx.NoError(utest.SetReqValue(req, "ResourceIds", ctx.GetVar("eip_id")))
