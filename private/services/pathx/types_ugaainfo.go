@@ -34,4 +34,7 @@ type UGAAInfo struct {
 
 	// 端口配置信息
 	TaskSet []UGAATask
+
+	// 线路出口IP地址
+	OutPublicIpList []OutPublicIpInfo
 }

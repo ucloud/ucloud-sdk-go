@@ -16,7 +16,7 @@ type DescribeUGAInstanceRequest struct {
 	// ProjectId *string `required:"true"`
 
 	// 全球加速实例ID
-	UGAAId *string `required:"false"`
+	UGAId *string `required:"false"`
 }
 
 // DescribeUGAInstanceResponse is response schema for DescribeUGAInstance action
