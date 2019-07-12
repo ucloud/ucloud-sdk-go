@@ -8,6 +8,9 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type UPathInfo struct {
 
+	// 支付方式
+	ChargeType string
+
 	// UPath名字
 	Name string
 
@@ -15,7 +18,7 @@ type UPathInfo struct {
 	UPathId string
 
 	// 带宽
-	Bandwidth string
+	Bandwidth int
 
 	// 线路ID
 	LineId string
@@ -29,6 +32,12 @@ type UPathInfo struct {
 	// UPath的过期时间
 	ExpireTime int
 
-	// 支付方式
-	ChargeType string
+	// 线路入口名称
+	LineFromName string
+
+	// 线路出口名称
+	LineToName string
+
+	// 线路出口IP信息
+	OutPublicIpList []OutPublicIpInfo
 }
