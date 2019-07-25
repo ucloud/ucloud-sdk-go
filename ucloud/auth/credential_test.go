@@ -80,10 +80,10 @@ func TestCredential_BuildCredentialedQuery(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Credential{
-				PublicKey:  tt.fields.PublicKey,
-				PrivateKey: tt.fields.PrivateKey,
-			}
+			c := NewCredential()
+			c.PublicKey = tt.fields.PublicKey
+			c.PrivateKey = tt.fields.PrivateKey
+
 			if got := c.BuildCredentialedQuery(tt.args.params); !strings.Contains(got, tt.want) {
 				t.Errorf("Credential.BuildCredentialedQuery() = %v, want %v", got, tt.want)
 			}

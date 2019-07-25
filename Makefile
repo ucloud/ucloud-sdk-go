@@ -29,9 +29,25 @@ test-acc: fmtcheck vet
 	go test -v ./tests/... --parallel=32
 
 .PHONY: test-cov
-test-cov: fmtcheck vet
-	go test -cover -coverprofile=coverage.out ./... --parallel=32
+test-cov: fmtcheck
+	go test -cover -coverprofile=coverage.out ./ucloud/... --parallel=32
+
+.PHONY: cov-preview
+cov-preview:
+	go tool cover -html=coverage.out
 
 .PHONY: cyclo
 cyclo:
 	gocyclo -over 15 ucloud/ services/ external/
+
+# UCloud Tools Path
+UCLOUD_TEMPLATE_PATH=../ucloud-api-model-v2/apisdk/lang/go/templates
+
+.PHONY: gen
+gen:
+	ucloud-model sdk apis \
+	    --product StepFlow \
+		--lang go \
+		--type public \
+		--template ${UCLOUD_TEMPLATE_PATH}/scripts-api.tpl \
+		--output ./scripts/gen-apis.sh

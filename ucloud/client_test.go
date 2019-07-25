@@ -1,7 +1,6 @@
 package ucloud
 
 import (
-	"fmt"
 	stdhttp "net/http"
 	"os"
 	"testing"
@@ -10,11 +9,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
@@ -32,41 +29,6 @@ func TestMain(m *testing.M) {
 func testSetup() {}
 
 func testTeardown() {}
-
-func newTestClient() *Client {
-	cfg := NewConfig()
-	// cfg.BaseUrl = "https://api-mock.pre.ucloudadmin.com/?_user=yufei.li%40ucloud.cn"
-	cfg.BaseUrl = "https://api.ucloud.cn"
-	cfg.Region = "cn-bj2"
-	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
-	cfg.LogLevel = log.WarnLevel
-	cfg.Timeout = 5 * time.Second
-	cfg.MaxRetries = 1
-
-	credential := auth.NewCredential()
-
-	return NewClient(&cfg, &credential)
-}
-
-type MockRequest struct {
-	request.CommonBase
-}
-
-type MockResponse struct {
-	response.CommonBase
-
-	TotalCount int
-	UHostSet   []map[string]interface{}
-}
-
-type mockClient struct{}
-
-func (c *mockClient) Send(req *http.HttpRequest) (*http.HttpResponse, error) {
-	resp := &http.HttpResponse{}
-	resp.SetBody([]byte(fmt.Sprintf(`{"Action": "%sResponse", "RetCode": 0, "Message": ""}`, testDefaultAction)))
-	resp.SetStatusCode(200)
-	return resp, nil
-}
 
 func TestCommonInvokeAction(t *testing.T) {
 	req := &MockRequest{}
@@ -183,6 +145,22 @@ func Test_errorHandler(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSchema(t *testing.T) {
+	s := "foo"
+	assert.Equal(t, s, StringValue(String(s)))
+
+	i := 42
+	assert.Equal(t, i, IntValue(Int(i)))
+
+	f := 42.0
+	assert.Equal(t, f, Float64Value(Float64(f)))
+
+	assert.Equal(t, true, BoolValue(Bool(true)))
+
+	d := 1 * time.Second
+	assert.Equal(t, d, TimeDurationValue(TimeDuration(d)))
 }
 
 func TestLoggingLevel(t *testing.T) {

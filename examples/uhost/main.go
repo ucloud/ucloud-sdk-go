@@ -2,10 +2,17 @@ package main
 
 import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
+	"os"
 
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 )
+
+const region = "cn-bj2"
+const zone = "cn-bj2-05"
+const imageID = "uimage-kg0w4u"
 
 var uhostClient *uhost.UHostClient
 var unetClient *unet.UNetClient
@@ -29,6 +36,21 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func loadConfig() (*ucloud.Config, *auth.Credential) {
+	cfg := ucloud.NewConfig()
+	cfg.LogLevel = log.DebugLevel
+	cfg.Region = region
+	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
+
+	credential := auth.NewCredential()
+	credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
+	credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
+
+	log.Info("setup clients ...")
+
+	return &cfg, &credential
 }
 
 func bindEIPToUHost(eipID, uhostID string) error {
