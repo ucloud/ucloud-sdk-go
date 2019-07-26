@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="ucloud-sdk.dl.ufileos.com/logos/logo-2.png" />
+    <img src="https://ucloud-sdk.dl.ufileos.com/logos%2Flogo-mini.png" />
 </p>
 
 <h1 align="center">UCloud Go SDK</h1>
