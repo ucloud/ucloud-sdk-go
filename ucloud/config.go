@@ -4,7 +4,11 @@ import (
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/version"
 )
+
+// Version is the version of sdk
+const Version = version.Version
 
 const headerKeyRequestUUID = "X-UCLOUD-REQUEST-UUID"
 

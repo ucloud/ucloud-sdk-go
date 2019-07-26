@@ -6,6 +6,7 @@
 
 [![GitHub (pre-)release](https://img.shields.io/github/release/ucloud/ucloud-sdk-go/all.svg)](https://github.com/ucloud/ucloud-sdk-go/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ucloud/ucloud-sdk-go)](https://goreportcard.com/report/github.com/ucloud/ucloud-sdk-go)
+[![Codecov](https://codecov.io/gh/ucloud/ucloud-sdk-go/branch/master/graph/badge.svg)](https://codecov.io/gh/ucloud/ucloud-sdk-go)
 [![Build Status](https://travis-ci.org/ucloud/ucloud-sdk-go.svg?branch=master)](https://travis-ci.org/ucloud/ucloud-sdk-go)
 [![SonarQube](https://sonarcloud.io/api/project_badges/measure?project=ucloud-sdk-go&metric=alert_status)](https://sonarcloud.io/dashboard?id=ucloud-sdk-go)
 [![GoDoc](https://godoc.org/github.com/ucloud/ucloud-sdk-go?status.svg)](https://godoc.org/github.com/ucloud/ucloud-sdk-go)
