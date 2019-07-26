@@ -138,7 +138,7 @@ func TestClient(t *testing.T) {
 		// send mocked request, assert response value
 		req := request.CommonBase{}
 		resp := response.CommonBase{}
-		err = client.InvokeAction("Test", &req, &resp)
+		err = client.InvokeAction("Test", client.SetupRequest(&req), &resp)
 		if test.Error == "" {
 			if test.Golden.Action != "" {
 				assert.Equal(t, resp.Action, test.Golden.Action)
@@ -160,6 +160,8 @@ func newTestClient() Client {
 	cfg := NewConfig()
 	cfg.BaseUrl = "https://api.ucloud.cn"
 	cfg.Region = "cn-bj2"
+	cfg.Zone = "cn-bj2-02"
+	cfg.ProjectId = "foo"
 	cfg.LogLevel = log.DebugLevel
 	cfg.Timeout = 5 * time.Second
 	cfg.MaxRetries = 1

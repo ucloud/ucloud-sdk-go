@@ -11,6 +11,7 @@ import (
 
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
@@ -112,6 +113,13 @@ func Test_errorHandler(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAccClientRequestUUID(t *testing.T) {
+	client := newTestClient()
+	resp := response.CommonBase{}
+	_ = client.InvokeAction("DescribeUHostInstance", &request.CommonBase{}, &resp)
+	assert.NotZero(t, resp.GetRequestUUID())
 }
 
 func TestSchema(t *testing.T) {
