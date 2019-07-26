@@ -30,11 +30,11 @@ test-acc: fmtcheck vet
 
 .PHONY: test-cov
 test-cov: fmtcheck
-	go test -cover -coverprofile=coverage.out ./ucloud/... --parallel=32
+	go test -cover -coverprofile=coverage.txt ./ucloud/... --parallel=32
 
 .PHONY: cov-preview
 cov-preview:
-	go tool cover -html=coverage.out
+	go tool cover -html=coverage.txt
 
 .PHONY: cyclo
 cyclo:

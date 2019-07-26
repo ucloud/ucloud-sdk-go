@@ -16,6 +16,9 @@ type Common interface {
 
 	GetRequest() request.Common
 	SetRequest(request.Common)
+
+	SetRequestUUID(string)
+	GetRequestUUID() string
 }
 
 // CommonBase has common attribute and method,

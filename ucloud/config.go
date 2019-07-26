@@ -6,6 +6,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 )
 
+const headerKeyRequestUUID = "X-UCLOUD-REQUEST-UUID"
+
 // Config is the config of ucloud sdk, use for setting up client
 type Config struct {
 	// Region is the region of backend service

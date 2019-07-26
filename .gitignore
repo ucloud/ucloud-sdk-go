@@ -16,6 +16,7 @@ bin/
 
 # Build
 coverage.out
+coverage.txt
 c.out
 
 # Debug Data

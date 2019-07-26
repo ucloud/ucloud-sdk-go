@@ -1,6 +1,7 @@
 package waiter
 
 import (
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 	"time"
@@ -34,7 +35,8 @@ func TestWaitForState(t *testing.T) {
 				Refresh: func() (interface{}, string, error) {
 					return true, "pending", nil
 				},
-				Timeout: 2 * time.Second,
+				Timeout:    2 * time.Second,
+				MinTimeout: 1 * time.Second,
 			},
 			nil,
 			true,
@@ -64,4 +66,14 @@ func TestWaitForState(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestErrorToString(t *testing.T) {
+	err := TimeoutError{
+		LastError:      errTimeoutConf,
+		LastState:      "pending",
+		Timeout:        1 * time.Second,
+		ExpectedStates: []string{"ok"},
+	}
+	assert.NotZero(t, err.Error())
 }

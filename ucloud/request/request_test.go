@@ -54,9 +54,6 @@ func TestRequestAccessor(t *testing.T) {
 	req.WithTimeout(1 * time.Second)
 	assert.Equal(t, 1*time.Second, req.GetTimeout())
 
-	req.SetRequestUUID("foo")
-	assert.Equal(t, "foo", req.GetRequestUUID())
-
 	err = req.SetAction("foo")
 	assert.NoError(t, err)
 	assert.Equal(t, "foo", req.GetAction())
