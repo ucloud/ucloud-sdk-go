@@ -1,7 +1,6 @@
 package ucloud
 
 import (
-	"fmt"
 	stdhttp "net/http"
 	"os"
 	"testing"
@@ -10,8 +9,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
@@ -32,73 +29,6 @@ func TestMain(m *testing.M) {
 func testSetup() {}
 
 func testTeardown() {}
-
-func newTestClient() *Client {
-	cfg := NewConfig()
-	// cfg.BaseUrl = "https://api-mock.pre.ucloudadmin.com/?_user=yufei.li%40ucloud.cn"
-	cfg.BaseUrl = "https://api.ucloud.cn"
-	cfg.Region = "cn-bj2"
-	cfg.ProjectId = os.Getenv("UCLOUD_PROJECT_ID")
-	cfg.LogLevel = log.WarnLevel
-	cfg.Timeout = 5 * time.Second
-	cfg.MaxRetries = 1
-
-	credential := auth.NewCredential()
-
-	return NewClient(&cfg, &credential)
-}
-
-type MockRequest struct {
-	request.CommonBase
-}
-
-type MockResponse struct {
-	response.CommonBase
-
-	TotalCount int
-	UHostSet   []map[string]interface{}
-}
-
-type mockClient struct{}
-
-func (c *mockClient) Send(req *http.HttpRequest) (*http.HttpResponse, error) {
-	resp := &http.HttpResponse{}
-	resp.SetBody([]byte(fmt.Sprintf(`{"Action": "%sResponse", "RetCode": 0, "Message": ""}`, testDefaultAction)))
-	resp.SetStatusCode(200)
-	return resp, nil
-}
-
-func TestCommonInvokeAction(t *testing.T) {
-	req := &MockRequest{}
-	resp := &MockResponse{}
-
-	client := newTestClient()
-	client.credential.PrivateKey = "mocked"
-	client.credential.PublicKey = "mocked"
-
-	client.httpClient = &mockClient{}
-
-	err := client.InvokeAction(testDefaultAction, client.SetupRequest(req), resp)
-	assert.Nil(t, err)
-	assert.Condition(t, func() bool { return resp.TotalCount >= 0 })
-}
-
-func TestCommonInvokeActionNotFound(t *testing.T) {
-	req := &MockRequest{}
-	resp := &MockResponse{}
-
-	client := newTestClient()
-	client.credential.PrivateKey = os.Getenv("UCLOUD_PRIVATE_KEY")
-	client.credential.PublicKey = os.Getenv("UCLOUD_PUBLIC_KEY")
-
-	err := client.InvokeAction("TestApi", client.SetupRequest(req), resp)
-	assert.NotNil(t, err)
-
-	uErr, ok := err.(uerr.Error)
-	assert.True(t, ok)
-	assert.Equal(t, 161, uErr.Code())
-	assert.Contains(t, uErr.Message(), "not found")
-}
 
 func TestClientTimeout(t *testing.T) {
 	req := &MockRequest{}
@@ -130,7 +60,7 @@ func Test_errorHandler(t *testing.T) {
 		{
 			name: "unexpected error",
 			step: func() error {
-				_, err := errorHandler(client, req, resp, errors.New("unexpected error"))
+				_, err := errorHandler(&client, req, resp, errors.New("unexpected error"))
 				if uErr, ok := err.(uerr.ClientError); !ok || uErr.Name() != uerr.ErrSendRequest {
 					return errors.New("unexpected error should be convert to unknown client error")
 				}
@@ -140,7 +70,7 @@ func Test_errorHandler(t *testing.T) {
 		{
 			name: "http status error",
 			step: func() error {
-				_, err := errorHandler(client, req, resp, uerr.NewServerStatusError(404, "404 NotFound"))
+				_, err := errorHandler(&client, req, resp, uerr.NewServerStatusError(404, "404 NotFound"))
 				if uErr, ok := err.(uerr.ServerError); !ok || uErr.StatusCode() != 404 {
 					return errors.New("http status error should be convert to status server error")
 				}
@@ -156,7 +86,7 @@ func Test_errorHandler(t *testing.T) {
 					return err
 				}
 				_, err = httpClient.Do(httpReq)
-				_, err = errorHandler(client, req, resp, err)
+				_, err = errorHandler(&client, req, resp, err)
 				if uErr, ok := err.(uerr.ClientError); !ok || uErr.Name() != uerr.ErrNetwork {
 					return errors.New("timeout error should be convert to network client error")
 				}
@@ -167,7 +97,7 @@ func Test_errorHandler(t *testing.T) {
 			name: "business error",
 			step: func() error {
 				resp := &response.CommonBase{Message: "Missing Action", RetCode: 160}
-				_, err := errorHandler(client, req, resp, nil)
+				_, err := errorHandler(&client, req, resp, nil)
 				if uErr, ok := err.(uerr.ServerError); !ok || uErr.Code() != 160 {
 					return errors.New("ucloud error should be raised for non-zero retCode")
 				}
@@ -185,8 +115,20 @@ func Test_errorHandler(t *testing.T) {
 	}
 }
 
+func TestAccClientRequestUUID(t *testing.T) {
+	client := newTestClient()
+	resp := response.CommonBase{}
+	_ = client.InvokeAction("DescribeUHostInstance", &request.CommonBase{}, &resp)
+	assert.NotZero(t, resp.GetRequestUUID())
+}
+
 func TestLoggingLevel(t *testing.T) {
 	client := newTestClient() // level: WarnLevel
+
+	logger := client.GetLogger()
+	logger.SetLevel(log.WarnLevel)
+	client.SetLogger(logger)
+	client.config.LogLevel = log.WarnLevel
 
 	assert.Equal(t, client.logger.GetLevel(), log.WarnLevel)
 	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.WarnLevel)
