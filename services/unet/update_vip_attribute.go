@@ -12,22 +12,22 @@ type UpdateVIPAttributeRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId string
+	// ProjectId string `required:"true"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
-	// Region string
+	// Region string `required:"true"`
 
 	// 内网VIP的名称
-	Name *string
+	Name *string `required:"false"`
 
 	// 内网VIP的备注
-	Remark *string
+	Remark *string `required:"false"`
 
 	// 内网VIP所属的业务组
-	Tag *string
+	Tag *string `required:"false"`
 
 	// 内网VIP的资源Id
-	VIPId *string
+	VIPId *string `required:"true"`
 }
 
 // UpdateVIPAttributeResponse is request schema for UpdateVIPAttribute action
