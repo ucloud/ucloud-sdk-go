@@ -5,16 +5,53 @@
 export TEMPLATE=../ucloud-api-model-v2/apisdk/lang/go/templates
 
 
-mkdir -p ./services/stepflow
-ucloud-model sdk apis --lang go --product StepFlow --type public --template ${TEMPLATE}/client.tpl --output ./services/stepflow/client.go
-ucloud-model sdk apis --lang go --product StepFlow --type public --template ${TEMPLATE}/doc.tpl --output ./services/stepflow/doc.go
+mkdir -p ./services/vpc
+ucloud-model sdk apis --lang go --product VPC --type public --template ${TEMPLATE}/client.tpl --output ./services/vpc/client.go
+ucloud-model sdk apis --lang go --product VPC --type public --template ${TEMPLATE}/doc.tpl --output ./services/vpc/doc.go
 
 
-ucloud-model sdk api --lang go --name CreateSFWorkflowFromTemplate --template ${TEMPLATE}/api.tpl --output ./services/stepflow/create_sf_workflow_from_template.go
-ucloud-model sdk api --lang go --name GetSFWorkflowTemplate --template ${TEMPLATE}/api.tpl --output ./services/stepflow/get_sf_workflow_template.go
-ucloud-model sdk model --lang go --product StepFlow --name ActivityTemplate --template ${TEMPLATE}/model.tpl --output ./services/stepflow/types_activity_template.go
-ucloud-model sdk model --lang go --product StepFlow --name Param --template ${TEMPLATE}/model.tpl --output ./services/stepflow/types_param.go
-ucloud-model sdk model --lang go --product StepFlow --name WorkflowTemplate --template ${TEMPLATE}/model.tpl --output ./services/stepflow/types_workflow_template.go
+ucloud-model sdk api --lang go --name AddVPCNetwork --template ${TEMPLATE}/api.tpl --output ./services/vpc/add_vpc_network.go
+ucloud-model sdk api --lang go --name AddWhiteListResource --template ${TEMPLATE}/api.tpl --output ./services/vpc/add_white_list_resource.go
+ucloud-model sdk api --lang go --name AssociateRouteTable --template ${TEMPLATE}/api.tpl --output ./services/vpc/associate_route_table.go
+ucloud-model sdk api --lang go --name CloneRouteTable --template ${TEMPLATE}/api.tpl --output ./services/vpc/clone_route_table.go
+ucloud-model sdk api --lang go --name CreateNATGW --template ${TEMPLATE}/api.tpl --output ./services/vpc/create_natgw.go
+ucloud-model sdk api --lang go --name CreateNATGWPolicy --template ${TEMPLATE}/api.tpl --output ./services/vpc/create_natgw_policy.go
+ucloud-model sdk api --lang go --name CreateRouteTable --template ${TEMPLATE}/api.tpl --output ./services/vpc/create_route_table.go
+ucloud-model sdk api --lang go --name CreateSubnet --template ${TEMPLATE}/api.tpl --output ./services/vpc/create_subnet.go
+ucloud-model sdk api --lang go --name CreateVPC --template ${TEMPLATE}/api.tpl --output ./services/vpc/create_vpc.go
+ucloud-model sdk api --lang go --name CreateVPCIntercom --template ${TEMPLATE}/api.tpl --output ./services/vpc/create_vpc_intercom.go
+ucloud-model sdk api --lang go --name DeleteNATGW --template ${TEMPLATE}/api.tpl --output ./services/vpc/delete_natgw.go
+ucloud-model sdk api --lang go --name DeleteNATGWPolicy --template ${TEMPLATE}/api.tpl --output ./services/vpc/delete_natgw_policy.go
+ucloud-model sdk api --lang go --name DeleteRouteTable --template ${TEMPLATE}/api.tpl --output ./services/vpc/delete_route_table.go
+ucloud-model sdk api --lang go --name DeleteSubnet --template ${TEMPLATE}/api.tpl --output ./services/vpc/delete_subnet.go
+ucloud-model sdk api --lang go --name DeleteVPC --template ${TEMPLATE}/api.tpl --output ./services/vpc/delete_vpc.go
+ucloud-model sdk api --lang go --name DeleteVPCIntercom --template ${TEMPLATE}/api.tpl --output ./services/vpc/delete_vpc_intercom.go
+ucloud-model sdk api --lang go --name DescribeNATGW --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_natgw.go
+ucloud-model sdk api --lang go --name DescribeNATGWPolicy --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_natgw_policy.go
+ucloud-model sdk api --lang go --name DescribeRouteTable --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_route_table.go
+ucloud-model sdk model --lang go --product VPC --name RouteRuleInfo --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_route_rule_info.go
+ucloud-model sdk model --lang go --product VPC --name RouteTableInfo --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_route_table_info.go
+ucloud-model sdk api --lang go --name DescribeSubnet --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_subnet.go
+ucloud-model sdk model --lang go --product VPC --name SubnetInfo --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_subnet_info.go
+ucloud-model sdk api --lang go --name DescribeSubnetResource --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_subnet_resource.go
+ucloud-model sdk model --lang go --product VPC --name SubnetResource --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_subnet_resource.go
+ucloud-model sdk api --lang go --name DescribeVPC --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_vpc.go
+ucloud-model sdk model --lang go --product VPC --name VPCNetworkInfo --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_vpc_network_info.go
+ucloud-model sdk model --lang go --product VPC --name VPCInfo --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_vpc_info.go
+ucloud-model sdk api --lang go --name DescribeVPCIntercom --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_vpc_intercom.go
+ucloud-model sdk model --lang go --product VPC --name VPCIntercomInfo --template ${TEMPLATE}/model.tpl --output ./services/vpc/types_vpc_intercom_info.go
+ucloud-model sdk api --lang go --name DescribeWhiteListResource --template ${TEMPLATE}/api.tpl --output ./services/vpc/describe_white_list_resource.go
+ucloud-model sdk api --lang go --name EnableWhiteList --template ${TEMPLATE}/api.tpl --output ./services/vpc/enable_white_list.go
+ucloud-model sdk api --lang go --name GetAvailableResourceForPolicy --template ${TEMPLATE}/api.tpl --output ./services/vpc/get_available_resource_for_policy.go
+ucloud-model sdk api --lang go --name GetAvailableResourceForWhiteList --template ${TEMPLATE}/api.tpl --output ./services/vpc/get_available_resource_for_white_list.go
+ucloud-model sdk api --lang go --name ListSubnetForNATGW --template ${TEMPLATE}/api.tpl --output ./services/vpc/list_subnet_for_natgw.go
+ucloud-model sdk api --lang go --name ModifyRouteRule --template ${TEMPLATE}/api.tpl --output ./services/vpc/modify_route_rule.go
+ucloud-model sdk api --lang go --name SetGwDefaultExport --template ${TEMPLATE}/api.tpl --output ./services/vpc/set_gw_default_export.go
+ucloud-model sdk api --lang go --name UpdateNATGWPolicy --template ${TEMPLATE}/api.tpl --output ./services/vpc/update_natgw_policy.go
+ucloud-model sdk api --lang go --name UpdateNATGWSubnet --template ${TEMPLATE}/api.tpl --output ./services/vpc/update_natgw_subnet.go
+ucloud-model sdk api --lang go --name UpdateRouteTableAttribute --template ${TEMPLATE}/api.tpl --output ./services/vpc/update_route_table_attribute.go
+ucloud-model sdk api --lang go --name UpdateSubnetAttribute --template ${TEMPLATE}/api.tpl --output ./services/vpc/update_subnet_attribute.go
+ucloud-model sdk api --lang go --name UpdateVPCNetwork --template ${TEMPLATE}/api.tpl --output ./services/vpc/update_vpc_network.go
 
 
 make fmt

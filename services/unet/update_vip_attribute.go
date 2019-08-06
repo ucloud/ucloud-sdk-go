@@ -30,7 +30,7 @@ type UpdateVIPAttributeRequest struct {
 	VIPId *string `required:"true"`
 }
 
-// UpdateVIPAttributeResponse is request schema for UpdateVIPAttribute action
+// UpdateVIPAttributeResponse is response schema for UpdateVIPAttribute action
 type UpdateVIPAttributeResponse struct {
 	response.CommonBase
 }

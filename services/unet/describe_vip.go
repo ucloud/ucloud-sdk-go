@@ -36,7 +36,7 @@ type DescribeVIPRequest struct {
 	VPCId *string `required:"false"`
 }
 
-// DescribeVIPResponse is request schema for DescribeVIP action
+// DescribeVIPResponse is response schema for DescribeVIP action
 type DescribeVIPResponse struct {
 	response.CommonBase
 
