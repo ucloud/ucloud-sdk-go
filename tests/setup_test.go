@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/services/ipsecvpn"
 	"os"
 	"testing"
 
@@ -28,7 +29,9 @@ import (
 	pulb "github.com/ucloud/ucloud-sdk-go/private/services/ulb"
 	pumem "github.com/ucloud/ucloud-sdk-go/private/services/umem"
 	pumon "github.com/ucloud/ucloud-sdk-go/private/services/umon"
+	pvpc "github.com/ucloud/ucloud-sdk-go/private/services/vpc"
 
+	iipsecvpn "github.com/ucloud/ucloud-sdk-go/internal/services/ipsecvpn"
 	iubill "github.com/ucloud/ucloud-sdk-go/internal/services/ubill"
 	iudataark "github.com/ucloud/ucloud-sdk-go/internal/services/udataark"
 	iudb "github.com/ucloud/ucloud-sdk-go/internal/services/udb"
@@ -41,6 +44,7 @@ import (
 	iumon "github.com/ucloud/ucloud-sdk-go/internal/services/umon"
 	iunet "github.com/ucloud/ucloud-sdk-go/internal/services/unet"
 	iuphost "github.com/ucloud/ucloud-sdk-go/internal/services/uphost"
+	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 )
 
 var config *ucloud.Config
@@ -57,6 +61,7 @@ var umemClient *umem.UMemClient
 var udpnClient *udpn.UDPNClient
 var ubillClient *ubill.UBillClient
 var uphostClient *uphost.UPHostClient
+var ipsecvpnClient *ipsecvpn.IPSecVPNClient
 
 var puhostClient *puhost.UHostClient
 var pudiskClient *pudisk.UDiskClient
@@ -65,6 +70,7 @@ var pumonClient *pumon.UMonClient
 var pulbClient *pulb.ULBClient
 var pufsClient *pufs.UFSClient
 var pudbClient *pudb.UDBClient
+var pvpcClient *pvpc.VPCClient
 
 var iuhostClient *iuhost.UHostClient
 var iunetClient *iunet.UNetClient
@@ -78,6 +84,8 @@ var iudpnClient *iudpn.UDPNClient
 var iubillClient *iubill.UBillClient
 var iuphostClient *iuphost.UPHostClient
 var iufsClient *iufs.UFSClient
+var ivpcClient *ivpc.VPCClient
+var iipsecvpnClient *iipsecvpn.IPSecVPNClient
 
 func TestMain(m *testing.M) {
 	testSetup()
@@ -116,6 +124,7 @@ func testSetup() {
 	udpnClient = udpn.NewClient(&cfg, &credential)
 	ubillClient = ubill.NewClient(&cfg, &credential)
 	uphostClient = uphost.NewClient(&cfg, &credential)
+	ipsecvpnClient = ipsecvpn.NewClient(&cfg, &credential)
 
 	iudataarkClient = iudataark.NewClient(&cfg, &credential)
 	iudiskClient = iudisk.NewClient(&cfg, &credential)
@@ -129,6 +138,8 @@ func testSetup() {
 	iubillClient = iubill.NewClient(&cfg, &credential)
 	iuphostClient = iuphost.NewClient(&cfg, &credential)
 	iufsClient = iufs.NewClient(&cfg, &credential)
+	ivpcClient = ivpc.NewClient(&cfg, &credential)
+	iipsecvpnClient = iipsecvpn.NewClient(&cfg, &credential)
 
 	pudiskClient = pudisk.NewClient(&cfg, &credential)
 	puhostClient = puhost.NewClient(&cfg, &credential)
@@ -137,6 +148,7 @@ func testSetup() {
 	pulbClient = pulb.NewClient(&cfg, &credential)
 	pufsClient = pufs.NewClient(&cfg, &credential)
 	pudbClient = pudb.NewClient(&cfg, &credential)
+	pvpcClient = pvpc.NewClient(&cfg, &credential)
 
 	log.Info("setup test fixtures ...")
 }
