@@ -640,7 +640,7 @@ func testSet149DescribeVServer18(ctx *utest.TestContext) {
 			return ulbClient.DescribeVServer(req)
 		},
 		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "4103", "str_eq"),
+			ctx.NewValidator("RetCode", "0", "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,

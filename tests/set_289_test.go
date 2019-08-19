@@ -24,7 +24,7 @@ func TestSet289(t *testing.T) {
 	ctx.SetVar("ChargeType", "Month")
 	ctx.SetVar("CreateCPU", 1)
 	ctx.SetVar("CreateMem", 1024)
-	ctx.SetVar("ImageId", "")
+	ctx.SetVar("ImageId", "#{u_get_image_resource($Region,$Zone)}")
 	ctx.SetVar("BootSize", 20)
 	ctx.SetVar("BootType", "CLOUD_SSD")
 	ctx.SetVar("DiskSize", 20)
@@ -72,17 +72,17 @@ func testSet289DescribeUDiskPrice00(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskPriceRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDataArkMode", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDataArkMode", ctx.GetVar("UDataArkMode")))
 
-	ctx.NoError(utest.SetReqValue(req, "Size", ""))
+	ctx.NoError(utest.SetReqValue(req, "Size", ctx.GetVar("Size")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Quantity", 1))
 
-	ctx.NoError(utest.SetReqValue(req, "DiskType", ""))
+	ctx.NoError(utest.SetReqValue(req, "DiskType", ctx.GetVar("UDiskType")))
 
 	ctx.NoError(utest.SetReqValue(req, "ChargeType", "Month"))
 
@@ -112,11 +112,11 @@ func testSet289CheckUDiskAllowance01(ctx *utest.TestContext) {
 
 	req := pudiskClient.NewCheckUDiskAllowanceRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "Size", ""))
+	ctx.NoError(utest.SetReqValue(req, "Size", ctx.GetVar("Size")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Count", 1))
 
@@ -148,19 +148,19 @@ func testSet289CreateUDisk02(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCreateUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDataArkMode", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDataArkMode", ctx.GetVar("UDataArkMode")))
 
-	ctx.NoError(utest.SetReqValue(req, "Size", ""))
+	ctx.NoError(utest.SetReqValue(req, "Size", ctx.GetVar("Size")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Quantity", 0))
 
-	ctx.NoError(utest.SetReqValue(req, "Name", ""))
+	ctx.NoError(utest.SetReqValue(req, "Name", ctx.GetVar("UDiskName")))
 
-	ctx.NoError(utest.SetReqValue(req, "DiskType", ""))
+	ctx.NoError(utest.SetReqValue(req, "DiskType", ctx.GetVar("UDiskType")))
 
 	ctx.NoError(utest.SetReqValue(req, "ChargeType", "Month"))
 
@@ -192,11 +192,11 @@ func testSet289DescribeUDisk03(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -225,11 +225,11 @@ func testSet289CreateUDiskSnapshot04(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCreateUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Name", "snapshot_01"))
 
@@ -263,11 +263,11 @@ func testSet289DescribeUDisk05(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -298,11 +298,11 @@ func testSet289DescribeSnapshot06(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDescribeSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ctx.GetVar("snapshot1_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -310,7 +310,7 @@ func testSet289DescribeSnapshot06(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("UHostSnapshotSet.0.DiskId", "", "str_eq"),
+			ctx.NewValidator("UHostSnapshotSet.0.DiskId", ctx.GetVar("udisk_noArk_Id"), "str_eq"),
 			ctx.NewValidator("UHostSnapshotSet.0.State", "Normal", "str_eq"),
 		},
 		MaxRetries:    50,
@@ -332,11 +332,11 @@ func testSet289CreateUDiskSnapshot07(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCreateUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Name", "snapshot_02"))
 
@@ -369,11 +369,11 @@ func testSet289DescribeSnapshot08(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDescribeSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ctx.GetVar("snapshot2_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -381,7 +381,7 @@ func testSet289DescribeSnapshot08(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("UHostSnapshotSet.0.DiskId", "", "str_eq"),
+			ctx.NewValidator("UHostSnapshotSet.0.DiskId", ctx.GetVar("udisk_noArk_Id"), "str_eq"),
 			ctx.NewValidator("UHostSnapshotSet.0.State", "Normal", "str_eq"),
 		},
 		MaxRetries:    30,
@@ -403,11 +403,11 @@ func testSet289CreateUDiskSnapshot09(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCreateUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Name", "snapshot_03"))
 
@@ -441,11 +441,11 @@ func testSet289DescribeUDiskSnapshot10(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ctx.GetVar("snapshot3_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -455,7 +455,7 @@ func testSet289DescribeUDiskSnapshot10(ctx *utest.TestContext) {
 			ctx.NewValidator("RetCode", 0, "str_eq"),
 			ctx.NewValidator("Action", "DescribeUDiskSnapshotResponse", "str_eq"),
 			ctx.NewValidator("DataSet.0.Status", "Normal", "str_eq"),
-			ctx.NewValidator("DataSet.0.UDiskId", "", "str_eq"),
+			ctx.NewValidator("DataSet.0.UDiskId", ctx.GetVar("udisk_noArk_Id"), "str_eq"),
 		},
 		MaxRetries:    30,
 		RetryInterval: 5 * time.Second,
@@ -476,11 +476,11 @@ func testSet289CreateUDiskSnapshot11(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCreateUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Name", "snapshot_04"))
 
@@ -512,15 +512,15 @@ func testSet289CloneUDiskSnapshot12(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCloneUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	ctx.NoError(utest.SetReqValue(req, "UDataArkMode", "Yes"))
 
-	ctx.NoError(utest.SetReqValue(req, "SourceId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SourceId", ctx.GetVar("snapshot1_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Size", ""))
+	ctx.NoError(utest.SetReqValue(req, "Size", ctx.GetVar("Size")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Quantity", 0))
 
@@ -556,15 +556,15 @@ func testSet289CloneUDiskSnapshot13(ctx *utest.TestContext) {
 
 	req := udiskClient.NewCloneUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
 	ctx.NoError(utest.SetReqValue(req, "UDataArkMode", "No"))
 
-	ctx.NoError(utest.SetReqValue(req, "SourceId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SourceId", ctx.GetVar("snapshot1_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Size", ""))
+	ctx.NoError(utest.SetReqValue(req, "Size", ctx.GetVar("Size")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	ctx.NoError(utest.SetReqValue(req, "Quantity", 0))
 
@@ -600,13 +600,13 @@ func testSet289RestoreUDisk14(ctx *utest.TestContext) {
 
 	req := udiskClient.NewRestoreUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ctx.GetVar("snapshot1_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -635,11 +635,11 @@ func testSet289DescribeUDisk15(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -668,11 +668,11 @@ func testSet289DeleteSnapshot16(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDeleteSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ctx.GetVar("snapshot1_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -680,7 +680,7 @@ func testSet289DeleteSnapshot16(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("SnapshotId", "", "str_eq"),
+			ctx.NewValidator("SnapshotId", ctx.GetVar("snapshot1_Id"), "str_eq"),
 		},
 		MaxRetries:    3,
 		RetryInterval: 1 * time.Second,
@@ -701,11 +701,11 @@ func testSet289DescribeSnapshot17(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDescribeSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ctx.GetVar("snapshot1_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -735,11 +735,11 @@ func testSet289DeleteSnapshot18(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDeleteSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ctx.GetVar("snapshot2_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -747,7 +747,7 @@ func testSet289DeleteSnapshot18(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("SnapshotId", "", "str_eq"),
+			ctx.NewValidator("SnapshotId", ctx.GetVar("snapshot2_Id"), "str_eq"),
 		},
 		MaxRetries:    3,
 		RetryInterval: 1 * time.Second,
@@ -768,11 +768,11 @@ func testSet289DescribeSnapshot19(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDescribeSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ctx.GetVar("snapshot2_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -802,11 +802,11 @@ func testSet289DeleteUDiskSnapshot20(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDeleteUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotId", ctx.GetVar("snapshot3_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -835,11 +835,11 @@ func testSet289DescribeSnapshot21(ctx *utest.TestContext) {
 
 	req := puhostClient.NewDescribeSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ""))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotIds", ctx.GetVar("snapshot3_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -869,11 +869,11 @@ func testSet289DescribeUDiskSnapshot22(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskSnapshotRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -885,7 +885,7 @@ func testSet289DescribeUDiskSnapshot22(ctx *utest.TestContext) {
 			ctx.NewValidator("TotalCount", 0, "str_eq"),
 		},
 		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
+		RetryInterval: 3 * time.Second,
 		T:             ctx.T,
 	}
 
@@ -903,11 +903,11 @@ func testSet289DeleteUDisk23(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDeleteUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("udisk_noArk_Id")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -935,11 +935,11 @@ func testSet289DescribeUDisk24(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("clone_snap1_Ark")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -968,11 +968,11 @@ func testSet289DeleteUDisk25(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDeleteUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("clone_snap1_Ark")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -1000,11 +1000,11 @@ func testSet289DescribeUDisk26(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDescribeUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("clone_snap1_noArk")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -1034,11 +1034,11 @@ func testSet289DeleteUDisk27(ctx *utest.TestContext) {
 
 	req := udiskClient.NewDeleteUDiskRequest()
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ""))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
-	ctx.NoError(utest.SetReqValue(req, "UDiskId", ""))
+	ctx.NoError(utest.SetReqValue(req, "UDiskId", ctx.GetVar("clone_snap1_noArk")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ""))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
