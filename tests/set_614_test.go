@@ -31,19 +31,17 @@ func TestSet614(t *testing.T) {
 	testSet614DescribeEIP07(&ctx)
 	testSet614GetAvailableResourceForWhiteList08(&ctx)
 	testSet614GetAvailableHostForWhiteList09(&ctx)
-	testSet614AddWhiteListHost10(&ctx)
-	testSet614DeleteWhiteListHost11(&ctx)
-	testSet614AddWhiteListResource12(&ctx)
-	testSet614DescribeWhiteListResource13(&ctx)
-	testSet614DeleteWhiteListResource14(&ctx)
-	testSet614DescribeWhiteList15(&ctx)
-	testSet614EnableWhiteList16(&ctx)
-	testSet614DeleteNATGW17(&ctx)
-	testSet614ReleaseEIP18(&ctx)
-	testSet614PoweroffUHostInstance19(&ctx)
-	testSet614TerminateUHostInstance20(&ctx)
-	testSet614DeleteSubnet21(&ctx)
-	testSet614DeleteVPC22(&ctx)
+	testSet614AddWhiteListResource10(&ctx)
+	testSet614DescribeWhiteListResource11(&ctx)
+	testSet614DeleteWhiteListResource12(&ctx)
+	testSet614DescribeWhiteList13(&ctx)
+	testSet614EnableWhiteList14(&ctx)
+	testSet614DeleteNATGW15(&ctx)
+	testSet614ReleaseEIP16(&ctx)
+	testSet614PoweroffUHostInstance17(&ctx)
+	testSet614TerminateUHostInstance18(&ctx)
+	testSet614DeleteSubnet19(&ctx)
+	testSet614DeleteVPC20(&ctx)
 }
 
 func testSet614DescribeImage00(ctx *utest.TestContext) {
@@ -298,6 +296,8 @@ func testSet614CreateNATGW06(ctx *utest.TestContext) {
 
 	ctx.NoError(utest.SetReqValue(req, "NATGWName", "natgw-bgp"))
 
+	ctx.NoError(utest.SetReqValue(req, "IfOpen", 0))
+
 	ctx.NoError(utest.SetReqValue(req, "FirewallId", ctx.Must(utest.SearchValue(ctx.GetVar("FWId"), "Type", "recommend web", "FWId"))))
 
 	ctx.NoError(utest.SetReqValue(req, "EIPIds", ctx.GetVar("EIPId")))
@@ -416,71 +416,7 @@ func testSet614GetAvailableHostForWhiteList09(ctx *utest.TestContext) {
 
 }
 
-func testSet614AddWhiteListHost10(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
-
-	req := ivpcClient.NewAddWhiteListHostRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "VmIds", ctx.GetVar("UHostIds_s1")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ivpcClient.AddWhiteListHost(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-}
-
-func testSet614DeleteWhiteListHost11(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
-
-	req := ivpcClient.NewDeleteWhiteListHostRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "VmIds", ctx.GetVar("UHostIds_s1")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ivpcClient.DeleteWhiteListHost(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-}
-
-func testSet614AddWhiteListResource12(ctx *utest.TestContext) {
+func testSet614AddWhiteListResource10(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := vpcClient.NewAddWhiteListResourceRequest()
@@ -512,7 +448,7 @@ func testSet614AddWhiteListResource12(ctx *utest.TestContext) {
 
 }
 
-func testSet614DescribeWhiteListResource13(ctx *utest.TestContext) {
+func testSet614DescribeWhiteListResource11(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := vpcClient.NewDescribeWhiteListResourceRequest()
@@ -542,7 +478,7 @@ func testSet614DescribeWhiteListResource13(ctx *utest.TestContext) {
 
 }
 
-func testSet614DeleteWhiteListResource14(ctx *utest.TestContext) {
+func testSet614DeleteWhiteListResource12(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := vpcClient.NewDeleteWhiteListResourceRequest()
@@ -574,7 +510,7 @@ func testSet614DeleteWhiteListResource14(ctx *utest.TestContext) {
 
 }
 
-func testSet614DescribeWhiteList15(ctx *utest.TestContext) {
+func testSet614DescribeWhiteList13(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := ivpcClient.NewDescribeWhiteListRequest()
@@ -604,7 +540,7 @@ func testSet614DescribeWhiteList15(ctx *utest.TestContext) {
 
 }
 
-func testSet614EnableWhiteList16(ctx *utest.TestContext) {
+func testSet614EnableWhiteList14(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := vpcClient.NewEnableWhiteListRequest()
@@ -636,7 +572,7 @@ func testSet614EnableWhiteList16(ctx *utest.TestContext) {
 
 }
 
-func testSet614DeleteNATGW17(ctx *utest.TestContext) {
+func testSet614DeleteNATGW15(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := vpcClient.NewDeleteNATGWRequest()
@@ -666,7 +602,7 @@ func testSet614DeleteNATGW17(ctx *utest.TestContext) {
 
 }
 
-func testSet614ReleaseEIP18(ctx *utest.TestContext) {
+func testSet614ReleaseEIP16(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(5) * time.Second)
 
 	req := unetClient.NewReleaseEIPRequest()
@@ -694,7 +630,7 @@ func testSet614ReleaseEIP18(ctx *utest.TestContext) {
 
 }
 
-func testSet614PoweroffUHostInstance19(ctx *utest.TestContext) {
+func testSet614PoweroffUHostInstance17(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(5) * time.Second)
 
 	req := uhostClient.NewPoweroffUHostInstanceRequest()
@@ -724,7 +660,7 @@ func testSet614PoweroffUHostInstance19(ctx *utest.TestContext) {
 
 }
 
-func testSet614TerminateUHostInstance20(ctx *utest.TestContext) {
+func testSet614TerminateUHostInstance18(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(60) * time.Second)
 
 	req := uhostClient.NewTerminateUHostInstanceRequest()
@@ -754,7 +690,7 @@ func testSet614TerminateUHostInstance20(ctx *utest.TestContext) {
 
 }
 
-func testSet614DeleteSubnet21(ctx *utest.TestContext) {
+func testSet614DeleteSubnet19(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(5) * time.Second)
 
 	req := vpcClient.NewDeleteSubnetRequest()
@@ -782,7 +718,7 @@ func testSet614DeleteSubnet21(ctx *utest.TestContext) {
 
 }
 
-func testSet614DeleteVPC22(ctx *utest.TestContext) {
+func testSet614DeleteVPC20(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(3) * time.Second)
 
 	req := vpcClient.NewDeleteVPCRequest()

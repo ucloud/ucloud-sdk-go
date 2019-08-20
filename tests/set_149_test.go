@@ -611,7 +611,7 @@ func testSet149DeleteVServer17(ctx *utest.TestContext) {
 			return ulbClient.DeleteVServer(req)
 		},
 		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "4103", "str_eq"),
+			ctx.NewValidator("RetCode", "0", "str_eq"),
 		},
 		MaxRetries:    20,
 		RetryInterval: 10 * time.Second,
@@ -752,7 +752,7 @@ func testSet149DescribeULBSimple22(ctx *utest.TestContext) {
 			return iulbClient.DescribeULBSimple(req)
 		},
 		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "4103", "str_eq"),
+			ctx.NewValidator("RetCode", "0", "str_eq"),
 		},
 		MaxRetries:    10,
 		RetryInterval: 10 * time.Second,
