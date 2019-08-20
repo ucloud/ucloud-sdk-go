@@ -885,7 +885,7 @@ func testSet289DescribeUDiskSnapshot22(ctx *utest.TestContext) {
 			ctx.NewValidator("TotalCount", 0, "str_eq"),
 		},
 		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
+		RetryInterval: 3 * time.Second,
 		T:             ctx.T,
 	}
 
