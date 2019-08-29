@@ -14,7 +14,8 @@ type IPSecVPNClient struct {
 
 // NewClient will return a instance of IPSecVPNClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *IPSecVPNClient {
-	client := ucloud.NewClient(config, credential)
+	meta := ucloud.ClientMeta{Product: "IPSecVPN"}
+	client := ucloud.NewClientWithMeta(config, credential, meta)
 	return &IPSecVPNClient{
 		client,
 	}

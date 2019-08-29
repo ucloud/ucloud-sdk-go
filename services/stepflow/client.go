@@ -14,7 +14,8 @@ type StepFlowClient struct {
 
 // NewClient will return a instance of StepFlowClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *StepFlowClient {
-	client := ucloud.NewClient(config, credential)
+	meta := ucloud.ClientMeta{Product: "StepFlow"}
+	client := ucloud.NewClientWithMeta(config, credential, meta)
 	return &StepFlowClient{
 		client,
 	}
