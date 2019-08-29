@@ -86,11 +86,6 @@ func (c *Client) GetMeta() ClientMeta {
 	return c.meta
 }
 
-// SetMeta will return the meta data of client.
-func (c *Client) SetMeta(meta ClientMeta) {
-	c.meta = meta
-}
-
 // SetLogger will set the logger of client
 func (c *Client) SetLogger(logger log.Logger) {
 	c.logger = logger
