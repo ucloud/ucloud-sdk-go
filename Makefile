@@ -44,13 +44,17 @@ cyclo:
 UCLOUD_TEMPLATE_PATH=../ucloud-api-model-v2/apisdk/lang/go/templates
 
 .PHONY: gen
-gen:
+gen: gen-api gen-test
+	@echo "generate code success"
+
+gen-api:
 	ucloud-model sdk apis \
-	    --product VPC \
 		--lang go \
 		--type public \
 		--template ${UCLOUD_TEMPLATE_PATH}/scripts-api.tpl \
 		--output ./scripts/gen-apis.sh
+
+gen-test:
 	ucloud-model sdk tests \
 		--lang go \
 		--template ${UCLOUD_TEMPLATE_PATH}/scripts-test.tpl \
