@@ -42,6 +42,10 @@ func testSet113CreateUFSVolume00(ctx *utest.TestContext) {
 
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
 
+	//Manually add
+	ctx.NoError(utest.SetReqValue(req, "StorageType", "Basic"))
+	ctx.NoError(utest.SetReqValue(req, "ProtocolType", "NFSv3"))
+
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
 			return pufsClient.CreateUFSVolume(req)
