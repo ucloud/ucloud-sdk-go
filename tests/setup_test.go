@@ -15,6 +15,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/udb"
 	"github.com/ucloud/ucloud-sdk-go/services/udisk"
 	"github.com/ucloud/ucloud-sdk-go/services/udpn"
+	"github.com/ucloud/ucloud-sdk-go/services/ufile"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/ulb"
 	"github.com/ucloud/ucloud-sdk-go/services/umem"
@@ -37,6 +38,7 @@ import (
 	iudb "github.com/ucloud/ucloud-sdk-go/internal/services/udb"
 	iudisk "github.com/ucloud/ucloud-sdk-go/internal/services/udisk"
 	iudpn "github.com/ucloud/ucloud-sdk-go/internal/services/udpn"
+	iufile "github.com/ucloud/ucloud-sdk-go/internal/services/ufile"
 	iufs "github.com/ucloud/ucloud-sdk-go/internal/services/ufs"
 	iuhost "github.com/ucloud/ucloud-sdk-go/internal/services/uhost"
 	iulb "github.com/ucloud/ucloud-sdk-go/internal/services/ulb"
@@ -62,6 +64,7 @@ var udpnClient *udpn.UDPNClient
 var ubillClient *ubill.UBillClient
 var uphostClient *uphost.UPHostClient
 var ipsecvpnClient *ipsecvpn.IPSecVPNClient
+var ufileClient *ufile.UFileClient
 
 var puhostClient *puhost.UHostClient
 var pudiskClient *pudisk.UDiskClient
@@ -86,6 +89,7 @@ var iuphostClient *iuphost.UPHostClient
 var iufsClient *iufs.UFSClient
 var ivpcClient *ivpc.VPCClient
 var iipsecvpnClient *iipsecvpn.IPSecVPNClient
+var iufileClient *iufile.UFileClient
 
 func TestMain(m *testing.M) {
 	testSetup()
@@ -125,6 +129,7 @@ func testSetup() {
 	ubillClient = ubill.NewClient(&cfg, &credential)
 	uphostClient = uphost.NewClient(&cfg, &credential)
 	ipsecvpnClient = ipsecvpn.NewClient(&cfg, &credential)
+	ufileClient = ufile.NewClient(&cfg, &credential)
 
 	iudataarkClient = iudataark.NewClient(&cfg, &credential)
 	iudiskClient = iudisk.NewClient(&cfg, &credential)
@@ -140,6 +145,7 @@ func testSetup() {
 	iufsClient = iufs.NewClient(&cfg, &credential)
 	ivpcClient = ivpc.NewClient(&cfg, &credential)
 	iipsecvpnClient = iipsecvpn.NewClient(&cfg, &credential)
+	iufileClient = iufile.NewClient(&cfg, &credential)
 
 	pudiskClient = pudisk.NewClient(&cfg, &credential)
 	puhostClient = puhost.NewClient(&cfg, &credential)
