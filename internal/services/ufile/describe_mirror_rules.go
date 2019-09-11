@@ -3,6 +3,7 @@
 package ufile
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
@@ -44,6 +45,8 @@ func (c *UFileClient) DescribeMirrorRules(req *DescribeMirrorRulesRequest) (*Des
 	var res DescribeMirrorRulesResponse
 
 	reqCopier := *req
+	// In order to ignore the parameters about Region
+	reqCopier.Region = ucloud.String("")
 
 	err = c.Client.InvokeAction("DescribeMirrorRules", &reqCopier, &res)
 	if err != nil {

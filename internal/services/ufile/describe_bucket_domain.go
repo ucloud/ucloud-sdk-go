@@ -3,6 +3,7 @@
 package ufile
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
@@ -44,6 +45,8 @@ func (c *UFileClient) DescribeBucketDomain(req *DescribeBucketDomainRequest) (*D
 	var res DescribeBucketDomainResponse
 
 	reqCopier := *req
+	// In order to ignore the parameters about Region
+	reqCopier.Region = ucloud.String("")
 
 	err = c.Client.InvokeAction("DescribeBucketDomain", &reqCopier, &res)
 	if err != nil {
