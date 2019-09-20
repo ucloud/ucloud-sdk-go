@@ -8,48 +8,57 @@ you can also see https://docs.ucloud.cn for detail.
 */
 type VPCSubnetInfoSet struct {
 
-	// VPC id
-	VPCId string
+	// 创建时间
+	CreateTime int
 
-	// VPC名称
-	VPCName string
+	// 子网网关
+	Gateway string
 
-	// 子网id
+	// 是否有natgw
+	HasNATGW bool
+
+	// 子网关联的IPv6网段
+	IPv6Network string
+
+	// 子网掩码
+	Netmask string
+
+	// 子网关联的IPv6网段所属运营商
+	OperatorName string
+
+	// 备注
+	Remark string
+
+	// 路由表Id
+	RouteTableId string
+
+	// 子网网段
+	Subnet string
+
+	// 子网Id
 	SubnetId string
 
 	// 子网名称
 	SubnetName string
 
-	// 地址
-	Zone string
-
-	// 名称
-	Name string
-
-	// 备注
-	Remark string
-
-	// Tag
-	Tag string
-
 	// 子网类型
 	SubnetType int
 
-	// 子网网段
-	Subnet string
+	// 业务组
+	Tag string
 
-	// 子网掩码
-	Netmask string
+	// VPCId
+	VPCId string
 
-	// 子网网关
-	Gateway string
+	// VPC名称
+	VPCName string
 
-	// 创建时间
-	CreateTime int
+	// 可用区名称
+	Zone string
 
 	// 虚拟路由 id
 	VRouterId string
 
-	// 是否关联NATGW
-	HasNATGW bool
+	// 名称
+	Name string
 }
