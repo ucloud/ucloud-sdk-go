@@ -26,7 +26,7 @@ type IKEData struct {
 	IKELocalId string
 
 	// IKE预共享秘钥
-	IKEPreSharedKe string
+	IKEPreSharedKey string
 
 	// IKE对端ID标识
 	IKERemoteId string
