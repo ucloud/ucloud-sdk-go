@@ -120,6 +120,12 @@ type CreateUHostInstanceRequest struct {
 	// GPU类型，枚举值["K80", "P40", "V100"]，MachineType为G时必填
 	GpuType *string `required:"false"`
 
+	// 指定set创建
+	SetId *int `required:"false"`
+
+	// 指定宿主机创建，此时SetId为必填
+	HostIp *string `required:"false"`
+
 	// NetworkInterface
 	NetworkInterface []CreateUHostInstanceParamNetworkInterface
 }
@@ -131,6 +137,18 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	// EIP
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP
+
+	//
+	IP *CreateUHostInstanceParamNetworkInterfaceIP
+}
+
+/*
+CreateUHostInstanceParamNetworkInterfaceIP is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIP struct {
+
+	// 创建云主机时指定ipv6地址(默认分配则填写auto)
+	IPv6Adress *string
 }
 
 /*
