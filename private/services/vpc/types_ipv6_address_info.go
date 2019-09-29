@@ -11,7 +11,7 @@ you can also see https://docs.ucloud.cn/api for detail.
 type IPv6AddressInfo struct {
 
 	// 子网内的IPv6地址的公网带宽值。若DefaultBandwidthType为Bandwidth或Traffic，则带宽值为单个地址的带宽值；若为ShareBandwidth，则带宽值为共享带宽的带宽上限。
-	Bandwidth string
+	Bandwidth int
 
 	// IPv6地址的公网带宽设置。 ShareBandwidth：共享带宽 Bandwidth：带宽计费 Traffic：流量计费 Private：仅内网访问
 	BandwidthType string
