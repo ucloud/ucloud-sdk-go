@@ -29,7 +29,7 @@ type IPv6AddressInfo struct {
 	OperatorName string
 
 	// IPv6地址关联的资源详情。
-	RescourceInfo []IPv6ResourceInfo
+	ResourceInfo []IPv6ResourceInfo
 
 	// 若BandwidthType为ShareBandwidth，则为共享带宽ID
 	ShareBandwidthId string
