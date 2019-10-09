@@ -11,7 +11,7 @@ you can also see https://docs.ucloud.cn/api for detail.
 type SubnetIPv6AttributeInfo struct {
 
 	// 是否为子网中的资源默认分配IPv6地址。1为开启自动分配，默认为该子网中的资源分配IPv6地址；0为关闭自动分配。
-	DefaultAssignIPv6Address string
+	DefaultAssignIPv6Address bool
 
 	// 子网内的IPv6地址的默认分配的带宽。
 	DefaultBandwidth int
