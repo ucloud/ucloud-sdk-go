@@ -71,7 +71,7 @@ func (c *Client) SetHttpClient(httpClient http.Client) error {
 	return nil
 }
 
-// GetCredential will return the creadential config of client.
+// GetCredential will return the credential config of client.
 func (c *Client) GetCredential() *auth.Credential {
 	return c.credential
 }
@@ -142,7 +142,7 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 
 	if err == nil {
 		// use patch object to resolve the http response body
-		// in general, it will be fix common server error before server bugfix is released.
+		// in general, it will be fix common server error before server bug fix is released.
 		body := httpResp.GetBody()
 
 		for _, patch := range patches {

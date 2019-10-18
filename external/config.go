@@ -8,11 +8,20 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
+// CredentialProvider is the provider to store and provide credential instance
+type CredentialProvider interface {
+	Credential() *auth.Credential
+}
+
+// ClientConfigProvider is the provider to store and provide config instance
+type ClientConfigProvider interface {
+	Config() *ucloud.Config
+}
+
 // ConfigProvider is the provider to store and provide config/credential instance
 type ConfigProvider interface {
-	Credential() *auth.Credential
-
-	Config() *ucloud.Config
+	CredentialProvider
+	ClientConfigProvider
 }
 
 // config will read configuration
