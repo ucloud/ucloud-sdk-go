@@ -167,8 +167,8 @@ func testSetup() {
 	ustackCfg.Region = "cn"
 
 	ustackCred := auth.NewCredential()
-	ustackCred.PrivateKey = "9d6sLg5Kbfg3BU2bPYc4tx77UwoYZnx1qzdB5gvaCug5JkK7z-wnLYGzv8ccCBWS"
-	ustackCred.PublicKey = "Yd9e2CyvcrO7MFXWEtoyt9HYWbjTKqkNmyR2u4x4"
+	ustackCred.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
+	ustackCred.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
 
 	ucloudstackClient = ucloudstack.NewClient(&ustackCfg, &ustackCred)
 }
