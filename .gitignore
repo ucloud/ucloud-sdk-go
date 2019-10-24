@@ -21,3 +21,5 @@ c.out
 
 # Debug Data
 examples/debug
+scripts/gen-apis.sh
+scripts/gen-tests.sh

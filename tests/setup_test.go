@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"github.com/ucloud/ucloud-sdk-go/services/ipsecvpn"
 	"os"
 	"testing"
 
@@ -9,9 +8,11 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 
+	"github.com/ucloud/ucloud-sdk-go/services/ipsecvpn"
 	"github.com/ucloud/ucloud-sdk-go/services/pathx"
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
 	"github.com/ucloud/ucloud-sdk-go/services/ubill"
+	"github.com/ucloud/ucloud-sdk-go/services/ucloudstack"
 	"github.com/ucloud/ucloud-sdk-go/services/udb"
 	"github.com/ucloud/ucloud-sdk-go/services/udisk"
 	"github.com/ucloud/ucloud-sdk-go/services/udpn"
@@ -65,6 +66,7 @@ var ubillClient *ubill.UBillClient
 var uphostClient *uphost.UPHostClient
 var ipsecvpnClient *ipsecvpn.IPSecVPNClient
 var ufileClient *ufile.UFileClient
+var ucloudstackClient *ucloudstack.UCloudStackClient
 
 var puhostClient *puhost.UHostClient
 var pudiskClient *pudisk.UDiskClient
@@ -157,6 +159,18 @@ func testSetup() {
 	pvpcClient = pvpc.NewClient(&cfg, &credential)
 
 	log.Info("setup test fixtures ...")
+
+	ustackCfg := ucloud.NewConfig()
+	ustackCfg.BaseUrl = "http://console.pre.ucloudstack.com/api"
+	ustackCfg.MaxRetries = 1
+	ustackCfg.LogLevel = log.DebugLevel
+	ustackCfg.Region = "cn"
+
+	ustackCred := auth.NewCredential()
+	ustackCred.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
+	ustackCred.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
+
+	ucloudstackClient = ucloudstack.NewClient(&ustackCfg, &ustackCred)
 }
 
 func testTeardown() {}
