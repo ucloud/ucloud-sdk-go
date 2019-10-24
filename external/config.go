@@ -8,11 +8,20 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
+// CredentialProvider is the provider to store and provide credential instance
+type CredentialProvider interface {
+	Credential() *auth.Credential
+}
+
+// ClientConfigProvider is the provider to store and provide config instance
+type ClientConfigProvider interface {
+	Config() *ucloud.Config
+}
+
 // ConfigProvider is the provider to store and provide config/credential instance
 type ConfigProvider interface {
-	Credential() *auth.Credential
-
-	Config() *ucloud.Config
+	CredentialProvider
+	ClientConfigProvider
 }
 
 // config will read configuration
@@ -23,8 +32,11 @@ type config struct {
 	SharedCredentialFile string
 
 	// Credential configuration
-	PublicKey  string
-	PrivateKey string
+	PublicKey     string
+	PrivateKey    string
+	SecurityToken string
+	CanExpire     bool
+	Expires       time.Time
 
 	// Client configuration
 	ProjectId string
@@ -107,6 +119,9 @@ func (c *config) Credential() *auth.Credential {
 	cred := auth.NewCredential()
 	setStringify(&cred.PublicKey, c.PublicKey)
 	setStringify(&cred.PrivateKey, c.PrivateKey)
+	setStringify(&cred.SecurityToken, c.SecurityToken)
+	cred.CanExpire = c.CanExpire
+	cred.Expires = c.Expires
 	return &cred
 }
 

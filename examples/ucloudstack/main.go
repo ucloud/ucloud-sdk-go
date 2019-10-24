@@ -35,8 +35,6 @@ func main() {
 }
 
 func createVM(name string) {
-
-	// 认证
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
@@ -46,6 +44,7 @@ func createVM(name string) {
 	// 地域
 	createReq.Region = ucloud.String("cn")
 	createReq.Zone = ucloud.String("zone-01")
+
 	// 配置
 	createReq.ImageID = ucloud.String("cn-image-centos-74")
 	createReq.CPU = ucloud.Int(2)
@@ -53,13 +52,16 @@ func createVM(name string) {
 	createReq.BootDiskType = ucloud.String("Normal")
 	createReq.DataDiskType = ucloud.String("Normal")
 	createReq.VMType = ucloud.String("Normal")
+
 	// 网络
 	createReq.VPCID = ucloud.String("vpc-1al_S_tbN")
 	createReq.SubnetID = ucloud.String("subnet-1al_S_tbN")
 	createReq.WANSGID = ucloud.String("sg-1al_S_tbN")
+
 	// 认证方式
 	createReq.Name = ucloud.String(name)
 	createReq.Password = ucloud.String("ucloud.cn132")
+
 	// 计费方式
 	createReq.ChargeType = ucloud.String("Month")
 
@@ -76,8 +78,6 @@ func createVM(name string) {
 }
 
 func stopVM(vmID string) {
-
-	// 认证
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
@@ -100,8 +100,6 @@ func stopVM(vmID string) {
 }
 
 func deleteVM(vmID string) {
-
-	// 认证
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
@@ -124,8 +122,6 @@ func deleteVM(vmID string) {
 }
 
 func describeVM() {
-
-	// 认证
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
@@ -148,8 +144,6 @@ func describeVM() {
 }
 
 func describeMetric(vmID string) {
-
-	// 认证
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 

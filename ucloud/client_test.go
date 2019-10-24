@@ -1,6 +1,7 @@
 package ucloud
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	stdhttp "net/http"
 	"os"
 	"testing"
@@ -46,6 +47,13 @@ func TestClientTimeout(t *testing.T) {
 	assert.Equal(t, uErr.Name(), uerr.ErrNetwork)
 	assert.Equal(t, req.GetRetryCount(), 1)
 	assert.Equal(t, req.GetMaxretries(), 1)
+}
+
+func TestClient_setup(t *testing.T) {
+	cfg := NewConfig()
+	credential := auth.NewCredential()
+	client := NewClientWithMeta(&cfg, &credential, ClientMeta{Product: "OpenSDK"})
+	assert.Equal(t, "OpenSDK", client.GetMeta().Product)
 }
 
 func Test_errorHandler(t *testing.T) {
@@ -129,6 +137,8 @@ func TestLoggingLevel(t *testing.T) {
 	logger.SetLevel(log.WarnLevel)
 	client.SetLogger(logger)
 	client.config.LogLevel = log.WarnLevel
+
+	client.logActionWarnf("test", "%s", "foo")
 
 	assert.Equal(t, client.logger.GetLevel(), log.WarnLevel)
 	assert.Equal(t, client.config.GetActionLevel(testDefaultAction), log.WarnLevel)

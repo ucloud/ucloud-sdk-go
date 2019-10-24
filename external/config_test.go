@@ -84,17 +84,17 @@ func checkTestConfig(t *testing.T, c ConfigProvider) {
 }
 
 func setTestEnv() {
-	os.Setenv(UCloudPublicKeyEnvVar, TestValueEnvUCloudPublicKey)
-	os.Setenv(UCloudPrivateKeyEnvVar, TestValueEnvUCloudPrivateKey)
-	os.Setenv(UCloudProjectIdEnvVar, TestValueEnvUCloudProjectId)
-	os.Setenv(UCloudRegionEnvVar, TestValueEnvUCloudRegion)
-	os.Setenv(UCloudZoneEnvVar, TestValueEnvUCloudZone)
-	os.Setenv(UCloudAPIBaseURLEnvVar, TestValueEnvUCloudBaseUrl)
-	os.Setenv(UCloudSharedProfileEnvVar, TestValueEnvUCloudProfile)
-	os.Setenv(UCloudSharedConfigFileEnvVar, TestValueEnvUCloudSharedConfigFile)
-	os.Setenv(UCloudSharedCredentialFileEnvVar, TestValueEnvUCloudSharedCredentialFile)
-	durstr := strings.TrimSuffix(TestValueEnvUCloudTimeout.String(), "s")
-	os.Setenv(UCloudTimeoutSecondEnvVar, durstr)
+	_ = os.Setenv(UCloudPublicKeyEnvVar, TestValueEnvUCloudPublicKey)
+	_ = os.Setenv(UCloudPrivateKeyEnvVar, TestValueEnvUCloudPrivateKey)
+	_ = os.Setenv(UCloudProjectIdEnvVar, TestValueEnvUCloudProjectId)
+	_ = os.Setenv(UCloudRegionEnvVar, TestValueEnvUCloudRegion)
+	_ = os.Setenv(UCloudZoneEnvVar, TestValueEnvUCloudZone)
+	_ = os.Setenv(UCloudAPIBaseURLEnvVar, TestValueEnvUCloudBaseUrl)
+	_ = os.Setenv(UCloudSharedProfileEnvVar, TestValueEnvUCloudProfile)
+	_ = os.Setenv(UCloudSharedConfigFileEnvVar, TestValueEnvUCloudSharedConfigFile)
+	_ = os.Setenv(UCloudSharedCredentialFileEnvVar, TestValueEnvUCloudSharedCredentialFile)
+	durationStr := strings.TrimSuffix(TestValueEnvUCloudTimeout.String(), "s")
+	_ = os.Setenv(UCloudTimeoutSecondEnvVar, durationStr)
 }
 
 func writeTestTempConfigFile(vL []sharedConfig) (string, error) {

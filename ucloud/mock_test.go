@@ -156,6 +156,39 @@ func TestClient(t *testing.T) {
 	}
 }
 
+type httpMockedTest struct {
+	InputVector  string
+	MockedVector mock.Func
+	Golden       interface{}
+	GoldenErr    bool
+}
+
+func TestClient_http_mock(t *testing.T) {
+	tests := []httpMockedTest{
+		{
+			InputVector: "HTTPMockStatus400",
+			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				return http.NewStatusError(400, "Bad Request")
+			},
+			GoldenErr: true,
+		},
+	}
+	for _, test := range tests {
+		client := newTestClient()
+		httpClient := mock.NewHttpClient()
+		_ = httpClient.MockHTTP(test.MockedVector)
+		_ = client.SetHttpClient(httpClient)
+		var resp MockResponse
+		err := client.InvokeAction(test.InputVector, &MockRequest{}, &resp)
+		if test.GoldenErr {
+			assert.Error(t, err)
+		} else {
+			assert.NoError(t, err)
+			assert.Equal(t, test.Golden, resp)
+		}
+	}
+}
+
 func newTestClient() Client {
 	cfg := NewConfig()
 	cfg.BaseUrl = "https://api.ucloud.cn"

@@ -16,8 +16,8 @@ fmt:
 fmtcheck:
 	@bash $(CURDIR)/scripts/gofmtcheck.sh
 
-.PHONY: vet
-vet:
+.PHONY: lint
+lint:
 	go vet ./...
 
 .PHONY: test
