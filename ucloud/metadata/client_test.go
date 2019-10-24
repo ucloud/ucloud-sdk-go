@@ -46,27 +46,27 @@ func TestMetadataClient(t *testing.T) {
 			GoldenError: false,
 		},
 		{
-			MockedVector: "ucloud",
+			MockedVector: "metadata",
 			Do: func(client Client) (i interface{}, e error) {
 				return client.GetMetadata("/cloud-name")
 			},
-			Golden:      "ucloud",
+			Golden:      "metadata",
 			GoldenError: false,
 		},
 		{
-			MockedVector: "ls",
+			MockedVector: "user-data",
 			Do: func(client Client) (i interface{}, e error) {
 				return client.GetUserData()
 			},
-			Golden:      "ls",
+			Golden:      "user-data",
 			GoldenError: false,
 		},
 		{
-			MockedVector: "ls",
+			MockedVector: "vendor-data",
 			Do: func(client Client) (i interface{}, e error) {
 				return client.GetVendorData()
 			},
-			Golden:      "ls",
+			Golden:      "vendor-data",
 			GoldenError: false,
 		},
 	}
@@ -95,21 +95,21 @@ var goldenMetadata = Metadata{
 		},
 		Version: 2,
 	},
-	Platform: "uhost",
+	Platform:      "uhost",
 	PublicSSHKeys: []string{},
-	Region: "hk",
+	Region:        "hk",
 	UHost: MDUHost{
 		CPU: 1,
 		Disks: []MDDisks{
 			{
 				BackupType: "",
-				DiskId: "bsi-ifmi12",
-				DiskType: "CLOUD_SSD",
-				Drive: "vda",
-				Encrypted: false,
-				IsBoot: true,
-				Name: "系统盘_现网调试勿删",
-				Size: 20,
+				DiskId:     "bsi-ifmi12",
+				DiskType:   "CLOUD_SSD",
+				Drive:      "vda",
+				Encrypted:  false,
+				IsBoot:     true,
+				Name:       "系统盘_现网调试勿删",
+				Size:       20,
 			},
 		},
 		GPU:            0,
@@ -126,18 +126,18 @@ var goldenMetadata = Metadata{
 					{IPAddress: "10.8.134.210", Type: "Private", Bandwidth: 0, IPId: ""},
 					{IPAddress: "152.32.135.18", Type: "International", Bandwidth: 11, IPId: "eip-t4frnxjn"},
 				},
-				Mac: "52:54:00:71:04:E1",
+				Mac:      "52:54:00:71:04:E1",
 				SubnetId: "subnet-jodfnu",
-				VpcId: "uvnet-vxil3h",
+				VpcId:    "uvnet-vxil3h",
 			},
 		},
-		OsName: "CentOS 7.6 64位",
+		OsName:    "CentOS 7.6 64位",
 		ProjectId: "org-xp2ucn",
-		Region: "hk",
-		Remark: "",
-		Tag: "Default",
-		UHostId: "uhost-hhqeihh5",
-		Zone: "hk-02",
+		Region:    "hk",
+		Remark:    "",
+		Tag:       "Default",
+		UHostId:   "uhost-hhqeihh5",
+		Zone:      "hk-02",
 	},
 }
 

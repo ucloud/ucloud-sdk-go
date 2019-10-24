@@ -32,8 +32,11 @@ type config struct {
 	SharedCredentialFile string
 
 	// Credential configuration
-	PublicKey  string
-	PrivateKey string
+	PublicKey     string
+	PrivateKey    string
+	SecurityToken string
+	CanExpire     bool
+	Expires       time.Time
 
 	// Client configuration
 	ProjectId string
@@ -116,6 +119,9 @@ func (c *config) Credential() *auth.Credential {
 	cred := auth.NewCredential()
 	setStringify(&cred.PublicKey, c.PublicKey)
 	setStringify(&cred.PrivateKey, c.PrivateKey)
+	setStringify(&cred.SecurityToken, c.SecurityToken)
+	cred.CanExpire = c.CanExpire
+	cred.Expires = c.Expires
 	return &cred
 }
 

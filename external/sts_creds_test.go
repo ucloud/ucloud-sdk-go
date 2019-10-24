@@ -1,24 +1,26 @@
 package external
 
 import (
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/assert"
+
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/helpers/mock"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/metadata"
-	"testing"
-	"time"
 )
 
-type MockedMetadataCase struct {
+type MockedSTSCase struct {
 	MockedVector string
 	MockedError  error
-	Do           func(client defaultClient) (interface{}, error)
+	Do           func(metadataProvider) (interface{}, error)
 	Golden       interface{}
 	GoldenError  bool
 }
 
-func RunMockedMetadataCase(t *testing.T, mockedCase MockedMetadataCase) {
+func RunMockedMetadataCase(t *testing.T, mockedCase MockedSTSCase) {
 	httpClient := mock.NewHttpClient()
 	err := httpClient.MockHTTP(func(request *http.HttpRequest, response *http.HttpResponse) error {
 		if mockedCase.MockedError != nil {
@@ -28,11 +30,10 @@ func RunMockedMetadataCase(t *testing.T, mockedCase MockedMetadataCase) {
 	})
 	assert.NoError(t, err)
 
-	metadataResolver := metadata.DefaultClient{}
-	_ = metadataResolver.SetHttpClient(httpClient)
-	client := defaultClient{resolver: metadataResolver}
+	mdProvider := metadata.DefaultClient{}
+	_ = mdProvider.SetHttpClient(httpClient)
 
-	resp, err := mockedCase.Do(client)
+	resp, err := mockedCase.Do(&mdProvider)
 	assert.Equal(t, mockedCase.Golden, resp)
 	if mockedCase.GoldenError {
 		assert.Error(t, err)
@@ -42,12 +43,29 @@ func RunMockedMetadataCase(t *testing.T, mockedCase MockedMetadataCase) {
 }
 
 func TestAssumeRole(t *testing.T) {
-	cases := []MockedMetadataCase{
+	cases := []MockedSTSCase{
 		{
 			MockedVector: mockedAssumeRole,
-			Do: func(client defaultClient) (i interface{}, e error) {
+			Do: func(mdProvider metadataProvider) (i interface{}, e error) {
 				req := AssumeRoleRequest{}
-				return AssumeRole(req)
+				cfg, err := loadSTSConfig(req, mdProvider)
+				if err != nil {
+					return nil, err
+				}
+				return cfg.Credential(), nil
+			},
+			Golden:      goldenAssumeRole,
+			GoldenError: false,
+		},
+		{
+			MockedVector: mockedAssumeRole,
+			Do: func(mdProvider metadataProvider) (i interface{}, e error) {
+				req := AssumeRoleRequest{RoleName: "UHostInstance"}
+				cfg, err := loadSTSConfig(req, mdProvider)
+				if err != nil {
+					return nil, err
+				}
+				return cfg.Credential(), nil
 			},
 			Golden:      goldenAssumeRole,
 			GoldenError: false,
@@ -59,7 +77,7 @@ func TestAssumeRole(t *testing.T) {
 	}
 }
 
-var goldenAssumeRole = auth.Credential{
+var goldenAssumeRole = &auth.Credential{
 	PublicKey:     "foo",
 	PrivateKey:    "bar",
 	SecurityToken: "foobar",
@@ -71,9 +89,9 @@ const mockedAssumeRole = `
 {
     "Data": {
         "Expiration": 1571218055,
-        "PrivateKey": "foo",
+        "PrivateKey": "bar",
         "ProjectID": "org-xp2ucn",
-        "PublicKey": "bar",
+        "PublicKey": "foo",
         "RoleName": "UHostInstance",
         "SecurityToken": "foobar",
         "UHostID": "uhost-hhqeihh5"

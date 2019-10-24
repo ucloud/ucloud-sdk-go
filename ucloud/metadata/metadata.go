@@ -7,7 +7,7 @@ type Metadata struct {
 	LocalHostname    string          `json:"local-hostname"`
 	NetworkConfig    MDNetworkConfig `json:"network-config"`
 	Platform         string          `json:"platform"`
-	PublicSSHKeys    []string   `json:"public-ssh-keys"`
+	PublicSSHKeys    []string        `json:"public-ssh-keys"`
 	Region           string          `json:"region"`
 	UHost            MDUHost         `json:"uhost"`
 }

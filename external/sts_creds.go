@@ -3,17 +3,30 @@ package external
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
+
+	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/metadata"
 )
 
 type AssumeRoleRequest struct {
 	RoleName string
 }
 
-type AssumeRoleResponse struct {
+func LoadSTSConfig(req AssumeRoleRequest) (ConfigProvider, error) {
+	client := metadata.DefaultClient{}
+	return loadSTSConfig(req, &client)
+}
+
+type metadataProvider interface {
+	SendRequest(string) (string, error)
+	SetHttpClient(http.Client) error
+}
+
+type assumeRoleData struct {
 	Expiration    int
 	PrivateKey    string
 	ProjectID     string
@@ -23,38 +36,36 @@ type AssumeRoleResponse struct {
 	UHostID       string
 }
 
-func AssumeRole(req AssumeRoleRequest) (cred auth.Credential, err error) {
-	return defaultClient{}.AssumeRole(req)
+type assumeRoleResponse struct {
+	RetCode int
+	Message string
+	Data    assumeRoleData
 }
 
-type metadataResolver interface {
-	SendRequest(path string) (string, error)
-}
-
-type defaultClient struct {
-	resolver metadataResolver
-}
-
-func (client defaultClient) AssumeRole(req AssumeRoleRequest) (cred auth.Credential, err error) {
+func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvider, error) {
 	path := "/iam/token"
 	if len(req.RoleName) != 0 {
 		path += fmt.Sprintf("%s/%s", path, req.RoleName)
 	}
 
-	resp, err := client.resolver.SendRequest(path)
+	resp, err := client.SendRequest(path)
 	if err != nil {
-		return cred, err
+		return nil, err
 	}
 
-	var assumeRole AssumeRoleResponse
-	if err := json.NewDecoder(strings.NewReader(resp)).Decode(&assumeRole); err != nil {
-		return cred, errors.Errorf("failed to decode sts credential, %s", err)
+	var roleResp assumeRoleResponse
+	if err := json.NewDecoder(strings.NewReader(resp)).Decode(&roleResp); err != nil {
+		return nil, errors.Errorf("failed to decode sts credential, %s", err)
 	}
 
-	cred.CanExpire = true
-	cred.Expires = time.Unix(int64(assumeRole.Expiration), 0)
-	cred.PrivateKey = assumeRole.PrivateKey
-	cred.PublicKey = assumeRole.PublicKey
-	cred.SecurityToken = assumeRole.SecurityToken
-	return cred, nil
+	roleData := roleResp.Data
+	stsConfig := &config{
+		CanExpire:     true,
+		Expires:       time.Unix(int64(roleData.Expiration), 0),
+		PrivateKey:    roleData.PrivateKey,
+		PublicKey:     roleData.PublicKey,
+		SecurityToken: roleData.SecurityToken,
+		ProjectId:     roleData.ProjectID,
+	}
+	return stsConfig, nil
 }
