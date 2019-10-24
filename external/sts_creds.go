@@ -17,8 +17,13 @@ type AssumeRoleRequest struct {
 }
 
 func LoadSTSConfig(req AssumeRoleRequest) (ConfigProvider, error) {
-	client := metadata.DefaultClient{}
-	return loadSTSConfig(req, &client)
+	httpClient := http.NewHttpClient()
+	client := &metadata.DefaultClient{}
+	err := client.SetHttpClient(&httpClient)
+	if err != nil {
+		return nil, err
+	}
+	return loadSTSConfig(req, client)
 }
 
 type metadataProvider interface {
