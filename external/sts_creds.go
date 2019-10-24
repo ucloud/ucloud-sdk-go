@@ -2,7 +2,6 @@ package external
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"time"
 
@@ -48,9 +47,9 @@ type assumeRoleResponse struct {
 }
 
 func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvider, error) {
-	path := "/iam/token"
+	path := "/ram/token"
 	if len(req.RoleName) != 0 {
-		path += fmt.Sprintf("%s/%s", path, req.RoleName)
+		path += "/" + req.RoleName
 	}
 
 	resp, err := client.SendRequest(path)

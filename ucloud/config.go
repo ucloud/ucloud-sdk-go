@@ -1,7 +1,6 @@
 package ucloud
 
 import (
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
@@ -55,8 +54,6 @@ type Config struct {
 	// Logging level by action, used to filter logging messages by action
 	// use SetActionLevel() and GetActionLevel() to modify
 	actionLoggingLevels map[string]log.Level
-
-	CredentialProviders auth.Credential
 }
 
 // NewConfig will return a new client config with default options.

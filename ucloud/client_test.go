@@ -52,8 +52,18 @@ func TestClientTimeout(t *testing.T) {
 func TestClient_setup(t *testing.T) {
 	cfg := NewConfig()
 	credential := auth.NewCredential()
+	credential.CanExpire = true
+	credential.Expires = time.Time{}
+	credential.SecurityToken = "foo"
+
 	client := NewClientWithMeta(&cfg, &credential, ClientMeta{Product: "OpenSDK"})
 	assert.Equal(t, "OpenSDK", client.GetMeta().Product)
+	assert.True(t, credential.IsExpired())
+
+	err := client.InvokeAction("ExpiredCredential", &MockRequest{}, &MockResponse{})
+	assert.Error(t, err)
+	expiredErr := err.(uerr.ClientError)
+	assert.Equal(t, uerr.ErrCredentialExpired, expiredErr.Name())
 }
 
 func Test_errorHandler(t *testing.T) {

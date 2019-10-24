@@ -23,6 +23,8 @@ func describeUHost(cfg *ucloud.Config, cred *auth.Credential) {
 	client := uhost.NewClient(cfg, cred)
 
 	req := client.NewDescribeUHostInstanceRequest()
+	req.Region = ucloud.String("cn-bj2")
+
 	resp, err := client.DescribeUHostInstance(req)
 	if err != nil {
 		fmt.Printf("[ERROR] %s\n", err)

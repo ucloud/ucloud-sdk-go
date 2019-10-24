@@ -4,6 +4,7 @@ Package ucloud is a package of utilities to setup ucloud sdk and improve using e
 package ucloud
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/private/utils"
@@ -107,6 +108,13 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 	req.SetAction(action)
 	req.SetRequestTime(time.Now())
 	resp.SetRequest(req)
+
+	if c.credential.CanExpire && c.credential.IsExpired() {
+		return uerr.NewClientError(
+			uerr.ErrCredentialExpired,
+			fmt.Errorf("credential is expired at %s", c.credential.Expires.Format(time.RFC3339)),
+		)
+	}
 
 	for _, handler := range c.requestHandlers {
 		req, err = handler(c, req)

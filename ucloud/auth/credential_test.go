@@ -1,8 +1,11 @@
 package auth
 
 import (
+	"github.com/stretchr/testify/assert"
+	"net/url"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestCredential_CreateSign(t *testing.T) {
@@ -89,6 +92,21 @@ func TestCredential_BuildCredentialedQuery(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestCredential_STSCredential(t *testing.T) {
+	c := Credential{
+		PublicKey:     "ucloudsomeone@example.com1296235120854146120",
+		PrivateKey:    "46f09bb9fab4f12dfc160dae12273d5332b5debe",
+		SecurityToken: "some_stoken",
+		CanExpire:     true,
+		Expires:       time.Time{},
+	}
+	query := c.BuildCredentialedQuery(testCredentialBuildCredentialedQuery01)
+	values, err := url.ParseQuery(query)
+	assert.NoError(t, err)
+	assert.Equal(t, "170c480ad176a247b324eb92a2cfe536aacfbd04", values.Get("Signature"))
+	assert.True(t, c.IsExpired())
 }
 
 var testCredentialCreateSignQuery00 = strings.Join(strings.Split(`Action=CreateUHostInstance
