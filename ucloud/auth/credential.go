@@ -49,6 +49,9 @@ func (c *Credential) BuildCredentialedQuery(params map[string]string) string {
 	for k, v := range params {
 		urlValues.Set(k, v)
 	}
+	if len(c.SecurityToken) != 0 {
+		urlValues.Set("SecurityToken", c.SecurityToken)
+	}
 	urlValues.Set("PublicKey", c.PublicKey)
 	urlValues.Set("Signature", c.verifyAc(urlValues))
 	return urlValues.Encode()
