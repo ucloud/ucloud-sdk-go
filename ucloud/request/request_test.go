@@ -57,6 +57,7 @@ func TestRequestAccessor(t *testing.T) {
 	err = req.SetAction("foo")
 	assert.NoError(t, err)
 	assert.Equal(t, "foo", req.GetAction())
+	assert.Equal(t, String("Zm9v"), ToBase64Query(String(req.GetAction())))
 
 	err = req.SetRegion("cn-bj2")
 	assert.NoError(t, err)

@@ -1,10 +1,12 @@
 package metadata
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
+
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/helpers/mock"
-	"testing"
 )
 
 type MockedMetadataCase struct {
@@ -25,13 +27,15 @@ func RunMockedMetadataCase(t *testing.T, mockedCase MockedMetadataCase) {
 	})
 	assert.NoError(t, err)
 
-	client := DefaultClient{httpClient: httpClient}
-	resp, err := mockedCase.Do(client)
-	assert.Equal(t, mockedCase.Golden, resp)
+	mockedClient := DefaultClient{}
+	_ = mockedClient.SetHttpClient(httpClient)
+
+	resp, err := mockedCase.Do(mockedClient)
 	if mockedCase.GoldenError {
 		assert.Error(t, err)
 	} else {
 		assert.NoError(t, err)
+		assert.Equal(t, mockedCase.Golden, resp)
 	}
 }
 
@@ -44,6 +48,22 @@ func TestMetadataClient(t *testing.T) {
 			},
 			Golden:      goldenMetadata,
 			GoldenError: false,
+		},
+		{
+			MockedVector: mockedMetadataError,
+			Do: func(client Client) (i interface{}, e error) {
+				return client.GetInstanceIdentityDocument()
+			},
+			Golden:      nil,
+			GoldenError: true,
+		},
+		{
+			MockedError: http.NewStatusError(400, "Bad Request"),
+			Do: func(client Client) (i interface{}, e error) {
+				return client.GetInstanceIdentityDocument()
+			},
+			Golden:      nil,
+			GoldenError: true,
 		},
 		{
 			MockedVector: "metadata",
@@ -74,6 +94,11 @@ func TestMetadataClient(t *testing.T) {
 	for _, mockedCase := range cases {
 		RunMockedMetadataCase(t, mockedCase)
 	}
+}
+
+func TestClientSetup(t *testing.T) {
+	client := NewClient()
+	assert.NotZero(t, client)
 }
 
 var goldenMetadata = Metadata{
@@ -222,4 +247,8 @@ const mockedMetadata = `
         "zone": "hk-02"
     }
 }
+`
+
+const mockedMetadataError = `
+invalid data
 `
