@@ -7,8 +7,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-// RenameUDiskRequest is request schema for RenameUDisk action
-type RenameUDiskRequest struct {
+// DescribeRecycleUDiskRequest is request schema for DescribeRecycleUDisk action
+type DescribeRecycleUDiskRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
@@ -20,21 +20,27 @@ type RenameUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
 	// Zone *string `required:"true"`
 
-	// 重命名的UDisk的Id
-	UDiskId *string `required:"true"`
+	// 返回数据长度, 默认为20
+	Limit *int `required:"false"`
 
-	// 重命名UDisk的name
-	UDiskName *string `required:"true"`
+	// 数据偏移量, 默认为0
+	Offset *int `required:"false"`
 }
 
-// RenameUDiskResponse is response schema for RenameUDisk action
-type RenameUDiskResponse struct {
+// DescribeRecycleUDiskResponse is response schema for DescribeRecycleUDisk action
+type DescribeRecycleUDiskResponse struct {
 	response.CommonBase
+
+	// 回收站磁盘列表
+	DataSet []RecycleUDiskSet
+
+	// 磁盘数量
+	TotalCount int
 }
 
-// NewRenameUDiskRequest will create request of RenameUDisk action.
-func (c *UDiskClient) NewRenameUDiskRequest() *RenameUDiskRequest {
-	req := &RenameUDiskRequest{}
+// NewDescribeRecycleUDiskRequest will create request of DescribeRecycleUDisk action.
+func (c *UDiskClient) NewDescribeRecycleUDiskRequest() *DescribeRecycleUDiskRequest {
+	req := &DescribeRecycleUDiskRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -44,14 +50,14 @@ func (c *UDiskClient) NewRenameUDiskRequest() *RenameUDiskRequest {
 	return req
 }
 
-// RenameUDisk - 重命名UDisk
-func (c *UDiskClient) RenameUDisk(req *RenameUDiskRequest) (*RenameUDiskResponse, error) {
+// DescribeRecycleUDisk - 拉取回收站中云硬盘列表
+func (c *UDiskClient) DescribeRecycleUDisk(req *DescribeRecycleUDiskRequest) (*DescribeRecycleUDiskResponse, error) {
 	var err error
-	var res RenameUDiskResponse
+	var res DescribeRecycleUDiskResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("RenameUDisk", &reqCopier, &res)
+	err = c.Client.InvokeAction("DescribeRecycleUDisk", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

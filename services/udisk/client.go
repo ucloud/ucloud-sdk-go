@@ -14,8 +14,7 @@ type UDiskClient struct {
 
 // NewClient will return a instance of UDiskClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UDiskClient {
-	meta := ucloud.ClientMeta{Product: "UDisk"}
-	client := ucloud.NewClientWithMeta(config, credential, meta)
+	client := ucloud.NewClient(config, credential)
 	return &UDiskClient{
 		client,
 	}

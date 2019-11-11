@@ -7,8 +7,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-// CreateUDiskRequest is request schema for CreateUDisk action
-type CreateUDiskRequest struct {
+// CloneUDiskUDataArkRequest is request schema for CloneUDiskUDataArk action
+type CloneUDiskUDataArkRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
@@ -20,17 +20,14 @@ type CreateUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
 	// Zone *string `required:"true"`
 
-	// Year , Month, Dynamic, Postpay, Trial 默认: Dynamic
+	// Year , Month, Dynamic，Postpay 默认: Dynamic
 	ChargeType *string `required:"false"`
 
-	// 加密需要的cmk id，UKmsMode为Yes时，必填
-	CmkId *string `required:"false"`
+	// Disk注释
+	Comment *string `required:"false"`
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
-
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），默认值（DataDisk）
-	DiskType *string `required:"false"`
 
 	// 实例名称
 	Name *string `required:"true"`
@@ -38,47 +35,50 @@ type CreateUDiskRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]。
-	Size *int `required:"true"`
+	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘备份有效，对云盘备份无效)
+	Size *int `required:"false"`
+
+	// 指定从方舟克隆的备份时间点
+	SnapshotTime *int `required:"true"`
 
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// 是否开启数据方舟
+	// 是否开启数据方舟  Yes:开启数据方舟 No:关闭数据方舟 默认:No
 	UDataArkMode *string `required:"false"`
 
-	// 是否加密。Yes：加密，No：不加密，默认值（No）
-	UKmsMode *string `required:"false"`
+	// 需要克隆的源盘id
+	UDiskId *string `required:"true"`
 }
 
-// CreateUDiskResponse is response schema for CreateUDisk action
-type CreateUDiskResponse struct {
+// CloneUDiskUDataArkResponse is response schema for CloneUDiskUDataArk action
+type CloneUDiskUDataArkResponse struct {
 	response.CommonBase
 
-	// UDisk实例Id
+	// 创建UDisk Id
 	UDiskId []string
 }
 
-// NewCreateUDiskRequest will create request of CreateUDisk action.
-func (c *UDiskClient) NewCreateUDiskRequest() *CreateUDiskRequest {
-	req := &CreateUDiskRequest{}
+// NewCloneUDiskUDataArkRequest will create request of CloneUDiskUDataArk action.
+func (c *UDiskClient) NewCloneUDiskUDataArkRequest() *CloneUDiskUDataArkRequest {
+	req := &CloneUDiskUDataArkRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
+	req.SetRetryable(true)
 	return req
 }
 
-// CreateUDisk - 创建UDisk磁盘
-func (c *UDiskClient) CreateUDisk(req *CreateUDiskRequest) (*CreateUDiskResponse, error) {
+// CloneUDiskUDataArk - 从数据方舟的备份创建UDisk
+func (c *UDiskClient) CloneUDiskUDataArk(req *CloneUDiskUDataArkRequest) (*CloneUDiskUDataArkResponse, error) {
 	var err error
-	var res CreateUDiskResponse
+	var res CloneUDiskUDataArkResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("CreateUDisk", &reqCopier, &res)
+	err = c.Client.InvokeAction("CloneUDiskUDataArk", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

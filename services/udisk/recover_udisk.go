@@ -7,8 +7,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-// DeleteUDiskRequest is request schema for DeleteUDisk action
-type DeleteUDiskRequest struct {
+// RecoverUDiskRequest is request schema for RecoverUDisk action
+type RecoverUDiskRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
@@ -20,18 +20,24 @@ type DeleteUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
 	// Zone *string `required:"true"`
 
-	// 要删除的UDisk的Id
+	// Year , Month, Dynamic 默认: Dynamic
+	ChargeType *string `required:"false"`
+
+	// 购买时长 默认: 1
+	Quantity *int `required:"false"`
+
+	// 云硬盘资源ID
 	UDiskId *string `required:"true"`
 }
 
-// DeleteUDiskResponse is response schema for DeleteUDisk action
-type DeleteUDiskResponse struct {
+// RecoverUDiskResponse is response schema for RecoverUDisk action
+type RecoverUDiskResponse struct {
 	response.CommonBase
 }
 
-// NewDeleteUDiskRequest will create request of DeleteUDisk action.
-func (c *UDiskClient) NewDeleteUDiskRequest() *DeleteUDiskRequest {
-	req := &DeleteUDiskRequest{}
+// NewRecoverUDiskRequest will create request of RecoverUDisk action.
+func (c *UDiskClient) NewRecoverUDiskRequest() *RecoverUDiskRequest {
+	req := &RecoverUDiskRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -41,14 +47,14 @@ func (c *UDiskClient) NewDeleteUDiskRequest() *DeleteUDiskRequest {
 	return req
 }
 
-// DeleteUDisk - 删除UDisk
-func (c *UDiskClient) DeleteUDisk(req *DeleteUDiskRequest) (*DeleteUDiskResponse, error) {
+// RecoverUDisk - 从回收站中恢复云硬盘
+func (c *UDiskClient) RecoverUDisk(req *RecoverUDiskRequest) (*RecoverUDiskResponse, error) {
 	var err error
-	var res DeleteUDiskResponse
+	var res RecoverUDiskResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("DeleteUDisk", &reqCopier, &res)
+	err = c.Client.InvokeAction("RecoverUDisk", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
