@@ -31,11 +31,14 @@ type DescribeEIPRequest struct {
 type DescribeEIPResponse struct {
 	response.CommonBase
 
-	//
+	// 外网IP数组
 	Infos []EIPInfo
 
-	//
+	// 返回信息描述
 	Message string
+
+	// 返回现有外网IP总数
+	Totalcount int
 }
 
 // NewDescribeEIPRequest will create request of DescribeEIP action.
