@@ -7,8 +7,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-// StopVMInstanceRequest is request schema for StopVMInstance action
-type StopVMInstanceRequest struct {
+// StartVMInstanceRequest is request schema for StartVMInstance action
+type StartVMInstanceRequest struct {
 	request.CommonBase
 
 	// [公共参数] 地域。枚举值：cn，表示中国；
@@ -21,20 +21,17 @@ type StopVMInstanceRequest struct {
 	VMID *string `required:"true"`
 }
 
-// StopVMInstanceResponse is response schema for StopVMInstance action
-type StopVMInstanceResponse struct {
+// StartVMInstanceResponse is response schema for StartVMInstance action
+type StartVMInstanceResponse struct {
 	response.CommonBase
 
 	// 返回信息描述
 	Message string
-
-	// 虚拟机 ID
-	VMID string
 }
 
-// NewStopVMInstanceRequest will create request of StopVMInstance action.
-func (c *UCloudStackClient) NewStopVMInstanceRequest() *StopVMInstanceRequest {
-	req := &StopVMInstanceRequest{}
+// NewStartVMInstanceRequest will create request of StartVMInstance action.
+func (c *UCloudStackClient) NewStartVMInstanceRequest() *StartVMInstanceRequest {
+	req := &StartVMInstanceRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -44,14 +41,14 @@ func (c *UCloudStackClient) NewStopVMInstanceRequest() *StopVMInstanceRequest {
 	return req
 }
 
-// StopVMInstance - 关闭UCloudStack虚拟机
-func (c *UCloudStackClient) StopVMInstance(req *StopVMInstanceRequest) (*StopVMInstanceResponse, error) {
+// StartVMInstance - 开启UCloudStack虚拟机
+func (c *UCloudStackClient) StartVMInstance(req *StartVMInstanceRequest) (*StartVMInstanceResponse, error) {
 	var err error
-	var res StopVMInstanceResponse
+	var res StartVMInstanceResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("StopVMInstance", &reqCopier, &res)
+	err = c.Client.InvokeAction("StartVMInstance", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

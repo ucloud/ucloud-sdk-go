@@ -17,10 +17,10 @@ type DescribeMetricRequest struct {
 	// [公共参数] 可用区。枚举值：zone-01，中国；
 	// Zone *string `required:"true"`
 
-	// 开始时间
+	// 开始时间。使用unix时间戳
 	BeginTime *string `required:"true"`
 
-	// 结束时间
+	// 结束时间。使用Unix时间戳
 	EndTime *string `required:"true"`
 
 	// 监控指标。获取虚拟机监控信息调用举例，MetricName.0="CPUUtilization"、MetricName.0="MemUsage"。虚拟机监控指标枚举值：BlockProcessCount，表示阻塞进程数；CPUUtilization，表示CPU使用率；DiskReadOps，表示磁盘读次数；DiskWriteOps，表示磁盘写次数；IORead，表示磁盘读吞吐；IOWrite，表示磁盘写吞吐；LoadAvg，表示平均负载1分钟；MemUsage，表示内存使用率；NetPacketIn，表示网卡入包量；NetPacketOut，表示网卡出包量；NICIn，表示网卡入带宽；NICOut，表示网卡出带宽；SpaceUsage，表示空间使用率；TCPConnectCount，表示TCP连接数；
