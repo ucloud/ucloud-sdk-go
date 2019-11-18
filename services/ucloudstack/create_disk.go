@@ -23,17 +23,14 @@ type CreateDiskRequest struct {
 	// 磁盘大小
 	DiskSpace *int `required:"true"`
 
-	// 存储set类型
-	DiskType *string `required:"true"`
-
 	// 磁盘名称
 	Name *string `required:"true"`
 
 	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
-	Quantity *int `required:"true"`
+	Quantity *int `required:"false"`
 
-	// 存储类型。枚举值：LocalDisk，表示本地存储
-	StorageType *string `required:"true"`
+	// 磁盘类型。例如：Normal,SSD
+	SetType *string `required:"true"`
 }
 
 // CreateDiskResponse is response schema for CreateDisk action
@@ -45,9 +42,6 @@ type CreateDiskResponse struct {
 
 	// 返回信息描述。
 	Message string
-
-	// 返回码。
-	RetCode int
 }
 
 // NewCreateDiskRequest will create request of CreateDisk action.

@@ -23,7 +23,7 @@ type BindEIPRequest struct {
 	// 资源ID
 	ResourceID *string `required:"true"`
 
-	// 资源类型。VM：虚拟机ID, LB:负载均衡, NATGW：nat网关
+	// 资源类型。VM：虚拟机, LB:负载均衡, NATGW：nat网关
 	ResourceType *string `required:"true"`
 }
 
@@ -47,7 +47,7 @@ func (c *UCloudStackClient) NewBindEIPRequest() *BindEIPRequest {
 	return req
 }
 
-// BindEIP - 绑定弹性IP
+// BindEIP - 绑定UCoudStack弹性IP
 func (c *UCloudStackClient) BindEIP(req *BindEIPRequest) (*BindEIPResponse, error) {
 	var err error
 	var res BindEIPResponse

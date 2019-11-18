@@ -13,6 +13,12 @@ type EIPInfo struct {
 	// 带宽大小
 	Bandwidth int
 
+	// 绑定资源ID
+	BindResourceID string
+
+	// 绑定资源类型
+	BindResourceType string
+
 	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
 	ChargeType string
 
@@ -31,13 +37,10 @@ type EIPInfo struct {
 	// 名称
 	Name string
 
-	// 线路名称
-	OperatorAlias string
-
 	// 线路
 	OperatorName string
 
-	// 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// 地域
 	Region string
 
 	// 备注
@@ -45,4 +48,7 @@ type EIPInfo struct {
 
 	// 状态
 	Status string
+
+	// 可用区
+	Zone string
 }

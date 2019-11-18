@@ -23,14 +23,11 @@ type GetDiskPriceRequest struct {
 	// 磁盘大小
 	DiskSpace *int `required:"true"`
 
-	// 存储set类型
-	DiskType *string `required:"true"`
-
 	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
-	Quantity *int `required:"true"`
+	Quantity *int `required:"false"`
 
-	// 存储类型。枚举值：LocalDisk，表示本地存储。
-	StorageType *string `required:"true"`
+	// 磁盘类型
+	SetType *string `required:"true"`
 }
 
 // GetDiskPriceResponse is response schema for GetDiskPrice action
@@ -42,9 +39,6 @@ type GetDiskPriceResponse struct {
 
 	// 返回信息描述。
 	Message string
-
-	// 返回码
-	RetCode int
 }
 
 // NewGetDiskPriceRequest will create request of GetDiskPrice action.

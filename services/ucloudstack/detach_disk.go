@@ -17,11 +17,11 @@ type DetachDiskRequest struct {
 	// [公共参数] 可用区
 	// Zone *string `required:"true"`
 
-	// 绑定的资源ID
-	BindResourceID *string `required:"true"`
-
 	// 硬盘ID
 	DiskID *string `required:"true"`
+
+	// 绑定的资源ID
+	ResourceID *string `required:"true"`
 }
 
 // DetachDiskResponse is response schema for DetachDisk action
@@ -30,9 +30,6 @@ type DetachDiskResponse struct {
 
 	// 返回信息描述。
 	Message string
-
-	// 返回码
-	RetCode int
 }
 
 // NewDetachDiskRequest will create request of DetachDisk action.

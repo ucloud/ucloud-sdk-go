@@ -12,13 +12,13 @@ type DescribeUserRequest struct {
 	request.CommonBase
 
 	// 返回数据长度，默认为20，最大100。
-	Limit *int `required:"true"`
+	Limit *int `required:"false"`
 
 	// 列表起始位置偏移量，默认为0。
-	Offset *int `required:"true"`
+	Offset *int `required:"false"`
 
 	// 【数组】租户的 ID。输入有效的 ID。调用方式举例：UserIDs.0=123”、UserIDs.1=456
-	UserIDs []int `required:"true"`
+	UserIDs []int `required:"false"`
 }
 
 // DescribeUserResponse is response schema for DescribeUser action
@@ -47,7 +47,7 @@ func (c *UCloudStackClient) NewDescribeUserRequest() *DescribeUserRequest {
 	return req
 }
 
-// DescribeUser - 查寻UcloudStack租户信息
+// DescribeUser - 查询UcloudStack租户信息
 func (c *UCloudStackClient) DescribeUser(req *DescribeUserRequest) (*DescribeUserResponse, error) {
 	var err error
 	var res DescribeUserResponse

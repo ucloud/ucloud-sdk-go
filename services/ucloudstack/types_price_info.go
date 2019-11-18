@@ -13,6 +13,6 @@ type PriceInfo struct {
 	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
 	ChargeType string
 
-	//
+	// 价格
 	Price float64
 }

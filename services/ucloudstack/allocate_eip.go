@@ -30,7 +30,7 @@ type AllocateEIPRequest struct {
 	OperatorName *string `required:"true"`
 
 	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
-	Quantity *int `required:"true"`
+	Quantity *int `required:"false"`
 }
 
 // AllocateEIPResponse is response schema for AllocateEIP action
@@ -56,7 +56,7 @@ func (c *UCloudStackClient) NewAllocateEIPRequest() *AllocateEIPRequest {
 	return req
 }
 
-// AllocateEIP - 申请外网IP
+// AllocateEIP - 申请UCloudStack外网IP
 func (c *UCloudStackClient) AllocateEIP(req *AllocateEIPRequest) (*AllocateEIPResponse, error) {
 	var err error
 	var res AllocateEIPResponse

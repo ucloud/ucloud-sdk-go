@@ -11,7 +11,7 @@ you can also see https://docs.ucloud.cn/api for detail.
 type DiskInfo struct {
 
 	// 绑定资源ID
-	BindResourceID string
+	AttachResourceID string
 
 	// 硬盘计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
 	ChargeType string
@@ -37,10 +37,7 @@ type DiskInfo struct {
 	// 备注
 	Remark string
 
-	// setID
-	SetID string
-
-	// 集群类型
+	// 磁盘类型。例如：Normal,SSD
 	SetType string
 
 	// 大小。单位GB

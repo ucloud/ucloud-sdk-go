@@ -17,11 +17,8 @@ type GetVMInstancePriceRequest struct {
 	// [公共参数] 可用区。枚举值：zone-01，表示中国；
 	// Zone *string `required:"true"`
 
-	// 系统盘大小。枚举值：40
-	BootDiskSpace *int `required:"true"`
-
 	// 系统盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
-	BootDiskType *string `required:"true"`
+	BootDiskSetType *string `required:"true"`
 
 	// CPU 个数，目前只能输入数据库配置指定规格参数，如：1核2048M、2核4096M、4核8192M、8核16384M、16核32768M。
 	CPU *int `required:"true"`
@@ -29,16 +26,16 @@ type GetVMInstancePriceRequest struct {
 	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
 	ChargeType *string `required:"true"`
 
+	// 数据盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
+	DataDiskSetType *string `required:"true"`
+
 	// 数据盘大小，单位 GB。默认值为0。范围：【0，8000】，步长10。
 	DataDiskSpace *int `required:"true"`
 
-	// 数据盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
-	DataDiskType *string `required:"true"`
-
 	// GPU 卡核心的占用个数。枚举值：【1,2,4】。GPU与CPU、内存大小关系：CPU个数>=4*GPU个数，同时内存与CPU规格匹配.
-	GPU *int `required:"true"`
+	GPU *int `required:"false"`
 
-	// 镜像ID
+	// 镜像 ID。基础镜像 ID 或者自制镜像 ID。如：cn-image-centos-74。
 	ImageID *string `required:"true"`
 
 	// 内存大小，单位 M。目前只能输入数据库配置指定规格参数，如：1核2048M、2核4096M、4核8192M、8核16384M、16核32768M。
@@ -48,10 +45,7 @@ type GetVMInstancePriceRequest struct {
 	OSType *string `required:"true"`
 
 	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
-	Quantity *int `required:"true"`
-
-	// 存储方式。目前只有LocalDisk。
-	StorageType *string `required:"true"`
+	Quantity *int `required:"false"`
 
 	// 机型。枚举值：Normal，表示普通；SSD，表示SSD；
 	VMType *string `required:"true"`

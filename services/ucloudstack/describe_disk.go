@@ -18,29 +18,26 @@ type DescribeDiskRequest struct {
 	// Zone *string `required:"true"`
 
 	// 【数组】磁盘的 ID。输入有效的 ID。调用方式举例：DiskIDs.0=“one-id”、DiskIDs.1=“two-id”。
-	DiskIDs []string `required:"true"`
+	DiskIDs []string `required:"false"`
 
 	// 返回数据长度，默认为20，最大100。
-	Limit *int `required:"true"`
+	Limit *int `required:"false"`
 
 	// 列表起始位置偏移量，默认为0。
-	Offset *int `required:"true"`
+	Offset *int `required:"false"`
 }
 
 // DescribeDiskResponse is response schema for DescribeDisk action
 type DescribeDiskResponse struct {
 	response.CommonBase
 
-	// 【数组】返回虚拟机对象数组
+	// 【数组】返回磁盘对象数组
 	Infos []DiskInfo
 
 	// 返回信息描述。
 	Message string
 
-	// 返回码。
-	RetCode int
-
-	// 返回虚拟机总个数。
+	// 返回磁盘总个数。
 	TotalCount int
 }
 

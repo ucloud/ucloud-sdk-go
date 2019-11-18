@@ -25,9 +25,11 @@ func main() {
 
 	// createVM("my-first-vm")
 
-	// stopVM("vm-uGvOT3TZg")
+	// stopVM("vm-z07ZCzbZg")
 
-	// deleteVM("vm-lxK-oqTZg")
+	startVM("vm-z07ZCzbZg")
+
+	// deleteVM("vm-z07ZCzbZg")
 
 	// describeVM()
 
@@ -42,8 +44,6 @@ func main() {
 	// loginByPassword()
 
 	// getVMInstancePrice()
-
-	// startVM("vm-OVx-CCAZg")
 
 	// createEIP()
 
@@ -86,14 +86,14 @@ func createVM(name string) {
 	createReq.ImageID = ucloud.String("cn-image-centos-74")
 	createReq.CPU = ucloud.Int(2)
 	createReq.Memory = ucloud.Int(4096)
-	createReq.BootDiskType = ucloud.String("Normal")
-	createReq.DataDiskType = ucloud.String("Normal")
+	createReq.BootDiskSetType = ucloud.String("Normal")
+	createReq.DataDiskSetType = ucloud.String("Normal")
 	createReq.VMType = ucloud.String("Normal")
 
 	// 网络
-	createReq.VPCID = ucloud.String("vpc-1al_S_tbN")
-	createReq.SubnetID = ucloud.String("subnet-1al_S_tbN")
-	createReq.WANSGID = ucloud.String("sg-1al_S_tbN")
+	createReq.VPCID = ucloud.String("vpc-F9VtdYlCW")
+	createReq.SubnetID = ucloud.String("subnet-eacJCC0WR")
+	createReq.WANSGID = ucloud.String("sg-F9VtdYlCW")
 
 	// 认证方式
 	createReq.Name = ucloud.String(name)
@@ -287,11 +287,9 @@ func getVMInstancePrice() {
 	getVMInstancePriceReq.GPU = ucloud.Int(0)
 	getVMInstancePriceReq.CPU = ucloud.Int(1)
 	getVMInstancePriceReq.Memory = ucloud.Int(2048)
-	getVMInstancePriceReq.StorageType = ucloud.String("LocalDisk")
 	getVMInstancePriceReq.DataDiskSpace = ucloud.Int(20)
-	getVMInstancePriceReq.BootDiskSpace = ucloud.Int(40)
-	getVMInstancePriceReq.DataDiskType = ucloud.String("Normal")
-	getVMInstancePriceReq.BootDiskType = ucloud.String("Normal")
+	getVMInstancePriceReq.DataDiskSetType = ucloud.String("Normal")
+	getVMInstancePriceReq.BootDiskSetType = ucloud.String("Normal")
 	getVMInstancePriceReq.VMType = ucloud.String("SSD")
 	getVMInstancePriceReq.ChargeType = ucloud.String("Month")
 	getVMInstancePriceReq.Quantity = ucloud.Int(1)
@@ -470,8 +468,7 @@ func getDiskPrice() {
 	getDiskPriceReq.Region = ucloud.String("cn")
 	getDiskPriceReq.Zone = ucloud.String("zone-01")
 	getDiskPriceReq.ChargeType = ucloud.String("Month")
-	getDiskPriceReq.StorageType = ucloud.String("LocalDisk")
-	getDiskPriceReq.DiskType = ucloud.String("Normal")
+	getDiskPriceReq.SetType = ucloud.String("Normal")
 	getDiskPriceReq.DiskSpace = ucloud.Int(100)
 	getDiskPriceReq.Quantity = ucloud.Int(1)
 
@@ -498,8 +495,7 @@ func createDisk() {
 	createDiskReq.Region = ucloud.String("cn")
 	createDiskReq.Zone = ucloud.String("zone-01")
 	createDiskReq.ChargeType = ucloud.String("Month")
-	createDiskReq.StorageType = ucloud.String("LocalDisk")
-	createDiskReq.DiskType = ucloud.String("Normal")
+	createDiskReq.SetType = ucloud.String("Normal")
 	createDiskReq.DiskSpace = ucloud.Int(10)
 	createDiskReq.Quantity = ucloud.Int(1)
 	createDiskReq.Name = ucloud.String("硬盘测试")
@@ -527,8 +523,8 @@ func attachDisk(diskID, resourceID, resourceType string) {
 	attachDiskReq.Region = ucloud.String("cn")
 	attachDiskReq.Zone = ucloud.String("zone-01")
 	attachDiskReq.DiskID = ucloud.String(diskID)
-	attachDiskReq.BindResourceID = ucloud.String(resourceID)
-	attachDiskReq.BindResourceType = ucloud.String(resourceType)
+	attachDiskReq.ResourceID = ucloud.String(resourceID)
+	attachDiskReq.ResourceType = ucloud.String(resourceType)
 
 	// send request
 	attachDiskResp, err := ucloudstackClient.AttachDisk(attachDiskReq)
@@ -553,7 +549,7 @@ func detachDisk(diskID, resourceID string) {
 	detachDiskReq.Region = ucloud.String("cn")
 	detachDiskReq.Zone = ucloud.String("zone-01")
 	detachDiskReq.DiskID = ucloud.String(diskID)
-	detachDiskReq.BindResourceID = ucloud.String(resourceID)
+	detachDiskReq.ResourceID = ucloud.String(resourceID)
 
 	// send request
 	detachDiskResp, err := ucloudstackClient.DetachDisk(detachDiskReq)

@@ -27,7 +27,7 @@ type GetEIPPriceRequest struct {
 	OpertatorName *string `required:"true"`
 
 	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
-	Quantity *int `required:"true"`
+	Quantity *int `required:"false"`
 }
 
 // GetEIPPriceResponse is response schema for GetEIPPrice action

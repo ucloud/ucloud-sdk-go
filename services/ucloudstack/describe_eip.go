@@ -18,13 +18,13 @@ type DescribeEIPRequest struct {
 	// Zone *string `required:"true"`
 
 	// 【数组】外网的 ID。输入有效的 ID。调用方式举例：EIPIDs.0=“one-id”、EIPIDs.1=“two-id”
-	EIPIDs []string `required:"true"`
+	EIPIDs []string `required:"false"`
 
 	// 返回数据长度，默认为20，最大100。
-	Limit *string `required:"true"`
+	Limit *string `required:"false"`
 
 	// 列表起始位置偏移量，默认为0。
-	Offset *string `required:"true"`
+	Offset *string `required:"false"`
 }
 
 // DescribeEIPResponse is response schema for DescribeEIP action

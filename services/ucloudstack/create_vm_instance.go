@@ -18,7 +18,7 @@ type CreateVMInstanceRequest struct {
 	// Zone *string `required:"true"`
 
 	// 系统盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
-	BootDiskType *string `required:"true"`
+	BootDiskSetType *string `required:"true"`
 
 	// CPU 个数，目前只能输入数据库配置指定规格参数，如：1核2048M、2核4096M、4核8192M、8核16384M、16核32768M。
 	CPU *int `required:"true"`
@@ -26,11 +26,11 @@ type CreateVMInstanceRequest struct {
 	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
 	ChargeType *string `required:"true"`
 
+	// 数据盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
+	DataDiskSetType *string `required:"true"`
+
 	// 数据盘大小，单位 GB。默认值为0。范围：【0，8000】，步长10。
 	DataDiskSpace *int `required:"false"`
-
-	// 数据盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
-	DataDiskType *string `required:"true"`
 
 	// GPU 卡核心的占用个数。枚举值：【1,2,4】。GPU与CPU、内存大小关系：CPU个数>=4*GPU个数，同时内存与CPU规格匹配.
 	GPU *int `required:"false"`
@@ -76,7 +76,7 @@ type CreateVMInstanceResponse struct {
 	// 返回信息描述。
 	Message string
 
-	// 【数组】返回创建虚拟机的 ID 数组。
+	// 返回创建虚拟机的 ID 数组。
 	VMID string
 }
 

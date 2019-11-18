@@ -17,14 +17,14 @@ type AttachDiskRequest struct {
 	// [公共参数] 可用区
 	// Zone *string `required:"true"`
 
-	// 绑定的资源ID
-	BindResourceID *string `required:"true"`
-
-	// 绑定的资源类型，枚举值：VM，标识虚拟机
-	BindResourceType *string `required:"true"`
-
 	// 硬盘ID
 	DiskID *string `required:"true"`
+
+	// 绑定的资源ID
+	ResourceID *string `required:"true"`
+
+	// 绑定的资源类型，枚举值：VM，标识虚拟机
+	ResourceType *string `required:"true"`
 }
 
 // AttachDiskResponse is response schema for AttachDisk action
@@ -33,9 +33,6 @@ type AttachDiskResponse struct {
 
 	// 返回信息描述。
 	Message string
-
-	// 返回码
-	RetCode int
 }
 
 // NewAttachDiskRequest will create request of AttachDisk action.

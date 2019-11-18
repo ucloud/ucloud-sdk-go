@@ -17,7 +17,7 @@ type UserInfo struct {
 	CreateTime int
 
 	// 租户名称
-	Name string
+	Email string
 
 	// 私钥
 	PrivateKey string
