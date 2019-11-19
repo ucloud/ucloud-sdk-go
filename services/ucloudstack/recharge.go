@@ -17,9 +17,6 @@ type RechargeRequest struct {
 	// 充值来源。INPOUR_FROM_ALIPAY：支付宝，INPOUR_FROM_OFFLINE：银行转账，INPOUR_FROM_SINPAY：新浪支付，INPOUR_FROM_WECHAT_PAY：微信转账。
 	FromType *string `required:"true"`
 
-	// 充值类型。1：账户余额。
-	RechargeType *int `required:"true"`
-
 	// 充值单号。充值方式为“账户余额”时为必要参数。
 	SerialNo *string `required:"true"`
 
@@ -43,7 +40,7 @@ func (c *UCloudStackClient) NewRechargeRequest() *RechargeRequest {
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
+	req.SetRetryable(true)
 	return req
 }
 

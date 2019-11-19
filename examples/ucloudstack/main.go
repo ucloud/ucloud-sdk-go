@@ -15,8 +15,8 @@ func loadUcloudStackConfig() (*ucloud.Config, *auth.Credential) {
 	credential := auth.NewCredential()
 	// credential.PrivateKey = "8882b67466cf74e09289cd2467c4083acf26a0f4"
 	// credential.PublicKey = "vaKUnXpow0l93oqJSREFKfwgagqCkn3Kt8s+XgfRpyl58u9KA3v16/w1iW/Tg8irI7Oalw=="
-	credential.PrivateKey = "9dc39c3294588a19b75eafb41789e67c2a569126"
-	credential.PublicKey = "h4G+xUxDYaMzByDh6T4jGl2p3U33PxkevDEqh9kBjtwQYu/OClSlzo2oOAljQneH"
+	credential.PrivateKey = "7ZpFfsZuSTYacVrgdV644XXAp1tMLqKSqVwhcwa-yffMk15QkT59fnwfr0as2jrp"
+	credential.PublicKey = "hsqAhWAxmQTqg0cuJ_IXWyTfimDNPTFVPCliolc4"
 
 	return &cfg, &credential
 }
@@ -25,15 +25,15 @@ func main() {
 
 	// createVM("my-first-vm")
 
-	// stopVM("vm-z07ZCzbZg")
+	// stopVM("vm-WxXtLWbZg")
 
-	startVM("vm-z07ZCzbZg")
+	// startVM("vm-WxXtLWbZg")
 
-	// deleteVM("vm-z07ZCzbZg")
+	// deleteVM("vm-WxXtLWbZg")
 
 	// describeVM()
 
-	// describeMetric("vm-hu74T3oZR")
+	// describeMetric("vm-I9z__ZxWg")
 
 	// createUser()
 
@@ -47,13 +47,13 @@ func main() {
 
 	// createEIP()
 
-	// bindEIP("eip-_LwmQEJWR", "vm-d0XE8E1WR", "VM")
+	// bindEIP("eip-Oa7ZuWbZg", "vm-I9z__ZxWg", "VM")
 
-	// unBindEIP("eip-_LwmQEJWR", "vm-d0XE8E1WR", "VM")
+	// unBindEIP("eip-Oa7ZuWbZg", "vm-I9z__ZxWg", "VM")
 
-	// releaseEIP("eip-_LwmQEJWR")
+	// releaseEIP("eip-Oa7ZuWbZg")
 
-	// describeEIP("")
+	// describeEIP("eip-Oa7ZuWbZg")
 
 	// getEIPPrice()
 
@@ -61,13 +61,15 @@ func main() {
 
 	// createDisk()
 
-	// attachDisk("disk-H0hvHs1ZR", "vm-d0XE8E1WR", "VM")
+	// attachDisk("disk-soRpuZbZR", "vm-I9z__ZxWg", "VM")
 
-	// detachDisk("disk-H0hvHs1ZR", "vm-d0XE8E1WR")
+	// detachDisk("disk-soRpuZbZR", "vm-I9z__ZxWg")
 
-	// describeDisk("disk-H0hvHs1ZR")
+	// describeDisk("disk-soRpuZbZR")
 
-	// deleteDisk("disk-H0hvHs1ZR")
+	// cloneDisk("disk-soRpuZbZR")
+
+	deleteDisk("disk-soRpuZbZR")
 
 }
 
@@ -88,12 +90,13 @@ func createVM(name string) {
 	createReq.Memory = ucloud.Int(4096)
 	createReq.BootDiskSetType = ucloud.String("Normal")
 	createReq.DataDiskSetType = ucloud.String("Normal")
+	createReq.DataDiskSpace = ucloud.Int(100)
 	createReq.VMType = ucloud.String("Normal")
 
 	// 网络
-	createReq.VPCID = ucloud.String("vpc-F9VtdYlCW")
-	createReq.SubnetID = ucloud.String("subnet-eacJCC0WR")
-	createReq.WANSGID = ucloud.String("sg-F9VtdYlCW")
+	createReq.VPCID = ucloud.String("vpc-AwYJsri2e")
+	createReq.SubnetID = ucloud.String("subnet-AwYJsri2e")
+	createReq.WANSGID = ucloud.String("sg-AwYJsri2e")
 
 	// 认证方式
 	createReq.Name = ucloud.String(name)
@@ -208,13 +211,14 @@ func describeMetric(vmID string) {
 
 }
 
+// 管理员创建租户
 func createUser() {
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
 	createUserReq := ucloudstackClient.NewCreateUserRequest()
-	createUserReq.UserEmail = ucloud.String("utest001@ucloud.cn")
-	createUserReq.PassWord = ucloud.String("ucsk123")
+	createUserReq.UserEmail = ucloud.String("apitest@ucloud.cn")
+	createUserReq.PassWord = ucloud.String("ucloud.cn123")
 
 	createUserResp, err := ucloudstackClient.CreateUser(createUserReq)
 	if err != nil {
@@ -232,6 +236,7 @@ func describeUser() {
 	describeUserReq := ucloudstackClient.NewDescribeUserRequest()
 	describeUserReq.Limit = ucloud.Int(10)
 	describeUserReq.Offset = ucloud.Int(0)
+	describeUserReq.UserIDs = []int{200000257}
 	describeUserResp, err := ucloudstackClient.DescribeUser(describeUserReq)
 	if err != nil {
 		fmt.Printf("something bad happened: %s\n, message: %s", err, describeUserResp.Message)
@@ -246,11 +251,10 @@ func recharge() {
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
 	chargeReq := ucloudstackClient.NewRechargeRequest()
-	chargeReq.Amount = ucloud.Int(11000)
+	chargeReq.Amount = ucloud.Int(100000)
 	chargeReq.FromType = ucloud.String("INPOUR_FROM_ALIPAY")
-	chargeReq.RechargeType = ucloud.Int(1)
-	chargeReq.SerialNo = ucloud.String("alipay-2019111501")
-	chargeReq.UserID = ucloud.Int(200000251)
+	chargeReq.SerialNo = ucloud.String("alipay-2019111901")
+	chargeReq.UserID = ucloud.Int(200000257)
 
 	chargeResp, err := ucloudstackClient.Recharge(chargeReq)
 	if err != nil {
@@ -468,7 +472,7 @@ func getDiskPrice() {
 	getDiskPriceReq.Region = ucloud.String("cn")
 	getDiskPriceReq.Zone = ucloud.String("zone-01")
 	getDiskPriceReq.ChargeType = ucloud.String("Month")
-	getDiskPriceReq.SetType = ucloud.String("Normal")
+	getDiskPriceReq.SetType = ucloud.String("SSD")
 	getDiskPriceReq.DiskSpace = ucloud.Int(100)
 	getDiskPriceReq.Quantity = ucloud.Int(1)
 
@@ -563,6 +567,33 @@ func detachDisk(diskID, resourceID string) {
 	}
 
 	fmt.Printf("Detach disk Success")
+}
+
+func cloneDisk(srcID string) {
+	cfg, credential := loadUcloudStackConfig()
+	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
+
+	// request
+	cloneDiskReq := ucloudstackClient.NewCloneDiskRequest()
+	cloneDiskReq.Region = ucloud.String("cn")
+	cloneDiskReq.Zone = ucloud.String("zone-01")
+	cloneDiskReq.ChargeType = ucloud.String("Month")
+	cloneDiskReq.Quantity = ucloud.Int(1)
+	cloneDiskReq.Name = ucloud.String("硬盘克隆测试")
+	cloneDiskReq.SrcID = ucloud.String(srcID)
+
+	// send request
+	cloneDiskResp, err := ucloudstackClient.CloneDisk(cloneDiskReq)
+	if err != nil {
+		fmt.Printf("something bad happened: %s\n", err)
+		return
+	}
+	if cloneDiskResp.RetCode != 0 {
+		fmt.Printf("clone disk  fail, err: %s", cloneDiskResp.Message)
+		return
+	}
+
+	fmt.Printf("create disk Success, Infos: %+v", cloneDiskResp.DiskID)
 }
 
 func describeDisk(diskID string) {
