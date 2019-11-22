@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ucloud/ucloud-sdk-go/services/ucloudstack"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
@@ -13,12 +14,8 @@ func loadUcloudStackConfig() (*ucloud.Config, *auth.Credential) {
 	cfg.BaseUrl = "http://console.dev.ucloudstack.com/api"
 
 	credential := auth.NewCredential()
-	// admin
-	// credential.PrivateKey = "8882b67466cf74e09289cd2467c4083acf26a0f4"
-	// credential.PublicKey = "vaKUnXpow0l93oqJSREFKfwgagqCkn3Kt8s+XgfRpyl58u9KA3v16/w1iW/Tg8irI7Oalw=="
-	// user
-	credential.PrivateKey = "mFbdZ7vfogX-UfZuA08cKAiS01n0c-nAlTs3PTQE5POpOAo_n1j8Hn9POIHkZSBx"
-	credential.PublicKey = "Y86iYMO71kzDdpFClv_RkBQ4EGHLPP2d7AOH6Iup"
+	credential.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
+	credential.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
 
 	return &cfg, &credential
 }
