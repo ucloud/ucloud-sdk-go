@@ -13,10 +13,12 @@ func loadUcloudStackConfig() (*ucloud.Config, *auth.Credential) {
 	cfg.BaseUrl = "http://console.dev.ucloudstack.com/api"
 
 	credential := auth.NewCredential()
+	// admin
 	// credential.PrivateKey = "8882b67466cf74e09289cd2467c4083acf26a0f4"
 	// credential.PublicKey = "vaKUnXpow0l93oqJSREFKfwgagqCkn3Kt8s+XgfRpyl58u9KA3v16/w1iW/Tg8irI7Oalw=="
-	credential.PrivateKey = "7ZpFfsZuSTYacVrgdV644XXAp1tMLqKSqVwhcwa-yffMk15QkT59fnwfr0as2jrp"
-	credential.PublicKey = "hsqAhWAxmQTqg0cuJ_IXWyTfimDNPTFVPCliolc4"
+	// user
+	credential.PrivateKey = "mFbdZ7vfogX-UfZuA08cKAiS01n0c-nAlTs3PTQE5POpOAo_n1j8Hn9POIHkZSBx"
+	credential.PublicKey = "Y86iYMO71kzDdpFClv_RkBQ4EGHLPP2d7AOH6Iup"
 
 	return &cfg, &credential
 }
@@ -25,35 +27,35 @@ func main() {
 
 	// createVM("my-first-vm")
 
-	// stopVM("vm-WxXtLWbZg")
+	// stopVM("vm-QcJZVKbZg")
 
-	// startVM("vm-WxXtLWbZg")
+	// startVM("vm-QcJZVKbZg")
 
-	// deleteVM("vm-WxXtLWbZg")
+	// deleteVM("vm-QcJZVKbZg")
 
-	// describeVM()
+	// describeVM("vm-QcJZVKbZg")
 
-	// describeMetric("vm-I9z__ZxWg")
+	// describeMetric("vm-QcJZVKbZg")
 
-	// createUser()
+	// createUser("sdktest@ucloud.cn", "ucloud.cn")
 
-	// recharge()
+	// recharge(200000259, "alipay-1234")
 
-	// describeUser()
+	// describeUser(200000259)
 
-	// loginByPassword()
+	// loginByPassword("sdktest@ucloud.cn", "ucloud.cn")
 
 	// getVMInstancePrice()
 
 	// createEIP()
 
-	// bindEIP("eip-Oa7ZuWbZg", "vm-I9z__ZxWg", "VM")
+	// bindEIP("eip-nkFMVFbZR", "vm-QcJZVKbZg", "VM")
 
-	// unBindEIP("eip-Oa7ZuWbZg", "vm-I9z__ZxWg", "VM")
+	// unBindEIP("eip-nkFMVFbZR", "vm-QcJZVKbZg", "VM")
 
-	// releaseEIP("eip-Oa7ZuWbZg")
+	// releaseEIP("eip-nkFMVFbZR")
 
-	// describeEIP("eip-Oa7ZuWbZg")
+	// describeEIP("eip-nkFMVFbZR")
 
 	// getEIPPrice()
 
@@ -61,15 +63,15 @@ func main() {
 
 	// createDisk()
 
-	// attachDisk("disk-soRpuZbZR", "vm-I9z__ZxWg", "VM")
+	// attachDisk("disk-AzKn4FbZg", "vm-QcJZVKbZg", "VM")
 
-	// detachDisk("disk-soRpuZbZR", "vm-I9z__ZxWg")
+	// detachDisk("disk-AzKn4FbZg", "vm-QcJZVKbZg")
 
-	// describeDisk("disk-soRpuZbZR")
+	// describeDisk("disk-AzKn4FbZg")
 
-	// cloneDisk("disk-soRpuZbZR")
+	// cloneDisk("disk-AzKn4FbZg")
 
-	deleteDisk("disk-soRpuZbZR")
+	// deleteDisk("disk-AzKn4FbZg")
 
 }
 
@@ -94,9 +96,9 @@ func createVM(name string) {
 	createReq.VMType = ucloud.String("Normal")
 
 	// 网络
-	createReq.VPCID = ucloud.String("vpc-AwYJsri2e")
-	createReq.SubnetID = ucloud.String("subnet-AwYJsri2e")
-	createReq.WANSGID = ucloud.String("sg-AwYJsri2e")
+	createReq.VPCID = ucloud.String("vpc-dEBdhMBZO")
+	createReq.SubnetID = ucloud.String("subnet-dEBdhMBZO")
+	createReq.WANSGID = ucloud.String("sg-dEBdhMBZO")
 
 	// 认证方式
 	createReq.Name = ucloud.String(name)
@@ -161,7 +163,7 @@ func deleteVM(vmID string) {
 
 }
 
-func describeVM() {
+func describeVM(vmID string) {
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
@@ -170,6 +172,7 @@ func describeVM() {
 	describeReq.Region = ucloud.String("cn")
 	describeReq.Zone = ucloud.String("zone-01")
 	describeReq.Limit = ucloud.Int(10)
+	describeReq.VMIDs = []string{vmID}
 
 	// send request
 	descResp, err := ucloudstackClient.DescribeVMInstance(describeReq)
@@ -178,7 +181,7 @@ func describeVM() {
 	}
 
 	if descResp.TotalCount > 0 {
-		fmt.Printf("fisrt of VMs: %s\n", descResp.Infos[0].VMID)
+		fmt.Printf("fisrt of VMs: %+v\n", descResp.Infos)
 	}
 
 }
@@ -212,13 +215,13 @@ func describeMetric(vmID string) {
 }
 
 // 管理员创建租户
-func createUser() {
+func createUser(email, password string) {
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
 	createUserReq := ucloudstackClient.NewCreateUserRequest()
-	createUserReq.UserEmail = ucloud.String("apitest@ucloud.cn")
-	createUserReq.PassWord = ucloud.String("ucloud.cn123")
+	createUserReq.UserEmail = ucloud.String(email)
+	createUserReq.PassWord = ucloud.String(password)
 
 	createUserResp, err := ucloudstackClient.CreateUser(createUserReq)
 	if err != nil {
@@ -229,14 +232,14 @@ func createUser() {
 	fmt.Printf("New User's ID: %d", createUserResp.UserID)
 }
 
-func describeUser() {
+func describeUser(userID int) {
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
 	describeUserReq := ucloudstackClient.NewDescribeUserRequest()
 	describeUserReq.Limit = ucloud.Int(10)
 	describeUserReq.Offset = ucloud.Int(0)
-	describeUserReq.UserIDs = []int{200000257}
+	describeUserReq.UserIDs = []int{userID}
 	describeUserResp, err := ucloudstackClient.DescribeUser(describeUserReq)
 	if err != nil {
 		fmt.Printf("something bad happened: %s\n, message: %s", err, describeUserResp.Message)
@@ -246,15 +249,15 @@ func describeUser() {
 	fmt.Printf("User's info: %v", describeUserResp.Infos)
 }
 
-func recharge() {
+func recharge(userID int, serialNo string) {
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
 	chargeReq := ucloudstackClient.NewRechargeRequest()
 	chargeReq.Amount = ucloud.Int(100000)
 	chargeReq.FromType = ucloud.String("INPOUR_FROM_ALIPAY")
-	chargeReq.SerialNo = ucloud.String("alipay-2019111901")
-	chargeReq.UserID = ucloud.Int(200000257)
+	chargeReq.SerialNo = ucloud.String(serialNo)
+	chargeReq.UserID = ucloud.Int(userID)
 
 	chargeResp, err := ucloudstackClient.Recharge(chargeReq)
 	if err != nil {
@@ -262,16 +265,16 @@ func recharge() {
 		return
 	}
 
-	fmt.Printf("Recharge success, Resp: %v", chargeResp)
+	fmt.Printf("Recharge success")
 }
 
-func loginByPassword() {
+func loginByPassword(email, password string) {
 	cfg, credential := loadUcloudStackConfig()
 	ucloudstackClient := ucloudstack.NewClient(cfg, credential)
 
 	loginByPasswordReq := ucloudstackClient.NewLoginByPasswordRequest()
-	loginByPasswordReq.UserEmail = ucloud.String("admin@ucloud.cn")
-	loginByPasswordReq.Password = ucloud.String("ucloud.cn")
+	loginByPasswordReq.UserEmail = ucloud.String(email)
+	loginByPasswordReq.Password = ucloud.String(password)
 
 	loginByPasswordResp, err := ucloudstackClient.LoginByPassword(loginByPasswordReq)
 	if err != nil {
@@ -279,7 +282,7 @@ func loginByPassword() {
 		return
 	}
 
-	fmt.Printf("Recharge success, resp: %v", loginByPasswordResp)
+	fmt.Printf("Recharge success")
 }
 
 func getVMInstancePrice() {
