@@ -1,6 +1,7 @@
 package utest
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 	"reflect"
 	"strconv"
 
@@ -13,6 +14,10 @@ import (
 func GetValue(obj interface{}, path string) (interface{}, error) {
 	if obj == nil {
 		return "", nil
+	}
+
+	if r, ok := obj.(response.GenericResponse); ok {
+		obj = r.Payload()
 	}
 
 	v, err := utils.ValueAtPath(obj, path)
