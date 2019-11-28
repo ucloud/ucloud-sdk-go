@@ -80,5 +80,13 @@ func (c *Client) unmarshalHTTPResponse(body []byte, resp response.Common) error 
 		return nil
 	}
 
+	if r, ok := resp.(response.GenericResponse); ok {
+		m := make(map[string]interface{})
+		if err := json.Unmarshal(body, &m); err != nil {
+			return err
+		}
+		r.SetPayload(m)
+	}
+
 	return json.Unmarshal(body, &resp)
 }
