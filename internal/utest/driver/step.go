@@ -14,16 +14,25 @@ import (
 )
 
 type StepReport struct {
-	Title      string       `json:"title"`
-	Type       string       `json:"type"`
-	Status     string       `json:"status"`
-	Execution  Execution    `json:"execution"`
-	ApiRetries []ApiRetries `json:"api_retries"`
-	Errors     []error      `json:"errors"`
+	Title      string        `json:"title"`
+	Type       string        `json:"type"`
+	Status     string        `json:"status"`
+	Execution  StepExecution `json:"execution"`
+	ApiRetries []ApiRetries  `json:"api_retries"`
+	Errors     []error       `json:"errors"`
+}
+
+type StepExecution struct {
+	MaxRetries    int     `json:"max_retries"`
+	RetryInterval float64 `json:"retry_interval"`
+	StartupDelay  float64 `json:"startup_delay"`
+	FastFail      bool    `json:"fast_fail"`
+	Duration      float64 `json:"duration"`
+	StartTime     float64 `json:"start_time"`
+	EndTime       float64 `json:"end_time"`
 }
 
 type ApiRetries struct {
-	//TODO:map[string]interface{}
 	Request     map[string]string `json:"request"`
 	Response    json.RawMessage   `json:"response"`
 	RequestUUID string            `json:"request_uuid"`
@@ -131,7 +140,7 @@ func (t *Step) Report() StepReport {
 		Title:  t.Title,
 		Type:   t.Type,
 		Status: t.Status,
-		Execution: Execution{
+		Execution: StepExecution{
 			MaxRetries:    t.MaxRetries,
 			RetryInterval: t.RetryInterval.Seconds(),
 			StartupDelay:  t.StartupDelay.Seconds(),

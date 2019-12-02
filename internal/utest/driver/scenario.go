@@ -7,14 +7,20 @@ import (
 )
 
 type ScenarioReport struct {
-	Title        string       `json:"title"`
-	Steps        []StepReport `json:"steps"`
-	Status       string       `json:"status"`
-	Execution    Execution    `json:"execution"`
-	Owners       []string     `json:"owners"`
-	PassedCount  int          `json:"passedCount"`
-	FailedCount  int          `json:"failedCount"`
-	SkippedCount int          `json:"skippedCount"`
+	Title        string            `json:"title"`
+	Steps        []StepReport      `json:"steps"`
+	Status       string            `json:"status"`
+	Execution    ScenarioExecution `json:"execution"`
+	Owners       []string          `json:"owners"`
+	PassedCount  int               `json:"passedCount"`
+	FailedCount  int               `json:"failedCount"`
+	SkippedCount int               `json:"skippedCount"`
+}
+
+type ScenarioExecution struct {
+	Duration  float64 `json:"duration"`
+	StartTime float64 `json:"start_time"`
+	EndTime   float64 `json:"end_time"`
 }
 
 type Scenario struct {
@@ -89,9 +95,8 @@ func (s *Scenario) Report() ScenarioReport {
 	}
 	return ScenarioReport{
 		Title:  s.Title,
-		Steps:  steps,
 		Status: s.status(),
-		Execution: Execution{
+		Execution: ScenarioExecution{
 			Duration:  s.endTime() - s.startTime(),
 			StartTime: s.startTime(),
 			EndTime:   s.endTime(),
@@ -100,6 +105,7 @@ func (s *Scenario) Report() ScenarioReport {
 		PassedCount:  passedCount,
 		FailedCount:  failedCount,
 		SkippedCount: skippedCount,
+		Steps:        steps,
 	}
 }
 

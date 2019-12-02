@@ -6,22 +6,18 @@ import (
 )
 
 type SpecificationReport struct {
-	Status       string           `json:"status"`
-	Execution    Execution        `json:"execution"`
-	Scenarios    []ScenarioReport `json:"scenarios"`
-	PassedCount  int              `json:"passedCount"`
-	FailedCount  int              `json:"failedCount"`
-	SkippedCount int              `json:"skippedCount"`
+	Status       string                 `json:"status"`
+	Execution    SpecificationExecution `json:"execution"`
+	Scenarios    []ScenarioReport       `json:"scenarios"`
+	PassedCount  int                    `json:"passedCount"`
+	FailedCount  int                    `json:"failedCount"`
+	SkippedCount int                    `json:"skippedCount"`
 }
 
-type Execution struct {
-	MaxRetries    int     `json:"max_retries"`
-	RetryInterval float64 `json:"retry_interval"`
-	StartupDelay  float64 `json:"startup_delay"`
-	FastFail      bool    `json:"fast_fail"`
-	Duration      float64 `json:"duration"`
-	StartTime     float64 `json:"start_time"`
-	EndTime       float64 `json:"end_time"`
+type SpecificationExecution struct {
+	Duration  float64 `json:"duration"`
+	StartTime float64 `json:"start_time"`
+	EndTime   float64 `json:"end_time"`
 }
 
 type Specification struct {
@@ -51,15 +47,15 @@ func (spec *Specification) Report() SpecificationReport {
 	}
 	return SpecificationReport{
 		Status: spec.status(),
-		Execution: Execution{
+		Execution: SpecificationExecution{
 			Duration:  spec.endTime() - spec.startTime(),
 			StartTime: spec.startTime(),
 			EndTime:   spec.endTime(),
 		},
-		Scenarios:    scenarios,
 		PassedCount:  passedCount,
 		FailedCount:  failedCount,
 		SkippedCount: skippedCount,
+		Scenarios:    scenarios,
 	}
 }
 

@@ -34,7 +34,3 @@ func NewValidatorFromComparator(valuePath string, expected interface{}, comparat
 		return nil
 	}
 }
-
-func JSONEqual(value interface{}, expected interface{}) (bool, error) {
-	return false, nil
-}
