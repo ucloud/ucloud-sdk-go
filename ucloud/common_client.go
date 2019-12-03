@@ -5,7 +5,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-func (c *Client) NewGenericRequest() *request.BaseGenericRequest {
+func (c *Client) NewGenericRequest() request.GenericRequest {
 	req := &request.BaseGenericRequest{}
 
 	// setup request with client config
@@ -16,7 +16,7 @@ func (c *Client) NewGenericRequest() *request.BaseGenericRequest {
 	return req
 }
 
-func (c *Client) GenericInvoke(req *request.BaseGenericRequest) (*response.BaseGenericResponse, error) {
+func (c *Client) GenericInvoke(req request.GenericRequest) (response.GenericResponse, error) {
 	var res response.BaseGenericResponse
 
 	err := c.InvokeAction(req.GetAction(), req, &res)

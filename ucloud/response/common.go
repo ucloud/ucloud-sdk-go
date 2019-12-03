@@ -3,8 +3,10 @@ package response
 import "encoding/json"
 
 type GenericResponse interface {
+	Common
 	SetPayload(m map[string]interface{})
 	Payload() map[string]interface{}
+	Unmarshal(interface{}) error
 }
 type BaseGenericResponse struct {
 	CommonBase

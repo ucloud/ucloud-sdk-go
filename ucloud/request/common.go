@@ -1,6 +1,8 @@
 package request
 
 type GenericRequest interface {
+	Common
+
 	SetPayload(m map[string]interface{})
 	Payload() map[string]interface{}
 }
