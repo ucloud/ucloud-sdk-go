@@ -14,8 +14,9 @@ func loadUcloudStackConfig() (*ucloud.Config, *auth.Credential) {
 	cfg.BaseUrl = "http://console.dev.ucloudstack.com/api"
 
 	credential := auth.NewCredential()
-	credential.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
 	credential.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
+	credential.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
+
 
 	return &cfg, &credential
 }
