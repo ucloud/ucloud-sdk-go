@@ -13,23 +13,13 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-type stepErrors []error
-
-func (err stepErrors) MarshalJSON() ([]byte, error) {
-	var errString []string
-	for _, v := range err {
-		errString = append(errString, v.Error())
-	}
-	return json.Marshal(errString)
-}
-
 type StepReport struct {
-	Title      string        `json:"title"`
-	Type       string        `json:"type"`
-	Status     string        `json:"status"`
-	Execution  StepExecution `json:"execution"`
-	ApiRetries []ApiRetries  `json:"api_retries"`
-	Errors     stepErrors    `json:"errors,omitempty"`
+	Title      string          `json:"title"`
+	Type       string          `json:"type"`
+	Status     string          `json:"status"`
+	Execution  StepExecution   `json:"execution"`
+	ApiRetries []ApiRetries    `json:"api_retries"`
+	Errors     executionErrors `json:"errors,omitempty"`
 }
 
 type StepExecution struct {

@@ -1,8 +1,19 @@
 package driver
 
 import (
+	"encoding/json"
 	"testing"
 )
+
+type executionErrors []error
+
+func (err executionErrors) MarshalJSON() ([]byte, error) {
+	var errString []string
+	for _, v := range err {
+		errString = append(errString, v.Error())
+	}
+	return json.Marshal(errString)
+}
 
 type ScenarioReport struct {
 	Title        string            `json:"title"`
@@ -13,6 +24,7 @@ type ScenarioReport struct {
 	PassedCount  int               `json:"passedCount"`
 	FailedCount  int               `json:"failedCount"`
 	SkippedCount int               `json:"skippedCount"`
+	Errors       executionErrors   `json:"errors,omitempty"`
 }
 
 type ScenarioExecution struct {
@@ -28,24 +40,44 @@ type Scenario struct {
 	Steps    []*Step
 	Spec     *Specification
 	Owners   []string
-	Vars     map[string]interface{}
+	Vars     func(*Scenario) map[string]interface{}
+	Errors   []error
+
+	vars map[string]interface{}
 }
 
 // SetVar will set the variable of Scenario
 func (scenario *Scenario) SetVar(name string, value interface{}) {
-	scenario.Vars[name] = value
+	scenario.vars[name] = value
 }
 
 // GetVar will return the variable of Scenario
 func (scenario *Scenario) GetVar(name string) interface{} {
-	if v, ok := scenario.Vars[name]; ok {
+	if v, ok := scenario.vars[name]; ok {
 		return v
 	}
 	return ""
 }
 
+// Must will check error is nil and return the value
+func (scenario *Scenario) Must(v interface{}, err error) interface{} {
+	if err != nil {
+		scenario.Errors = append(scenario.Errors, err)
+	}
+	return v
+}
+
+func (scenario *Scenario) init() {
+	scenario.vars = map[string]interface{}{}
+}
+
 // Run will run the scenario test case
 func (scenario *Scenario) Run(t *testing.T) {
+	scenario.init()
+	for k, v := range scenario.Vars(scenario) {
+		scenario.SetVar(k, v)
+	}
+
 	for i := 0; i < len(scenario.Steps); i++ {
 		step := scenario.Steps[i]
 		step.init()
@@ -86,6 +118,7 @@ func (scenario *Scenario) Report() ScenarioReport {
 		FailedCount:  failedCount,
 		SkippedCount: skippedCount,
 		Steps:        steps,
+		Errors:       scenario.Errors,
 	}
 }
 
