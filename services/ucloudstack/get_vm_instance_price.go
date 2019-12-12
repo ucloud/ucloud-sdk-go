@@ -7,8 +7,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-// CreateVMInstanceRequest is request schema for CreateVMInstance action
-type CreateVMInstanceRequest struct {
+// GetVMInstancePriceRequest is request schema for GetVMInstancePrice action
+type GetVMInstancePriceRequest struct {
 	request.CommonBase
 
 	// [公共参数] 地域。枚举值：cn,表示中国；
@@ -30,7 +30,7 @@ type CreateVMInstanceRequest struct {
 	DataDiskSetType *string `required:"true"`
 
 	// 数据盘大小，单位 GB。默认值为0。范围：【0，8000】，步长10。
-	DataDiskSpace *int `required:"false"`
+	DataDiskSpace *int `required:"true"`
 
 	// GPU 卡核心的占用个数。枚举值：【1,2,4】。GPU与CPU、内存大小关系：CPU个数>=4*GPU个数，同时内存与CPU规格匹配.
 	GPU *int `required:"false"`
@@ -38,68 +38,50 @@ type CreateVMInstanceRequest struct {
 	// 镜像 ID。基础镜像 ID 或者自制镜像 ID。如：cn-image-centos-74。
 	ImageID *string `required:"true"`
 
-	// 指定内网IP。输入有效的指定内网 IP。默认为系统自动分配内网 IP。
-	InternalIP *string `required:"false"`
-
-	// 内网安全组 ID。输入“有效”状态的安全组的ID。
-	LANSGID *string `required:"false"`
-
 	// 内存大小，单位 M。目前只能输入数据库配置指定规格参数，如：1核2048M、2核4096M、4核8192M、8核16384M、16核32768M。
 	Memory *int `required:"true"`
 
-	// 虚拟机名称。可输入如：myVM。名称只能包含中英文、数字以及- _ .且1-30个字符。
-	Name *string `required:"true"`
-
-	// 密码。可输入如：ucloud.cn。密码长度限6-30个字符；需要同时包含两项或以上（大写字母/小写字母/数字/特殊符号)；windows不能包含用户名（administrator）中超过2个连续字符的部分。
-	Password *string `required:"true"`
+	// 系统类型。
+	OSType *string `required:"true"`
 
 	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
 	Quantity *int `required:"false"`
 
-	// 子网 ID。
-	SubnetID *string `required:"true"`
-
 	// 机型。枚举值：Normal，表示普通；SSD，表示SSD；
 	VMType *string `required:"true"`
-
-	// VPC ID。
-	VPCID *string `required:"true"`
-
-	// 外网安全组 ID。输入“有效”状态的安全组的ID。
-	WANSGID *string `required:"true"`
 }
 
-// CreateVMInstanceResponse is response schema for CreateVMInstance action
-type CreateVMInstanceResponse struct {
+// GetVMInstancePriceResponse is response schema for GetVMInstancePrice action
+type GetVMInstancePriceResponse struct {
 	response.CommonBase
+
+	// 返回的价格信息
+	Infos []PriceInfo
 
 	// 返回信息描述。
 	Message string
-
-	// 返回创建虚拟机的 ID 数组。
-	VMID string
 }
 
-// NewCreateVMInstanceRequest will create request of CreateVMInstance action.
-func (c *UCloudStackClient) NewCreateVMInstanceRequest() *CreateVMInstanceRequest {
-	req := &CreateVMInstanceRequest{}
+// NewGetVMInstancePriceRequest will create request of GetVMInstancePrice action.
+func (c *UCloudStackClient) NewGetVMInstancePriceRequest() *GetVMInstancePriceRequest {
+	req := &GetVMInstancePriceRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
+	req.SetRetryable(true)
 	return req
 }
 
-// CreateVMInstance - 创建UCloudStack虚拟机
-func (c *UCloudStackClient) CreateVMInstance(req *CreateVMInstanceRequest) (*CreateVMInstanceResponse, error) {
+// GetVMInstancePrice - 获取UCloudStack虚拟机价格
+func (c *UCloudStackClient) GetVMInstancePrice(req *GetVMInstancePriceRequest) (*GetVMInstancePriceResponse, error) {
 	var err error
-	var res CreateVMInstanceResponse
+	var res GetVMInstancePriceResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("CreateVMInstance", &reqCopier, &res)
+	err = c.Client.InvokeAction("GetVMInstancePrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
