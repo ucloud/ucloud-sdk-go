@@ -1,70 +1,46 @@
-/*
-Package response is the response of service
-*/
 package response
 
-import (
-	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
-)
+import "encoding/json"
 
-// Common describe a response of action,
-// it is only used for ucloud open api v1 via HTTP GET and action parameters.
-type Common interface {
-	GetRetCode() int
-	GetMessage() string
-	GetAction() string
+type GenericResponse interface {
+	Common
+	SetPayload(m map[string]interface{})
+	Payload() map[string]interface{}
+	Unmarshal(interface{}) error
+}
+type BaseGenericResponse struct {
+	CommonBase
 
-	GetRequest() request.Common
-	SetRequest(request.Common)
-
-	SetRequestUUID(string)
-	GetRequestUUID() string
+	payload map[string]interface{}
 }
 
-// CommonBase has common attribute and method,
-// it also implement ActionResponse interface.
-type CommonBase struct {
-	Action  string
-	RetCode int
-	Message string
-
-	requestUUID string
-
-	request request.Common
+func (r *BaseGenericResponse) SetPayload(m map[string]interface{}) {
+	r.payload = m
 }
 
-// GetRetCode will return the error code of ucloud api
-// Error is non-zero and success is zero
-func (c *CommonBase) GetRetCode() int {
-	return c.RetCode
+func (r BaseGenericResponse) Payload() map[string]interface{} {
+	m := make(map[string]interface{})
+
+	m["RetCode"] = r.GetRetCode()
+	m["Action"] = r.GetAction()
+	m["Message"] = r.GetMessage()
+	m["Action"] = r.GetAction()
+
+	for k, v := range r.payload {
+		m[k] = v
+	}
+
+	return m
 }
 
-// GetMessage will return the error message of ucloud api
-func (c *CommonBase) GetMessage() string {
-	return c.Message
-}
+func (r BaseGenericResponse) Unmarshal(resp interface{}) error {
+	body, err := json.Marshal(r.Payload())
+	if err != nil {
+		return err
+	}
 
-// GetAction will return the request action of ucloud api
-func (c *CommonBase) GetAction() string {
-	return c.Action
-}
-
-// GetRequest will return the latest retried request of current action
-func (c *CommonBase) GetRequest() request.Common {
-	return c.request
-}
-
-// GetRequest will return the latest retried request of current action
-func (c *CommonBase) SetRequest(req request.Common) {
-	c.request = req
-}
-
-// SetRequestUUID will set uuid of request
-func (c *CommonBase) SetRequestUUID(uuid string) {
-	c.requestUUID = uuid
-}
-
-// GetRequestUUID will get uuid of request
-func (c *CommonBase) GetRequestUUID() string {
-	return c.requestUUID
+	if err := json.Unmarshal(body, resp); err != nil {
+		return err
+	}
+	return nil
 }

@@ -6,595 +6,668 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ucloud/ucloud-sdk-go/internal/utest"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
+
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
 func TestSet2378(t *testing.T) {
-	t.Parallel()
-
-	ctx := utest.NewTestContext()
-	ctx.T = t
-	ctx.Vars = map[string]interface{}{}
-
-	ctx.SetVar("Region", "cn-sh2")
-	ctx.SetVar("Zone", "cn-sh2-02")
-
-	ctx.SetVar("BucketName_2", ctx.Must(utest.Concat("apitest-", ctx.Must(utest.GetTimestamp(10)))))
-	ctx.SetVar("original_type", "private")
-	ctx.SetVar("tokenName", "test-auto-token")
-	ctx.SetVar("allowed_ops_0", "TOKEN_ALLOW_WRITE")
-	ctx.SetVar("allowed_ops_1", "TOKEN_ALLOW_READ")
-	ctx.SetVar("allowed_ops_2", "TOKEN_ALLOW_DELETE")
-	ctx.SetVar("allowed_ops_3", "TOKEN_ALLOW_LIST")
-	ctx.SetVar("allowed_ops_4", "TOKEN_ALLOW_IOP")
-	ctx.SetVar("allowedPrefixes", "test-auto")
-	ctx.SetVar("mirror-old-prefix", "mirror-OldPrefix")
-	ctx.SetVar("mirror-new-prefix", "mirror-NewPrefix")
-	ctx.SetVar("DailyReport_StartTime", ctx.Must(utest.Calculate("-", ctx.Must(utest.GetTimestamp(10)), 2592000)))
-	ctx.SetVar("DailyReport_EndTime", ctx.Must(utest.GetTimestamp(10)))
-
-	testSet2378GetAvailableRegion00(&ctx)
-	testSet2378GetFuctionAvailableRegion01(&ctx)
-	testSet2378GetUFileDailyReport02(&ctx)
-	testSet2378CreateBucket03(&ctx)
-	testSet2378DescribeBucket04(&ctx)
-	testSet2378BindBucketDomain05(&ctx)
-	testSet2378DescribeBucketDomain06(&ctx)
-	testSet2378UnbindBucketDomain07(&ctx)
-	testSet2378UpdateBucket08(&ctx)
-	testSet2378DescribeBucket09(&ctx)
-	testSet2378DescribeMirrorRules10(&ctx)
-	testSet2378CreateUFileToken11(&ctx)
-	testSet2378DescribeUFileToken12(&ctx)
-	testSet2378UpdateUFileToken13(&ctx)
-	testSet2378DescribeUFileToken14(&ctx)
-	testSet2378DeleteUFileToken15(&ctx)
-	testSet2378DeleteBucket16(&ctx)
+	spec.ParallelTest(t, &driver.Scenario{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Id: 2378,
+		Vars: func(scenario *driver.Scenario) map[string]interface{} {
+			return map[string]interface{}{
+				"Region":                "cn-sh2",
+				"Zone":                  "cn-sh2-02",
+				"BucketName_2":          scenario.Must(functions.Concat("apitest-", scenario.Must(functions.GetTimestamp(10)))),
+				"original_type":         "private",
+				"tokenName":             "test-auto-token",
+				"allowed_ops_0":         "TOKEN_ALLOW_WRITE",
+				"allowed_ops_1":         "TOKEN_ALLOW_READ",
+				"allowed_ops_2":         "TOKEN_ALLOW_DELETE",
+				"allowed_ops_3":         "TOKEN_ALLOW_LIST",
+				"allowed_ops_4":         "TOKEN_ALLOW_IOP",
+				"allowedPrefixes":       "test-auto",
+				"mirror-old-prefix":     "mirror-OldPrefix",
+				"mirror-new-prefix":     "mirror-NewPrefix",
+				"DailyReport_StartTime": scenario.Must(functions.Calculate("-", scenario.Must(functions.GetTimestamp(10)), 2592000)),
+				"DailyReport_EndTime":   scenario.Must(functions.GetTimestamp(10)),
+			}
+		},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
+		Title:  "UFile-单地域bucket-基本操作",
+		Steps: []*driver.Step{
+			testStep2378GetAvailableRegion00,
+			testStep2378GetFuctionAvailableRegion01,
+			testStep2378GetUFileDailyReport02,
+			testStep2378CreateBucket03,
+			testStep2378DescribeBucket04,
+			testStep2378BindBucketDomain05,
+			testStep2378DescribeBucketDomain06,
+			testStep2378UnbindBucketDomain07,
+			testStep2378UpdateBucket08,
+			testStep2378DescribeBucket09,
+			testStep2378DescribeMirrorRules10,
+			testStep2378CreateUFileToken11,
+			testStep2378DescribeUFileToken12,
+			testStep2378UpdateUFileToken13,
+			testStep2378DescribeUFileToken14,
+			testStep2378DeleteUFileToken15,
+			testStep2378DeleteBucket16,
+		},
+	})
 }
 
-func testSet2378GetAvailableRegion00(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378GetAvailableRegion00 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("GetAvailableRegion")
+		req.SetPayload(map[string]interface{}{})
 
-	req := iufileClient.NewGetAvailableRegionRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.GetAvailableRegion(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "GetAvailableRegionResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "GetAvailableRegionResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取地域信息",
+	FastFail:      false,
 }
 
-func testSet2378GetFuctionAvailableRegion01(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378GetFuctionAvailableRegion01 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("GetFuctionAvailableRegion")
+		req.SetPayload(map[string]interface{}{})
 
-	req := iufileClient.NewGetFuctionAvailableRegionRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.GetFuctionAvailableRegion(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "GetFuctionAvailableRegionResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "GetFuctionAvailableRegionResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取功能可用地域",
+	FastFail:      false,
 }
 
-func testSet2378GetUFileDailyReport02(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378GetUFileDailyReport02 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("GetUFileDailyReport")
+		req.SetPayload(map[string]interface{}{
+			"StartTime": step.Scenario.GetVar("DailyReport_StartTime"),
+			"Region":    step.Scenario.GetVar("Region"),
+			"EndTime":   step.Scenario.GetVar("DailyReport_EndTime"),
+		})
 
-	req := iufileClient.NewGetUFileDailyReportRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "StartTime", ctx.GetVar("DailyReport_StartTime")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "EndTime", ctx.GetVar("DailyReport_EndTime")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.GetUFileDailyReport(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "GetUFileDailyReportResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "GetUFileDailyReportResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "查看日消费报表",
+	FastFail:      false,
 }
 
-func testSet2378CreateBucket03(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378CreateBucket03 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CreateBucket")
+		req.SetPayload(map[string]interface{}{
+			"Type":       step.Scenario.GetVar("original_type"),
+			"Region":     step.Scenario.GetVar("Region"),
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := ufileClient.NewCreateBucketRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Type", ctx.GetVar("original_type")))
+		step.Scenario.SetVar("bucketId", step.Must(utils.GetValue(resp, "BucketId")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.CreateBucket(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "CreateBucketResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Fatal(err)
-		ctx.T.FailNow()
-
-	}
-
-	ctx.Vars["bucketId"] = ctx.Must(utest.GetValue(resp, "BucketId"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateBucketResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建Bucket",
+	FastFail:      true,
 }
 
-func testSet2378DescribeBucket04(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DescribeBucket04 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeBucket")
+		req.SetPayload(map[string]interface{}{
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := ufileClient.NewDescribeBucketRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
+		step.Scenario.SetVar("bindDomain", step.Must(utils.GetValue(resp, "DataSet.0.Domain.Src.0")))
 
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.DescribeBucket(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeBucketResponse", "str_eq"),
-			ctx.NewValidator("DataSet.0.BucketName", ctx.GetVar("BucketName_2"), "str_eq"),
-			ctx.NewValidator("DataSet.0.Type", "private", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Fatal(err)
-		ctx.T.FailNow()
-
-	}
-
-	ctx.Vars["bindDomain"] = ctx.Must(utest.GetValue(resp, "DataSet.0.Domain.Src.0"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeBucketResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.BucketName", step.Scenario.GetVar("BucketName_2"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Type", "private", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取Bucket信息",
+	FastFail:      true,
 }
 
-func testSet2378BindBucketDomain05(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378BindBucketDomain05 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("BindBucketDomain")
+		req.SetPayload(map[string]interface{}{
+			"Domain":     step.Scenario.GetVar("bindDomain"),
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := iufileClient.NewBindBucketDomainRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Domain", ctx.GetVar("bindDomain")))
-
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.BindBucketDomain(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "BindBucketDomainResponse", "str_eq"),
-			ctx.NewValidator("BucketId", ctx.GetVar("bucketId"), "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Fatal(err)
-		ctx.T.FailNow()
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "BindBucketDomainResponse", "str_eq"),
+			validation.Builtins.NewValidator("BucketId", step.Scenario.GetVar("bucketId"), "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "绑定自定义域名",
+	FastFail:      true,
 }
 
-func testSet2378DescribeBucketDomain06(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DescribeBucketDomain06 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeBucketDomain")
+		req.SetPayload(map[string]interface{}{
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := iufileClient.NewDescribeBucketDomainRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.DescribeBucketDomain(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeBucketDomainResponse", "str_eq"),
-			ctx.NewValidator("DataSet.0.Domain", ctx.GetVar("bindDomain"), "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeBucketDomainResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Domain", step.Scenario.GetVar("bindDomain"), "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取bcuket自定义域名信息",
+	FastFail:      false,
 }
 
-func testSet2378UnbindBucketDomain07(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378UnbindBucketDomain07 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("UnbindBucketDomain")
+		req.SetPayload(map[string]interface{}{
+			"Domain":     step.Scenario.GetVar("bindDomain"),
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := iufileClient.NewUnbindBucketDomainRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Domain", ctx.GetVar("bindDomain")))
-
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.UnbindBucketDomain(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "UnbindBucketDomainResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Fatal(err)
-		ctx.T.FailNow()
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "UnbindBucketDomainResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "解绑自定义域名",
+	FastFail:      true,
 }
 
-func testSet2378UpdateBucket08(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378UpdateBucket08 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("UpdateBucket")
+		req.SetPayload(map[string]interface{}{
+			"Type":       "public",
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := ufileClient.NewUpdateBucketRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Type", "public"))
-
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.UpdateBucket(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "UpdateBucketResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Fatal(err)
-		ctx.T.FailNow()
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "UpdateBucketResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "更改Bucket属性",
+	FastFail:      true,
 }
 
-func testSet2378DescribeBucket09(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DescribeBucket09 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeBucket")
+		req.SetPayload(map[string]interface{}{
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := ufileClient.NewDescribeBucketRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.DescribeBucket(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeBucketResponse", "str_eq"),
-			ctx.NewValidator("DataSet.0.Type", "public", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Fatal(err)
-		ctx.T.FailNow()
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeBucketResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Type", "public", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取Bucket信息",
+	FastFail:      true,
 }
 
-func testSet2378DescribeMirrorRules10(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DescribeMirrorRules10 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeMirrorRules")
+		req.SetPayload(map[string]interface{}{
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := iufileClient.NewDescribeMirrorRulesRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return iufileClient.DescribeMirrorRules(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeMirrorRulesResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeMirrorRulesResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取回源规则信息",
+	FastFail:      false,
 }
 
-func testSet2378CreateUFileToken11(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378CreateUFileToken11 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CreateUFileToken")
+		req.SetPayload(map[string]interface{}{
+			"TokenName": step.Scenario.GetVar("tokenName"),
+			"Region":    step.Scenario.GetVar("Region"),
+			"AllowedPrefixes": []interface{}{
+				"*",
+			},
+			"AllowedOps": []interface{}{
+				"TOKEN_ALLOW_READ",
+			},
+			"AllowedBuckets": []interface{}{
+				step.Scenario.GetVar("BucketName_2"),
+			},
+		})
 
-	req := ufileClient.NewCreateUFileTokenRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "TokenName", ctx.GetVar("tokenName")))
+		step.Scenario.SetVar("tokenId", step.Must(utils.GetValue(resp, "TokenId")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "AllowedPrefixes", "*"))
-
-	ctx.NoError(utest.SetReqValue(req, "AllowedOps", "TOKEN_ALLOW_READ"))
-
-	ctx.NoError(utest.SetReqValue(req, "AllowedBuckets", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.CreateUFileToken(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "CreateUFileTokenResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["tokenId"] = ctx.Must(utest.GetValue(resp, "TokenId"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateUFileTokenResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建UFile令牌",
+	FastFail:      false,
 }
 
-func testSet2378DescribeUFileToken12(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DescribeUFileToken12 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeUFileToken")
+		req.SetPayload(map[string]interface{}{
+			"TokenId": step.Scenario.GetVar("tokenId"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
 
-	req := ufileClient.NewDescribeUFileTokenRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "TokenId", ctx.GetVar("tokenId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.DescribeUFileToken(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeUFileTokenResponse", "str_eq"),
-			ctx.NewValidator("DataSet.0.TokenName", ctx.GetVar("tokenName"), "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedOps.0", "TOKEN_ALLOW_READ", "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedPrefixes.0", "*", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUFileTokenResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.TokenName", step.Scenario.GetVar("tokenName"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedOps.0", "TOKEN_ALLOW_READ", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedPrefixes.0", "*", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取令牌信息",
+	FastFail:      false,
 }
 
-func testSet2378UpdateUFileToken13(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378UpdateUFileToken13 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("UpdateUFileToken")
+		req.SetPayload(map[string]interface{}{
+			"TokenId": step.Scenario.GetVar("tokenId"),
+			"Region":  step.Scenario.GetVar("Region"),
+			"AllowedPrefixes": []interface{}{
+				step.Scenario.GetVar("allowedPrefixes"),
+			},
+			"AllowedOps": []interface{}{
+				step.Scenario.GetVar("allowed_ops_0"),
+				step.Scenario.GetVar("allowed_ops_1"),
+				step.Scenario.GetVar("allowed_ops_2"),
+				step.Scenario.GetVar("allowed_ops_3"),
+				step.Scenario.GetVar("allowed_ops_4"),
+			},
+		})
 
-	req := ufileClient.NewUpdateUFileTokenRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "TokenId", ctx.GetVar("tokenId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "AllowedPrefixes", ctx.GetVar("allowedPrefixes")))
-
-	ctx.NoError(utest.SetReqValue(req, "AllowedOps", ctx.GetVar("allowed_ops_0"), ctx.GetVar("allowed_ops_1"), ctx.GetVar("allowed_ops_2"), ctx.GetVar("allowed_ops_3"), ctx.GetVar("allowed_ops_4")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.UpdateUFileToken(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "UpdateUFileTokenResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "UpdateUFileTokenResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "更新令牌",
+	FastFail:      false,
 }
 
-func testSet2378DescribeUFileToken14(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DescribeUFileToken14 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeUFileToken")
+		req.SetPayload(map[string]interface{}{
+			"TokenId": step.Scenario.GetVar("tokenId"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
 
-	req := ufileClient.NewDescribeUFileTokenRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "TokenId", ctx.GetVar("tokenId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.DescribeUFileToken(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeUFileTokenResponse", "str_eq"),
-			ctx.NewValidator("DataSet.0.TokenName", ctx.GetVar("tokenName"), "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedPrefixes.0", ctx.GetVar("allowedPrefixes"), "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedOps.0", "TOKEN_ALLOW_READ", "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedOps.1", "TOKEN_ALLOW_WRITE", "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedOps.2", "TOKEN_ALLOW_DELETE", "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedOps.3", "TOKEN_ALLOW_LIST", "str_eq"),
-			ctx.NewValidator("DataSet.0.AllowedOps.4", "TOKEN_ALLOW_IOP", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUFileTokenResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.TokenName", step.Scenario.GetVar("tokenName"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedPrefixes.0", step.Scenario.GetVar("allowedPrefixes"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedOps.0", "TOKEN_ALLOW_READ", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedOps.1", "TOKEN_ALLOW_WRITE", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedOps.2", "TOKEN_ALLOW_DELETE", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedOps.3", "TOKEN_ALLOW_LIST", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.AllowedOps.4", "TOKEN_ALLOW_IOP", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取令牌信息",
+	FastFail:      false,
 }
 
-func testSet2378DeleteUFileToken15(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep2378DeleteUFileToken15 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DeleteUFileToken")
+		req.SetPayload(map[string]interface{}{
+			"TokenId": step.Scenario.GetVar("tokenId"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
 
-	req := ufileClient.NewDeleteUFileTokenRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "TokenId", ctx.GetVar("tokenId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.DeleteUFileToken(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DeleteUFileTokenResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteUFileTokenResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除令牌",
+	FastFail:      false,
 }
 
-func testSet2378DeleteBucket16(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(30) * time.Second)
+var testStep2378DeleteBucket16 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DeleteBucket")
+		req.SetPayload(map[string]interface{}{
+			"BucketName": step.Scenario.GetVar("BucketName_2"),
+		})
 
-	req := ufileClient.NewDeleteBucketRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "BucketName", ctx.GetVar("BucketName_2")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ufileClient.DeleteBucket(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DeleteBucketResponse", "str_eq"),
-		},
-		MaxRetries:    20,
-		RetryInterval: 3 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteBucketResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(30) * time.Second,
+	MaxRetries:    20,
+	RetryInterval: 3 * time.Second,
+	Title:         "删除Bucket",
+	FastFail:      false,
 }

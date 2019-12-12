@@ -6,742 +6,808 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ucloud/ucloud-sdk-go/internal/utest"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
+
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
 func TestSet614(t *testing.T) {
-	t.Parallel()
-
-	ctx := utest.NewTestContext()
-	ctx.T = t
-	ctx.Vars = map[string]interface{}{}
-
-	ctx.SetVar("Region", "cn-sh2")
-	ctx.SetVar("Zone", "cn-sh2-02")
-
-	ctx.SetVar("Image_Id_cloud", "#{u_get_image_resource($Region,$Zone)}")
-
-	testSet614DescribeImage00(&ctx)
-	testSet614CreateVPC01(&ctx)
-	testSet614CreateSubnet02(&ctx)
-	testSet614CreateUHostInstance03(&ctx)
-	testSet614AllocateEIP04(&ctx)
-	testSet614DescribeFirewall05(&ctx)
-	testSet614CreateNATGW06(&ctx)
-	testSet614DescribeEIP07(&ctx)
-	testSet614GetAvailableResourceForWhiteList08(&ctx)
-	testSet614GetAvailableHostForWhiteList09(&ctx)
-	testSet614AddWhiteListResource10(&ctx)
-	testSet614DescribeWhiteListResource11(&ctx)
-	testSet614DeleteWhiteListResource12(&ctx)
-	testSet614DescribeWhiteList13(&ctx)
-	testSet614EnableWhiteList14(&ctx)
-	testSet614DeleteNATGW15(&ctx)
-	testSet614ReleaseEIP16(&ctx)
-	testSet614PoweroffUHostInstance17(&ctx)
-	testSet614TerminateUHostInstance18(&ctx)
-	testSet614DeleteSubnet19(&ctx)
-	testSet614DeleteVPC20(&ctx)
+	spec.ParallelTest(t, &driver.Scenario{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Id: 614,
+		Vars: func(scenario *driver.Scenario) map[string]interface{} {
+			return map[string]interface{}{
+				"Region":         "cn-sh2",
+				"Zone":           "cn-sh2-02",
+				"Image_Id_cloud": "#{u_get_image_resource($Region,$Zone)}",
+			}
+		},
+		Owners: []string{"li.wei@ucloud.cn"},
+		Title:  "新版-natgw-白名单-03-BGP线路",
+		Steps: []*driver.Step{
+			testStep614DescribeImage00,
+			testStep614CreateVPC01,
+			testStep614CreateSubnet02,
+			testStep614CreateUHostInstance03,
+			testStep614AllocateEIP04,
+			testStep614DescribeFirewall05,
+			testStep614CreateNATGW06,
+			testStep614DescribeEIP07,
+			testStep614GetAvailableResourceForWhiteList08,
+			testStep614GetAvailableHostForWhiteList09,
+			testStep614AddWhiteListResource10,
+			testStep614DescribeWhiteListResource11,
+			testStep614DeleteWhiteListResource12,
+			testStep614DescribeWhiteList13,
+			testStep614EnableWhiteList14,
+			testStep614DeleteNATGW15,
+			testStep614ReleaseEIP16,
+			testStep614PoweroffUHostInstance17,
+			testStep614TerminateUHostInstance18,
+			testStep614DeleteSubnet19,
+			testStep614DeleteVPC20,
+		},
+	})
 }
 
-func testSet614DescribeImage00(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(0) * time.Second)
+var testStep614DescribeImage00 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeImage")
+		req.SetPayload(map[string]interface{}{
+			"Zone":      step.Scenario.GetVar("Zone"),
+			"Region":    step.Scenario.GetVar("Region"),
+			"OsType":    "Linux",
+			"ImageType": "Base",
+		})
 
-	req := uhostClient.NewDescribeImageRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+		step.Scenario.SetVar("Image_Id_cloud", step.Must(utils.GetValue(resp, "ImageSet.0.ImageId")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "OsType", "Linux"))
-
-	ctx.NoError(utest.SetReqValue(req, "ImageType", "Base"))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.DescribeImage(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "DescribeImageResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["Image_Id_cloud"] = ctx.Must(utest.GetValue(resp, "ImageSet.0.ImageId"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeImageResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取镜像列表",
+	FastFail:      false,
 }
 
-func testSet614CreateVPC01(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614CreateVPC01 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CreateVPC")
+		req.SetPayload(map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"Network": []interface{}{
+				"172.16.0.0/12",
+			},
+			"Name": "vpc-natgw-bgp",
+		})
 
-	req := vpcClient.NewCreateVPCRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+		step.Scenario.SetVar("VPCId", step.Must(utils.GetValue(resp, "VPCId")))
 
-	ctx.NoError(utest.SetReqValue(req, "Network", "172.16.0.0/12"))
-
-	ctx.NoError(utest.SetReqValue(req, "Name", "vpc-natgw-bgp"))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.CreateVPC(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["VPCId"] = ctx.Must(utest.GetValue(resp, "VPCId"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "创建VPC",
+	FastFail:      false,
 }
 
-func testSet614CreateSubnet02(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614CreateSubnet02 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CreateSubnet")
+		req.SetPayload(map[string]interface{}{
+			"VPCId":      step.Scenario.GetVar("VPCId"),
+			"SubnetName": "natgw-s1-bgp",
+			"Subnet":     "172.16.0.0",
+			"Region":     step.Scenario.GetVar("Region"),
+			"Netmask":    21,
+		})
 
-	req := vpcClient.NewCreateSubnetRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId")))
+		step.Scenario.SetVar("SubnetId", step.Must(utils.GetValue(resp, "SubnetId")))
 
-	ctx.NoError(utest.SetReqValue(req, "SubnetName", "natgw-s1-bgp"))
-
-	ctx.NoError(utest.SetReqValue(req, "Subnet", "172.16.0.0"))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "Netmask", 21))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.CreateSubnet(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["SubnetId"] = ctx.Must(utest.GetValue(resp, "SubnetId"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "创建子网",
+	FastFail:      false,
 }
 
-func testSet614CreateUHostInstance03(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614CreateUHostInstance03 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CreateUHostInstance")
+		req.SetPayload(map[string]interface{}{
+			"Zone":      step.Scenario.GetVar("Zone"),
+			"VPCId":     step.Scenario.GetVar("VPCId"),
+			"Tag":       "Default",
+			"SubnetId":  step.Scenario.GetVar("SubnetId"),
+			"Region":    step.Scenario.GetVar("Region"),
+			"Password":  "VXFhNzg5VGVzdCFAIyQ7LA==",
+			"Name":      "natgw-s1-bgp",
+			"Memory":    1024,
+			"LoginMode": "Password",
+			"ImageId":   step.Scenario.GetVar("Image_Id_cloud"),
+			"Disks": []map[string]interface{}{
+				{
+					"IsBoot": true,
+					"Size":   20,
+					"Type":   "LOCAL_NORMAL",
+				},
+			},
+			"CPU": 1,
+		})
 
-	req := uhostClient.NewCreateUHostInstanceRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+		step.Scenario.SetVar("UHostIds_s1", step.Must(utils.GetValue(resp, "UHostIds.0")))
+		step.Scenario.SetVar("IPs_s1", step.Must(utils.GetValue(resp, "IPs.0")))
 
-	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId")))
-
-	ctx.NoError(utest.SetReqValue(req, "TimemachineFeature", "No"))
-
-	ctx.NoError(utest.SetReqValue(req, "Tag", "Default"))
-
-	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "Password", "VXFhNzg5VGVzdCFAIyQ7LA=="))
-
-	ctx.NoError(utest.SetReqValue(req, "Name", "natgw-s1-bgp"))
-
-	ctx.NoError(utest.SetReqValue(req, "Memory", 1024))
-
-	ctx.NoError(utest.SetReqValue(req, "LoginMode", "Password"))
-
-	ctx.NoError(utest.SetReqValue(req, "ImageId", ctx.GetVar("Image_Id_cloud")))
-
-	ctx.NoError(utest.SetReqValue(req, "HotplugFeature", false))
-
-	ctx.NoError(utest.SetReqValue(req, "DiskSpace", 0))
-
-	ctx.NoError(utest.SetReqValue(req, "CPU", 1))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.CreateUHostInstance(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["UHostIds_s1"] = ctx.Must(utest.GetValue(resp, "UHostIds.0"))
-	ctx.Vars["IPs_s1"] = ctx.Must(utest.GetValue(resp, "IPs.0"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "创建云主机",
+	FastFail:      false,
 }
 
-func testSet614AllocateEIP04(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(180) * time.Second)
+var testStep614AllocateEIP04 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("AllocateEIP")
+		req.SetPayload(map[string]interface{}{
+			"Tag":          "Default",
+			"Region":       step.Scenario.GetVar("Region"),
+			"Quantity":     1,
+			"PayMode":      "Bandwidth",
+			"OperatorName": "Bgp",
+			"Name":         "natgw-bgp",
+			"ChargeType":   "Month",
+			"Bandwidth":    2,
+		})
 
-	req := unetClient.NewAllocateEIPRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Tag", "Default"))
+		step.Scenario.SetVar("EIPId", step.Must(utils.GetValue(resp, "EIPSet.0.EIPId")))
+		step.Scenario.SetVar("EIP", step.Must(utils.GetValue(resp, "EIPSet.0.EIPAddr.0.IP")))
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "Quantity", 1))
-
-	ctx.NoError(utest.SetReqValue(req, "PayMode", "Bandwidth"))
-
-	ctx.NoError(utest.SetReqValue(req, "OperatorName", "Bgp"))
-
-	ctx.NoError(utest.SetReqValue(req, "Name", "natgw-bgp"))
-
-	ctx.NoError(utest.SetReqValue(req, "ChargeType", "Month"))
-
-	ctx.NoError(utest.SetReqValue(req, "Bandwidth", 2))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return unetClient.AllocateEIP(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["EIPId"] = ctx.Must(utest.GetValue(resp, "EIPSet.0.EIPId"))
-	ctx.Vars["EIP"] = ctx.Must(utest.GetValue(resp, "EIPSet.0.EIPAddr.0.IP"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(180) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "申请弹性IP",
+	FastFail:      false,
 }
 
-func testSet614DescribeFirewall05(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DescribeFirewall05 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeFirewall")
+		req.SetPayload(map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+		})
 
-	req := unetClient.NewDescribeFirewallRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+		step.Scenario.SetVar("FWId", step.Must(utils.GetValue(resp, "DataSet")))
 
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return unetClient.DescribeFirewall(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["FWId"] = ctx.Must(utest.GetValue(resp, "DataSet"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "获取防火墙信息",
+	FastFail:      false,
 }
 
-func testSet614CreateNATGW06(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614CreateNATGW06 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CreateNATGW")
+		req.SetPayload(map[string]interface{}{
+			"VPCId": step.Scenario.GetVar("VPCId"),
+			"Tag":   "Default",
+			"SubnetworkIds": []interface{}{
+				step.Scenario.GetVar("SubnetId"),
+			},
+			"Remark":     "bgp",
+			"Region":     step.Scenario.GetVar("Region"),
+			"NATGWName":  "natgw-bgp",
+			"IfOpen":     0,
+			"FirewallId": step.Must(functions.SearchValue(step.Scenario.GetVar("FWId"), "Type", "recommend web", "FWId")),
+			"EIPIds": []interface{}{
+				step.Scenario.GetVar("EIPId"),
+			},
+		})
 
-	req := vpcClient.NewCreateNATGWRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Tag", "Default"))
-
-	ctx.NoError(utest.SetReqValue(req, "SubnetworkIds", ctx.GetVar("SubnetId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Remark", "bgp"))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWName", "natgw-bgp"))
-
-	ctx.NoError(utest.SetReqValue(req, "IfOpen", 0))
-
-	ctx.NoError(utest.SetReqValue(req, "FirewallId", ctx.Must(utest.SearchValue(ctx.GetVar("FWId"), "Type", "recommend web", "FWId"))))
-
-	ctx.NoError(utest.SetReqValue(req, "EIPIds", ctx.GetVar("EIPId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.CreateNATGW(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    10,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    10,
+	RetryInterval: 10 * time.Second,
+	Title:         "创建NatGateway",
+	FastFail:      false,
 }
 
-func testSet614DescribeEIP07(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DescribeEIP07 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeEIP")
+		req.SetPayload(map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"EIPIds": []interface{}{
+				step.Scenario.GetVar("EIPId"),
+			},
+		})
 
-	req := unetClient.NewDescribeEIPRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+		step.Scenario.SetVar("NATGWId", step.Must(utils.GetValue(resp, "EIPSet.0.Resource.ResourceID")))
 
-	ctx.NoError(utest.SetReqValue(req, "EIPIds", ctx.GetVar("EIPId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return unetClient.DescribeEIP(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("EIPSet.0.Resource.ResourceType", "natgw", "str_eq"),
-		},
-		MaxRetries:    10,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
-	ctx.Vars["NATGWId"] = ctx.Must(utest.GetValue(resp, "EIPSet.0.Resource.ResourceID"))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("EIPSet.0.Resource.ResourceType", "natgw", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    10,
+	RetryInterval: 10 * time.Second,
+	Title:         "获取弹性IP信息",
+	FastFail:      false,
 }
 
-func testSet614GetAvailableResourceForWhiteList08(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614GetAvailableResourceForWhiteList08 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("GetAvailableResourceForWhiteList")
+		req.SetPayload(map[string]interface{}{
+			"Region":  step.Scenario.GetVar("Region"),
+			"NATGWId": step.Scenario.GetVar("NATGWId"),
+		})
 
-	req := vpcClient.NewGetAvailableResourceForWhiteListRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.GetAvailableResourceForWhiteList(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "获得可添加白名单的资源列表",
+	FastFail:      false,
 }
 
-func testSet614GetAvailableHostForWhiteList09(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614GetAvailableHostForWhiteList09 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("GetAvailableHostForWhiteList")
+		req.SetPayload(map[string]interface{}{
+			"Region":  step.Scenario.GetVar("Region"),
+			"NATGWId": step.Scenario.GetVar("NATGWId"),
+		})
 
-	req := ivpcClient.NewGetAvailableHostForWhiteListRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ivpcClient.GetAvailableHostForWhiteList(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-			ctx.NewValidator("Action", "GetAvailableHostForWhiteListResponse", "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 1 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "GetAvailableHostForWhiteListResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取可用于白名单的uhost",
+	FastFail:      false,
 }
 
-func testSet614AddWhiteListResource10(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614AddWhiteListResource10 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("AddWhiteListResource")
+		req.SetPayload(map[string]interface{}{
+			"ResourceIds": []interface{}{
+				step.Scenario.GetVar("UHostIds_s1"),
+			},
+			"Region":  step.Scenario.GetVar("Region"),
+			"NATGWId": step.Scenario.GetVar("NATGWId"),
+		})
 
-	req := vpcClient.NewAddWhiteListResourceRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "ResourceIds", ctx.GetVar("UHostIds_s1")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.AddWhiteListResource(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "添加白名单资源",
+	FastFail:      false,
 }
 
-func testSet614DescribeWhiteListResource11(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DescribeWhiteListResource11 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeWhiteListResource")
+		req.SetPayload(map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"NATGWIds": []interface{}{
+				step.Scenario.GetVar("NATGWId"),
+			},
+		})
 
-	req := vpcClient.NewDescribeWhiteListResourceRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWIds", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.DescribeWhiteListResource(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "描述白名单资源的详细信息",
+	FastFail:      false,
 }
 
-func testSet614DeleteWhiteListResource12(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DeleteWhiteListResource12 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DeleteWhiteListResource")
+		req.SetPayload(map[string]interface{}{
+			"ResourceIds": []interface{}{
+				step.Scenario.GetVar("UHostIds_s1"),
+			},
+			"Region":  step.Scenario.GetVar("Region"),
+			"NATGWId": step.Scenario.GetVar("NATGWId"),
+		})
 
-	req := vpcClient.NewDeleteWhiteListResourceRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "ResourceIds", ctx.GetVar("UHostIds_s1")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.DeleteWhiteListResource(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "删除白名单列表资源",
+	FastFail:      false,
 }
 
-func testSet614DescribeWhiteList13(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DescribeWhiteList13 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DescribeWhiteList")
+		req.SetPayload(map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"NATGWIds": []interface{}{
+				step.Scenario.GetVar("NATGWId"),
+			},
+		})
 
-	req := ivpcClient.NewDescribeWhiteListRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWIds", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return ivpcClient.DescribeWhiteList(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "获取NatGateway白名单列表",
+	FastFail:      false,
 }
 
-func testSet614EnableWhiteList14(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614EnableWhiteList14 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("EnableWhiteList")
+		req.SetPayload(map[string]interface{}{
+			"Region":  step.Scenario.GetVar("Region"),
+			"NATGWId": step.Scenario.GetVar("NATGWId"),
+			"IfOpen":  1,
+		})
 
-	req := vpcClient.NewEnableWhiteListRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	ctx.NoError(utest.SetReqValue(req, "IfOpen", 1))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.EnableWhiteList(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "修改 NatGateWay白名单开关",
+	FastFail:      false,
 }
 
-func testSet614DeleteNATGW15(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DeleteNATGW15 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DeleteNATGW")
+		req.SetPayload(map[string]interface{}{
+			"Region":  step.Scenario.GetVar("Region"),
+			"NATGWId": step.Scenario.GetVar("NATGWId"),
+		})
 
-	req := vpcClient.NewDeleteNATGWRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "NATGWId", ctx.GetVar("NATGWId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.DeleteNATGW(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", 0, "str_eq"),
-		},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "删除NatGateway",
+	FastFail:      false,
 }
 
-func testSet614ReleaseEIP16(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(5) * time.Second)
+var testStep614ReleaseEIP16 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("ReleaseEIP")
+		req.SetPayload(map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"EIPId":  step.Scenario.GetVar("EIPId"),
+		})
 
-	req := unetClient.NewReleaseEIPRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	ctx.NoError(utest.SetReqValue(req, "EIPId", ctx.GetVar("EIPId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return unetClient.ReleaseEIP(req)
-		},
-		Validators:    []utest.TestValidator{},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "释放弹性IP",
+	FastFail:      false,
 }
 
-func testSet614PoweroffUHostInstance17(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(5) * time.Second)
+var testStep614PoweroffUHostInstance17 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("PoweroffUHostInstance")
+		req.SetPayload(map[string]interface{}{
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UHostId": step.Scenario.GetVar("UHostIds_s1"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
 
-	req := uhostClient.NewPoweroffUHostInstanceRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-
-	ctx.NoError(utest.SetReqValue(req, "UHostId", ctx.GetVar("UHostIds_s1")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.PoweroffUHostInstance(req)
-		},
-		Validators:    []utest.TestValidator{},
-		MaxRetries:    3,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 10 * time.Second,
+	Title:         "模拟主机掉电",
+	FastFail:      false,
 }
 
-func testSet614TerminateUHostInstance18(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(60) * time.Second)
+var testStep614TerminateUHostInstance18 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("TerminateUHostInstance")
+		req.SetPayload(map[string]interface{}{
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UHostId": step.Scenario.GetVar("UHostIds_s1"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
 
-	req := uhostClient.NewTerminateUHostInstanceRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-
-	ctx.NoError(utest.SetReqValue(req, "UHostId", ctx.GetVar("UHostIds_s1")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.TerminateUHostInstance(req)
-		},
-		Validators:    []utest.TestValidator{},
-		MaxRetries:    10,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(60) * time.Second,
+	MaxRetries:    10,
+	RetryInterval: 10 * time.Second,
+	Title:         "删除云主机",
+	FastFail:      false,
 }
 
-func testSet614DeleteSubnet19(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(5) * time.Second)
+var testStep614DeleteSubnet19 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DeleteSubnet")
+		req.SetPayload(map[string]interface{}{
+			"SubnetId": step.Scenario.GetVar("SubnetId"),
+			"Region":   step.Scenario.GetVar("Region"),
+		})
 
-	req := vpcClient.NewDeleteSubnetRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("SubnetId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.DeleteSubnet(req)
-		},
-		Validators:    []utest.TestValidator{},
-		MaxRetries:    10,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    10,
+	RetryInterval: 10 * time.Second,
+	Title:         "删除子网",
+	FastFail:      false,
 }
 
-func testSet614DeleteVPC20(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(3) * time.Second)
+var testStep614DeleteVPC20 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.NewClient("")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*ucloud.Client)
+		req := client.NewGenericRequest()
+		_ = req.SetAction("DeleteVPC")
+		req.SetPayload(map[string]interface{}{
+			"VPCId":  step.Scenario.GetVar("VPCId"),
+			"Region": step.Scenario.GetVar("Region"),
+		})
 
-	req := vpcClient.NewDeleteVPCRequest()
+		resp, err := client.GenericInvoke(req)
+		if err != nil {
+			return resp, err
+		}
 
-	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("VPCId")))
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return vpcClient.DeleteVPC(req)
-		},
-		Validators:    []utest.TestValidator{},
-		MaxRetries:    10,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-
-		ctx.T.Error(err)
-
-	}
-
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    10,
+	RetryInterval: 10 * time.Second,
+	Title:         "删除VPC",
+	FastFail:      false,
 }
