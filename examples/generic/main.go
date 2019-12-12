@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"os"
+
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
-	"os"
 )
 
 const region = "cn-sh2"
