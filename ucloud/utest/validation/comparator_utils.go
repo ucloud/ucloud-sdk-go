@@ -1,4 +1,4 @@
-package utest
+package validation
 
 import (
 	"encoding/json"
@@ -9,31 +9,31 @@ import (
 	"github.com/pkg/errors"
 )
 
-func checkFloats(a, b interface{}, checkFunc func(float64, float64) (bool, error)) (bool, error) {
+func checkFloats(a, b interface{}, checkFunc func(float64, float64) error) error {
 	aVal, bVal, err := toFloats(a, b)
 	if err != nil {
-		return false, err
+		return err
 	}
 	return checkFunc(aVal, bVal)
 }
 
-func checkStrings(a, b interface{}, checkFunc func(string, string) (bool, error)) (bool, error) {
+func checkStrings(a, b interface{}, checkFunc func(string, string) error) error {
 	aVal, bVal, err := toStrings(a, b)
 	if err != nil {
-		return false, err
+		return err
 	}
 	return checkFunc(aVal, bVal)
 }
 
-func checkLens(a, b interface{}, checkFunc func(int, int) (bool, error)) (bool, error) {
+func checkLens(a, b interface{}, checkFunc func(int, int) error) error {
 	aVal, err := toLen(a)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	bVal, err := toInt(b)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	return checkFunc(aVal, bVal)

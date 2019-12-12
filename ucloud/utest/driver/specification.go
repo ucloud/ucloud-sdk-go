@@ -1,6 +1,8 @@
 package driver
 
 import (
+	"testing"
+
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
@@ -26,9 +28,16 @@ type Specification struct {
 	Credential *auth.Credential
 }
 
-func (spec *Specification) AddScenario(s *Scenario) {
-	s.Spec = spec
-	spec.Scenarios = append(spec.Scenarios, s)
+// ParallelTest is a help function for parallel testing
+func (spec *Specification) ParallelTest(t *testing.T, sce *Scenario) {
+	t.Parallel()
+	spec.AddScenario(sce)
+	sce.Run(t)
+}
+
+func (spec *Specification) AddScenario(scenario *Scenario) {
+	scenario.Spec = spec
+	spec.Scenarios = append(spec.Scenarios, scenario)
 }
 
 func (spec *Specification) Report() SpecificationReport {
@@ -82,7 +91,7 @@ func (spec *Specification) status() string {
 func (spec *Specification) startTime() float64 {
 	var t float64
 	for _, v := range spec.Scenarios {
-		if v.status() != "skipped" {
+		if v.status() != "skipped" && v.startTime() != 0 {
 			if t == 0 {
 				t = v.startTime()
 			} else if v.startTime() < t {

@@ -12,9 +12,9 @@ type serviceClient interface {
 	AddResponseHandler(ucloud.ResponseHandler) error
 }
 
-// ServiceFactory is the validator function
 type serviceFactory func(*ucloud.Config, *auth.Credential) serviceClient
 
+// newServiceClient will build a service Client
 func newServiceClient(product string, cfg *ucloud.Config, cred *auth.Credential) serviceClient {
 	for k, v := range serviceFactoryMap {
 		if k == product {
