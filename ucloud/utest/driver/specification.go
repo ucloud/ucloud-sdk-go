@@ -2,9 +2,6 @@ package driver
 
 import (
 	"testing"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 )
 
 type SpecificationReport struct {
@@ -24,8 +21,8 @@ type SpecificationExecution struct {
 
 type Specification struct {
 	Scenarios  []*Scenario
-	Config     *ucloud.Config
-	Credential *auth.Credential
+	Config     interface{}
+	Credential interface{}
 }
 
 // ParallelTest is a help function for parallel testing

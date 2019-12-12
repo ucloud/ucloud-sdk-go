@@ -12,16 +12,16 @@ type serviceClient interface {
 	AddResponseHandler(ucloud.ResponseHandler) error
 }
 
-type serviceFactory func(*ucloud.Config, *auth.Credential) serviceClient
+type serviceFactory func(interface{}, interface{}) serviceClient
 
 // newServiceClient will build a service Client
-func newServiceClient(product string, cfg *ucloud.Config, cred *auth.Credential) serviceClient {
+func newServiceClient(product string, cfg interface{}, cred interface{}) serviceClient {
 	for k, v := range serviceFactoryMap {
 		if k == product {
 			c := v(cfg, cred)
 			return c
 		} else if len(product) == 0 {
-			c := ucloud.NewClient(cfg, cred)
+			c := ucloud.NewClient(cfg.(*ucloud.Config), cred.(*auth.Credential))
 			return c
 		}
 	}
@@ -30,7 +30,7 @@ func newServiceClient(product string, cfg *ucloud.Config, cred *auth.Credential)
 }
 
 var serviceFactoryMap = map[string]serviceFactory{
-	"UHost": func(cfg *ucloud.Config, cred *auth.Credential) serviceClient {
-		return uhost.NewClient(cfg, cred)
+	"UHost": func(cfg interface{}, cred interface{}) serviceClient {
+		return uhost.NewClient(cfg.(*ucloud.Config), cred.(*auth.Credential))
 	},
 }
