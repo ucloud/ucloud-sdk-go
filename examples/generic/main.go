@@ -18,13 +18,9 @@ func main() {
 	cfg, credential := loadConfig()
 	client := ucloud.NewClient(cfg, credential)
 
-	password := base64.StdEncoding.EncodeToString([]byte("ucloud_password"))
-	req := client.NewGenericRequest()
-	//err := req.SetAction("CreateUHostInstance")
-	//if err != nil {
-	//	panic(err)
-	//}
-	req.SetPayload(map[string]interface{}{
+	password := base64.StdEncoding.EncodeToString([]byte("ucloud_password_test"))
+	reqCreate := client.NewGenericRequest()
+	reqCreate.SetPayload(map[string]interface{}{
 		"Action":  "CreateUHostInstance",
 		"Zone":    zone,
 		"ImageId": imageID,
@@ -52,47 +48,36 @@ func main() {
 		},
 	})
 
-	genericResp, err := client.GenericInvoke(req)
+	genericResp, err := client.GenericInvoke(reqCreate)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(genericResp.Payload()["UHostIds"].([]interface{})[0].(string))
-	fmt.Println(genericResp.Payload())
-	fmt.Println(genericResp.Payload()["Action"])
-
 	type CreateUHostInstanceResponse struct {
-		// response.CommonBase
 		// UHost实例Id集合
 		UHostIds []string
 
 		// IP信息
 		IPs []string
 	}
-	resp := &CreateUHostInstanceResponse{}
-	if err := genericResp.Unmarshal(resp); err != nil {
+	respCreate := &CreateUHostInstanceResponse{}
+	if err := genericResp.Unmarshal(respCreate); err != nil {
 		panic(err)
 	}
-	fmt.Println(resp.UHostIds[0])
-	fmt.Println(resp)
-	// fmt.Println(resp.Action)
 
-	r := client.NewGenericRequest()
-
-	r.SetPayload(map[string]interface{}{
+	reqDescribe := client.NewGenericRequest()
+	reqDescribe.SetPayload(map[string]interface{}{
 		"Action":   "DescribeUHostInstance",
 		"Zone":     zone,
-		"UHostIds": []string{resp.UHostIds[0]},
-		// "UHostIds": []string{genericResp.Payload()["UHostIds"].([]interface{})[0].(string)},
+		"UHostIds": []string{respCreate.UHostIds[0]},
 	})
 
-	res, err := client.GenericInvoke(r)
+	respDescribe, err := client.GenericInvoke(reqDescribe)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(res.Payload())
-	fmt.Println(res.Payload()["Action"])
-	fmt.Println(res.Payload()["UHostSet"].([]interface{})[0].(map[string]interface{})["BasicImageId"].(string))
+
+	fmt.Println(respDescribe.Payload()["UHostSet"].([]interface{})[0].(map[string]interface{})["BasicImageId"].(string))
 }
 
 func loadConfig() (*ucloud.Config, *auth.Credential) {
