@@ -6,812 +6,742 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/internal/utest"
 )
 
 func TestSet25(t *testing.T) {
-	spec.ParallelTest(t, &driver.Scenario{
-		PreCheck: func() {
-			testAccPreCheck(t)
+	t.Parallel()
+
+	ctx := utest.NewTestContext()
+	ctx.T = t
+	ctx.Vars = map[string]interface{}{}
+
+	ctx.SetVar("Region", "cn-sh2")
+	ctx.SetVar("Zone", "cn-sh2-02")
+
+	ctx.SetVar("Region", "cn-sh2")
+	ctx.SetVar("Zone", "cn-sh2-02")
+
+	testSet25CreateVPC00(&ctx)
+	testSet25CreateSubnet01(&ctx)
+	testSet25GetVPNGatewayPrice02(&ctx)
+	testSet25CreateVPNGateway03(&ctx)
+	testSet25AllocateEIP04(&ctx)
+	testSet25BindEIP05(&ctx)
+	testSet25DescribeVPNGateway06(&ctx)
+	testSet25GetVPNGatewayUpgradePrice07(&ctx)
+	testSet25UpdateVPNGateway08(&ctx)
+	testSet25CreateRemoteVPNGateway09(&ctx)
+	testSet25DescribeRemoteVPNGateway10(&ctx)
+	testSet25CreateVPNTunnel11(&ctx)
+	testSet25DescribeVPNTunnel12(&ctx)
+	testSet25UpdateVPNTunnelAttribute13(&ctx)
+	testSet25DeleteVPNGateway14(&ctx)
+	testSet25DeleteRemoteVPNGateway15(&ctx)
+	testSet25DeleteVPNTunnel16(&ctx)
+	testSet25DeleteVPNGateway17(&ctx)
+	testSet25DeleteRemoteVPNGateway18(&ctx)
+	testSet25ReleaseEIP19(&ctx)
+	testSet25DeleteSubnet20(&ctx)
+	testSet25DeleteVPC21(&ctx)
+}
+
+func testSet25CreateVPC00(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
+
+	req := vpcClient.NewCreateVPCRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "Network", "192.168.0.0/16"))
+
+	ctx.NoError(utest.SetReqValue(req, "Name", "ipsecvpn-vpc"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return vpcClient.CreateVPC(req)
 		},
-		Id: 25,
-		Vars: func(scenario *driver.Scenario) map[string]interface{} {
-			return map[string]interface{}{
-
-				"Region": "cn-sh2",
-				"Zone":   "cn-sh2-02",
-			}
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
 		},
-		Owners: []string{"becky.xu@ucloud.cn"},
-		Title:  "IPSecVPN-BGP机房",
-		Steps: []*driver.Step{
-			testStep25CreateVPC00,
-			testStep25CreateSubnet01,
-			testStep25GetVPNGatewayPrice02,
-			testStep25CreateVPNGateway03,
-			testStep25AllocateEIP04,
-			testStep25BindEIP05,
-			testStep25DescribeVPNGateway06,
-			testStep25GetVPNGatewayUpgradePrice07,
-			testStep25UpdateVPNGateway08,
-			testStep25CreateRemoteVPNGateway09,
-			testStep25DescribeRemoteVPNGateway10,
-			testStep25CreateVPNTunnel11,
-			testStep25DescribeVPNTunnel12,
-			testStep25UpdateVPNTunnelAttribute13,
-			testStep25DeleteVPNGateway14,
-			testStep25DeleteRemoteVPNGateway15,
-			testStep25DeleteVPNTunnel16,
-			testStep25DeleteVPNGateway17,
-			testStep25DeleteRemoteVPNGateway18,
-			testStep25ReleaseEIP19,
-			testStep25DeleteSubnet20,
-			testStep25DeleteVPC21,
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+	ctx.Vars["vpc_id"] = ctx.Must(utest.GetValue(resp, "VPCId"))
+}
+
+func testSet25CreateSubnet01(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(10) * time.Second)
+
+	req := vpcClient.NewCreateSubnetRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("vpc_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "SubnetName", "ipsecvpn-subnet"))
+
+	ctx.NoError(utest.SetReqValue(req, "Subnet", "192.168.11.0"))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return vpcClient.CreateSubnet(req)
 		},
-	})
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+	ctx.Vars["subnet_id"] = ctx.Must(utest.GetValue(resp, "SubnetId"))
 }
 
-var testStep25CreateVPC00 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateVPC")
-		req.SetPayload(map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-			"Network": []interface{}{
-				"192.168.0.0/16",
-			},
-			"Name": "ipsecvpn-vpc",
-		})
+func testSet25GetVPNGatewayPrice02(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := iipsecvpnClient.NewGetVPNGatewayPriceRequest()
 
-		step.Scenario.SetVar("vpc_id", step.Must(utils.GetValue(resp, "VPCId")))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "创建VPC",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "Grade", "Standard"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return iipsecvpnClient.GetVPNGatewayPrice(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25CreateSubnet01 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateSubnet")
-		req.SetPayload(map[string]interface{}{
-			"VPCId":      step.Scenario.GetVar("vpc_id"),
-			"SubnetName": "ipsecvpn-subnet",
-			"Subnet":     "192.168.11.0",
-			"Region":     step.Scenario.GetVar("Region"),
-		})
+func testSet25CreateVPNGateway03(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewCreateVPNGatewayRequest()
 
-		step.Scenario.SetVar("subnet_id", step.Must(utils.GetValue(resp, "SubnetId")))
+	ctx.NoError(utest.SetReqValue(req, "VPNGatewayName", "auto_apitest"))
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "创建子网",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("vpc_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "Grade", "Standard"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.CreateVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+	ctx.Vars["vpngw_id"] = ctx.Must(utest.GetValue(resp, "VPNGatewayId"))
 }
 
-var testStep25GetVPNGatewayPrice02 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("GetVPNGatewayPrice")
-		req.SetPayload(map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-			"Grade":  "Standard",
-		})
+func testSet25AllocateEIP04(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := unetClient.NewAllocateEIPRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取VPN价格",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "OperatorName", "Bgp"))
+
+	ctx.NoError(utest.SetReqValue(req, "Bandwidth", 2))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return unetClient.AllocateEIP(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+	ctx.Vars["eip_id"] = ctx.Must(utest.GetValue(resp, "EIPSet.0.EIPId"))
 }
 
-var testStep25CreateVPNGateway03 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"VPNGatewayName": "auto_apitest",
-			"VPCId":          step.Scenario.GetVar("vpc_id"),
-			"Region":         step.Scenario.GetVar("Region"),
-			"Grade":          "Standard",
-		})
+func testSet25BindEIP05(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := unetClient.NewBindEIPRequest()
 
-		step.Scenario.SetVar("vpngw_id", step.Must(utils.GetValue(resp, "VPNGatewayId")))
+	ctx.NoError(utest.SetReqValue(req, "ResourceType", "vpngw"))
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "新建VPN网关",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "ResourceId", ctx.GetVar("vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "EIPId", ctx.GetVar("eip_id")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return unetClient.BindEIP(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25AllocateEIP04 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("AllocateEIP")
-		req.SetPayload(map[string]interface{}{
-			"Region":       step.Scenario.GetVar("Region"),
-			"OperatorName": "Bgp",
-			"Bandwidth":    2,
-		})
+func testSet25DescribeVPNGateway06(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(5) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDescribeVPNGatewayRequest()
 
-		step.Scenario.SetVar("eip_id", step.Must(utils.GetValue(resp, "EIPSet.0.EIPId")))
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "申请弹性IP",
-	FastFail:      false,
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DescribeVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25BindEIP05 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("BindEIP")
-		req.SetPayload(map[string]interface{}{
-			"ResourceType": "vpngw",
-			"ResourceId":   step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-			"EIPId":        step.Scenario.GetVar("eip_id"),
-		})
+func testSet25GetVPNGatewayUpgradePrice07(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := iipsecvpnClient.NewGetVPNGatewayUpgradePriceRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "绑定弹性IP",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPNGatewayId", ctx.GetVar("vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "Grade", "Enhanced"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return iipsecvpnClient.GetVPNGatewayUpgradePrice(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DescribeVPNGateway06 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-		})
+func testSet25UpdateVPNGateway08(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(5) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewUpdateVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(5) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取VPN网关信息",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPNGatewayId", ctx.GetVar("vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "Grade", "Enhanced"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.UpdateVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    10,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25GetVPNGatewayUpgradePrice07 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("GetVPNGatewayUpgradePrice")
-		req.SetPayload(map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-			"Grade":        "Enhanced",
-		})
+func testSet25CreateRemoteVPNGateway09(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewCreateRemoteVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取VPN网关规格改动价格",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "RemoteVPNGatewayName", "auto_apitest"))
+
+	ctx.NoError(utest.SetReqValue(req, "RemoteVPNGatewayAddr", "10.1.1.0"))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.CreateRemoteVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+	ctx.Vars["remote_vpngw_id"] = ctx.Must(utest.GetValue(resp, "RemoteVPNGatewayId"))
 }
 
-var testStep25UpdateVPNGateway08 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("UpdateVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-			"Grade":        "Enhanced",
-		})
+func testSet25DescribeRemoteVPNGateway10(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDescribeRemoteVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(5) * time.Second,
-	MaxRetries:    10,
-	RetryInterval: 1 * time.Second,
-	Title:         "更新VPN网关信息",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DescribeRemoteVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25CreateRemoteVPNGateway09 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateRemoteVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"RemoteVPNGatewayName": "auto_apitest",
-			"RemoteVPNGatewayAddr": "10.1.1.0",
-			"Region":               step.Scenario.GetVar("Region"),
-		})
+func testSet25CreateVPNTunnel11(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(5) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewCreateVPNTunnelRequest()
 
-		step.Scenario.SetVar("remote_vpngw_id", step.Must(utils.GetValue(resp, "RemoteVPNGatewayId")))
+	ctx.NoError(utest.SetReqValue(req, "VPNTunnelName", "auto_apitest"))
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "新建客户VPN网关",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPNGatewayId", ctx.GetVar("vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "RemoteVPNGatewayId", ctx.GetVar("remote_vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "IPSecRemoteSubnets", "10.1.1.0/24"))
+
+	ctx.NoError(utest.SetReqValue(req, "IPSecProtocol", "ah"))
+
+	ctx.NoError(utest.SetReqValue(req, "IPSecPFSDhGroup", 15))
+
+	ctx.NoError(utest.SetReqValue(req, "IPSecLocalSubnetIds", ctx.GetVar("subnet_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "IKEPreSharedKey", "test"))
+
+	ctx.NoError(utest.SetReqValue(req, "IKEExchangeMode", "main"))
+
+	ctx.NoError(utest.SetReqValue(req, "IKEDhGroup", 15))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.CreateVPNTunnel(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
+	ctx.Vars["vpn_tunnel_id"] = ctx.Must(utest.GetValue(resp, "VPNTunnelId"))
 }
 
-var testStep25DescribeRemoteVPNGateway10 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeRemoteVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-		})
+func testSet25DescribeVPNTunnel12(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDescribeVPNTunnelRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取客户VPN网关信息",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DescribeVPNTunnel(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25CreateVPNTunnel11 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateVPNTunnel")
-		req.SetPayload(map[string]interface{}{
-			"VPNTunnelName":      "auto_apitest",
-			"VPNGatewayId":       step.Scenario.GetVar("vpngw_id"),
-			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
-			"Region":             step.Scenario.GetVar("Region"),
-			"IPSecRemoteSubnets": []interface{}{
-				"10.1.1.0/24",
-			},
-			"IPSecProtocol":   "ah",
-			"IPSecPFSDhGroup": 15,
-			"IPSecLocalSubnetIds": []interface{}{
-				step.Scenario.GetVar("subnet_id"),
-			},
-			"IKEPreSharedKey": "test",
-			"IKEExchangeMode": "main",
-			"IKEDhGroup":      15,
-		})
+func testSet25UpdateVPNTunnelAttribute13(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewUpdateVPNTunnelAttributeRequest()
 
-		step.Scenario.SetVar("vpn_tunnel_id", step.Must(utils.GetValue(resp, "VPNTunnelId")))
+	ctx.NoError(utest.SetReqValue(req, "VPNTunnelId", ctx.GetVar("vpn_tunnel_id")))
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(5) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "新建VPN隧道",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.UpdateVPNTunnelAttribute(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DescribeVPNTunnel12 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeVPNTunnel")
-		req.SetPayload(map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-		})
+func testSet25DeleteVPNGateway14(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDeleteVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取VPN隧道信息",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPNGatewayId", ctx.GetVar("vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DeleteVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 66007, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25UpdateVPNTunnelAttribute13 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("UpdateVPNTunnelAttribute")
-		req.SetPayload(map[string]interface{}{
-			"VPNTunnelId": step.Scenario.GetVar("vpn_tunnel_id"),
-			"Region":      step.Scenario.GetVar("Region"),
-		})
+func testSet25DeleteRemoteVPNGateway15(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDeleteRemoteVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "更新VPN隧道属性",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "RemoteVPNGatewayId", ctx.GetVar("remote_vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DeleteRemoteVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 66032, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DeleteVPNGateway14 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-		})
+func testSet25DeleteVPNTunnel16(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDeleteVPNTunnelRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 66007, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "删除VPN网关",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPNTunnelId", ctx.GetVar("vpn_tunnel_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DeleteVPNTunnel(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DeleteRemoteVPNGateway15 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteRemoteVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
-			"Region":             step.Scenario.GetVar("Region"),
-		})
+func testSet25DeleteVPNGateway17(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDeleteVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 66032, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "删除客户VPN网关",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "VPNGatewayId", ctx.GetVar("vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DeleteVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DeleteVPNTunnel16 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPNTunnel")
-		req.SetPayload(map[string]interface{}{
-			"VPNTunnelId": step.Scenario.GetVar("vpn_tunnel_id"),
-			"Region":      step.Scenario.GetVar("Region"),
-		})
+func testSet25DeleteRemoteVPNGateway18(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := ipsecvpnClient.NewDeleteRemoteVPNGatewayRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "删除VPN隧道",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "RemoteVPNGatewayId", ctx.GetVar("remote_vpngw_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return ipsecvpnClient.DeleteRemoteVPNGateway(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DeleteVPNGateway17 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-		})
+func testSet25ReleaseEIP19(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := unetClient.NewReleaseEIPRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "删除VPN网关",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	ctx.NoError(utest.SetReqValue(req, "EIPId", ctx.GetVar("eip_id")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return unetClient.ReleaseEIP(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    0,
+		RetryInterval: 0 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25DeleteRemoteVPNGateway18 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteRemoteVPNGateway")
-		req.SetPayload(map[string]interface{}{
-			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
-			"Region":             step.Scenario.GetVar("Region"),
-		})
+func testSet25DeleteSubnet20(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := vpcClient.NewDeleteSubnetRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "删除客户VPN网关",
-	FastFail:      false,
+	ctx.NoError(utest.SetReqValue(req, "SubnetId", ctx.GetVar("subnet_id")))
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return vpcClient.DeleteSubnet(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+
+		ctx.T.Error(err)
+
+	}
+
 }
 
-var testStep25ReleaseEIP19 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("ReleaseEIP")
-		req.SetPayload(map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-			"EIPId":  step.Scenario.GetVar("eip_id"),
-		})
+func testSet25DeleteVPC21(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(10) * time.Second)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	req := vpcClient.NewDeleteVPCRequest()
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "释放弹性IP",
-	FastFail:      false,
-}
+	ctx.NoError(utest.SetReqValue(req, "VPCId", ctx.GetVar("vpc_id")))
 
-var testStep25DeleteSubnet20 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteSubnet")
-		req.SetPayload(map[string]interface{}{
-			"SubnetId": step.Scenario.GetVar("subnet_id"),
-			"Region":   step.Scenario.GetVar("Region"),
-		})
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return vpcClient.DeleteVPC(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", 0, "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "删除子网",
-	FastFail:      false,
-}
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
 
-var testStep25DeleteVPC21 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.NewClient("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPC")
-		req.SetPayload(map[string]interface{}{
-			"VPCId":  step.Scenario.GetVar("vpc_id"),
-			"Region": step.Scenario.GetVar("Region"),
-		})
+		ctx.T.Error(err)
 
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
+	}
 
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "删除VPC",
-	FastFail:      false,
 }

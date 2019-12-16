@@ -7,7 +7,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/internal/utest"
 )
 
-func TestSet448(t *testing.T) {
+func TestSet1840(t *testing.T) {
 	t.Parallel()
 
 	ctx := utest.NewTestContext()
@@ -18,32 +18,34 @@ func TestSet448(t *testing.T) {
 	ctx.SetVar("Zone", "cn-sh2-02")
 
 	ctx.SetVar("Password", "2012_UClou")
-	ctx.SetVar("CreateBootDisk", "20")
-	ctx.SetVar("ChargeType", "Month")
-	ctx.SetVar("CreateCPU", "1")
-	ctx.SetVar("CreateMem", "1024")
-	ctx.SetVar("CreateDiskspace", "20")
-	ctx.SetVar("UpgradeDiskSpace", "30")
-	ctx.SetVar("NewPassword", "2020_UClou")
-	ctx.SetVar("Name", "uhost-basic-api-N2-Normal-LocalDisk-1")
+	ctx.SetVar("SnapshotSysName", "snapshot-ARK-SYS-01")
+	ctx.SetVar("SnapshotSysDesc", "snapshot-ARK-SYS-01-desc")
+	ctx.SetVar("SnapDiskType", "LocalBoot")
+	ctx.SetVar("SnapshotDataNameModify", "snapshot-ARK-DATA-01-modify")
+	ctx.SetVar("SnapshotDataDescModify", "snapshot-ARK-DATA-01-desc-Modify")
+	ctx.SetVar("UhostName", "uhost-snapshot-ARK-auto-api-1")
+	ctx.SetVar("SnapshotDataName", "snapshot-ARK-DATA-01")
+	ctx.SetVar("SnapshotDataDesc", "snapshot-ARK-DATA-01-desc")
+	ctx.SetVar("CreateFromTimeMachinePassword", "Z3VhbmxpeXVhbm1pbWExMjMhQCM=")
 	ctx.SetVar("ImageID", ctx.Must(utest.GetImageResource(ctx.GetVar("Region"), ctx.GetVar("Zone"))))
-	ctx.SetVar("UpgradeBootDisk", "40")
-	ctx.SetVar("UpgradeCPU", "2")
 
-	testSet448CreateUHostInstance00(&ctx)
-	testSet448DescribeUHostInstance01(&ctx)
-	testSet448RebootUHostInstance02(&ctx)
-	testSet448DescribeUHostInstance03(&ctx)
-	testSet448StopUHostInstance04(&ctx)
-	testSet448DescribeUHostInstance05(&ctx)
-	testSet448ResizeUHostInstance06(&ctx)
-	testSet448DescribeUHostInstance07(&ctx)
-	testSet448PoweroffUHostInstance08(&ctx)
-	testSet448DescribeUHostInstance09(&ctx)
-	testSet448TerminateUHostInstance10(&ctx)
+	testSet1840CreateUHostInstance00(&ctx)
+	testSet1840DescribeUHostInstance01(&ctx)
+	testSet1840StopUHostInstance02(&ctx)
+	testSet1840DescribeUHostInstance03(&ctx)
+	testSet1840UpgradeToArkUHostInstance04(&ctx)
+	testSet1840DescribeUHostInstance05(&ctx)
+	testSet1840StartUHostInstance06(&ctx)
+	testSet1840DescribeUHostInstance07(&ctx)
+	testSet1840DescribeUhostTmMeta08(&ctx)
+	testSet1840DescribeVDiskTmList09(&ctx)
+	testSet1840DescribeVDiskTmList10(&ctx)
+	testSet1840StopUHostInstance11(&ctx)
+	testSet1840DescribeUHostInstance12(&ctx)
+	testSet1840TerminateUHostInstance13(&ctx)
 }
 
-func testSet448CreateUHostInstance00(ctx *utest.TestContext) {
+func testSet1840CreateUHostInstance00(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(0) * time.Second)
 
 	req := uhostClient.NewCreateUHostInstanceRequest()
@@ -54,24 +56,13 @@ func testSet448CreateUHostInstance00(ctx *utest.TestContext) {
 	ctx.NoError(utest.SetReqValue(req, "LoginMode", "Password"))
 	ctx.NoError(utest.SetReqValue(req, "Password", ctx.GetVar("Password")))
 
-	ctx.NoError(utest.SetReqValue(req, "CPU", ctx.GetVar("CreateCPU")))
-	ctx.NoError(utest.SetReqValue(req, "Memory", ctx.GetVar("CreateMem")))
-	ctx.NoError(utest.SetReqValue(req, "StorageType", "LocalDisk"))
-	ctx.NoError(utest.SetReqValue(req, "Name", ctx.GetVar("Name")))
+	ctx.NoError(utest.SetReqValue(req, "Name", ctx.GetVar("UhostName")))
 
-	ctx.NoError(utest.SetReqValue(req, "DiskSpace", ctx.GetVar("CreateDiskspace")))
-
-	ctx.NoError(utest.SetReqValue(req, "ChargeType", ctx.GetVar("ChargeType")))
-	ctx.NoError(utest.SetReqValue(req, "Quantity", "1"))
-	ctx.NoError(utest.SetReqValue(req, "NetCapability", "Normal"))
-	ctx.NoError(utest.SetReqValue(req, "Tag", "Default"))
-
-	ctx.NoError(utest.SetReqValue(req, "BootDiskSpace", ctx.GetVar("CreateBootDisk")))
-	ctx.NoError(utest.SetReqValue(req, "TimemachineFeature", "No"))
+	ctx.NoError(utest.SetReqValue(req, "TimemachineFeature", "no"))
 	ctx.NoError(utest.SetReqValue(req, "HotplugFeature", "false"))
-	ctx.NoError(utest.SetReqValue(req, "HostType", "N2"))
+	ctx.NoError(utest.SetReqValue(req, "DiskSpace", 20))
 
-	ctx.NoError(utest.SetReqValue(req, "GPU", 0))
+	ctx.NoError(utest.SetReqValue(req, "GPU", 0)) // TODO: check
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
@@ -93,7 +84,7 @@ func testSet448CreateUHostInstance00(ctx *utest.TestContext) {
 	ctx.Vars["hostId"] = ctx.Must(utest.GetValue(resp, "UHostIds.0"))
 }
 
-func testSet448DescribeUHostInstance01(ctx *utest.TestContext) {
+func testSet1840DescribeUHostInstance01(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(10) * time.Second)
 
 	req := uhostClient.NewDescribeUHostInstanceRequest()
@@ -108,19 +99,11 @@ func testSet448DescribeUHostInstance01(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.CPU", ctx.GetVar("CreateCPU"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Memory", ctx.GetVar("CreateMem"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostId", ctx.GetVar("hostId"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Name", ctx.GetVar("Name"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.TotalDiskSpace", ctx.GetVar("CreateDiskspace"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.HostType", "N2", "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostType", "Normal", "str_eq"),
-			ctx.NewValidator("UHostSet.0.StorageType", "LocalDisk", "str_eq"),
-			// ctx.NewValidator("UHostSet.0.BasicImageId", ctx.GetVar("ImageID"), "str_eq"),
 			ctx.NewValidator("UHostSet.0.State", "Running", "str_eq"),
+			ctx.NewValidator("UHostSet.0.TimemachineFeature", "no", "str_eq"),
 			ctx.NewValidator("UHostSet.0.BootDiskState", "Normal", "str_eq"),
 		},
-		MaxRetries:    200,
+		MaxRetries:    100,
 		RetryInterval: 30 * time.Second,
 		T:             ctx.T,
 	}
@@ -132,74 +115,8 @@ func testSet448DescribeUHostInstance01(ctx *utest.TestContext) {
 
 }
 
-func testSet448RebootUHostInstance02(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
-
-	req := uhostClient.NewRebootUHostInstanceRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-	ctx.NoError(utest.SetReqValue(req, "UHostId", ctx.GetVar("hostId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.RebootUHostInstance(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "0", "str_eq"),
-		},
-		MaxRetries:    5,
-		RetryInterval: 60 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
-	}
-
-}
-
-func testSet448DescribeUHostInstance03(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
-
-	req := uhostClient.NewDescribeUHostInstanceRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-	ctx.NoError(utest.SetReqValue(req, "UHostIds", ctx.GetVar("hostId")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.DescribeUHostInstance(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.CPU", ctx.GetVar("CreateCPU"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Memory", ctx.GetVar("CreateMem"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostId", ctx.GetVar("hostId"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Name", ctx.GetVar("Name"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.TotalDiskSpace", ctx.GetVar("CreateDiskspace"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.HostType", "N2", "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostType", "Normal", "str_eq"),
-			ctx.NewValidator("UHostSet.0.StorageType", "LocalDisk", "str_eq"),
-			// ctx.NewValidator("UHostSet.0.BasicImageId", ctx.GetVar("ImageID"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.State", "Running", "str_eq"),
-		},
-		MaxRetries:    30,
-		RetryInterval: 10 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
-	}
-
-}
-
-func testSet448StopUHostInstance04(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
+func testSet1840StopUHostInstance02(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
 	req := uhostClient.NewStopUHostInstanceRequest()
 
@@ -213,9 +130,10 @@ func testSet448StopUHostInstance04(ctx *utest.TestContext) {
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "StopUHostInstanceResponse", "str_eq"),
 		},
-		MaxRetries:    5,
-		RetryInterval: 30 * time.Second,
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
 		T:             ctx.T,
 	}
 
@@ -226,7 +144,7 @@ func testSet448StopUHostInstance04(ctx *utest.TestContext) {
 
 }
 
-func testSet448DescribeUHostInstance05(ctx *utest.TestContext) {
+func testSet1840DescribeUHostInstance03(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(10) * time.Second)
 
 	req := uhostClient.NewDescribeUHostInstanceRequest()
@@ -242,6 +160,127 @@ func testSet448DescribeUHostInstance05(ctx *utest.TestContext) {
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
 			ctx.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
+		},
+		MaxRetries:    10,
+		RetryInterval: 10 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet1840UpgradeToArkUHostInstance04(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
+
+	req := uhostClient.NewUpgradeToArkUHostInstanceRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+	ctx.NoError(utest.SetReqValue(req, "UHostIds", ctx.GetVar("hostId")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return uhostClient.UpgradeToArkUHostInstance(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "UpgradeToArkUHostInstanceResponse", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet1840DescribeUHostInstance05(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(100) * time.Second)
+
+	req := uhostClient.NewDescribeUHostInstanceRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+	ctx.NoError(utest.SetReqValue(req, "UHostIds", ctx.GetVar("hostId")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return uhostClient.DescribeUHostInstance(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
+			ctx.NewValidator("UHostSet.0.TimemachineFeature", "yes", "str_eq"),
+			ctx.NewValidator("UHostSet.0.BootDiskState", "Normal", "str_eq"),
+			ctx.NewValidator("UHostSet.0.DiskSet.0.BackupType", "DATAARK", "str_eq"),
+		},
+		MaxRetries:    120,
+		RetryInterval: 30 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet1840StartUHostInstance06(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
+
+	req := uhostClient.NewStartUHostInstanceRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+	ctx.NoError(utest.SetReqValue(req, "UHostId", ctx.GetVar("hostId")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return uhostClient.StartUHostInstance(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "StartUHostInstanceResponse", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet1840DescribeUHostInstance07(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(10) * time.Second)
+
+	req := uhostClient.NewDescribeUHostInstanceRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+	ctx.NoError(utest.SetReqValue(req, "UHostIds", ctx.GetVar("hostId")))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return uhostClient.DescribeUHostInstance(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("UHostSet.0.State", "Running", "str_eq"),
+			ctx.NewValidator("UHostSet.0.TimemachineFeature", "yes", "str_eq"),
+			ctx.NewValidator("UHostSet.0.DiskSet.0.BackupType", "DATAARK", "str_eq"),
 		},
 		MaxRetries:    30,
 		RetryInterval: 10 * time.Second,
@@ -255,68 +294,58 @@ func testSet448DescribeUHostInstance05(ctx *utest.TestContext) {
 
 }
 
-func testSet448ResizeUHostInstance06(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
+func testSet1840DescribeUhostTmMeta08(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(100) * time.Second)
 
-	req := uhostClient.NewResizeUHostInstanceRequest()
-
-	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
-	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-	ctx.NoError(utest.SetReqValue(req, "UHostId", ctx.GetVar("hostId")))
-	ctx.NoError(utest.SetReqValue(req, "CPU", ctx.GetVar("UpgradeCPU")))
-
-	ctx.NoError(utest.SetReqValue(req, "DiskSpace", ctx.GetVar("UpgradeDiskSpace")))
-
-	ctx.NoError(utest.SetReqValue(req, "BootDiskSpace", ctx.GetVar("UpgradeBootDisk")))
-
-	testCase := utest.TestCase{
-		Invoker: func() (interface{}, error) {
-			return uhostClient.ResizeUHostInstance(req)
-		},
-		Validators: []utest.TestValidator{
-			ctx.NewValidator("RetCode", "0", "str_eq"),
-		},
-		MaxRetries:    5,
-		RetryInterval: 45 * time.Second,
-		T:             ctx.T,
-	}
-
-	resp, err := testCase.Run()
-	if resp == nil || err != nil {
-		ctx.T.Fatal(err)
-	}
-
-}
-
-func testSet448DescribeUHostInstance07(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(30) * time.Second)
-
-	req := uhostClient.NewDescribeUHostInstanceRequest()
+	req := iudataarkClient.NewDescribeUhostTmMetaRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
-	ctx.NoError(utest.SetReqValue(req, "UHostIds", ctx.GetVar("hostId")))
+	ctx.NoError(utest.SetReqValue(req, "UhostId", ctx.GetVar("hostId")))
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return uhostClient.DescribeUHostInstance(req)
+			return iudataarkClient.DescribeUhostTmMeta(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
-			ctx.NewValidator("UHostSet.0.Memory", ctx.GetVar("CreateMem"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostId", ctx.GetVar("hostId"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.TotalDiskSpace", ctx.GetVar("UpgradeDiskSpace"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.Name", ctx.GetVar("Name"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.CPU", ctx.GetVar("UpgradeCPU"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.HostType", "N2", "str_eq"),
-			ctx.NewValidator("UHostSet.0.UHostType", "Normal", "str_eq"),
-			ctx.NewValidator("UHostSet.0.StorageType", "LocalDisk", "str_eq"),
-			// ctx.NewValidator("UHostSet.0.BasicImageId", ctx.GetVar("ImageID"), "str_eq"),
-			ctx.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
-			ctx.NewValidator("UHostSet.0.DiskSet.0.Size", ctx.GetVar("UpgradeBootDisk"), "str_eq"),
+			ctx.NewValidator("Action", "DescribeUhostTmMetaResponse", "str_eq"),
+			ctx.NewValidator("UtmStatus", "normal", "str_eq"),
 		},
 		MaxRetries:    60,
-		RetryInterval: 30 * time.Second,
+		RetryInterval: 60 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+	ctx.Vars["VdiskIdSys"] = ctx.Must(utest.GetValue(resp, "DataSet.0.VdiskId"))
+	ctx.Vars["VdiskIdData"] = ctx.Must(utest.GetValue(resp, "DataSet.1.VdiskId"))
+}
+
+func testSet1840DescribeVDiskTmList09(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
+
+	req := iudataarkClient.NewDescribeVDiskTmListRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+	ctx.NoError(utest.SetReqValue(req, "VDiskId", ctx.GetVar("VdiskIdSys")))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotType", "all"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return iudataarkClient.DescribeVDiskTmList(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "DescribeVDiskTmListResponse", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
 		T:             ctx.T,
 	}
 
@@ -327,10 +356,40 @@ func testSet448DescribeUHostInstance07(ctx *utest.TestContext) {
 
 }
 
-func testSet448PoweroffUHostInstance08(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
+func testSet1840DescribeVDiskTmList10(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
-	req := uhostClient.NewPoweroffUHostInstanceRequest()
+	req := iudataarkClient.NewDescribeVDiskTmListRequest()
+
+	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
+	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
+	ctx.NoError(utest.SetReqValue(req, "VDiskId", ctx.GetVar("VdiskIdData")))
+	ctx.NoError(utest.SetReqValue(req, "SnapshotType", "all"))
+
+	testCase := utest.TestCase{
+		Invoker: func() (interface{}, error) {
+			return iudataarkClient.DescribeVDiskTmList(req)
+		},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "DescribeVDiskTmListResponse", "str_eq"),
+		},
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
+		T:             ctx.T,
+	}
+
+	resp, err := testCase.Run()
+	if resp == nil || err != nil {
+		ctx.T.Fatal(err)
+	}
+
+}
+
+func testSet1840StopUHostInstance11(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
+
+	req := uhostClient.NewStopUHostInstanceRequest()
 
 	ctx.NoError(utest.SetReqValue(req, "Region", ctx.GetVar("Region")))
 	ctx.NoError(utest.SetReqValue(req, "Zone", ctx.GetVar("Zone")))
@@ -338,13 +397,14 @@ func testSet448PoweroffUHostInstance08(ctx *utest.TestContext) {
 
 	testCase := utest.TestCase{
 		Invoker: func() (interface{}, error) {
-			return uhostClient.PoweroffUHostInstance(req)
+			return uhostClient.StopUHostInstance(req)
 		},
 		Validators: []utest.TestValidator{
 			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "StopUHostInstanceResponse", "str_eq"),
 		},
-		MaxRetries:    5,
-		RetryInterval: 30 * time.Second,
+		MaxRetries:    3,
+		RetryInterval: 1 * time.Second,
 		T:             ctx.T,
 	}
 
@@ -355,7 +415,7 @@ func testSet448PoweroffUHostInstance08(ctx *utest.TestContext) {
 
 }
 
-func testSet448DescribeUHostInstance09(ctx *utest.TestContext) {
+func testSet1840DescribeUHostInstance12(ctx *utest.TestContext) {
 	time.Sleep(time.Duration(10) * time.Second)
 
 	req := uhostClient.NewDescribeUHostInstanceRequest()
@@ -384,8 +444,8 @@ func testSet448DescribeUHostInstance09(ctx *utest.TestContext) {
 
 }
 
-func testSet448TerminateUHostInstance10(ctx *utest.TestContext) {
-	time.Sleep(time.Duration(10) * time.Second)
+func testSet1840TerminateUHostInstance13(ctx *utest.TestContext) {
+	time.Sleep(time.Duration(0) * time.Second)
 
 	req := uhostClient.NewTerminateUHostInstanceRequest()
 
@@ -397,7 +457,10 @@ func testSet448TerminateUHostInstance10(ctx *utest.TestContext) {
 		Invoker: func() (interface{}, error) {
 			return uhostClient.TerminateUHostInstance(req)
 		},
-		Validators:    []utest.TestValidator{},
+		Validators: []utest.TestValidator{
+			ctx.NewValidator("RetCode", "0", "str_eq"),
+			ctx.NewValidator("Action", "TerminateUHostInstanceResponse", "str_eq"),
+		},
 		MaxRetries:    3,
 		RetryInterval: 1 * time.Second,
 		T:             ctx.T,
