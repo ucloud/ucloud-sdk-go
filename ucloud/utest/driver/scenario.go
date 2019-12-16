@@ -83,6 +83,7 @@ func (scenario *Scenario) Run(t *testing.T) {
 		step.init()
 		step.Scenario = scenario
 		step.T = t
+		step.id = i + 1
 		step.run()
 		if len(step.Errors) > 0 && step.FastFail {
 			t.Fatal(step.Errors)

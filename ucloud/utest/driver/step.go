@@ -60,6 +60,8 @@ type Step struct {
 	Status     string
 	Scenario   *Scenario
 	APIRetries []ApiRetries
+
+	id int
 }
 
 // NewClient will build a service Client and add response handler
@@ -82,9 +84,13 @@ func (step *Step) NewClient(product string) (interface{}, error) {
 // Must will check error is nil and return the value
 func (step *Step) Must(v interface{}, err error) interface{} {
 	if err != nil {
-		step.Errors = append(step.Errors, err)
+		step.appendError(err)
 	}
 	return v
+}
+
+func (step *Step) appendError(err error) {
+	step.Errors = append(step.Errors, fmt.Errorf("step %02d Failed, %s", step.id, err))
 }
 
 // Run will run the step test case with retry
@@ -105,20 +111,20 @@ func (step *Step) run() {
 		if err != nil {
 			if e, ok := err.(uerr.Error); ok && e.Name() == uerr.ErrSendRequest {
 				step.Status = "failed"
-				step.Errors = append(step.Errors, err)
+				step.appendError(err)
 				assert.NoError(step.T, err)
 				return
 			} else if ok && e.Name() == uerr.ErrRetCode {
 				// pass
 			} else {
-				step.Errors = append(step.Errors, err)
+				step.appendError(err)
 				// continue
 			}
 		}
 
 		for _, validator := range step.Validators(step) {
 			if err := validator(resp); err != nil {
-				step.Errors = append(step.Errors, err)
+				step.appendError(err)
 			}
 		}
 
