@@ -15,7 +15,6 @@ import (
 
 type StepReport struct {
 	Title      string          `json:"title"`
-	Type       string          `json:"type"`
 	Status     string          `json:"status"`
 	Execution  StepExecution   `json:"execution"`
 	ApiRetries []ApiRetries    `json:"api_retries"`
@@ -48,20 +47,19 @@ type Step struct {
 	StartupDelay  time.Duration
 	FastFail      bool
 	Title         string
-	Type          string
 	Owners        []string
+	Scenario      *Scenario
 
 	Invoker    func(*Step) (interface{}, error)
 	Validators func(*Step) []TestValidator
 
-	Errors     []error
-	StartTime  float64
-	EndTime    float64
-	Status     string
-	Scenario   *Scenario
-	APIRetries []ApiRetries
+	errors     []error
+	apiRetries []ApiRetries
 
-	id int
+	startTime float64
+	endTime   float64
+	status    string
+	id        int
 }
 
 // LoadFixture is a function for load fixture by the name from map fixture function
@@ -86,60 +84,64 @@ func SetupClientFixture(client ucloud.ServiceClient) FixtureFunc {
 // Must will check error is nil and return the value
 func (step *Step) Must(v interface{}, err error) interface{} {
 	if err != nil {
-		step.appendError(err)
+		step.AppendError(err)
 	}
 	return v
 }
 
-func (step *Step) appendError(err error) {
-	step.Errors = append(step.Errors, fmt.Errorf("step %02d Failed, %s", step.id, err))
+func (step *Step) AppendApiRetries(apiRetry ApiRetries) {
+	step.apiRetries = append(step.apiRetries, apiRetry)
+}
+
+func (step *Step) AppendError(err error) {
+	step.errors = append(step.errors, fmt.Errorf("step %02d Failed, %s", step.id, err))
 }
 
 // Run will run the step test case with retry
 func (step *Step) run() {
-	step.StartTime = float64(time.Now().Unix())
+	step.startTime = float64(time.Now().Unix())
 	if step.StartupDelay != time.Duration(0) {
 		<-time.After(step.StartupDelay)
 	}
 
 	defer func() {
-		step.EndTime = float64(time.Now().Unix())
+		step.endTime = float64(time.Now().Unix())
 	}()
 
 	for i := 0; i < step.MaxRetries+1; i++ {
-		step.Errors = []error{}
+		step.errors = []error{}
 
 		resp, err := step.Invoker(step)
 		if err != nil {
 			if e, ok := err.(uerr.Error); ok && e.Name() == uerr.ErrSendRequest {
-				step.Status = "failed"
-				step.appendError(err)
+				step.status = "failed"
+				step.AppendError(err)
 				assert.NoError(step.T, err)
 				return
 			} else if ok && e.Name() == uerr.ErrRetCode {
 				// pass
 			} else {
-				step.appendError(err)
+				step.AppendError(err)
 				// continue
 			}
 		}
 
 		for _, validator := range step.Validators(step) {
 			if err := validator(resp); err != nil {
-				step.appendError(err)
+				step.AppendError(err)
 			}
 		}
 
-		if len(step.Errors) > 0 {
+		if len(step.errors) > 0 {
 			if i == step.MaxRetries {
-				step.Status = "failed"
+				step.status = "failed"
 				return
 			}
 			<-time.After(step.RetryInterval)
 			continue
 		}
 
-		step.Status = "passed"
+		step.status = "passed"
 		return
 	}
 
@@ -149,25 +151,23 @@ func (step *Step) run() {
 func (step *Step) Report() StepReport {
 	return StepReport{
 		Title:  step.Title,
-		Type:   step.Type,
-		Status: step.Status,
+		Status: step.status,
 		Execution: StepExecution{
 			MaxRetries:    step.MaxRetries,
 			RetryInterval: step.RetryInterval.Seconds(),
 			StartupDelay:  step.StartupDelay.Seconds(),
 			FastFail:      step.FastFail,
-			Duration:      step.EndTime - step.StartTime,
-			StartTime:     step.StartTime,
-			EndTime:       step.EndTime,
+			Duration:      step.endTime - step.startTime,
+			StartTime:     step.startTime,
+			EndTime:       step.endTime,
 		},
-		ApiRetries: step.APIRetries,
-		Errors:     step.Errors,
+		ApiRetries: step.apiRetries,
+		Errors:     step.errors,
 	}
 }
 
 func (step *Step) init() {
-	step.Status = "skipped"
-	step.Type = "api"
+	step.status = "skipped"
 }
 
 func (step *Step) handleResponse(c *ucloud.Client, req request.Common, resp response.Common, retError error) (response.Common, error) {
@@ -186,7 +186,7 @@ func (step *Step) handleResponse(c *ucloud.Client, req request.Common, resp resp
 		return nil, err
 	}
 
-	step.APIRetries = append(step.APIRetries, ApiRetries{
+	step.apiRetries = append(step.apiRetries, ApiRetries{
 		Request:     reqMap,
 		Response:    res,
 		RequestUUID: resp.GetRequestUUID(),
