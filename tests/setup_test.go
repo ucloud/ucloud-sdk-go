@@ -128,6 +128,7 @@ func testSetup() {
 	ustackCred.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
 
 	spec.AddFixture("", driver.SetupClientFixture(ucloud.NewClient(&cfg, &credential)))
+	spec.AddFixture("UCloudStack", driver.SetupClientFixture(ucloudstack.NewClient(&ustackCfg, &ustackCred)))
 
 	// compatible with older test framework
 	ucloudstackClient = ucloudstack.NewClient(&ustackCfg, &ustackCred)
