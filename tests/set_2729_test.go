@@ -1,11 +1,12 @@
 package tests
 
 import (
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 
 	"github.com/ucloud/ucloud-sdk-go/internal/utest"
 )

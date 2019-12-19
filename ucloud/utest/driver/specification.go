@@ -20,9 +20,18 @@ type SpecificationExecution struct {
 }
 
 type Specification struct {
-	Scenarios  []*Scenario
-	Config     interface{}
-	Credential interface{}
+	Scenarios []*Scenario
+	fixtures  map[string]FixtureFunc
+}
+
+type FixtureFunc func(step *Step) (interface{}, error)
+
+// AddFixture is a help function for dependency injection
+func (spec *Specification) AddFixture(name string, fixture FixtureFunc) {
+	if spec.fixtures == nil {
+		spec.fixtures = make(map[string]FixtureFunc)
+	}
+	spec.fixtures[name] = fixture
 }
 
 // ParallelTest is a help function for parallel testing

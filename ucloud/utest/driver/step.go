@@ -64,21 +64,23 @@ type Step struct {
 	id int
 }
 
-// NewClient will build a service Client and add response handler
-func (step *Step) NewClient(product string) (interface{}, error) {
-	cfg := step.Scenario.Spec.Config
-	cred := step.Scenario.Spec.Credential
-
-	client := newServiceClient(product, cfg, cred)
-	if client == nil {
-		return nil, fmt.Errorf("can not setup client form the %s", product)
+// LoadFixture is a function for load fixture by the name from map fixture function
+func (step *Step) LoadFixture(name string) (interface{}, error) {
+	if step.Scenario.Spec.fixtures[name] != nil {
+		return step.Scenario.Spec.fixtures[name](step)
 	}
+	return nil, fmt.Errorf("can not load fixture by the %s", name)
+}
 
-	if err := client.AddResponseHandler(step.handleResponse); err != nil {
-		return nil, err
+// SetupClientFixture is a help function for setup client fixture
+func SetupClientFixture(client ucloud.ServiceClient) FixtureFunc {
+	return func(step *Step) (i interface{}, e error) {
+		if err := client.AddResponseHandler(step.handleResponse); err != nil {
+			return nil, err
+		}
+
+		return client, nil
 	}
-
-	return client, nil
 }
 
 // Must will check error is nil and return the value

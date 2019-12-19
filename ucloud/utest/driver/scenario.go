@@ -17,6 +17,7 @@ func (err executionErrors) MarshalJSON() ([]byte, error) {
 
 type ScenarioReport struct {
 	Title        string            `json:"title"`
+	Id           string            `json:"id"`
 	Steps        []StepReport      `json:"steps"`
 	Status       string            `json:"status"`
 	Execution    ScenarioExecution `json:"execution"`
@@ -35,7 +36,7 @@ type ScenarioExecution struct {
 
 type Scenario struct {
 	PreCheck func()
-	Id       int
+	Id       string
 	Title    string
 	Steps    []*Step
 	Spec     *Specification
@@ -108,6 +109,7 @@ func (scenario *Scenario) Report() ScenarioReport {
 	}
 	return ScenarioReport{
 		Title:  scenario.Title,
+		Id:     scenario.Id,
 		Status: scenario.status(),
 		Execution: ScenarioExecution{
 			Duration:  scenario.endTime() - scenario.startTime(),
