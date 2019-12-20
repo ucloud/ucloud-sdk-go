@@ -4,7 +4,7 @@ type GenericRequest interface {
 	Common
 
 	SetPayload(m map[string]interface{})
-	Payload() map[string]interface{}
+	GetPayload() map[string]interface{}
 }
 
 type BaseGenericRequest struct {
@@ -17,7 +17,7 @@ func (r *BaseGenericRequest) SetPayload(m map[string]interface{}) {
 	r.payload = m
 }
 
-func (r BaseGenericRequest) Payload() map[string]interface{} {
+func (r BaseGenericRequest) GetPayload() map[string]interface{} {
 	m := make(map[string]interface{})
 	if len(r.CommonBase.GetRegion()) != 0 {
 		m["Region"] = r.CommonBase.GetRegion()

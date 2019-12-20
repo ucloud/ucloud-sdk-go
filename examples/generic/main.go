@@ -77,7 +77,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(respDescribe.Payload()["UHostSet"].([]interface{})[0].(map[string]interface{})["State"].(string))
+	fmt.Println(respDescribe.GetPayload()["UHostSet"].([]interface{})[0].(map[string]interface{})["State"].(string))
 }
 
 func loadConfig() (*ucloud.Config, *auth.Credential) {

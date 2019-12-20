@@ -20,7 +20,7 @@ func GetValue(obj interface{}, path string) (interface{}, error) {
 	}
 
 	if r, ok := obj.(response.GenericResponse); ok {
-		obj = r.Payload()
+		obj = r.GetPayload()
 	}
 
 	v, err := utils.ValueAtPath(obj, path)
