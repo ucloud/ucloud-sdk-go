@@ -22,9 +22,9 @@ type ScenarioReport struct {
 	Status       string            `json:"status"`
 	Execution    ScenarioExecution `json:"execution"`
 	Owners       []string          `json:"owners"`
-	PassedCount  int               `json:"passedCount"`
-	FailedCount  int               `json:"failedCount"`
-	SkippedCount int               `json:"skippedCount"`
+	PassedCount  int               `json:"passed_count"`
+	FailedCount  int               `json:"failed_count"`
+	SkippedCount int               `json:"skipped_count"`
 	Errors       executionErrors   `json:"errors,omitempty"`
 }
 
