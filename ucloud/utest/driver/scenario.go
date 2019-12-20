@@ -74,6 +74,10 @@ func (scenario *Scenario) init() {
 
 // Run will run the scenario test case
 func (scenario *Scenario) Run(t *testing.T) {
+	if scenario.PreCheck != nil {
+		scenario.PreCheck()
+	}
+
 	scenario.init()
 	for k, v := range scenario.Vars(scenario) {
 		scenario.SetVar(k, v)
