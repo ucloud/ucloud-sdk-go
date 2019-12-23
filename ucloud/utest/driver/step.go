@@ -14,11 +14,11 @@ import (
 )
 
 type StepReport struct {
-	Title      string          `json:"title"`
-	Status     string          `json:"status"`
-	Execution  StepExecution   `json:"execution"`
-	ApiRetries []ApiRetries    `json:"api_retries"`
-	Errors     executionErrors `json:"errors,omitempty"`
+	Title     string          `json:"title"`
+	Status    string          `json:"status"`
+	Execution StepExecution   `json:"execution"`
+	Retries   Retries         `json:"retries"`
+	Errors    executionErrors `json:"errors,omitempty"`
 }
 
 type StepExecution struct {
@@ -29,13 +29,6 @@ type StepExecution struct {
 	Duration      float64 `json:"duration"`
 	StartTime     float64 `json:"start_time"`
 	EndTime       float64 `json:"end_time"`
-}
-
-type ApiRetries struct {
-	Request     map[string]string `json:"request"`
-	Response    json.RawMessage   `json:"response"`
-	RequestUUID string            `json:"request_uuid"`
-	RequestTime float64           `json:"request_time"`
 }
 
 type TestValidator func(interface{}) error
@@ -53,13 +46,26 @@ type Step struct {
 	Invoker    func(*Step) (interface{}, error)
 	Validators func(*Step) []TestValidator
 
-	errors     []error
-	apiRetries []ApiRetries
+	errors  []error
+	retries Retries
 
 	startTime float64
 	endTime   float64
 	status    string
 	id        int
+}
+
+type Retries struct {
+	Headers []string        `json:"headers"`
+	Rows    [][]interface{} `json:"rows"`
+}
+
+func (retries *Retries) SetHeaders(headers []string) {
+	retries.Headers = headers
+}
+
+func (retries *Retries) Append(row []interface{}) {
+	retries.Rows = append(retries.Rows, row)
 }
 
 // LoadFixture is a function for load fixture by the name from map fixture function
@@ -87,10 +93,6 @@ func (step *Step) Must(v interface{}, err error) interface{} {
 		step.AppendError(err)
 	}
 	return v
-}
-
-func (step *Step) AppendApiRetries(apiRetry ApiRetries) {
-	step.apiRetries = append(step.apiRetries, apiRetry)
 }
 
 func (step *Step) AppendError(err error) {
@@ -161,8 +163,8 @@ func (step *Step) Report() StepReport {
 			StartTime:     step.startTime,
 			EndTime:       step.endTime,
 		},
-		ApiRetries: step.apiRetries,
-		Errors:     step.errors,
+		Retries: step.retries,
+		Errors:  step.errors,
 	}
 }
 
@@ -177,20 +179,27 @@ func (step *Step) handleResponse(c *ucloud.Client, req request.Common, resp resp
 			return nil, retError
 		}
 	}
+
 	reqMap, err := request.ToQueryMap(req)
 	if err != nil {
 		return nil, err
 	}
-	res, err := json.Marshal(resp)
+	reqPayload, err := json.MarshalIndent(reqMap, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+	respPayload, err := json.MarshalIndent(resp, "", "  ")
 	if err != nil {
 		return nil, err
 	}
 
-	step.apiRetries = append(step.apiRetries, ApiRetries{
-		Request:     reqMap,
-		Response:    res,
-		RequestUUID: resp.GetRequestUUID(),
-		RequestTime: float64(req.GetRequestTime().Unix()),
+	step.retries.SetHeaders([]string{"请求", "响应", "日志"})
+	step.retries.Append([]interface{}{
+		string(reqPayload),
+		string(respPayload),
+		fmt.Sprintf("%s/%d/%s", uxiaoDSN, req.GetRequestTime().Unix(), resp.GetRequestUUID()),
 	})
 	return resp, retError
 }
+
+const uxiaoDSN = "https://uxiao.ucloudadmin.com/#/apigwLog/msg"
