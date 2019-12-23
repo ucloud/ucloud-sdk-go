@@ -19,6 +19,10 @@ func GetValue(obj interface{}, path string) (interface{}, error) {
 		return "", nil
 	}
 
+	if path == "" {
+		return obj, nil
+	}
+
 	if r, ok := obj.(response.GenericResponse); ok {
 		obj = r.GetPayload()
 	}
