@@ -42,13 +42,12 @@ type Step struct {
 	Title         string
 	Owners        []string
 	Scenario      *Scenario
+	retries       Retries
 
 	Invoker    func(*Step) (interface{}, error)
 	Validators func(*Step) []TestValidator
 
-	errors  []error
-	retries Retries
-
+	errors    []error
 	startTime float64
 	endTime   float64
 	status    string
@@ -60,12 +59,12 @@ type Retries struct {
 	Rows    [][]interface{} `json:"rows"`
 }
 
-func (retries *Retries) SetHeaders(headers []string) {
-	retries.Headers = headers
+func (step *Step) AppendRetriesRows(row []interface{}) {
+	step.retries.Rows = append(step.retries.Rows, row)
 }
 
-func (retries *Retries) Append(row []interface{}) {
-	retries.Rows = append(retries.Rows, row)
+func (step *Step) SetRetriesHeaders(headers []string) {
+	step.retries.Headers = headers
 }
 
 // LoadFixture is a function for load fixture by the name from map fixture function
@@ -77,8 +76,12 @@ func (step *Step) LoadFixture(name string) (interface{}, error) {
 }
 
 // SetupClientFixture is a help function for setup client fixture
-func SetupClientFixture(client ucloud.ServiceClient) FixtureFunc {
+func SetupClientFixture(factory func() (ucloud.ServiceClient, error)) FixtureFunc {
 	return func(step *Step) (i interface{}, e error) {
+		client, err := factory()
+		if err != nil {
+			return nil, err
+		}
 		if err := client.AddResponseHandler(step.handleResponse); err != nil {
 			return nil, err
 		}
@@ -193,8 +196,8 @@ func (step *Step) handleResponse(c *ucloud.Client, req request.Common, resp resp
 		return nil, err
 	}
 
-	step.retries.SetHeaders([]string{"请求", "响应", "日志"})
-	step.retries.Append([]interface{}{
+	step.SetRetriesHeaders([]string{"请求", "响应", "日志"})
+	step.AppendRetriesRows([]interface{}{
 		string(reqPayload),
 		string(respPayload),
 		fmt.Sprintf("%s/%d/%s", uxiaoDSN, req.GetRequestTime().Unix(), resp.GetRequestUUID()),
