@@ -119,16 +119,14 @@ func testSetup() {
 	cfg.SetActionLevel("DescribeUDBParamGroup", log.WarnLevel)
 
 	ustackCfg := ucloud.NewConfig()
-	ustackCfg.BaseUrl = "http://console.dev.ucloudstack.com/api"
+	ustackCfg.BaseUrl = "http://console.pre.ucloudstack.com/api"
 	ustackCfg.MaxRetries = 1
 	ustackCfg.LogLevel = log.DebugLevel
 	ustackCfg.Region = "cn"
 	ustackCfg.Zone = "zone-01"
 	ustackCred := auth.NewCredential()
-	// ustackCred.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
-	// ustackCred.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
-	ustackCred.PrivateKey = "6cx61v4Cx7j5X-SB5dMTIFCrG4rp4n5G_fL5u5OUcePwnA9SdzCUlGFHSet7RWmT"
-	ustackCred.PublicKey = "hsqAhWAxmQTqg0cuJ_IXWyTfimCJdyherV7BSFTB"
+	ustackCred.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
+	ustackCred.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
 
 	spec.AddFixture("", driver.SetupClientFixture(ucloud.NewClient(&cfg, &credential)))
 	spec.AddFixture("UCloudStack", driver.SetupClientFixture(ucloudstack.NewClient(&ustackCfg, &ustackCred)))
