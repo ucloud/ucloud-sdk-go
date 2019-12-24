@@ -22,8 +22,8 @@ func TestScenario4207(t *testing.T) {
 		Id: "4207",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
-				"Region":    "cn-sh2",
-				"Zone":      "cn-sh2-02",
+				"Region":    "cn",
+				"Zone":      "zone-01",
 				"EndTime":   scenario.Must(functions.GetTimestamp(10)),
 				"BeginTime": scenario.Must(functions.Calculate("-", scenario.Must(functions.GetTimestamp(10)), 3600)),
 			}
@@ -86,9 +86,10 @@ var testStep4207UCloudStackDescribeVPC01 = &driver.Step{
 
 		req := client.NewDescribeVPCRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Offset":    0,
-			"Limit":     10,
-			"AccountID": 0,
+			"Zone":   step.Scenario.GetVar("Zone"),
+			"Region": step.Scenario.GetVar("Region"),
+			"Offset": 0,
+			"Limit":  10,
 		})
 
 		resp, err := client.DescribeVPC(req)
@@ -110,7 +111,7 @@ var testStep4207UCloudStackDescribeVPC01 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "获取VPC信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeSecurityGroup02 = &driver.Step{
@@ -123,6 +124,8 @@ var testStep4207UCloudStackDescribeSecurityGroup02 = &driver.Step{
 
 		req := client.NewDescribeSecurityGroupRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":     step.Scenario.GetVar("Zone"),
+			"Region":   step.Scenario.GetVar("Region"),
 			"needPoll": "true",
 			"Offset":   0,
 			"Limit":    10,
@@ -140,13 +143,14 @@ var testStep4207UCloudStackDescribeSecurityGroup02 = &driver.Step{
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("Action", "DescribeSecurityGroupResponse", "str_eq"),
+			validation.Builtins.NewValidator("Infos.0.Status", "Available", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取防火墙信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackGetVMInstancePrice03 = &driver.Step{
@@ -160,7 +164,7 @@ var testStep4207UCloudStackGetVMInstancePrice03 = &driver.Step{
 		req := client.NewGetVMInstancePriceRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":            step.Scenario.GetVar("Zone"),
-			"VMType":          "Normal",
+			"VMType":          "Normal01",
 			"Region":          step.Scenario.GetVar("Region"),
 			"OSType":          "Linux",
 			"Memory":          2048,
@@ -189,7 +193,7 @@ var testStep4207UCloudStackGetVMInstancePrice03 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "获取UCloudStack虚拟机价格",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackCreateVMInstance04 = &driver.Step{
@@ -202,23 +206,26 @@ var testStep4207UCloudStackCreateVMInstance04 = &driver.Step{
 
 		req := client.NewCreateVMInstanceRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":          step.Scenario.GetVar("Zone"),
-			"WANSGID":       step.Scenario.GetVar("SGID"),
-			"VPCID":         step.Scenario.GetVar("VPCID"),
-			"VMType":        "SSD",
-			"SubnetID":      step.Scenario.GetVar("SubnetID"),
-			"Region":        step.Scenario.GetVar("Region"),
-			"Quantity":      1,
-			"Password":      "ucloud.cn",
-			"Name":          "sdk-test",
-			"Memory":        2048,
-			"ImageID":       "cn-image-centos-74",
-			"DataDiskType":  "SSD",
-			"DataDiskSpace": 0,
-			"ChargeType":    "Month",
-			"CPU":           1,
-			"BootDiskType":  "SSD",
+			"Zone":            step.Scenario.GetVar("Zone"),
+			"WANSGID":         step.Scenario.GetVar("SGID"),
+			"VPCID":           step.Scenario.GetVar("VPCID"),
+			"VMType":          "Normal01",
+			"SubnetID":        step.Scenario.GetVar("SubnetID"),
+			"Region":          step.Scenario.GetVar("Region"),
+			"Quantity":        1,
+			"Password":        "ucloud.cn",
+			"Name":            "sdk-test",
+			"Memory":          2048,
+			"ImageID":         "cn-image-centos-74",
+			"DataDiskSetType": "Nvme",
+			"DataDiskSpace":   0,
+			"ChargeType":      "Month",
+			"CPU":             1,
+			"BootDiskSetType": "Nvme",
 		})
+		if err != nil {
+			return nil, err
+		}
 
 		resp, err := client.CreateVMInstance(req)
 		if err != nil {
@@ -238,7 +245,7 @@ var testStep4207UCloudStackCreateVMInstance04 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance05 = &driver.Step{
@@ -276,7 +283,7 @@ var testStep4207UCloudStackDescribeVMInstance05 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackGetAlarmTemplateList06 = &driver.Step{
@@ -288,7 +295,7 @@ var testStep4207UCloudStackGetAlarmTemplateList06 = &driver.Step{
 		client := c.(*ucloudstack.UCloudStackClient)
 
 		req := client.NewGenericRequest()
-		_ = req.SetAction("UCloudStackGetAlarmTemplateList")
+		_ = req.SetAction("GetAlarmTemplateList")
 		req.SetPayload(map[string]interface{}{
 			"ResourceType": "VM",
 		})
@@ -311,7 +318,7 @@ var testStep4207UCloudStackGetAlarmTemplateList06 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "获取告警模板列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackBindAlarmTemplate07 = &driver.Step{
@@ -343,14 +350,14 @@ var testStep4207UCloudStackBindAlarmTemplate07 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "BindAlarmTemplateUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "BindAlarmTemplateResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "绑定告警模板",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackUnbindAlarmTemplate08 = &driver.Step{
@@ -381,14 +388,14 @@ var testStep4207UCloudStackUnbindAlarmTemplate08 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "UnbindAlarmTemplateUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "UnbindAlarmTemplateResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "解绑告警模板",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackResetVMInstancePassword09 = &driver.Step{
@@ -424,7 +431,7 @@ var testStep4207UCloudStackResetVMInstancePassword09 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "重置虚拟机密码",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance10 = &driver.Step{
@@ -462,7 +469,7 @@ var testStep4207UCloudStackDescribeVMInstance10 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackRestartVMInstance11 = &driver.Step{
@@ -497,7 +504,7 @@ var testStep4207UCloudStackRestartVMInstance11 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "重启虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance12 = &driver.Step{
@@ -535,7 +542,7 @@ var testStep4207UCloudStackDescribeVMInstance12 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackModifyNameAndRemark13 = &driver.Step{
@@ -572,7 +579,7 @@ var testStep4207UCloudStackModifyNameAndRemark13 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "修改资源名称和备注",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeMetric14 = &driver.Step{
@@ -606,14 +613,14 @@ var testStep4207UCloudStackDescribeMetric14 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetMetricResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeMetricResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "获取监控数据",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackStopVMInstance15 = &driver.Step{
@@ -648,7 +655,7 @@ var testStep4207UCloudStackStopVMInstance15 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "关闭UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance16 = &driver.Step{
@@ -686,7 +693,7 @@ var testStep4207UCloudStackDescribeVMInstance16 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackResizeVMConfig17 = &driver.Step{
@@ -723,7 +730,7 @@ var testStep4207UCloudStackResizeVMConfig17 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "修改虚拟机配置",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance18 = &driver.Step{
@@ -761,7 +768,7 @@ var testStep4207UCloudStackDescribeVMInstance18 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackReinstallVMInstance19 = &driver.Step{
@@ -797,7 +804,7 @@ var testStep4207UCloudStackReinstallVMInstance19 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "重装系统",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance20 = &driver.Step{
@@ -835,7 +842,7 @@ var testStep4207UCloudStackDescribeVMInstance20 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackStartVMInstance21 = &driver.Step{
@@ -870,7 +877,7 @@ var testStep4207UCloudStackStartVMInstance21 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "开启UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance22 = &driver.Step{
@@ -908,7 +915,7 @@ var testStep4207UCloudStackDescribeVMInstance22 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackGetEIPPrice23 = &driver.Step{
@@ -938,14 +945,14 @@ var testStep4207UCloudStackGetEIPPrice23 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetEIPPriceucskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "GetEIPPriceResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "获取UCloudStack弹性IP价格",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackAllocateEIP24 = &driver.Step{
@@ -977,14 +984,14 @@ var testStep4207UCloudStackAllocateEIP24 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "AllocateEIPucskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "AllocateEIPResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "申请UCloudStack外网IP",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeEIP25 = &driver.Step{
@@ -1014,7 +1021,7 @@ var testStep4207UCloudStackDescribeEIP25 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeEIPusckResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeEIPResponse", "str_eq"),
 			validation.Builtins.NewValidator("Infos.0.Status", "Free", "str_eq"),
 		}
 	},
@@ -1022,7 +1029,7 @@ var testStep4207UCloudStackDescribeEIP25 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack外网IP的信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackBindEIP26 = &driver.Step{
@@ -1052,14 +1059,14 @@ var testStep4207UCloudStackBindEIP26 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "BindEIPusckResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "BindEIPResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "绑定UCoudStack弹性IP",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeEIP27 = &driver.Step{
@@ -1089,7 +1096,7 @@ var testStep4207UCloudStackDescribeEIP27 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeEIPusckResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeEIPResponse", "str_eq"),
 			validation.Builtins.NewValidator("Infos.0.Status", "Bound", "str_eq"),
 		}
 	},
@@ -1097,7 +1104,7 @@ var testStep4207UCloudStackDescribeEIP27 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack外网IP的信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackUnBindEIP28 = &driver.Step{
@@ -1127,14 +1134,14 @@ var testStep4207UCloudStackUnBindEIP28 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "UnBindEIPusckResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "UnBindEIPResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "解绑UCloudStack外网IP",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeEIP29 = &driver.Step{
@@ -1164,7 +1171,7 @@ var testStep4207UCloudStackDescribeEIP29 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeEIPusckResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeEIPResponse", "str_eq"),
 			validation.Builtins.NewValidator("Infos.0.Status", "Free", "str_eq"),
 		}
 	},
@@ -1172,7 +1179,7 @@ var testStep4207UCloudStackDescribeEIP29 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack外网IP的信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackReleaseEIP30 = &driver.Step{
@@ -1200,14 +1207,14 @@ var testStep4207UCloudStackReleaseEIP30 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "ReleaseEIPucskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "ReleaseEIPResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除UCloudStack外网IP",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackGetDiskPrice31 = &driver.Step{
@@ -1244,7 +1251,7 @@ var testStep4207UCloudStackGetDiskPrice31 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "获取UCloudStack硬盘价格",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackCreateDisk32 = &driver.Step{
@@ -1276,14 +1283,14 @@ var testStep4207UCloudStackCreateDisk32 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "CreateDiskucskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateDiskResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建UCloudStack硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeDisk33 = &driver.Step{
@@ -1321,7 +1328,7 @@ var testStep4207UCloudStackDescribeDisk33 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack硬盘信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackAttachDisk34 = &driver.Step{
@@ -1358,7 +1365,7 @@ var testStep4207UCloudStackAttachDisk34 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "绑定UClouStack硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeDisk35 = &driver.Step{
@@ -1396,7 +1403,7 @@ var testStep4207UCloudStackDescribeDisk35 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack硬盘信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDetachDisk36 = &driver.Step{
@@ -1432,7 +1439,7 @@ var testStep4207UCloudStackDetachDisk36 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "解绑UClouStack硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeDisk37 = &driver.Step{
@@ -1470,7 +1477,7 @@ var testStep4207UCloudStackDescribeDisk37 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack硬盘信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDeleteDisk38 = &driver.Step{
@@ -1505,7 +1512,7 @@ var testStep4207UCloudStackDeleteDisk38 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除UCloudStack硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackStopVMInstance39 = &driver.Step{
@@ -1540,7 +1547,7 @@ var testStep4207UCloudStackStopVMInstance39 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "关闭UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDescribeVMInstance40 = &driver.Step{
@@ -1578,7 +1585,7 @@ var testStep4207UCloudStackDescribeVMInstance40 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "查询UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4207UCloudStackDeleteVMInstance41 = &driver.Step{
@@ -1613,5 +1620,5 @@ var testStep4207UCloudStackDeleteVMInstance41 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除UCloudStack虚拟机",
-	FastFail:      false,
+	FastFail:      true,
 }

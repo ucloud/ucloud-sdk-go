@@ -22,8 +22,8 @@ func TestScenario4554(t *testing.T) {
 		Id: "4554",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
-				"Region": "cn-sh2",
-				"Zone":   "cn-sh2-02",
+				"Region": "cn",
+				"Zone":   "zone-01",
 			}
 		},
 		Owners: []string{"sunny.zhang@ucloud.cn"},
@@ -76,14 +76,14 @@ var testStep4554UCloudStackCreateVPC01 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "CreateVPCUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateVPCResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建VPC",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDescribeVPC02 = &driver.Step{
@@ -113,14 +113,14 @@ var testStep4554UCloudStackDescribeVPC02 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeVPCUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeVPCResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "查询VPC信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackCreateSubnet03 = &driver.Step{
@@ -151,14 +151,14 @@ var testStep4554UCloudStackCreateSubnet03 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "CreateSubnetUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateSubnetResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建子网",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDescribeSubnet04 = &driver.Step{
@@ -189,14 +189,14 @@ var testStep4554UCloudStackDescribeSubnet04 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeSubnetUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeSubnetResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "查询子网信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDeleteSubnet05 = &driver.Step{
@@ -224,14 +224,14 @@ var testStep4554UCloudStackDeleteSubnet05 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DeleteSubnetUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteSubnetResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除子网",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDeleteVPC06 = &driver.Step{
@@ -259,14 +259,14 @@ var testStep4554UCloudStackDeleteVPC06 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DeleteVPCUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteVPCResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除VPC",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackCreateSecurityGroup07 = &driver.Step{
@@ -298,14 +298,14 @@ var testStep4554UCloudStackCreateSecurityGroup07 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "CreateSecurityGroupUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateSecurityGroupResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建安全组",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDescribeSecurityGroup08 = &driver.Step{
@@ -336,14 +336,15 @@ var testStep4554UCloudStackDescribeSecurityGroup08 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeSecurityGroupUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeSecurityGroupResponse", "str_eq"),
+			validation.Builtins.NewValidator("Infos.0.Status", "Available", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "查询安全组信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackCreateSecurityGroupRule09 = &driver.Step{
@@ -381,7 +382,7 @@ var testStep4554UCloudStackCreateSecurityGroupRule09 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建安全组规则",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackUpdateSecurityGroupRule10 = &driver.Step{
@@ -419,7 +420,7 @@ var testStep4554UCloudStackUpdateSecurityGroupRule10 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "修改安全组规则",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDeleteSecurityGroupRule11 = &driver.Step{
@@ -455,7 +456,7 @@ var testStep4554UCloudStackDeleteSecurityGroupRule11 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除安全组规则",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDeleteSecurityGroup12 = &driver.Step{
@@ -483,14 +484,14 @@ var testStep4554UCloudStackDeleteSecurityGroup12 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DeleteSecurityGroupUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteSecurityGroupResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
+	StartupDelay:  time.Second * 50,
 	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	RetryInterval: time.Second,
 	Title:         "删除安全组",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackAllocateEIP13 = &driver.Step{
@@ -506,6 +507,8 @@ var testStep4554UCloudStackAllocateEIP13 = &driver.Step{
 			"Region":       step.Scenario.GetVar("Region"),
 			"OperatorName": "Bgp",
 			"Bandwidth":    1,
+			"Name":         "eip测试",
+			"ChargeType":   "Month",
 		})
 
 		resp, err := client.AllocateEIP(req)
@@ -526,7 +529,7 @@ var testStep4554UCloudStackAllocateEIP13 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "申请弹性IP",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackDescribeEIP14 = &driver.Step{
@@ -556,7 +559,7 @@ var testStep4554UCloudStackDescribeEIP14 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeEIPusckResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeEIPResponse", "str_eq"),
 			validation.Builtins.NewValidator("Infos.0.Status", "Free", "str_eq"),
 		}
 	},
@@ -564,7 +567,7 @@ var testStep4554UCloudStackDescribeEIP14 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取UCloudStack外网IP的信息",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackModifyEIPBandwidth15 = &driver.Step{
@@ -593,14 +596,14 @@ var testStep4554UCloudStackModifyEIPBandwidth15 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "ModifyEIPBandwidthUcskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "ModifyEIPBandwidthResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "调整外网IP带宽",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep4554UCloudStackReleaseEIP16 = &driver.Step{
@@ -628,12 +631,12 @@ var testStep4554UCloudStackReleaseEIP16 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "ReleaseEIPucskResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "ReleaseEIPResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(5) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除UCloudStack外网IP",
-	FastFail:      false,
+	FastFail:      true,
 }
