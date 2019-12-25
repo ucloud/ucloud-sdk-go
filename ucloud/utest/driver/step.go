@@ -14,12 +14,11 @@ import (
 )
 
 type StepReport struct {
-	Title      string          `json:"title"`
-	Type       string          `json:"type"`
-	Status     string          `json:"status"`
-	Execution  StepExecution   `json:"execution"`
-	ApiRetries []ApiRetries    `json:"api_retries"`
-	Errors     executionErrors `json:"errors,omitempty"`
+	Title     string          `json:"title"`
+	Status    string          `json:"status"`
+	Execution StepExecution   `json:"execution"`
+	Retries   Retries         `json:"retries"`
+	Errors    executionErrors `json:"errors,omitempty"`
 }
 
 type StepExecution struct {
@@ -32,13 +31,6 @@ type StepExecution struct {
 	EndTime       float64 `json:"end_time"`
 }
 
-type ApiRetries struct {
-	Request     map[string]string `json:"request"`
-	Response    json.RawMessage   `json:"response"`
-	RequestUUID string            `json:"request_uuid"`
-	RequestTime float64           `json:"request_time"`
-}
-
 type TestValidator func(interface{}) error
 type Step struct {
 	T *testing.T
@@ -48,20 +40,31 @@ type Step struct {
 	StartupDelay  time.Duration
 	FastFail      bool
 	Title         string
-	Type          string
 	Owners        []string
+	Scenario      *Scenario
+	retries       Retries
 
 	Invoker    func(*Step) (interface{}, error)
 	Validators func(*Step) []TestValidator
 
-	Errors     []error
-	StartTime  float64
-	EndTime    float64
-	Status     string
-	Scenario   *Scenario
-	APIRetries []ApiRetries
+	errors    []error
+	startTime float64
+	endTime   float64
+	status    string
+	id        int
+}
 
-	id int
+type Retries struct {
+	Headers []string        `json:"headers"`
+	Rows    [][]interface{} `json:"rows"`
+}
+
+func (step *Step) AppendRetriesRows(row []interface{}) {
+	step.retries.Rows = append(step.retries.Rows, row)
+}
+
+func (step *Step) SetRetriesHeaders(headers []string) {
+	step.retries.Headers = headers
 }
 
 // LoadFixture is a function for load fixture by the name from map fixture function
@@ -73,8 +76,12 @@ func (step *Step) LoadFixture(name string) (interface{}, error) {
 }
 
 // SetupClientFixture is a help function for setup client fixture
-func SetupClientFixture(client ucloud.ServiceClient) FixtureFunc {
+func SetupClientFixture(factory func() (ucloud.ServiceClient, error)) FixtureFunc {
 	return func(step *Step) (i interface{}, e error) {
+		client, err := factory()
+		if err != nil {
+			return nil, err
+		}
 		if err := client.AddResponseHandler(step.handleResponse); err != nil {
 			return nil, err
 		}
@@ -86,60 +93,60 @@ func SetupClientFixture(client ucloud.ServiceClient) FixtureFunc {
 // Must will check error is nil and return the value
 func (step *Step) Must(v interface{}, err error) interface{} {
 	if err != nil {
-		step.appendError(err)
+		step.AppendError(err)
 	}
 	return v
 }
 
-func (step *Step) appendError(err error) {
-	step.Errors = append(step.Errors, fmt.Errorf("step %02d Failed, %s", step.id, err))
+func (step *Step) AppendError(err error) {
+	step.errors = append(step.errors, fmt.Errorf("step %02d Failed, %s", step.id, err))
 }
 
 // Run will run the step test case with retry
 func (step *Step) run() {
-	step.StartTime = float64(time.Now().Unix())
+	step.startTime = float64(time.Now().Unix())
 	if step.StartupDelay != time.Duration(0) {
 		<-time.After(step.StartupDelay)
 	}
 
 	defer func() {
-		step.EndTime = float64(time.Now().Unix())
+		step.endTime = float64(time.Now().Unix())
 	}()
 
 	for i := 0; i < step.MaxRetries+1; i++ {
-		step.Errors = []error{}
+		step.errors = []error{}
 
 		resp, err := step.Invoker(step)
 		if err != nil {
 			if e, ok := err.(uerr.Error); ok && e.Name() == uerr.ErrSendRequest {
-				step.Status = "failed"
-				step.appendError(err)
+				step.status = "failed"
+				step.AppendError(err)
 				assert.NoError(step.T, err)
 				return
 			} else if ok && e.Name() == uerr.ErrRetCode {
 				// pass
 			} else {
-				step.appendError(err)
+				step.AppendError(err)
 				// continue
 			}
 		}
 
 		for _, validator := range step.Validators(step) {
 			if err := validator(resp); err != nil {
-				step.appendError(err)
+				step.AppendError(err)
 			}
 		}
 
-		if len(step.Errors) > 0 {
+		if len(step.errors) > 0 {
 			if i == step.MaxRetries {
-				step.Status = "failed"
+				step.status = "failed"
 				return
 			}
 			<-time.After(step.RetryInterval)
 			continue
 		}
 
-		step.Status = "passed"
+		step.status = "passed"
 		return
 	}
 
@@ -149,25 +156,23 @@ func (step *Step) run() {
 func (step *Step) Report() StepReport {
 	return StepReport{
 		Title:  step.Title,
-		Type:   step.Type,
-		Status: step.Status,
+		Status: step.status,
 		Execution: StepExecution{
 			MaxRetries:    step.MaxRetries,
 			RetryInterval: step.RetryInterval.Seconds(),
 			StartupDelay:  step.StartupDelay.Seconds(),
 			FastFail:      step.FastFail,
-			Duration:      step.EndTime - step.StartTime,
-			StartTime:     step.StartTime,
-			EndTime:       step.EndTime,
+			Duration:      step.endTime - step.startTime,
+			StartTime:     step.startTime,
+			EndTime:       step.endTime,
 		},
-		ApiRetries: step.APIRetries,
-		Errors:     step.Errors,
+		Retries: step.retries,
+		Errors:  step.errors,
 	}
 }
 
 func (step *Step) init() {
-	step.Status = "skipped"
-	step.Type = "api"
+	step.status = "skipped"
 }
 
 func (step *Step) handleResponse(c *ucloud.Client, req request.Common, resp response.Common, retError error) (response.Common, error) {
@@ -177,20 +182,27 @@ func (step *Step) handleResponse(c *ucloud.Client, req request.Common, resp resp
 			return nil, retError
 		}
 	}
+
 	reqMap, err := request.ToQueryMap(req)
 	if err != nil {
 		return nil, err
 	}
-	res, err := json.Marshal(resp)
+	reqPayload, err := json.MarshalIndent(reqMap, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+	respPayload, err := json.MarshalIndent(resp, "", "  ")
 	if err != nil {
 		return nil, err
 	}
 
-	step.APIRetries = append(step.APIRetries, ApiRetries{
-		Request:     reqMap,
-		Response:    res,
-		RequestUUID: resp.GetRequestUUID(),
-		RequestTime: float64(req.GetRequestTime().Unix()),
+	step.SetRetriesHeaders([]string{"请求", "响应", "日志"})
+	step.AppendRetriesRows([]interface{}{
+		string(reqPayload),
+		string(respPayload),
+		fmt.Sprintf("%s/%d/%s", uxiaoDSN, req.GetRequestTime().Unix(), resp.GetRequestUUID()),
 	})
 	return resp, retError
 }
+
+const uxiaoDSN = "https://uxiao.ucloudadmin.com/#/apigwLog/msg"

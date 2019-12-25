@@ -22,9 +22,9 @@ type ScenarioReport struct {
 	Status       string            `json:"status"`
 	Execution    ScenarioExecution `json:"execution"`
 	Owners       []string          `json:"owners"`
-	PassedCount  int               `json:"passedCount"`
-	FailedCount  int               `json:"failedCount"`
-	SkippedCount int               `json:"skippedCount"`
+	PassedCount  int               `json:"passed_count"`
+	FailedCount  int               `json:"failed_count"`
+	SkippedCount int               `json:"skipped_count"`
 	Errors       executionErrors   `json:"errors,omitempty"`
 }
 
@@ -39,12 +39,12 @@ type Scenario struct {
 	Id       string
 	Title    string
 	Steps    []*Step
-	Spec     *Specification
 	Owners   []string
 	Vars     func(*Scenario) map[string]interface{}
-	Errors   []error
+	Spec     *Specification
 
-	vars map[string]interface{}
+	errors []error
+	vars   map[string]interface{}
 }
 
 // SetVar will set the variable of Scenario
@@ -63,7 +63,7 @@ func (scenario *Scenario) GetVar(name string) interface{} {
 // Must will check error is nil and return the value
 func (scenario *Scenario) Must(v interface{}, err error) interface{} {
 	if err != nil {
-		scenario.Errors = append(scenario.Errors, err)
+		scenario.errors = append(scenario.errors, err)
 	}
 	return v
 }
@@ -74,6 +74,10 @@ func (scenario *Scenario) init() {
 
 // Run will run the scenario test case
 func (scenario *Scenario) Run(t *testing.T) {
+	if scenario.PreCheck != nil {
+		scenario.PreCheck()
+	}
+
 	scenario.init()
 	for k, v := range scenario.Vars(scenario) {
 		scenario.SetVar(k, v)
@@ -86,8 +90,8 @@ func (scenario *Scenario) Run(t *testing.T) {
 		step.T = t
 		step.id = i + 1
 		step.run()
-		if len(step.Errors) > 0 && step.FastFail {
-			t.Fatal(step.Errors)
+		if len(step.errors) > 0 && step.FastFail {
+			t.Fatal(step.errors)
 			return
 		}
 	}
@@ -98,7 +102,7 @@ func (scenario *Scenario) Report() ScenarioReport {
 	var passedCount, failedCount, skippedCount int
 	for _, v := range scenario.Steps {
 		steps = append(steps, v.Report())
-		switch v.Status {
+		switch v.status {
 		case "passed":
 			passedCount++
 		case "failed":
@@ -121,18 +125,18 @@ func (scenario *Scenario) Report() ScenarioReport {
 		FailedCount:  failedCount,
 		SkippedCount: skippedCount,
 		Steps:        steps,
-		Errors:       scenario.Errors,
+		Errors:       scenario.errors,
 	}
 }
 
 func (scenario *Scenario) startTime() float64 {
 	var t float64
 	for _, v := range scenario.Steps {
-		if v.Status != "skipped" && v.StartTime != 0 {
+		if v.status != "skipped" && v.startTime != 0 {
 			if t == 0 {
-				t = v.StartTime
-			} else if v.StartTime < t {
-				t = v.StartTime
+				t = v.startTime
+			} else if v.startTime < t {
+				t = v.startTime
 			}
 		}
 	}
@@ -142,8 +146,8 @@ func (scenario *Scenario) startTime() float64 {
 func (scenario *Scenario) endTime() float64 {
 	var t float64
 	for _, v := range scenario.Steps {
-		if v.Status != "skipped" && v.EndTime > t {
-			t = v.EndTime
+		if v.status != "skipped" && v.endTime > t {
+			t = v.endTime
 		}
 	}
 	return t
@@ -152,13 +156,13 @@ func (scenario *Scenario) endTime() float64 {
 func (scenario *Scenario) status() string {
 	var status []string
 	for _, v := range scenario.Steps {
-		switch v.Status {
+		switch v.status {
 		case "failed":
 			return "failed"
 		case "skipped":
 			continue
 		case "passed":
-			status = append(status, v.Status)
+			status = append(status, v.status)
 		}
 	}
 

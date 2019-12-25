@@ -8,9 +8,9 @@ type SpecificationReport struct {
 	Status       string                 `json:"status"`
 	Execution    SpecificationExecution `json:"execution"`
 	Scenarios    []ScenarioReport       `json:"scenarios"`
-	PassedCount  int                    `json:"passedCount"`
-	FailedCount  int                    `json:"failedCount"`
-	SkippedCount int                    `json:"skippedCount"`
+	PassedCount  int                    `json:"passed_count"`
+	FailedCount  int                    `json:"failed_count"`
+	SkippedCount int                    `json:"skipped_count"`
 }
 
 type SpecificationExecution struct {

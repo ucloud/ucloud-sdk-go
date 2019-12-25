@@ -16,7 +16,7 @@ func ToBase64Query(s *string) *string {
 // ToQueryMap will convert a request to string map
 func ToQueryMap(req Common) (map[string]string, error) {
 	if r, ok := req.(GenericRequest); ok {
-		v := reflect.ValueOf(r.Payload())
+		v := reflect.ValueOf(r.GetPayload())
 		return encodeMap(&v, "")
 	}
 

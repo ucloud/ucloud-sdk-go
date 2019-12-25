@@ -5,7 +5,7 @@ import "encoding/json"
 type GenericResponse interface {
 	Common
 	SetPayload(m map[string]interface{})
-	Payload() map[string]interface{}
+	GetPayload() map[string]interface{}
 	Unmarshal(interface{}) error
 }
 type BaseGenericResponse struct {
@@ -18,7 +18,7 @@ func (r *BaseGenericResponse) SetPayload(m map[string]interface{}) {
 	r.payload = m
 }
 
-func (r BaseGenericResponse) Payload() map[string]interface{} {
+func (r BaseGenericResponse) GetPayload() map[string]interface{} {
 	m := make(map[string]interface{})
 
 	m["RetCode"] = r.GetRetCode()
@@ -34,7 +34,7 @@ func (r BaseGenericResponse) Payload() map[string]interface{} {
 }
 
 func (r BaseGenericResponse) Unmarshal(resp interface{}) error {
-	body, err := json.Marshal(r.Payload())
+	body, err := json.Marshal(r.GetPayload())
 	if err != nil {
 		return err
 	}
