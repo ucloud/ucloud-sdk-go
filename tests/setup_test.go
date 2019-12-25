@@ -123,13 +123,13 @@ func testSetup() {
 	ustackCfg.MaxRetries = 1
 	ustackCfg.LogLevel = log.DebugLevel
 	ustackCfg.Region = "cn"
+	ustackCfg.Zone = "zone-01"
 	ustackCred := auth.NewCredential()
 	ustackCred.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
 	ustackCred.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
 
-	spec.AddFixture("", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ucloud.NewClient(&cfg, &credential), nil
-	}))
+	spec.AddFixture("", driver.SetupClientFixture(ucloud.NewClient(&cfg, &credential)))
+	spec.AddFixture("UCloudStack", driver.SetupClientFixture(ucloudstack.NewClient(&ustackCfg, &ustackCred)))
 
 	// compatible with older test framework
 	ucloudstackClient = ucloudstack.NewClient(&ustackCfg, &ustackCred)
