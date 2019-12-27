@@ -1,3 +1,9 @@
+## 0.13.2 (2019-12-27)
+
+ENHANCEMENTS:
+
+- Update `ResizeAttachedDisk`
+
 ## 0.13.1 (2019-12-26)
 
 ENHANCEMENTS:
