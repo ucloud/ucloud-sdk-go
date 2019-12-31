@@ -128,7 +128,7 @@ func (step *Step) run() {
 			}
 		}
 
-		if step.Validators != nil {
+		if step.Validators != nil && resp != nil {
 			for _, validator := range step.Validators(step) {
 				if err := validator(resp); err != nil {
 					step.AppendError(err)

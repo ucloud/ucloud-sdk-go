@@ -296,9 +296,12 @@ var testStep4207UCloudStackGetAlarmTemplateList06 = &driver.Step{
 
 		req := client.NewGenericRequest()
 		_ = req.SetAction("GetAlarmTemplateList")
-		req.SetPayload(map[string]interface{}{
+		err = req.SetPayload(map[string]interface{}{
 			"ResourceType": "VM",
 		})
+		if err != nil {
+			return nil, err
+		}
 
 		resp, err := client.GenericInvoke(req)
 		if err != nil {

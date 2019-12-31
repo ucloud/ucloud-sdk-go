@@ -131,7 +131,6 @@ func testSetup() {
 	spec.AddFixture("", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucloud.NewClient(&cfg, &credential), nil
 	}))
-
 	spec.AddFixture("UCloudStack", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucloudstack.NewClient(&ustackCfg, &ustackCred), nil
 	}))
@@ -181,12 +180,12 @@ func testSetup() {
 func saveReport() {
 	data, err := json.Marshal(spec.Report())
 	if err != nil {
-		log.Warn("cannot mae")
+		log.Warn("cannot marshal report to json")
 	}
 
 	err = ioutil.WriteFile("./report.json", data, 0755)
 	if err != nil {
-		panic(err)
+		log.Warn("cannot save report to local disk")
 	}
 }
 
@@ -201,5 +200,4 @@ func testAccPreCheck(t *testing.T) {
 	if !driver.IsAcc() {
 		t.Skip(driver.ACC_SKIP_REASON)
 	}
-
 }
