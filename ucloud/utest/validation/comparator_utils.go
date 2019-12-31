@@ -83,7 +83,7 @@ func toFloat(v interface{}) (float64, error) {
 	case reflect.String:
 		val, err := strconv.ParseFloat(rv.String(), 64)
 		if err != nil {
-			return 0.0, errors.Errorf("value %s cannot convert to float", err)
+			return 0.0, errors.Errorf("value %s cannot convert to float, %s", v, err)
 		}
 		return val, nil
 	default:
@@ -102,7 +102,7 @@ func toInt(v interface{}) (int, error) {
 	case reflect.String:
 		val, err := strconv.Atoi(rv.String())
 		if err != nil {
-			return 0.0, errors.Errorf("value %s cannot convert to int", err)
+			return 0.0, errors.Errorf("value %s cannot convert to int, %s", v, err)
 		}
 		return val, nil
 	default:

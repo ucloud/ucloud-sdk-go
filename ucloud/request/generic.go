@@ -1,9 +1,14 @@
 package request
 
+import (
+	"fmt"
+	"reflect"
+)
+
 type GenericRequest interface {
 	Common
 
-	SetPayload(m map[string]interface{})
+	SetPayload(m map[string]interface{}) error
 	GetPayload() map[string]interface{}
 }
 
@@ -13,8 +18,21 @@ type BaseGenericRequest struct {
 	payload map[string]interface{}
 }
 
-func (r *BaseGenericRequest) SetPayload(m map[string]interface{}) {
+func (r *BaseGenericRequest) SetPayload(m map[string]interface{}) error {
+	if m["Region"] != nil && reflect.ValueOf(m["Region"]).Type().Kind() != reflect.String {
+		return fmt.Errorf("request SetPayload error, the Region must set a String value")
+	}
+	if m["Zone"] != nil && reflect.ValueOf(m["Zone"]).Type().Kind() != reflect.String {
+		return fmt.Errorf("request SetPayload error, the Zone must set a String value")
+	}
+	if m["Action"] != nil && reflect.ValueOf(m["Action"]).Type().Kind() != reflect.String {
+		return fmt.Errorf("request SetPayload error, the Action must set a String value")
+	}
+	if m["ProjectId"] != nil && reflect.ValueOf(m["ProjectId"]).Type().Kind() != reflect.String {
+		return fmt.Errorf("request SetPayload error, the ProjectId must set a String value")
+	}
 	r.payload = m
+	return nil
 }
 
 func (r BaseGenericRequest) GetPayload() map[string]interface{} {

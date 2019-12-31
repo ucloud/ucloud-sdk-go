@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"math"
 	"reflect"
 	"regexp"
 	"strings"
@@ -125,7 +126,7 @@ func ne(a, b interface{}) error {
 
 func absEq(a, b interface{}) error {
 	return checkFloats(a, b, func(aVal, bVal float64) error {
-		if aVal != bVal {
+		if math.Abs(aVal) != math.Abs(bVal) {
 			return NewNotExpectedError()
 		}
 		return nil

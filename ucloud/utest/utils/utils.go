@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 
 	"github.com/pkg/errors"
-	"github.com/ucloud/ucloud-sdk-go/private/utils"
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
 // GetValue will return the value of an object by path
@@ -27,7 +26,7 @@ func GetValue(obj interface{}, path string) (interface{}, error) {
 		obj = r.GetPayload()
 	}
 
-	v, err := utils.ValueAtPath(obj, path)
+	v, err := valueAtPath(obj, path)
 	if err != nil {
 		return "", err
 	}
@@ -117,22 +116,89 @@ func convertValue(f reflect.Value, v interface{}) error {
 		if err != nil {
 			return err
 		}
-		fv = reflect.ValueOf(ucloud.Int(int(intValue)))
+		fv = reflect.ValueOf(request.Int(int(intValue)))
 	case reflect.Float32, reflect.Float64:
 		floatValue, err := strconv.ParseFloat(value, 64)
 		if err != nil {
 			return err
 		}
-		fv = reflect.ValueOf(ucloud.Float64(floatValue))
+		fv = reflect.ValueOf(request.Float64(floatValue))
 	case reflect.Bool:
 		boolValue, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
 		}
-		fv = reflect.ValueOf(ucloud.Bool(boolValue))
+		fv = reflect.ValueOf(request.Bool(boolValue))
 	}
 
 	f.Set(fv)
 
 	return nil
+}
+
+// valueAtPath will get struct attribute value by recursive
+func valueAtPath(v interface{}, path string) (interface{}, error) {
+	components := strings.Split(path, ".")
+
+	rv := reflect.ValueOf(v)
+	for rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return nil, errors.Errorf("object %#v is nil", v)
+		}
+		rv = rv.Elem()
+	}
+
+	if rv.Kind() == reflect.Slice || rv.Kind() == reflect.Array {
+		i, err := strconv.Atoi(components[0])
+		if err != nil {
+			return nil, errors.Errorf("path %s is invalid at index of array", path)
+		}
+
+		length := rv.Len()
+		if i >= length {
+			return nil, errors.Errorf("path %s is invalid, array has length %v, but got %v", path, length, i)
+		}
+
+		itemV := rv.Index(i)
+		if !itemV.IsValid() {
+			return nil, errors.Errorf("path %s is invalid for map", path)
+		}
+
+		if len(components) > 1 {
+			return valueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
+		}
+
+		return itemV.Interface(), nil
+	}
+
+	if rv.Kind() == reflect.Map && !rv.IsNil() {
+		itemV := rv.MapIndex(reflect.ValueOf(components[0]))
+		if !itemV.IsValid() {
+			return nil, errors.Errorf("path %s is invalid for map", path)
+		}
+
+		if len(components) > 1 {
+			return valueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
+		}
+
+		return itemV.Interface(), nil
+	}
+
+	if rv.Kind() == reflect.Struct {
+		itemV := rv.FieldByNameFunc(func(s string) bool {
+			return strings.ToLower(s) == strings.ToLower(components[0])
+		})
+
+		if !itemV.IsValid() {
+			return nil, errors.Errorf("path %s is invalid for struct", path)
+		}
+
+		if len(components) > 1 {
+			return valueAtPath(itemV.Interface(), strings.Join(components[1:], "."))
+		}
+
+		return itemV.Interface(), nil
+	}
+
+	return nil, errors.Errorf("object %#v is invalid, need map or struct", v)
 }

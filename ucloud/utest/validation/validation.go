@@ -26,13 +26,17 @@ func NewTestContext(m map[string]CompareFunc) TestComparator {
 // NewValidator will return new validator to validate value is expected
 func (ctx *TestComparator) NewValidator(valuePath string, expected interface{}, comparator string) driver.TestValidator {
 	comparatorFunc := ctx.Comparators.Get(comparator)
+	if comparatorFunc == nil {
+		return func(i interface{}) error {
+			return errors.Errorf("the NewValidator cannot get comparator func from %s", comparator)
+		}
+	}
 
 	return func(resp interface{}) error {
 		v, err := utils.GetValue(resp, valuePath)
 		if err != nil {
 			return errors.Errorf("cannot get value from %s, %s", valuePath, err)
 		}
-
 		err = comparatorFunc(v, expected)
 		if err != nil {
 			if IsNotExpectedError(err) {

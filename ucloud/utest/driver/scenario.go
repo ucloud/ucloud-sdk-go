@@ -79,8 +79,10 @@ func (scenario *Scenario) Run(t *testing.T) {
 	}
 
 	scenario.init()
-	for k, v := range scenario.Vars(scenario) {
-		scenario.SetVar(k, v)
+	if scenario.Vars != nil {
+		for k, v := range scenario.Vars(scenario) {
+			scenario.SetVar(k, v)
+		}
 	}
 
 	for i := 0; i < len(scenario.Steps); i++ {

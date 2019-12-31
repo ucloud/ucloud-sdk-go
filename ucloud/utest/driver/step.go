@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
@@ -40,7 +39,6 @@ type Step struct {
 	StartupDelay  time.Duration
 	FastFail      bool
 	Title         string
-	Owners        []string
 	Scenario      *Scenario
 	retries       Retries
 
@@ -121,7 +119,6 @@ func (step *Step) run() {
 			if e, ok := err.(uerr.Error); ok && e.Name() == uerr.ErrSendRequest {
 				step.status = "failed"
 				step.AppendError(err)
-				assert.NoError(step.T, err)
 				return
 			} else if ok && e.Name() == uerr.ErrRetCode {
 				// pass
@@ -131,9 +128,11 @@ func (step *Step) run() {
 			}
 		}
 
-		for _, validator := range step.Validators(step) {
-			if err := validator(resp); err != nil {
-				step.AppendError(err)
+		if step.Validators != nil {
+			for _, validator := range step.Validators(step) {
+				if err := validator(resp); err != nil {
+					step.AppendError(err)
+				}
 			}
 		}
 
