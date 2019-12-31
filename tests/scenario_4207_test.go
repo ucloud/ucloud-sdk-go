@@ -17,7 +17,7 @@ import (
 func TestScenario4207(t *testing.T) {
 	spec.ParallelTest(t, &driver.Scenario{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			testUCloudStackAccPreCheck(t)
 		},
 		Id: "4207",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {

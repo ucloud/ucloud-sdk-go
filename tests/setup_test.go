@@ -201,3 +201,16 @@ func testAccPreCheck(t *testing.T) {
 		t.Skip(driver.ACC_SKIP_REASON)
 	}
 }
+
+func testUCloudStackAccPreCheck(t *testing.T) {
+	if v := os.Getenv("UCLOUDSTACK_PUBLIC_KEY"); v == "" {
+		t.Fatal("UCLOUDSTACK_PUBLIC_KEY must be set for acceptance tests")
+	}
+	if v := os.Getenv("UCLOUDSTACK_PRIVATE_KEY"); v == "" {
+		t.Fatal("UCLOUDSTACK_PRIVATE_KEY must be set for acceptance tests")
+	}
+
+	if !driver.IsAcc() {
+		t.Skip(driver.ACC_SKIP_REASON)
+	}
+}
