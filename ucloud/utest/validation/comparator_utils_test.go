@@ -41,6 +41,12 @@ func Test_checkFloats(t *testing.T) {
 			}
 			return nil
 		}}, true, false},
+		{"not_bool", args{"0.1", true, func(aVal, bVal float64) error {
+			if aVal != bVal {
+				return NewNotExpectedError()
+			}
+			return nil
+		}}, true, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -194,7 +200,7 @@ func Test_roundTo(t *testing.T) {
 	}
 }
 
-func Test_ToString(t *testing.T) {
+func Test_toString(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -236,6 +242,7 @@ func Test_toFloat(t *testing.T) {
 		{"ok_int", args{1}, 1.0, false},
 		{"ok_float", args{1.0}, 1.0, false},
 		{"ok_str", args{"0.1"}, 0.1, false},
+		{"not_bool", args{true}, 0.0, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -282,6 +289,35 @@ func Test_toLen(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("ToLen() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_toInt(t *testing.T) {
+	type args struct {
+		v interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    int
+		wantErr bool
+	}{
+		{"ok_int", args{1}, 1, false},
+		{"ok_float", args{1.0}, 1, false},
+		{"not_str", args{"0.1"}, 0, true},
+		{"ok_str", args{"1"}, 1, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := toInt(tt.args.v)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("toInt() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("toInt() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

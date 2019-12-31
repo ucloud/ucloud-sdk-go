@@ -12,7 +12,7 @@ import (
 
 const region = "cn-sh2"
 const zone = "cn-sh2-02"
-const imageID = "uimage-dm50wf"
+const imageID = "uimage-33ey05"
 
 func main() {
 	cfg, credential := loadConfig()
@@ -20,7 +20,7 @@ func main() {
 
 	password := base64.StdEncoding.EncodeToString([]byte("ucloud_password_test"))
 	reqCreate := client.NewGenericRequest()
-	reqCreate.SetPayload(map[string]interface{}{
+	err := reqCreate.SetPayload(map[string]interface{}{
 		"Action":  "CreateUHostInstance",
 		"Zone":    zone,
 		"ImageId": imageID,
@@ -48,36 +48,49 @@ func main() {
 		},
 	})
 
-	genericResp, err := client.GenericInvoke(reqCreate)
+	if err != nil {
+		panic(err)
+	}
+
+	genericRespCreate, err := client.GenericInvoke(reqCreate)
 	if err != nil {
 		panic(err)
 	}
 
 	type CreateUHostInstanceResponse struct {
-		// UHost实例Id集合
 		UHostIds []string
-
-		// IP信息
-		IPs []string
 	}
 	respCreate := &CreateUHostInstanceResponse{}
-	if err := genericResp.Unmarshal(respCreate); err != nil {
+	if err := genericRespCreate.Unmarshal(respCreate); err != nil {
 		panic(err)
 	}
 
 	reqDescribe := client.NewGenericRequest()
-	reqDescribe.SetPayload(map[string]interface{}{
+	err = reqDescribe.SetPayload(map[string]interface{}{
 		"Action":   "DescribeUHostInstance",
 		"Zone":     zone,
 		"UHostIds": []string{respCreate.UHostIds[0]},
 	})
 
-	respDescribe, err := client.GenericInvoke(reqDescribe)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(respDescribe.GetPayload()["UHostSet"].([]interface{})[0].(map[string]interface{})["State"].(string))
+	genericRespDescribe, err := client.GenericInvoke(reqDescribe)
+	if err != nil {
+		panic(err)
+	}
+
+	type DescribeUHostInstanceResponse struct {
+		UHostSet []struct {
+			State string
+		}
+	}
+	respDescribe := &DescribeUHostInstanceResponse{}
+	if err := genericRespDescribe.Unmarshal(respDescribe); err != nil {
+		panic(err)
+	}
+	fmt.Println(respDescribe.UHostSet[0].State)
 }
 
 func loadConfig() (*ucloud.Config, *auth.Credential) {

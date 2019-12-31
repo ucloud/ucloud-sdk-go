@@ -16,7 +16,6 @@ func TestGetTimestamp(t *testing.T) {
 		want    int
 		wantErr bool
 	}{
-		// {"ok", args{"13"}, "", false}, // TODO: how to mock?
 		{"invalid_length", args{20}, 0, true},
 	}
 	for _, tt := range tests {
@@ -77,7 +76,7 @@ func TestSearchValue(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			"ok",
+			"ok_foo",
 			args{
 				[]testStruct{
 					{Name: "foo", Data: 42},
@@ -89,6 +88,36 @@ func TestSearchValue(t *testing.T) {
 			},
 			42,
 			false,
+		},
+
+		{
+			"ok_bar",
+			args{
+				[]testStruct{
+					{Name: "foo", Data: 42},
+					{Name: "bar", Data: 142},
+				},
+				"Name",
+				"bar",
+				"Data",
+			},
+			142,
+			false,
+		},
+
+		{
+			"not",
+			args{
+				[]testStruct{
+					{Name: "foo", Data: 42},
+					{Name: "bar", Data: 142},
+				},
+				"Name",
+				"foo",
+				"Test",
+			},
+			"",
+			true,
 		},
 	}
 	for _, tt := range tests {
@@ -153,10 +182,15 @@ func TestCalculate(t *testing.T) {
 		{"sum", args{"+", 1, 1}, int64(2), false},
 		{"sub", args{"-", 2, 1}, int64(1), false},
 		{"multi", args{"*", 1, 3}, int64(3), false},
+		{"divide", args{"/", 3, 1}, int64(3), false},
+		{"invalid", args{"t", 3, 1}, 0, true},
 
 		{"float_sum", args{"+", 1.1, 1}, 2.1, false},
 		{"float_sub", args{"-", 2.1, 1}, 1.1, false},
 		{"string_sub", args{"-", "2.1", 1}, 0, true},
+		{"float_multi", args{"*", 1, 3.0}, 3.0, false},
+		{"float_divide", args{"/", 3.0, 1.0}, 3.0, false},
+		{"float_invalid", args{"t", 3.0, 1.0}, 0, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

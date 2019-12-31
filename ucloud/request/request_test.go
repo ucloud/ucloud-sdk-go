@@ -72,6 +72,63 @@ func TestRequestAccessor(t *testing.T) {
 	assert.Equal(t, "foo", req.GetProjectId())
 }
 
+func TestRequestAccessorForGeneric(t *testing.T) {
+	var err error
+	req := &BaseGenericRequest{}
+
+	assert.Equal(t, "", req.GetAction())
+	err = req.CommonBase.SetAction("foo")
+	assert.NoError(t, err)
+	assert.Equal(t, "foo", req.GetAction())
+
+	assert.Equal(t, "", req.GetRegion())
+	err = req.CommonBase.SetRegion("cn-bj2")
+	assert.NoError(t, err)
+	assert.Equal(t, "cn-bj2", req.GetRegion())
+
+	assert.Equal(t, "", req.GetZone())
+	err = req.CommonBase.SetZone("cn-bj2-02")
+	assert.NoError(t, err)
+	assert.Equal(t, "cn-bj2-02", req.GetZone())
+
+	assert.Equal(t, "", req.GetProjectId())
+	err = req.CommonBase.SetProjectId("bar")
+	assert.NoError(t, err)
+	assert.Equal(t, "bar", req.GetProjectId())
+
+	assert.Equal(t, map[string]interface{}{
+		"Region":    "cn-bj2",
+		"Zone":      "cn-bj2-02",
+		"Action":    "foo",
+		"ProjectId": "bar",
+	}, req.GetPayload())
+
+	assert.NoError(t, req.SetPayload(map[string]interface{}{
+		"Region":    "cn-sh2",
+		"Zone":      "cn-sh2-02",
+		"Action":    "bar",
+		"ProjectId": "foo",
+	}))
+
+	assert.Equal(t, "cn-sh2-02", req.GetZone())
+	assert.Equal(t, "cn-sh2", req.GetRegion())
+	assert.Equal(t, "foo", req.GetProjectId())
+	assert.Equal(t, "bar", req.GetAction())
+
+	assert.Error(t, req.SetPayload(map[string]interface{}{
+		"Region": 1,
+	}))
+	assert.Error(t, req.SetPayload(map[string]interface{}{
+		"Zone": true,
+	}))
+	assert.Error(t, req.SetPayload(map[string]interface{}{
+		"Action": 1,
+	}))
+	assert.Error(t, req.SetPayload(map[string]interface{}{
+		"ProjectId": 1,
+	}))
+}
+
 func TestEncodeOne(t *testing.T) {
 	i := 42
 
@@ -243,6 +300,91 @@ func TestToQueryMap(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := ToQueryMap(tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("requestToMap() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("requestToMap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestToQueryMapForGeneric(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload map[string]interface{}
+		want    map[string]string
+		wantErr bool
+	}{
+		{
+			"Ok",
+			map[string]interface{}{
+				"Id":      1,
+				"Name":    "lilei",
+				"IsValid": true,
+				"Ips":     []string{"127.0.0.1", "192.168.1.1"},
+			},
+			map[string]string{
+				"Id":      "1",
+				"Name":    "lilei",
+				"IsValid": "true",
+				"Ips.0":   "127.0.0.1",
+				"Ips.1":   "192.168.1.1",
+			},
+			false,
+		},
+
+		{
+			"Ok_nest_map",
+			map[string]interface{}{
+				"Str":  "str",
+				"Int":  1,
+				"Bool": true,
+				"Nest": []map[string]interface{}{
+					{
+						"Nest2": map[string]interface{}{
+							"Int": 1,
+							"Str": "str",
+						},
+					},
+				},
+			},
+			map[string]string{
+				"Str":              "str",
+				"Int":              "1",
+				"Bool":             "true",
+				"Nest.0.Nest2.Int": "1",
+				"Nest.0.Nest2.Str": "str",
+			},
+			false,
+		},
+
+		{
+			"Ok_ptr_map",
+			map[string]interface{}{
+				"Nest": []*map[string]interface{}{
+					{
+						"Nest2": map[string]interface{}{
+							"Int": 1,
+							"Str": "str",
+						},
+					},
+				},
+			},
+			map[string]string{
+				"Nest.0.Nest2.Int": "1",
+				"Nest.0.Nest2.Str": "str",
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := &BaseGenericRequest{}
+			assert.NoError(t, req.SetPayload(tt.payload))
+			got, err := ToQueryMap(req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("requestToMap() error = %v, wantErr %v", err, tt.wantErr)
 				return
