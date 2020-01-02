@@ -242,3 +242,50 @@ type MockResponse struct {
 	TotalCount int
 	UHostSet   []map[string]interface{}
 }
+
+func TestGenericClient(t *testing.T) {
+	tests := []ClientTestCase{
+		{
+			Name:        "generic_ok",
+			InputVector: newTestClient,
+			Mock:        map[string]interface{}{"Action": "Test", "Message": "", "RetCode": 0.0},
+			Golden:      clientCaseGolden{Action: "Test", RetCode: 0},
+			Error:       "",
+		},
+
+		{
+			Name:        "generic_no",
+			InputVector: newTestClient,
+			Mock:        map[string]interface{}{"Action": "Test", "Message": "Action [Test] not found", "RetCode": 161},
+			Golden:      clientCaseGolden{Action: "Test", RetCode: 0},
+			Error:       "not found",
+		},
+	}
+
+	for _, test := range tests {
+		var err error
+		client := test.InputVector()
+
+		err = mockTestClient(&client, test.Mock)
+		assert.NoError(t, err)
+
+		// send mocked request, assert response value
+		req := client.NewGenericRequest()
+		resp, err := client.GenericInvoke(req)
+		if test.Error == "" {
+			if test.Golden.Action != "" {
+				assert.Equal(t, resp.GetAction(), test.Golden.Action)
+			}
+
+			assert.Equal(t, resp.GetRetCode(), test.Golden.RetCode)
+			assert.Equal(t, test.Mock, resp.GetPayload())
+		} else {
+			assert.Error(t, err)
+			assert.Contains(t, err.Error(), test.Error)
+
+			if retCodeErr, ok := err.(uerr.ServerError); ok && test.Golden.RetCode != 0 {
+				assert.Equal(t, test.Golden.RetCode, retCodeErr.Code())
+			}
+		}
+	}
+}
