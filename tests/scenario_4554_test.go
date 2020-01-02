@@ -15,6 +15,7 @@ import (
 )
 
 func TestScenario4554(t *testing.T) {
+	t.Skip()
 	spec.ParallelTest(t, &driver.Scenario{
 		PreCheck: func() {
 			testUCloudStackAccPreCheck(t)
