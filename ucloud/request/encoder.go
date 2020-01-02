@@ -144,16 +144,7 @@ func encodeMap(rv *reflect.Value, prefix string) (map[string]string, error) {
 	result := make(map[string]string)
 
 	for _, mapKey := range rv.MapKeys() {
-		mapValue := rv.MapIndex(mapKey)
-		f := mapValue.Elem()
-
-		name := mapKey.String()
-		if prefix != "" {
-			name = fmt.Sprintf("%s.%s", prefix, name)
-		}
-
-		// find the real value of pointer
-		// such as **struct to struct
+		f := rv.MapIndex(mapKey)
 		for f.Kind() == reflect.Ptr || f.Kind() == reflect.Interface {
 			if f.IsNil() {
 				break
@@ -164,6 +155,11 @@ func encodeMap(rv *reflect.Value, prefix string) (map[string]string, error) {
 		// check if nil-pointer
 		if f.Kind() == reflect.Ptr && f.IsNil() {
 			continue
+		}
+
+		name := mapKey.String()
+		if prefix != "" {
+			name = fmt.Sprintf("%s.%s", prefix, name)
 		}
 
 		switch f.Kind() {
