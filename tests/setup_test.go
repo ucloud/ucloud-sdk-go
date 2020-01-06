@@ -131,8 +131,8 @@ func testSetup() {
 	spec.AddFixture("", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucloud.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UCloudStack", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ucloudstack.NewClient(&ustackCfg, &ustackCred), nil
+	spec.AddFixture("UHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uhost.NewClient(&cfg, &credential), nil
 	}))
 
 	// compatible with older test framework
