@@ -166,7 +166,7 @@ func encodeMap(rv *reflect.Value, prefix string) (map[string]string, error) {
 		case reflect.Slice, reflect.Array:
 			for n := 0; n < f.Len(); n++ {
 				item := f.Index(n)
-				for item.Kind() == reflect.Ptr || f.Kind() == reflect.Interface {
+				for item.Kind() == reflect.Ptr || item.Kind() == reflect.Interface {
 					if f.IsNil() {
 						break
 					}

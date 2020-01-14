@@ -39,26 +39,26 @@ func SetRequest(req request.Common, payload map[string]interface{}) error {
 	rv := reflect.ValueOf(req)
 	for rv.Kind() == reflect.Ptr {
 		if rv.IsNil() {
-			return errors.Errorf("struct is nil")
+			return errors.Errorf("request ptr is nil")
 		}
 		rv = rv.Elem()
 	}
 
 	if rv.Kind() != reflect.Struct {
-		return errors.Errorf("got type %s, expected struct", rv.Kind().String())
+		return errors.Errorf("request expected type Struct, got type %s,", rv.Kind().String())
 	}
 
 	for k, v := range payload {
 		f := rv.FieldByName(k)
 		if !f.IsValid() {
-			return fmt.Errorf("struct field %s is invalid", k)
+			return errors.Errorf("error on setting field %q of request, field is invalid", k)
 		}
 
 		if !f.CanSet() {
-			return fmt.Errorf("cannot set %s, field cannot be set", k)
+			return errors.Errorf("error on setting field %q of request, field cannot be set", k)
 		}
 		if err := setValue(f, v); err != nil {
-			return err
+			return errors.Errorf("error on setting field %q of request, %s", k, err)
 		}
 	}
 	return nil
@@ -114,19 +114,19 @@ func convertValue(f reflect.Value, v interface{}) error {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		intValue, err := strconv.ParseInt(value, 10, 64)
 		if err != nil {
-			return err
+			return errors.Errorf("convert %q to Int failed, %s", value, err)
 		}
 		fv = reflect.ValueOf(request.Int(int(intValue)))
 	case reflect.Float32, reflect.Float64:
 		floatValue, err := strconv.ParseFloat(value, 64)
 		if err != nil {
-			return err
+			return errors.Errorf("convert %q to Float failed, %s", value, err)
 		}
 		fv = reflect.ValueOf(request.Float64(floatValue))
 	case reflect.Bool:
 		boolValue, err := strconv.ParseBool(value)
 		if err != nil {
-			return err
+			return errors.Errorf("convert %q to Bool failed, %s", value, err)
 		}
 		fv = reflect.ValueOf(request.Bool(boolValue))
 	}

@@ -233,11 +233,18 @@ func lenLe(a, b interface{}) error {
 }
 
 func contains(a, b interface{}) error {
-	rv := reflect.ValueOf(a)
-	switch rv.Kind() {
+	f := reflect.ValueOf(a)
+	switch f.Kind() {
 	case reflect.Slice, reflect.Array:
-		for i := 0; i < rv.Len(); i++ {
-			err := strEq(rv.Index(i).String(), b)
+		for i := 0; i < f.Len(); i++ {
+			item := f.Index(i)
+			for item.Kind() == reflect.Ptr || item.Kind() == reflect.Interface {
+				if f.IsNil() {
+					break
+				}
+				item = item.Elem()
+			}
+			err := strEq(item.String(), b)
 			if err != nil {
 				if !IsNotExpectedError(err) {
 					return err
@@ -256,7 +263,7 @@ func contains(a, b interface{}) error {
 			return nil
 		})
 	default:
-		return errors.Errorf("val must be contained by an iterable type, got %s", rv.String())
+		return errors.Errorf("val must be contained by an iterable type, got %s", f.String())
 	}
 }
 
