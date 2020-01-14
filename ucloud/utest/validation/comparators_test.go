@@ -48,6 +48,7 @@ func Test_contains(t *testing.T) {
 		{"arrNotIn", args{[]string{"1", "2"}, "3"}, true, true},
 		{"strIn", args{"12", "1"}, false, false},
 		{"strNotIn", args{"12", "3"}, true, true},
+		{"interfaceIn", args{[]interface{}{"test"}, "test"}, false, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
