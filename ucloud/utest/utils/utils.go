@@ -138,6 +138,7 @@ func convertValue(f reflect.Value, v interface{}) error {
 
 // valueAtPath will get struct attribute value by recursive
 func valueAtPath(v interface{}, path string) (interface{}, error) {
+	path = strings.TrimSpace(path)
 	components := strings.Split(path, ".")
 
 	rv := reflect.ValueOf(v)
