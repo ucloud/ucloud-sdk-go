@@ -3,10 +3,10 @@ package validation
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"reflect"
 	"strconv"
-
-	"github.com/pkg/errors"
+	"strings"
 )
 
 func checkFloats(a, b interface{}, checkFunc func(float64, float64) error) error {
@@ -21,6 +21,12 @@ func checkStrings(a, b interface{}, checkFunc func(string, string) error) error 
 	aVal, bVal, err := toStrings(a, b)
 	if err != nil {
 		return err
+	}
+	if strings.ToLower(aVal) == "false" {
+		aVal = "false"
+	}
+	if strings.ToLower(bVal) == "false" {
+		bVal = "false"
 	}
 	return checkFunc(aVal, bVal)
 }
