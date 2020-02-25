@@ -35,7 +35,7 @@ type assumeRoleData struct {
 	PrivateKey    string
 	ProjectID     string
 	PublicKey     string
-	RoleName      string
+	CharacterName string
 	SecurityToken string
 	UHostID       string
 }
@@ -47,7 +47,7 @@ type assumeRoleResponse struct {
 }
 
 func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvider, error) {
-	path := "/ram/token"
+	path := "/meta-data/latest/uam/security-credentials"
 	if len(req.RoleName) != 0 {
 		path += "/" + req.RoleName
 	}
