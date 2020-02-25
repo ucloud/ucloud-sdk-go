@@ -47,7 +47,7 @@ type assumeRoleResponse struct {
 }
 
 func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvider, error) {
-	path := "/meta-data/latest/uam/security-credentials"
+	path := "/meta-data/v1/uam/security-credentials"
 	if len(req.RoleName) != 0 {
 		path += "/" + req.RoleName
 	}
