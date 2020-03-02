@@ -38,6 +38,7 @@ type assumeRoleData struct {
 	CharacterName string
 	SecurityToken string
 	UHostID       string
+	UPHostId      string
 }
 
 type assumeRoleResponse struct {
