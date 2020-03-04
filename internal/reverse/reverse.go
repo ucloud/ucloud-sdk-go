@@ -3,6 +3,8 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
+	"github.com/ucloud/ucloud-sdk-go/services/ucloudstack"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
@@ -93,6 +95,8 @@ func initialize() ApisReport {
 	var uphostClient *uphost.UPHostClient
 	var ipsecvpnClient *ipsecvpn.IPSecVPNClient
 	var ufileClient *ufile.UFileClient
+	var stepflowClient *stepflow.StepFlowClient
+	var ucloudstackClient *ucloudstack.UCloudStackClient
 
 	cfg := ucloud.NewConfig()
 	cfg.Region = "..."
@@ -115,6 +119,8 @@ func initialize() ApisReport {
 	uphostClient = uphost.NewClient(&cfg, &credential)
 	ipsecvpnClient = ipsecvpn.NewClient(&cfg, &credential)
 	ufileClient = ufile.NewClient(&cfg, &credential)
+	stepflowClient = stepflow.NewClient(&cfg, &credential)
+	ucloudstackClient = ucloudstack.NewClient(&cfg, &credential)
 
 	apisReport.inspectProductClient(uhostClient)
 	apisReport.inspectProductClient(unetClient)
@@ -130,6 +136,8 @@ func initialize() ApisReport {
 	apisReport.inspectProductClient(uphostClient)
 	apisReport.inspectProductClient(ipsecvpnClient)
 	apisReport.inspectProductClient(ufileClient)
+	apisReport.inspectProductClient(stepflowClient)
+	apisReport.inspectProductClient(ucloudstackClient)
 
 	return apisReport
 }
