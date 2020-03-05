@@ -53,6 +53,8 @@ import (
 	iunet "github.com/ucloud/ucloud-sdk-go/internal/services/unet"
 	iuphost "github.com/ucloud/ucloud-sdk-go/internal/services/uphost"
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
+
+	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 )
 
 func TestMain(m *testing.M) {
@@ -131,8 +133,50 @@ func testSetup() {
 	spec.AddFixture("", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucloud.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UCloudStack", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ucloudstack.NewClient(&ustackCfg, &ustackCred), nil
+	spec.AddFixture("IPSecVPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ipsecvpn.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("PathX", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return pathx.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("StepFlow", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return stepflow.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UAccount", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uaccount.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UBill", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ubill.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udpn.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDisk", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udisk.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UFile", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ufile.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uhost.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("ULB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ulb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UMem", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return umem.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UNet", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return unet.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uphost.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return vpc.NewClient(&cfg, &credential), nil
 	}))
 
 	// compatible with older test framework
