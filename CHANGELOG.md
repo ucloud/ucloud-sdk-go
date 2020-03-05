@@ -1,3 +1,14 @@
+## 0.14.0 (2020-03-05)
+
+FEATURES:
+
+- add the method about Generic Invoke of the Client
+- add utest framework
+
+ENHANCEMENTS:
+
+- Update `UHost` apis to be consistent with official document
+
 ## 0.13.2 (2019-12-27)
 
 ENHANCEMENTS:
