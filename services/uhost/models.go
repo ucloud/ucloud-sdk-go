@@ -103,9 +103,6 @@ type UHostIPSet struct {
 	// 外网IP资源ID 。(内网IP无对应的资源ID)
 	IPId string
 
-	// IPv4/IPv6；
-	IPMode string
-
 	// 当前网卡的Mac。
 	Mac string
 
@@ -207,9 +204,6 @@ type UHostInstanceSet struct {
 
 	//
 	IPs []string `deprecated:"true"`
-
-	// true:有ipv6特性；false，没有ipv6特性
-	IPv6Feature bool
 
 	// 【建议不再使用】主机的系统盘ID。
 	ImageId string
