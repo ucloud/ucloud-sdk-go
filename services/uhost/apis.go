@@ -211,18 +211,6 @@ type CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-
-	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址
-	Adress *string `required:"false"`
-
-	// 第N块网卡中IPv6对应的共享带宽id，默认不带外网
-	ShareBandwidthId *string `required:"false"`
-}
-
-/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -253,9 +241,6 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-
-	//
-	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
 }
 
 /*
