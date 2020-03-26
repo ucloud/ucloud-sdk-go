@@ -6,16 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/services/unet"
+	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
-
-	"github.com/ucloud/ucloud-sdk-go/services/unet"
-
-	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 )
 
 func TestScenario613(t *testing.T) {
@@ -208,7 +205,7 @@ var testStep613CreateUHostInstance04 = &driver.Step{
 			"LoginMode":   "Password",
 			"ImageId":     step.Scenario.GetVar("Image_Id"),
 			"Disks": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"IsBoot": "True",
 					"Size":   20,
 					"Type":   "LOCAL_NORMAL",

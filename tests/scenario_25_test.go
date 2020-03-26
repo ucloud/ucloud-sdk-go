@@ -6,11 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/ipsecvpn"
+	"github.com/ucloud/ucloud-sdk-go/services/unet"
+	"github.com/ucloud/ucloud-sdk-go/services/vpc"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )
 
 func TestScenario25(t *testing.T) {
@@ -21,9 +23,7 @@ func TestScenario25(t *testing.T) {
 		Id: "25",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
-
-				"Region": "cn-sh2",
-				"Zone":   "cn-sh2-02",
+				"Region": "cn-bj2",
 			}
 		},
 		Owners: []string{"becky.xu@ucloud.cn"},
@@ -57,15 +57,14 @@ func TestScenario25(t *testing.T) {
 
 var testStep25CreateVPC01 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateVPC")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateVPCRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 			"Network": []interface{}{
 				"192.168.0.0/16",
@@ -76,7 +75,7 @@ var testStep25CreateVPC01 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.CreateVPC(req)
 		if err != nil {
 			return resp, err
 		}
@@ -98,15 +97,14 @@ var testStep25CreateVPC01 = &driver.Step{
 
 var testStep25CreateSubnet02 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateSubnet")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateSubnetRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPCId":      step.Scenario.GetVar("vpc_id"),
 			"SubnetName": "ipsecvpn-subnet",
 			"Subnet":     "192.168.11.0",
@@ -116,7 +114,7 @@ var testStep25CreateSubnet02 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.CreateSubnet(req)
 		if err != nil {
 			return resp, err
 		}
@@ -153,7 +151,6 @@ var testStep25GetVPNGatewayPrice03 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-
 		resp, err := client.GenericInvoke(req)
 		if err != nil {
 			return resp, err
@@ -175,15 +172,14 @@ var testStep25GetVPNGatewayPrice03 = &driver.Step{
 
 var testStep25CreateVPNGateway04 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNGatewayName": "auto_apitest",
 			"VPCId":          step.Scenario.GetVar("vpc_id"),
 			"Region":         step.Scenario.GetVar("Region"),
@@ -193,7 +189,7 @@ var testStep25CreateVPNGateway04 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.CreateVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -215,15 +211,14 @@ var testStep25CreateVPNGateway04 = &driver.Step{
 
 var testStep25AllocateEIP05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UNet")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*unet.UNetClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("AllocateEIP")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewAllocateEIPRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region":       step.Scenario.GetVar("Region"),
 			"OperatorName": "Bgp",
 			"Bandwidth":    2,
@@ -232,7 +227,7 @@ var testStep25AllocateEIP05 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.AllocateEIP(req)
 		if err != nil {
 			return resp, err
 		}
@@ -254,15 +249,14 @@ var testStep25AllocateEIP05 = &driver.Step{
 
 var testStep25BindEIP06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UNet")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*unet.UNetClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("BindEIP")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewBindEIPRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"ResourceType": "vpngw",
 			"ResourceId":   step.Scenario.GetVar("vpngw_id"),
 			"Region":       step.Scenario.GetVar("Region"),
@@ -272,7 +266,7 @@ var testStep25BindEIP06 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.BindEIP(req)
 		if err != nil {
 			return resp, err
 		}
@@ -293,22 +287,21 @@ var testStep25BindEIP06 = &driver.Step{
 
 var testStep25DescribeVPNGateway07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DescribeVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -345,7 +338,6 @@ var testStep25GetVPNGatewayUpgradePrice08 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-
 		resp, err := client.GenericInvoke(req)
 		if err != nil {
 			return resp, err
@@ -367,15 +359,14 @@ var testStep25GetVPNGatewayUpgradePrice08 = &driver.Step{
 
 var testStep25UpdateVPNGateway09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("UpdateVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewUpdateVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
 			"Region":       step.Scenario.GetVar("Region"),
 			"Grade":        "Enhanced",
@@ -384,7 +375,7 @@ var testStep25UpdateVPNGateway09 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.UpdateVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -405,15 +396,14 @@ var testStep25UpdateVPNGateway09 = &driver.Step{
 
 var testStep25CreateRemoteVPNGateway10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateRemoteVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateRemoteVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"RemoteVPNGatewayName": "auto_apitest",
 			"RemoteVPNGatewayAddr": "10.1.1.0",
 			"Region":               step.Scenario.GetVar("Region"),
@@ -422,7 +412,7 @@ var testStep25CreateRemoteVPNGateway10 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.CreateRemoteVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -444,22 +434,21 @@ var testStep25CreateRemoteVPNGateway10 = &driver.Step{
 
 var testStep25DescribeRemoteVPNGateway11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeRemoteVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeRemoteVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DescribeRemoteVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -480,15 +469,14 @@ var testStep25DescribeRemoteVPNGateway11 = &driver.Step{
 
 var testStep25CreateVPNTunnel12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateVPNTunnel")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateVPNTunnelRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNTunnelName":      "auto_apitest",
 			"VPNGatewayId":       step.Scenario.GetVar("vpngw_id"),
 			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
@@ -509,7 +497,7 @@ var testStep25CreateVPNTunnel12 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.CreateVPNTunnel(req)
 		if err != nil {
 			return resp, err
 		}
@@ -531,22 +519,21 @@ var testStep25CreateVPNTunnel12 = &driver.Step{
 
 var testStep25DescribeVPNTunnel13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeVPNTunnel")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeVPNTunnelRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DescribeVPNTunnel(req)
 		if err != nil {
 			return resp, err
 		}
@@ -567,15 +554,14 @@ var testStep25DescribeVPNTunnel13 = &driver.Step{
 
 var testStep25UpdateVPNTunnelAttribute14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("UpdateVPNTunnelAttribute")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewUpdateVPNTunnelAttributeRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNTunnelId": step.Scenario.GetVar("vpn_tunnel_id"),
 			"Region":      step.Scenario.GetVar("Region"),
 		})
@@ -583,7 +569,7 @@ var testStep25UpdateVPNTunnelAttribute14 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.UpdateVPNTunnelAttribute(req)
 		if err != nil {
 			return resp, err
 		}
@@ -604,15 +590,14 @@ var testStep25UpdateVPNTunnelAttribute14 = &driver.Step{
 
 var testStep25DeleteVPNGateway15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
 			"Region":       step.Scenario.GetVar("Region"),
 		})
@@ -620,7 +605,7 @@ var testStep25DeleteVPNGateway15 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -641,15 +626,14 @@ var testStep25DeleteVPNGateway15 = &driver.Step{
 
 var testStep25DeleteRemoteVPNGateway16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteRemoteVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteRemoteVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
 			"Region":             step.Scenario.GetVar("Region"),
 		})
@@ -657,7 +641,7 @@ var testStep25DeleteRemoteVPNGateway16 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteRemoteVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -678,15 +662,14 @@ var testStep25DeleteRemoteVPNGateway16 = &driver.Step{
 
 var testStep25DeleteVPNTunnel17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPNTunnel")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteVPNTunnelRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNTunnelId": step.Scenario.GetVar("vpn_tunnel_id"),
 			"Region":      step.Scenario.GetVar("Region"),
 		})
@@ -694,7 +677,7 @@ var testStep25DeleteVPNTunnel17 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteVPNTunnel(req)
 		if err != nil {
 			return resp, err
 		}
@@ -715,15 +698,14 @@ var testStep25DeleteVPNTunnel17 = &driver.Step{
 
 var testStep25DeleteVPNGateway18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
 			"Region":       step.Scenario.GetVar("Region"),
 		})
@@ -731,7 +713,7 @@ var testStep25DeleteVPNGateway18 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -745,22 +727,21 @@ var testStep25DeleteVPNGateway18 = &driver.Step{
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	RetryInterval: 5 * time.Second,
 	Title:         "删除VPN网关",
 	FastFail:      false,
 }
 
 var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteRemoteVPNGateway")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteRemoteVPNGatewayRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
 			"Region":             step.Scenario.GetVar("Region"),
 		})
@@ -768,7 +749,7 @@ var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteRemoteVPNGateway(req)
 		if err != nil {
 			return resp, err
 		}
@@ -789,15 +770,14 @@ var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
 
 var testStep25ReleaseEIP20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UNet")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*unet.UNetClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("ReleaseEIP")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewReleaseEIPRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 			"EIPId":  step.Scenario.GetVar("eip_id"),
 		})
@@ -805,7 +785,7 @@ var testStep25ReleaseEIP20 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.ReleaseEIP(req)
 		if err != nil {
 			return resp, err
 		}
@@ -826,15 +806,14 @@ var testStep25ReleaseEIP20 = &driver.Step{
 
 var testStep25DeleteSubnet21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteSubnet")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteSubnetRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"SubnetId": step.Scenario.GetVar("subnet_id"),
 			"Region":   step.Scenario.GetVar("Region"),
 		})
@@ -842,7 +821,7 @@ var testStep25DeleteSubnet21 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteSubnet(req)
 		if err != nil {
 			return resp, err
 		}
@@ -863,15 +842,14 @@ var testStep25DeleteSubnet21 = &driver.Step{
 
 var testStep25DeleteVPC22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteVPC")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteVPCRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPCId":  step.Scenario.GetVar("vpc_id"),
 			"Region": step.Scenario.GetVar("Region"),
 		})
@@ -879,7 +857,7 @@ var testStep25DeleteVPC22 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GenericInvoke(req)
+		resp, err := client.DeleteVPC(req)
 		if err != nil {
 			return resp, err
 		}
