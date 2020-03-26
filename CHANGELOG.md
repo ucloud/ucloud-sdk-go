@@ -1,3 +1,9 @@
+## 0.14.1 (2020-03-26)
+
+ENHANCEMENTS:
+
+- Update `VPC` apis to be consistent with official document
+
 ## 0.14.0 (2020-03-05)
 
 FEATURES:
