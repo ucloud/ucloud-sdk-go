@@ -6,56 +6,58 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ucloud/ucloud-sdk-go/services/ipsecvpn"
-	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
 )
 
-func TestScenario25(t *testing.T) {
+func TestScenario4023(t *testing.T) {
 	spec.ParallelTest(t, &driver.Scenario{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Id: "25",
+		Id: "4023",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
-				"Region": "cn-bj2",
+				"route_table_name1": "route_test1",
+				"route_table_name2": "route_test2",
+				"network1":          "182.13.0.0/16",
+				"network2":          "172.123.17.0/24",
+				"Region":            "cn-bj2",
+				"Zone":              "cn-bj2-02",
 			}
 		},
-		Owners: []string{"becky.xu@ucloud.cn"},
-		Title:  "IPSecVPN自动化回归-BGP机房",
+		Owners: []string{"peter.zhang@ucloud.cn"},
+		Title:  "VPC自动化回归-自定义路由",
 		Steps: []*driver.Step{
-			testStep25CreateVPC01,
-			testStep25CreateSubnet02,
-			testStep25GetVPNGatewayPrice03,
-			testStep25CreateVPNGateway04,
-			testStep25AllocateEIP05,
-			testStep25BindEIP06,
-			testStep25DescribeVPNGateway07,
-			testStep25GetVPNGatewayUpgradePrice08,
-			testStep25UpdateVPNGateway09,
-			testStep25CreateRemoteVPNGateway10,
-			testStep25DescribeRemoteVPNGateway11,
-			testStep25CreateVPNTunnel12,
-			testStep25DescribeVPNTunnel13,
-			testStep25UpdateVPNTunnelAttribute14,
-			testStep25DeleteVPNGateway15,
-			testStep25DeleteRemoteVPNGateway16,
-			testStep25DeleteVPNTunnel17,
-			testStep25DeleteVPNGateway18,
-			testStep25DeleteRemoteVPNGateway19,
-			testStep25ReleaseEIP20,
-			testStep25DeleteSubnet21,
-			testStep25DeleteVPC22,
+			testStep4023CreateVPC01,
+			testStep4023CreateSubnet02,
+			testStep4023AllocateVIP03,
+			testStep4023CreateRouteTable04,
+			testStep4023CloneRouteTable05,
+			testStep4023AssociateRouteTable06,
+			testStep4023ModifyRouteRule07,
+			testStep4023ModifyRouteRule08,
+			testStep4023ModifyRouteRule09,
+			testStep4023DescribeRouteTable10,
+			testStep4023DescribeRouteTable11,
+			testStep4023UpdateRouteTableAttribute12,
+			testStep4023DeleteRouteTable13,
+			testStep4023DeleteRouteTable14,
+			testStep4023ReleaseVIP15,
+			testStep4023DeleteSubnet16,
+			testStep4023DeleteVPC17,
+			testStep4023DescribeRouteTable18,
+			testStep4023DescribeRouteTable19,
+			testStep4023DeleteRouteTable20,
+			testStep4023DeleteRouteTable21,
 		},
 	})
 }
 
-var testStep25CreateVPC01 = &driver.Step{
+var testStep4023CreateVPC01 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -69,7 +71,7 @@ var testStep25CreateVPC01 = &driver.Step{
 			"Network": []interface{}{
 				"192.168.0.0/16",
 			},
-			"Name": "ipsecvpn-vpc",
+			"Name": "route-test",
 		})
 		if err != nil {
 			return nil, err
@@ -95,7 +97,7 @@ var testStep25CreateVPC01 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25CreateSubnet02 = &driver.Step{
+var testStep4023CreateSubnet02 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -106,7 +108,7 @@ var testStep25CreateSubnet02 = &driver.Step{
 		req := client.NewCreateSubnetRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"VPCId":      step.Scenario.GetVar("vpc_id"),
-			"SubnetName": "ipsecvpn-subnet",
+			"SubnetName": "route-subnet-test",
 			"Subnet":     "192.168.11.0",
 			"Region":     step.Scenario.GetVar("Region"),
 		})
@@ -127,35 +129,77 @@ var testStep25CreateSubnet02 = &driver.Step{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(10) * time.Second,
+	StartupDelay:  time.Duration(5) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建子网",
 	FastFail:      false,
 }
 
-var testStep25GetVPNGatewayPrice03 = &driver.Step{
+var testStep4023AllocateVIP03 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("GetVPNGatewayPrice")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewAllocateVIPRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":    step.Scenario.GetVar("vpc_id"),
+			"SubnetId": step.Scenario.GetVar("subnet_id"),
+			"Region":   step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.AllocateVIP(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("vip", step.Must(utils.GetValue(resp, "VIPSet.0.VIP")))
+		step.Scenario.SetVar("vip_id", step.Must(utils.GetValue(resp, "VIPSet.0.VIPId")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "AllocateVIPResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "申请内网虚拟IP",
+	FastFail:      false,
+}
+
+var testStep4023CreateRouteTable04 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewCreateRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":  step.Scenario.GetVar("vpc_id"),
 			"Region": step.Scenario.GetVar("Region"),
-			"Grade":  "Standard",
+			"Name":   step.Scenario.GetVar("route_table_name1"),
 		})
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.CreateRouteTable(req)
 		if err != nil {
 			return resp, err
 		}
 
+		step.Scenario.SetVar("RouteTableId1", step.Must(utils.GetValue(resp, "RouteTableId")))
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
@@ -163,149 +207,36 @@ var testStep25GetVPNGatewayPrice03 = &driver.Step{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取VPN价格",
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建路由表",
 	FastFail:      false,
 }
 
-var testStep25CreateVPNGateway04 = &driver.Step{
+var testStep4023CloneRouteTable05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewCreateVPNGatewayRequest()
+		req := client.NewCloneRouteTableRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNGatewayName": "auto_apitest",
-			"VPCId":          step.Scenario.GetVar("vpc_id"),
-			"Region":         step.Scenario.GetVar("Region"),
-			"Grade":          "Standard",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.CreateVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		step.Scenario.SetVar("vpngw_id", step.Must(utils.GetValue(resp, "VPNGatewayId")))
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "新建VPN网关",
-	FastFail:      false,
-}
-
-var testStep25AllocateEIP05 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UNet")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*unet.UNetClient)
-
-		req := client.NewAllocateEIPRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
 			"Region":       step.Scenario.GetVar("Region"),
-			"OperatorName": "Bgp",
-			"Bandwidth":    2,
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.AllocateEIP(req)
+		resp, err := client.CloneRouteTable(req)
 		if err != nil {
 			return resp, err
 		}
 
-		step.Scenario.SetVar("eip_id", step.Must(utils.GetValue(resp, "EIPSet.0.EIPId")))
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "申请弹性IP",
-	FastFail:      false,
-}
-
-var testStep25BindEIP06 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UNet")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*unet.UNetClient)
-
-		req := client.NewBindEIPRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"ResourceType": "vpngw",
-			"ResourceId":   step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-			"EIPId":        step.Scenario.GetVar("eip_id"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.BindEIP(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "绑定弹性IP",
-	FastFail:      false,
-}
-
-var testStep25DescribeVPNGateway07 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDescribeVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
+		step.Scenario.SetVar("RouteTableId2", step.Must(utils.GetValue(resp, "RouteTableId")))
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
@@ -316,29 +247,29 @@ var testStep25DescribeVPNGateway07 = &driver.Step{
 	StartupDelay:  time.Duration(5) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "获取VPN网关信息",
+	Title:         "克隆路由表",
 	FastFail:      false,
 }
 
-var testStep25GetVPNGatewayUpgradePrice08 = &driver.Step{
+var testStep4023AssociateRouteTable06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("GetVPNGatewayUpgradePrice")
-		err = req.SetPayload(map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
+		req := client.NewAssociateRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"SubnetId":     step.Scenario.GetVar("subnet_id"),
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
 			"Region":       step.Scenario.GetVar("Region"),
-			"Grade":        "Enhanced",
 		})
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.AssociateRouteTable(req)
 		if err != nil {
 			return resp, err
 		}
@@ -351,158 +282,76 @@ var testStep25GetVPNGatewayUpgradePrice08 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取VPN网关规格改动价格",
-	FastFail:      false,
-}
-
-var testStep25UpdateVPNGateway09 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewUpdateVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-			"Grade":        "Enhanced",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.UpdateVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(5) * time.Second,
-	MaxRetries:    10,
+	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "更新VPN网关信息",
+	Title:         "绑定子网的路由表",
 	FastFail:      false,
 }
 
-var testStep25CreateRemoteVPNGateway10 = &driver.Step{
+var testStep4023ModifyRouteRule07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewCreateRemoteVPNGatewayRequest()
+		req := client.NewModifyRouteRuleRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"RemoteVPNGatewayName": "auto_apitest",
-			"RemoteVPNGatewayAddr": "10.1.1.0",
-			"Region":               step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.CreateRemoteVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		step.Scenario.SetVar("remote_vpngw_id", step.Must(utils.GetValue(resp, "RemoteVPNGatewayId")))
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "新建客户VPN网关",
-	FastFail:      false,
-}
-
-var testStep25DescribeRemoteVPNGateway11 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDescribeRemoteVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeRemoteVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取客户VPN网关信息",
-	FastFail:      false,
-}
-
-var testStep25CreateVPNTunnel12 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewCreateVPNTunnelRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNTunnelName":      "auto_apitest",
-			"VPNGatewayId":       step.Scenario.GetVar("vpngw_id"),
-			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
-			"Region":             step.Scenario.GetVar("Region"),
-			"IPSecRemoteSubnets": []interface{}{
-				"10.1.1.0/24",
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"RouteRule": []interface{}{
+				step.Must(functions.Concat(step.Scenario.GetVar("RouteTableId1"), "|", step.Scenario.GetVar("network1"), "|vip|", step.Scenario.GetVar("vip_id"), "|0||add")),
 			},
-			"IPSecProtocol":   "ah",
-			"IPSecPFSDhGroup": 15,
-			"IPSecLocalSubnetIds": []interface{}{
-				step.Scenario.GetVar("subnet_id"),
-			},
-			"IKEPreSharedKey": "test",
-			"IKEExchangeMode": "main",
-			"IKEDhGroup":      15,
+			"Region": step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.CreateVPNTunnel(req)
+		resp, err := client.ModifyRouteRule(req)
 		if err != nil {
 			return resp, err
 		}
 
-		step.Scenario.SetVar("vpn_tunnel_id", step.Must(utils.GetValue(resp, "VPNTunnelId")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "路由策略增、删、改",
+	FastFail:      false,
+}
+
+var testStep4023ModifyRouteRule08 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewModifyRouteRuleRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"RouteRule": []interface{}{
+				step.Must(functions.Concat(step.Scenario.GetVar("RouteTableId1"), "|", step.Scenario.GetVar("network2"), "|vip|", step.Scenario.GetVar("vip_id"), "|0||update")),
+			},
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.ModifyRouteRule(req)
+		if err != nil {
+			return resp, err
+		}
+
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
@@ -513,19 +362,58 @@ var testStep25CreateVPNTunnel12 = &driver.Step{
 	StartupDelay:  time.Duration(5) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "新建VPN隧道",
+	Title:         "路由策略增、删、改",
 	FastFail:      false,
 }
 
-var testStep25DescribeVPNTunnel13 = &driver.Step{
+var testStep4023ModifyRouteRule09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewDescribeVPNTunnelRequest()
+		req := client.NewModifyRouteRuleRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"RouteRule": []interface{}{
+				step.Must(functions.Concat(step.Scenario.GetVar("RouteTableId1"), "|", step.Scenario.GetVar("network2"), "|vip|", step.Scenario.GetVar("vip_id"), "|0||delete")),
+			},
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.ModifyRouteRule(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "路由策略增、删、改",
+	FastFail:      false,
+}
+
+var testStep4023DescribeRouteTable10 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDescribeRouteTableRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 		})
@@ -533,223 +421,7 @@ var testStep25DescribeVPNTunnel13 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.DescribeVPNTunnel(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取VPN隧道信息",
-	FastFail:      false,
-}
-
-var testStep25UpdateVPNTunnelAttribute14 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewUpdateVPNTunnelAttributeRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNTunnelId": step.Scenario.GetVar("vpn_tunnel_id"),
-			"Region":      step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.UpdateVPNTunnelAttribute(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "更新VPN隧道属性",
-	FastFail:      false,
-}
-
-var testStep25DeleteVPNGateway15 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDeleteVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DeleteVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 66007, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "删除VPN网关",
-	FastFail:      false,
-}
-
-var testStep25DeleteRemoteVPNGateway16 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDeleteRemoteVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
-			"Region":             step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DeleteRemoteVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 66032, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "删除客户VPN网关",
-	FastFail:      false,
-}
-
-var testStep25DeleteVPNTunnel17 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDeleteVPNTunnelRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNTunnelId": step.Scenario.GetVar("vpn_tunnel_id"),
-			"Region":      step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DeleteVPNTunnel(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "删除VPN隧道",
-	FastFail:      false,
-}
-
-var testStep25DeleteVPNGateway18 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDeleteVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
-			"Region":       step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DeleteVPNGateway(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 5 * time.Second,
-	Title:         "删除VPN网关",
-	FastFail:      false,
-}
-
-var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("IPSecVPN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ipsecvpn.IPSecVPNClient)
-
-		req := client.NewDeleteRemoteVPNGatewayRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"RemoteVPNGatewayId": step.Scenario.GetVar("remote_vpngw_id"),
-			"Region":             step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DeleteRemoteVPNGateway(req)
+		resp, err := client.DescribeRouteTable(req)
 		if err != nil {
 			return resp, err
 		}
@@ -764,28 +436,28 @@ var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "删除客户VPN网关",
+	Title:         "获取路由表详细信息(包括路由策略)",
 	FastFail:      false,
 }
 
-var testStep25ReleaseEIP20 = &driver.Step{
+var testStep4023DescribeRouteTable11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UNet")
+		c, err := step.LoadFixture("VPC")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*unet.UNetClient)
+		client := c.(*vpc.VPCClient)
 
-		req := client.NewReleaseEIPRequest()
+		req := client.NewDescribeRouteTableRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Region": step.Scenario.GetVar("Region"),
-			"EIPId":  step.Scenario.GetVar("eip_id"),
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"Region":       step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.ReleaseEIP(req)
+		resp, err := client.DescribeRouteTable(req)
 		if err != nil {
 			return resp, err
 		}
@@ -797,14 +469,161 @@ var testStep25ReleaseEIP20 = &driver.Step{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(10) * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "释放弹性IP",
+	Title:         "获取路由表详细信息(包括路由策略)",
 	FastFail:      false,
 }
 
-var testStep25DeleteSubnet21 = &driver.Step{
+var testStep4023UpdateRouteTableAttribute12 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewUpdateRouteTableAttributeRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"Remark":       "test123",
+			"Region":       step.Scenario.GetVar("Region"),
+			"Name":         step.Scenario.GetVar("route_table_name1"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.UpdateRouteTableAttribute(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "更新路由表基本信息",
+	FastFail:      false,
+}
+
+var testStep4023DeleteRouteTable13 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteRouteTable(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 58119, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除自定义路由表",
+	FastFail:      false,
+}
+
+var testStep4023DeleteRouteTable14 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId2"),
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteRouteTable(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 8039, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除自定义路由表",
+	FastFail:      false,
+}
+
+var testStep4023ReleaseVIP15 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewReleaseVIPRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VIPId":  step.Scenario.GetVar("vip_id"),
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.ReleaseVIP(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "ReleaseVIPResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "释放内网虚拟IP",
+	FastFail:      false,
+}
+
+var testStep4023DeleteSubnet16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -829,18 +648,16 @@ var testStep25DeleteSubnet21 = &driver.Step{
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
+		return []driver.TestValidator{}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
+	StartupDelay:  time.Duration(5) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除子网",
 	FastFail:      false,
 }
 
-var testStep25DeleteVPC22 = &driver.Step{
+var testStep4023DeleteVPC17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -865,13 +682,155 @@ var testStep25DeleteVPC22 = &driver.Step{
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
+		return []driver.TestValidator{}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除VPC",
+	FastFail:      false,
+}
+
+var testStep4023DescribeRouteTable18 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDescribeRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeRouteTable(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取路由表详细信息(包括路由策略)",
+	FastFail:      false,
+}
+
+var testStep4023DescribeRouteTable19 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDescribeRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId2"),
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeRouteTable(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取路由表详细信息(包括路由策略)",
+	FastFail:      false,
+}
+
+var testStep4023DeleteRouteTable20 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId1"),
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteRouteTable(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 8039, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除自定义路由表",
+	FastFail:      false,
+}
+
+var testStep4023DeleteRouteTable21 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteRouteTableRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"RouteTableId": step.Scenario.GetVar("RouteTableId2"),
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteRouteTable(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 8039, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除自定义路由表",
 	FastFail:      false,
 }

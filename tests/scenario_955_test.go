@@ -15,47 +15,48 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
 )
 
-func TestScenario25(t *testing.T) {
+func TestScenario955(t *testing.T) {
 	spec.ParallelTest(t, &driver.Scenario{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Id: "25",
+		Id: "955",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
-				"Region": "cn-bj2",
+				"Region": "tw-tp",
+				"Zone":   "tw-tp-01",
 			}
 		},
-		Owners: []string{"becky.xu@ucloud.cn"},
-		Title:  "IPSecVPN自动化回归-BGP机房",
+		Owners: []string{"li.wei@ucloud.cn"},
+		Title:  "IPSecVPN自动化回归-国际机房",
 		Steps: []*driver.Step{
-			testStep25CreateVPC01,
-			testStep25CreateSubnet02,
-			testStep25GetVPNGatewayPrice03,
-			testStep25CreateVPNGateway04,
-			testStep25AllocateEIP05,
-			testStep25BindEIP06,
-			testStep25DescribeVPNGateway07,
-			testStep25GetVPNGatewayUpgradePrice08,
-			testStep25UpdateVPNGateway09,
-			testStep25CreateRemoteVPNGateway10,
-			testStep25DescribeRemoteVPNGateway11,
-			testStep25CreateVPNTunnel12,
-			testStep25DescribeVPNTunnel13,
-			testStep25UpdateVPNTunnelAttribute14,
-			testStep25DeleteVPNGateway15,
-			testStep25DeleteRemoteVPNGateway16,
-			testStep25DeleteVPNTunnel17,
-			testStep25DeleteVPNGateway18,
-			testStep25DeleteRemoteVPNGateway19,
-			testStep25ReleaseEIP20,
-			testStep25DeleteSubnet21,
-			testStep25DeleteVPC22,
+			testStep955CreateVPC01,
+			testStep955CreateSubnet02,
+			testStep955GetVPNGatewayPrice03,
+			testStep955CreateVPNGateway04,
+			testStep955AllocateEIP05,
+			testStep955BindEIP06,
+			testStep955DescribeVPNGateway07,
+			testStep955GetVPNGatewayUpgradePrice08,
+			testStep955UpdateVPNGateway09,
+			testStep955CreateRemoteVPNGateway10,
+			testStep955DescribeRemoteVPNGateway11,
+			testStep955CreateVPNTunnel12,
+			testStep955DescribeVPNTunnel13,
+			testStep955UpdateVPNTunnelAttribute14,
+			testStep955DeleteVPNGateway15,
+			testStep955DeleteRemoteVPNGateway16,
+			testStep955DeleteVPNTunnel17,
+			testStep955DeleteVPNGateway18,
+			testStep955DeleteRemoteVPNGateway19,
+			testStep955ReleaseEIP20,
+			testStep955DeleteSubnet21,
+			testStep955DeleteVPC22,
 		},
 	})
 }
 
-var testStep25CreateVPC01 = &driver.Step{
+var testStep955CreateVPC01 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -95,7 +96,7 @@ var testStep25CreateVPC01 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25CreateSubnet02 = &driver.Step{
+var testStep955CreateSubnet02 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -134,7 +135,7 @@ var testStep25CreateSubnet02 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25GetVPNGatewayPrice03 = &driver.Step{
+var testStep955GetVPNGatewayPrice03 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -170,7 +171,7 @@ var testStep25GetVPNGatewayPrice03 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25CreateVPNGateway04 = &driver.Step{
+var testStep955CreateVPNGateway04 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -209,7 +210,7 @@ var testStep25CreateVPNGateway04 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25AllocateEIP05 = &driver.Step{
+var testStep955AllocateEIP05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -220,7 +221,7 @@ var testStep25AllocateEIP05 = &driver.Step{
 		req := client.NewAllocateEIPRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Region":       step.Scenario.GetVar("Region"),
-			"OperatorName": "Bgp",
+			"OperatorName": "International",
 			"Bandwidth":    2,
 		})
 		if err != nil {
@@ -247,7 +248,7 @@ var testStep25AllocateEIP05 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25BindEIP06 = &driver.Step{
+var testStep955BindEIP06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -285,7 +286,7 @@ var testStep25BindEIP06 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DescribeVPNGateway07 = &driver.Step{
+var testStep955DescribeVPNGateway07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -320,7 +321,7 @@ var testStep25DescribeVPNGateway07 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25GetVPNGatewayUpgradePrice08 = &driver.Step{
+var testStep955GetVPNGatewayUpgradePrice08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -357,7 +358,7 @@ var testStep25GetVPNGatewayUpgradePrice08 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25UpdateVPNGateway09 = &driver.Step{
+var testStep955UpdateVPNGateway09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -394,7 +395,7 @@ var testStep25UpdateVPNGateway09 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25CreateRemoteVPNGateway10 = &driver.Step{
+var testStep955CreateRemoteVPNGateway10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -432,7 +433,7 @@ var testStep25CreateRemoteVPNGateway10 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DescribeRemoteVPNGateway11 = &driver.Step{
+var testStep955DescribeRemoteVPNGateway11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -467,7 +468,7 @@ var testStep25DescribeRemoteVPNGateway11 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25CreateVPNTunnel12 = &driver.Step{
+var testStep955CreateVPNTunnel12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -517,7 +518,7 @@ var testStep25CreateVPNTunnel12 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DescribeVPNTunnel13 = &driver.Step{
+var testStep955DescribeVPNTunnel13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -552,7 +553,7 @@ var testStep25DescribeVPNTunnel13 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25UpdateVPNTunnelAttribute14 = &driver.Step{
+var testStep955UpdateVPNTunnelAttribute14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -588,7 +589,7 @@ var testStep25UpdateVPNTunnelAttribute14 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DeleteVPNGateway15 = &driver.Step{
+var testStep955DeleteVPNGateway15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -624,7 +625,7 @@ var testStep25DeleteVPNGateway15 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DeleteRemoteVPNGateway16 = &driver.Step{
+var testStep955DeleteRemoteVPNGateway16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -660,7 +661,7 @@ var testStep25DeleteRemoteVPNGateway16 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DeleteVPNTunnel17 = &driver.Step{
+var testStep955DeleteVPNTunnel17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -696,7 +697,7 @@ var testStep25DeleteVPNTunnel17 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DeleteVPNGateway18 = &driver.Step{
+var testStep955DeleteVPNGateway18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -732,7 +733,7 @@ var testStep25DeleteVPNGateway18 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
+var testStep955DeleteRemoteVPNGateway19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
@@ -762,13 +763,13 @@ var testStep25DeleteRemoteVPNGateway19 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	MaxRetries:    0,
+	RetryInterval: 0 * time.Second,
 	Title:         "删除客户VPN网关",
 	FastFail:      false,
 }
 
-var testStep25ReleaseEIP20 = &driver.Step{
+var testStep955ReleaseEIP20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -797,14 +798,14 @@ var testStep25ReleaseEIP20 = &driver.Step{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    0,
+	RetryInterval: 0 * time.Second,
 	Title:         "释放弹性IP",
 	FastFail:      false,
 }
 
-var testStep25DeleteSubnet21 = &driver.Step{
+var testStep955DeleteSubnet21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
@@ -840,7 +841,7 @@ var testStep25DeleteSubnet21 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep25DeleteVPC22 = &driver.Step{
+var testStep955DeleteVPC22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("VPC")
 		if err != nil {
