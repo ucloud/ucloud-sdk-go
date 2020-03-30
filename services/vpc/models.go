@@ -366,9 +366,14 @@ type RouteTableInfo struct {
 }
 
 /*
-SubnetInfo - 子网信息
+VPCSubnetInfoSet - 子网信息
 */
-type SubnetInfo struct {
+type VPCSubnetInfoSet struct {
+	// 名称 【已废弃】
+	Name string `deprecated:"true"`
+
+	// 虚拟路由 id【已废弃】
+	VRouterId string `deprecated:"true"`
 
 	// 可用IP数量
 	AvailableIPs int
@@ -420,9 +425,9 @@ type SubnetInfo struct {
 }
 
 /*
-SubnetResource - 子网下资源
+ResourceInfo - 子网下资源
 */
-type SubnetResource struct {
+type ResourceInfo struct {
 
 	// 资源ip
 	IP string
