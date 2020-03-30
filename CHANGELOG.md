@@ -1,3 +1,10 @@
+## 0.14.2 (2020-03-30)
+
+BUG FIXES:
+
+- Fix the model `SubnetInfo` to `VPCSubnetInfoSet` of  `DescribeSubnetResponse.DataSet` (#135)
+- Fix the model `SubnetResource ` to `ResourceInfo` of  `DescribeSubnetResourceResponse.DataSet` (#135)
+
 ## 0.14.1 (2020-03-26)
 
 ENHANCEMENTS:
