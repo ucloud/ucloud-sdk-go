@@ -6,16 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/services/ulb"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
-
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
-
-	"github.com/ucloud/ucloud-sdk-go/services/ulb"
 )
 
 func TestScenario4377(t *testing.T) {
@@ -334,7 +331,7 @@ var testStep4377AllocateBackendBatch07 = &driver.Step{
 			"ULBId":     step.Scenario.GetVar("ULBId"),
 			"Region":    step.Scenario.GetVar("Region"),
 			"Backends": []interface{}{
-				step.Must(functions.Concat(step.Scenario.GetVar("UHostId_01"), "|UHost|80|1|", step.Scenario.GetVar("IP_01"))),
+				step.Must(functions.Concat(step.Scenario.GetVar("UHostId_01"), "|UHost|80|1|", step.Scenario.GetVar("IP_01"), "|0")),
 			},
 			"ApiVersion": 3,
 		})
@@ -414,6 +411,7 @@ var testStep4377UpdateBackendAttribute09 = &driver.Step{
 
 		req := client.NewUpdateBackendAttributeRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
+			"Weight":    0,
 			"ULBId":     step.Scenario.GetVar("ULBId"),
 			"Region":    step.Scenario.GetVar("Region"),
 			"Port":      80,
@@ -457,7 +455,7 @@ var testStep4377UpdateBackendAttributeBatch10 = &driver.Step{
 			"ULBId":  step.Scenario.GetVar("ULBId"),
 			"Region": step.Scenario.GetVar("Region"),
 			"Attribute": []interface{}{
-				step.Must(functions.Concat(step.Scenario.GetVar("BackendId"), "|80|0")),
+				step.Must(functions.Concat(step.Scenario.GetVar("BackendId"), "|80|0|0")),
 			},
 		})
 		if err != nil {
@@ -566,6 +564,7 @@ var testStep4377AllocateBackend13 = &driver.Step{
 
 		req := client.NewAllocateBackendRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
+			"Weight":       0,
 			"VServerId":    step.Scenario.GetVar("VServerId"),
 			"ULBId":        step.Scenario.GetVar("ULBId"),
 			"ResourceType": "UHost",

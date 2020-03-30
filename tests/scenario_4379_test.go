@@ -6,13 +6,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/services/ulb"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
-
-	"github.com/ucloud/ucloud-sdk-go/services/ulb"
 )
 
 func TestScenario4379(t *testing.T) {
