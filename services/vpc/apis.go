@@ -2081,8 +2081,8 @@ type DescribeSubnetRequest struct {
 type DescribeSubnetResponse struct {
 	response.CommonBase
 
-	// 子网信息数组，具体资源见下方SubnetInfo
-	DataSet []SubnetInfo
+	// 子网信息数组，具体资源见下方VPCSubnetInfoSet
+	DataSet []VPCSubnetInfoSet
 
 	// 子网总数量
 	TotalCount int
@@ -2146,8 +2146,8 @@ type DescribeSubnetResourceRequest struct {
 type DescribeSubnetResourceResponse struct {
 	response.CommonBase
 
-	// 返回数据集，请见SubnetResource
-	DataSet []SubnetResource
+	// 返回数据集，请见ResourceInfo
+	DataSet []ResourceInfo
 
 	// 总数
 	TotalCount int
