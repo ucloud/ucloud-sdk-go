@@ -2081,8 +2081,8 @@ type DescribeSubnetRequest struct {
 type DescribeSubnetResponse struct {
 	response.CommonBase
 
-	// 子网信息数组，具体资源见下方SubnetInfo
-	DataSet []SubnetInfo
+	// 子网信息数组，具体资源见下方VPCSubnetInfoSet
+	DataSet []VPCSubnetInfoSet
 
 	// 子网总数量
 	TotalCount int
@@ -2119,8 +2119,8 @@ func (c *VPCClient) DescribeSubnet(req *DescribeSubnetRequest) (*DescribeSubnetR
 	return &res, nil
 }
 
-// DescribeSubnetResourceRequest is request schema for DescribeSubnetResource action
-type DescribeSubnetResourceRequest struct {
+// DescribeResourceInfoRequest is request schema for DescribeResourceInfo action
+type DescribeResourceInfoRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
@@ -2142,20 +2142,20 @@ type DescribeSubnetResourceRequest struct {
 	SubnetId *string `required:"true"`
 }
 
-// DescribeSubnetResourceResponse is response schema for DescribeSubnetResource action
-type DescribeSubnetResourceResponse struct {
+// DescribeResourceInfoResponse is response schema for DescribeResourceInfo action
+type DescribeResourceInfoResponse struct {
 	response.CommonBase
 
-	// 返回数据集，请见SubnetResource
-	DataSet []SubnetResource
+	// 返回数据集，请见ResourceInfo
+	DataSet []ResourceInfo
 
 	// 总数
 	TotalCount int
 }
 
-// NewDescribeSubnetResourceRequest will create request of DescribeSubnetResource action.
-func (c *VPCClient) NewDescribeSubnetResourceRequest() *DescribeSubnetResourceRequest {
-	req := &DescribeSubnetResourceRequest{}
+// NewDescribeResourceInfoRequest will create request of DescribeResourceInfo action.
+func (c *VPCClient) NewDescribeResourceInfoRequest() *DescribeResourceInfoRequest {
+	req := &DescribeResourceInfoRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -2166,17 +2166,17 @@ func (c *VPCClient) NewDescribeSubnetResourceRequest() *DescribeSubnetResourceRe
 }
 
 /*
-API: DescribeSubnetResource
+API: DescribeResourceInfo
 
 展示子网资源
 */
-func (c *VPCClient) DescribeSubnetResource(req *DescribeSubnetResourceRequest) (*DescribeSubnetResourceResponse, error) {
+func (c *VPCClient) DescribeResourceInfo(req *DescribeResourceInfoRequest) (*DescribeResourceInfoResponse, error) {
 	var err error
-	var res DescribeSubnetResourceResponse
+	var res DescribeResourceInfoResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("DescribeSubnetResource", &reqCopier, &res)
+	err = c.Client.InvokeAction("DescribeResourceInfo", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
