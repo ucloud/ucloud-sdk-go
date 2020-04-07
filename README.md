@@ -60,7 +60,7 @@ dep ensure -add github.com/ucloud/ucloud-sdk-go
 
 ## First Using
 
-Currently，Go SDK use `PublicKey/PrivateKey` as authentication method, the key can be found from：
+Currently, Go SDK use `PublicKey/PrivateKey` as authentication method, the key can be found from：
 
 - [UAPI Key Generation](https://console.ucloud.cn/uapi/apikey)
 
@@ -109,17 +109,17 @@ func main() {
 }
 ```
 
-Replace the client configuration and host image id by your custom value，then you can create a cloud host。
+Replace the client configuration and host image id by your custom value, then you can create a cloud host。
 
 At this example, you had already completed a `CreateUHostInstance` request by UCloud Go SDK, it is covered most of feature of sdk, you can write your own script for free!
 
-Each API call in the SDK has a detailed comment and document，You can use Editor/IDE to jump to the specific API method code to view (can also to see [Go Doc](https://godoc.org/github.com/ucloud/ucloud-sdk-go)）, and use completion of IDE and error logging to inspect usage of SDK。
+Each API call in the SDK has a detailed comment and document, You can use Editor/IDE to jump to the specific API method code to view (can also to see [Go Doc](https://godoc.org/github.com/ucloud/ucloud-sdk-go)）, and use completion of IDE and error logging to inspect usage of SDK。
 
 If you are interested the advanced usage about above code example, please see the documentation: 
 
 - [Configuration](opensdk-go/configure), Learn how to configure SDK, such as Logging, Retrying, Service endpoint(Public Cloud & Private Cloud), and etc.
 - [Error Handling](opensdk-go/error), Learn how to resolve the several exception types, include parameters error, business error for *RetCode is not 0*.
-- [Type System](opensdk-go/typesystem)，Learn how to validate parameters, and normalize the response of API.
+- [Type System](opensdk-go/typesystem), Learn how to validate parameters, and normalize the response of API.
 - [Request Middleware](opensdk-go/middleware), Learn how to intercept request that applied by SDK, and add common logic to the lifecycle.
 - [Toolbox & Helpers](opensdk-go/helpers), The additional helpers, such as the poll function for waiting resource state.
 
@@ -133,9 +133,9 @@ SDK provided some example based on environment, and provide resource provisionin
 - [Read External Configuration](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/external), Use external configuration, such as configuration from *UCloud CLI*
 - [Logging](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/logging), Configure options of logging
 - [Retrying](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/retry), Introducing the auto retrying feature
-- [Toolbox: State Poll](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/wait)，Learn how to wait host opened gracefully 
+- [Toolbox: State Poll](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/wait), Learn how to wait host opened gracefully 
 - [Create Host](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/uhost), Introducing how to create host
-- [Create Two-Tier architecture based on Load Balancer](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/two-tier)，ULB + UHost
+- [Create Two-Tier architecture based on Load Balancer](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples/two-tier), ULB + UHost
 
 ### Examples based on Request
 

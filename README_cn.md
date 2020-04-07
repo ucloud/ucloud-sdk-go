@@ -28,7 +28,7 @@ go get github.com/ucloud/ucloud-sdk-go
 **Note** 如果遇到网络不稳定，可以使用代理服务器来加速下载，例如使用 GOPROXY 加速：
 
 ```go
-export GOPROXY=https://goproxy.io
+export GOPROXY=https://goproxy.cn
 ```
 
 再次执行安装命令即可。
@@ -151,7 +151,7 @@ SDK 提供了部分基于场景的示例，并提供了对应的资源销毁逻�
 **Note** 如果遇到网络不稳定，可以使用代理服务器来加速下载，例如使用 GOPROXY 加速：
 
 ```go
-export GOPROXY=https://goproxy.io
+export GOPROXY=https://goproxy.cn
 ```
 
 **Note**：如同时使用 go mod 和 Goland IDE，请在 Settings 中搜索 vgo，并启用 vgo 支持。
