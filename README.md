@@ -103,9 +103,9 @@ func main() {
     newUHost,err := uhostClient.CreateUHostInstance(req)
     if err != nil {
         fmt.Printf("something bad happened: %s\n", err)
+    } else {
+        fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
     }
-
-    fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 }
 ```
 
