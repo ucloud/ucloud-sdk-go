@@ -59,19 +59,17 @@ import (
     "github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
-func loadConfig() (*ucloud.Config, *auth.Credential) {
+func main() {
     cfg := ucloud.NewConfig()
 
     credential := auth.NewCredential()
-    credential.PrivateKey ="my_privatekey"
-    credential.PublicKey = "my_publickey"
+    // replace the public/private key by your own
+    credential.PrivateKey ="my_private_key"
+    credential.PublicKey = "my_public_key"
 
-    return &cfg, &credential
-}
+    uhostClient := uhost.NewClient(&cfg, &credential)
 
-func main() {
-    cfg, credential := loadConfig()
-    uhostClient := uhost.NewClient(cfg, credential)
+    // apply a request ...
 }
 ```
 
@@ -93,15 +91,17 @@ req.Memory     = ucloud.Int(1024)
 req.Tag        = ucloud.String("sdk-example")
 ```
 
-### Complex structure in query
+### Complex Query
 
-You can also set array as query, such as:
+You can set array as query for `DescribeUHostInstance` action, such as:
 
 ```go
 req.UHostIds = []string{"uhost-xxx", "uhost-yyy"}
 ```
 
 will encoded as `UHostIds.0=uhost-xxx&UHostIds.1=uhost-yyy`
+
+You can also set the complex struct array for `CreateUHostInstance` action, such as:
 
 ```go
 dataDisk := uhost.UHostDisk{
@@ -114,22 +114,22 @@ req.Disks = []uhost.UHostDisk{dataDisk}
 
 will encoded as `Disks.0.Size=20&Disks.0.Type=CLOUD_NORMAL&Disks.0.IsBoot=false`.
 
-Then you can apply the request simply.
+Then apply the request simply.
 
 ```go
 // send request
 newUHost, err := uhostClient.CreateUHostInstance(req)
 if err != nil {
     fmt.Printf("something bad happened: %s\n", err)
+} else {
+    fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 }
-
-fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 ```
 
 There are more examples in the [examples](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples) folder. 
 You can copy any of them for your advanced usage. 
 
-## Docs
+## Documentations
 
 If you need more complex topic, please read the docs.
 
