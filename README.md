@@ -12,8 +12,9 @@
 [![GoDoc](https://godoc.org/github.com/ucloud/ucloud-sdk-go?status.svg)](https://godoc.org/github.com/ucloud/ucloud-sdk-go)
 [![GitHub](https://img.shields.io/github/license/ucloud/ucloud-sdk-go.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-- Website: https://www.ucloud.cn/
-- Mailing list: [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
+- [Website](https://www.ucloud.cn/)
+- [Documentation](https://docs.ucloud.cn/opensdk-go/README)
+- [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
 
 UCloud SDK is a Go client library for accessing the UCloud API.
 
@@ -58,55 +59,41 @@ import (
     "github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
-func loadConfig() (*ucloud.Config, *auth.Credential) {
+func main() {
     cfg := ucloud.NewConfig()
 
     credential := auth.NewCredential()
-    credential.PrivateKey ="my_privatekey"
-    credential.PublicKey = "my_publickey"
+    // replace the public/private key by your own
+    credential.PrivateKey ="my_private_key"
+    credential.PublicKey = "my_public_key"
 
-    return &cfg, &credential
-}
+    uhostClient := uhost.NewClient(&cfg, &credential)
 
-func main() {
-    cfg, credential := loadConfig()
-    uhostClient := uhost.NewClient(cfg, credential)
+    // apply a request ...
 }
 ```
 
 ## Quick Start
 
-To create a new uhost:
+To create a new uhost, here is an example to construct an api request:
 
 ```go
 // build Request
 req := uhostClient.NewCreateUHostInstanceRequest()
 req.Name       = ucloud.String("sdk-example-uhost")
 req.Zone       = ucloud.String("cn-bj2-05")
-req.ImageId    = ucloud.String("uimage-ixczxu")
+req.ImageId    = ucloud.String("uimage-xxx") // you can replace the image with an available id
 req.LoginMode  = ucloud.String("Password")
 req.Password   = ucloud.String("my_uhost_password")
 req.ChargeType = ucloud.String("Dynamic")
 req.CPU        = ucloud.Int(1)
 req.Memory     = ucloud.Int(1024)
 req.Tag        = ucloud.String("sdk-example")
-
-// send request
-newUHost,err := uhostClient.CreateUHostInstance(req)
-if err != nil {
-    fmt.Printf("something bad happened: %s\n", err)
-}
-
-fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
 ```
 
-**Note**
+### Complex Query
 
-UHost created above cannot be accessed via Internet unless an EIP is created and bind to the UHost.
-
-### Complex structure in query
-
-You can also set array as query, such as:
+You can set array as query for `DescribeUHostInstance` action, such as:
 
 ```go
 req.UHostIds = []string{"uhost-xxx", "uhost-yyy"}
@@ -114,23 +101,46 @@ req.UHostIds = []string{"uhost-xxx", "uhost-yyy"}
 
 will encoded as `UHostIds.0=uhost-xxx&UHostIds.1=uhost-yyy`
 
+You can also set the complex struct array for `CreateUHostInstance` action, such as:
+
 ```go
 dataDisk := uhost.UHostDisk{
-    Size: ucloud.Int(20),
-    Type: ucloud.String("CLOUD_NORMAL"),
-    IsBoot: ucloud.Bool(false),
+    Size: ucloud.Int(40),
+    Type: ucloud.String("CLOUD_SSD"),
+    IsBoot: ucloud.Bool(true),
 }
 req.Disks = []uhost.UHostDisk{dataDisk}
 ```
 
-will encoded as `Disks.0.Size=20&Disks.0.Type=CLOUD_NORMAL&Disks.0.IsBoot=false`
+will encoded as `Disks.0.Size=20&Disks.0.Type=CLOUD_NORMAL&Disks.0.IsBoot=false`.
 
-## Docs
+Then apply the request simply.
+
+```go
+// send request
+newUHost, err := uhostClient.CreateUHostInstance(req)
+if err != nil {
+    fmt.Printf("something bad happened: %s\n", err)
+} else {
+    fmt.Printf("resource id of the uhost: %s\n", newUHost.UHostIds[0])
+}
+```
+
+There are more examples in the [examples](https://github.com/ucloud/ucloud-sdk-go/tree/master/examples) folder. 
+You can copy any of them for your advanced usage. 
+
+## Documentations
+
+If you need more complex topic, please read the docs.
 
 - [Configure Document](./docs/en-us/Configure.md)
 - [Usage Document](./docs/en-us/Usage.md)
 - [Retry Policy Document](./docs/en-us/Retry.md)
 - [State Waiter Document](./docs/en-us/Wait.md)
+
+If you are a chinese user, you can also visit the official website for documentation:
+
+- [Official Website](https://docs.ucloud.cn/opensdk-go/README)
 
 ## Feedback & Contribution
 

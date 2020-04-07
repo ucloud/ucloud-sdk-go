@@ -16,7 +16,6 @@ import (
 
 const region = "cn-bj2"
 const zone = "cn-bj2-05"
-const imageID = "uimage-kg0w4u"
 
 var uhostClient *uhost.UHostClient
 var unetClient *unet.UNetClient
@@ -40,7 +39,12 @@ func init() {
 }
 
 func main() {
-	uhostIDs, errs := createUHostBatch(2)
+	imageId, err := describeRandomImageId()
+	if err != nil {
+		panic(err)
+	}
+
+	uhostIDs, errs := createUHostBatch(imageId, 2)
 	if len(errs) > 0 {
 		log.Error(errs)
 		return
@@ -75,6 +79,22 @@ func main() {
 
 	// teardown
 	defer releaseBackendBatch(ulbID, vserverID, backendIDs)
+}
+
+func describeRandomImageId() (string, error) {
+	req := uhostClient.NewDescribeImageRequest()
+	req.ImageType = ucloud.String("Base")
+	req.OsType = ucloud.String("Linux")
+
+	resp, err := uhostClient.DescribeImage(req)
+	if err != nil {
+		return "", err
+	}
+
+	if len(resp.ImageSet) == 0 {
+		return "", fmt.Errorf("can not found any image")
+	}
+	return resp.ImageSet[0].ImageId, nil
 }
 
 func createULB() (string, error) {
@@ -185,9 +205,9 @@ func releaseBackend(ulbID, backendID string) error {
 	return nil
 }
 
-func createUHostBatch(count int) (ids []string, errors []error) {
+func createUHostBatch(imageId string, count int) (ids []string, errors []error) {
 	for i := 0; i < count; i++ {
-		id, err := createUHost(fmt.Sprintf("sdk-example-%d", i))
+		id, err := createUHost(fmt.Sprintf("sdk-example-%d", i), imageId)
 		if err != nil {
 			errors = append(errors, err)
 		} else {
@@ -205,11 +225,11 @@ func createUHostBatch(count int) (ids []string, errors []error) {
 	return
 }
 
-func createUHost(name string) (string, error) {
+func createUHost(name, imageId string) (string, error) {
 	req := uhostClient.NewCreateUHostInstanceRequest()
 	req.Name = ucloud.String(name)
 	req.Zone = ucloud.String(zone)       // TODO: use random zone
-	req.ImageId = ucloud.String(imageID) // TODO: use random image
+	req.ImageId = ucloud.String(imageId) // TODO: use random image
 	req.LoginMode = ucloud.String("Password")
 	req.Password = ucloud.String("somePassword_")
 	req.ChargeType = ucloud.String("Dynamic")
