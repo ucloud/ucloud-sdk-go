@@ -80,11 +80,13 @@ import (
 func main() {
     cfg := ucloud.NewConfig()
 
+    // replace the public/private key by your own
     credential := auth.NewCredential()
-    credential.PrivateKey ="my_privatekey"
-    credential.PublicKey = "my_publickey"
+    credential.PrivateKey = "my_private_key"
+    credential.PublicKey = "my_public_key"
 
     uhostClient := uhost.NewClient(&cfg, &credential)
+
     req := uhostClient.NewCreateUHostInstanceRequest()
     req.Name       = ucloud.String("sdk-example-uhost")
     req.Zone       = ucloud.String("cn-bj2-05")
@@ -155,3 +157,8 @@ export GOPROXY=https://goproxy.io
 **Note**：如同时使用 go mod 和 Goland IDE，请在 Settings 中搜索 vgo，并启用 vgo 支持。
 
 **Note**：如同时使用 go mod 和 GOPATH，注意 go mod init/tidy 不能在 GOPATH 下执行，把项目从 GOPATH 下移出即可。
+
+## 反馈 & 贡献
+
+- [Issue](https://github.com/ucloud/ucloud-sdk-go/issues)
+- [Pull Request](https://github.com/ucloud/ucloud-sdk-go/pulls)

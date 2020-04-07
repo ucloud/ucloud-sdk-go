@@ -158,3 +158,8 @@ export GOPROXY=https://goproxy.io
 **Note**：If using `go mod` and `Goland IDE` together, please search `vgo` on `Settings`, and enable `vgo` support.
 
 **Note**：If using `go mod` 和 `GOPATH`, notice the `go mod init/tidy` can not run with `GOPATH`, please move out current project from `GOPATH`.
+
+## Feedback & Contribution
+
+- [Issue](https://github.com/ucloud/ucloud-sdk-go/issues)
+- [Pull Request](https://github.com/ucloud/ucloud-sdk-go/pulls)
