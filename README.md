@@ -72,7 +72,6 @@ package main
 import (
     "fmt"
 
-
     "github.com/ucloud/ucloud-sdk-go/ucloud"
     "github.com/ucloud/ucloud-sdk-go/ucloud/auth"
     "github.com/ucloud/ucloud-sdk-go/services/uhost"
@@ -80,13 +79,15 @@ import (
 
 func main() {
     cfg := ucloud.NewConfig()
+    cfg.Region = "cn-bj2"
 
-    credential := auth.NewCredential()
     // replace the public/private key by your own
-    credential.PrivateKey ="my_private_key"
+    credential := auth.NewCredential()
+    credential.PrivateKey = "my_private_key"
     credential.PublicKey = "my_public_key"
 
     uhostClient := uhost.NewClient(&cfg, &credential)
+
     req := uhostClient.NewCreateUHostInstanceRequest()
     req.Name       = ucloud.String("sdk-example-uhost")
     req.Zone       = ucloud.String("cn-bj2-05")
@@ -108,9 +109,9 @@ func main() {
 }
 ```
 
-Replace the configuration of client and image id of host by your custom id，then you can create a cloud host。
+Replace the client configuration and host image id by your custom value，then you can create a cloud host。
 
-At this example, you had already completed a `CreateUHostInstance` request by **UCloud Go SDK**, it is covered most of feature of sdk, you can write your own script for free!
+At this example, you had already completed a `CreateUHostInstance` request by UCloud Go SDK, it is covered most of feature of sdk, you can write your own script for free!
 
 Each API call in the SDK has a detailed comment and document，You can use Editor/IDE to jump to the specific API method code to view (can also to see [Go Doc](https://godoc.org/github.com/ucloud/ucloud-sdk-go)）, and use completion of IDE and error logging to inspect usage of SDK。
 
