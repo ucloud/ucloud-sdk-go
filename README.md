@@ -72,6 +72,7 @@ package main
 import (
     "fmt"
 
+
     "github.com/ucloud/ucloud-sdk-go/ucloud"
     "github.com/ucloud/ucloud-sdk-go/ucloud/auth"
     "github.com/ucloud/ucloud-sdk-go/services/uhost"
@@ -81,8 +82,9 @@ func main() {
     cfg := ucloud.NewConfig()
 
     credential := auth.NewCredential()
-    credential.PrivateKey ="my_privatekey"
-    credential.PublicKey = "my_publickey"
+    // replace the public/private key by your own
+    credential.PrivateKey ="my_private_key"
+    credential.PublicKey = "my_public_key"
 
     uhostClient := uhost.NewClient(&cfg, &credential)
     req := uhostClient.NewCreateUHostInstanceRequest()
