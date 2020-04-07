@@ -14,7 +14,7 @@
 
 - [Website](https://www.ucloud.cn/)
 - [Documentation](https://docs.ucloud.cn/opensdk-go/README)
-- [Mailing list [Google Group]](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
+- [Google Group](https://groups.google.com/forum/#!forum/ucloud-sdk-go)
 
 UCloud SDK is a Go client library for accessing the UCloud API.
 
@@ -77,7 +77,7 @@ func main() {
 
 ## Quick Start
 
-To create a new uhost, here is an example to construct a api request:
+To create a new uhost, here is an example to construct an api request:
 
 ```go
 // build Request
