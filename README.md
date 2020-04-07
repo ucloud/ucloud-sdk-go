@@ -117,11 +117,11 @@ Each API call in the SDK has a detailed comment and document, You can use Editor
 
 If you are interested the advanced usage about above code example, please see the documentation: 
 
-- [Configuration](opensdk-go/configure), Learn how to configure SDK, such as Logging, Retrying, Service endpoint(Public Cloud & Private Cloud), and etc.
-- [Error Handling](opensdk-go/error), Learn how to resolve the several exception types, include parameters error, business error for *RetCode is not 0*.
-- [Type System](opensdk-go/typesystem), Learn how to validate parameters, and normalize the response of API.
-- [Request Middleware](opensdk-go/middleware), Learn how to intercept request that applied by SDK, and add common logic to the lifecycle.
-- [Toolbox & Helpers](opensdk-go/helpers), The additional helpers, such as the poll function for waiting resource state.
+- [Configuration](https://docs.ucloud.cn/opensdk-go/configure), Learn how to configure SDK, such as Logging, Retrying, Service endpoint(Public Cloud & Private Cloud), and etc.
+- [Error Handling](https://docs.ucloud.cn/opensdk-go/error), Learn how to resolve the several exception types, include parameters error, business error for *RetCode is not 0*.
+- [Type System](https://docs.ucloud.cn/opensdk-go/typesystem), Learn how to validate parameters, and normalize the response of API.
+- [Request Middleware](https://docs.ucloud.cn/opensdk-go/middleware), Learn how to intercept request that applied by SDK, and add common logic to the lifecycle.
+- [Toolbox & Helpers](https://docs.ucloud.cn/opensdk-go/helpers), The additional helpers, such as the poll function for waiting resource state.
 
 ## More Examples
 
