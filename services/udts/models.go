@@ -120,33 +120,6 @@ type UFileNode struct {
 }
 
 /*
-RedisNode - Redis节点
-*/
-type RedisNode struct {
-
-	// 数据库地址，只填写主(master)地址，集群模式下，多个地址用 ; 相连
-	Address string
-
-	// 数据库所在的地域。 只有当 Host 为 UCloud 用户内网地址的时候需要提供
-	DataRegion string
-
-	// Redis2Redis全量迁移是否使用rump，默认是dump-restore
-	IsRump string
-
-	// redis密码
-	Password string
-
-	// 子网 ID, 只有当 Host 为 UCloud 用户内网地址并且源目属于不同的地域的时候需要提供
-	SubnetId string
-
-	// redis模式
-	Type string
-
-	// 数据库所在机器的 VPCId, 只有内网跨域迁移的时候需要提供
-	VPCId string
-}
-
-/*
 UDWNode - UDW 结点
 */
 type UDWNode struct {
@@ -206,6 +179,33 @@ type TiDBNode struct {
 	User string
 
 	// VPC 资源ID, 只有当 Host 为 UCloud 用户内网地址的时候需要提供。
+	VPCId string
+}
+
+/*
+RedisNode - Redis节点
+*/
+type RedisNode struct {
+
+	// 数据库地址，只填写主(master)地址，集群模式下，多个地址用 ; 相连
+	Address string
+
+	// 数据库所在的地域。 只有当 Host 为 UCloud 用户内网地址的时候需要提供
+	DataRegion string
+
+	// Redis2Redis全量迁移是否使用rump，默认是dump-restore
+	IsRump string
+
+	// redis密码
+	Password string
+
+	// 子网 ID, 只有当 Host 为 UCloud 用户内网地址并且源目属于不同的地域的时候需要提供
+	SubnetId string
+
+	// redis模式
+	Type string
+
+	// 数据库所在机器的 VPCId, 只有内网跨域迁移的时候需要提供
 	VPCId string
 }
 
