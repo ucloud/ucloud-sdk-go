@@ -55,6 +55,7 @@ import (
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
+	"github.com/ucloud/ucloud-sdk-go/services/udts"
 )
 
 func TestMain(m *testing.M) {
@@ -153,6 +154,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UDPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udpn.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDTS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udts.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UDisk", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udisk.NewClient(&cfg, &credential), nil
