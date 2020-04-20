@@ -56,6 +56,7 @@ import (
 
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
+	"github.com/ucloud/ucloud-sdk-go/services/umedia"
 )
 
 func TestMain(m *testing.M) {
@@ -169,6 +170,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("ULB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ulb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UMedia", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return umedia.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UMem", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return umem.NewClient(&cfg, &credential), nil
