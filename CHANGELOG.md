@@ -1,3 +1,9 @@
+## 0.16.0 (2020-04-23)
+
+FEATURES:
+
+- add UMedia apis to be consistent with [official document](https://docs.ucloud.cn/api/umedia-api/README)(#147  )
+
 ## 0.15.0 (2020-04-09)
 
 FEATURES:
