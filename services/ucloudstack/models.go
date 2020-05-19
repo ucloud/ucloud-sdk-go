@@ -93,6 +93,102 @@ type EIPInfo struct {
 }
 
 /*
+ImageInfo - 镜像信息
+*/
+type ImageInfo struct {
+
+	// 创建时间。时间戳。
+	CreateTime int
+
+	// 镜像ID
+	ImageID string
+
+	// 镜像状态。枚举类型：Making（创建中）,Available（可用）,Unavailable（不可用）,Terminating（销毁中）,Used（被使用中）,Deleting（删除中）,Deleted（已删除）
+	ImageStatus string
+
+	// 镜像类型。枚举类型：Base(基础镜像),Custom（自制镜像）。
+	ImageType string
+
+	// 镜像名称
+	Name string
+
+	// 镜像系统发行版本。例如：Centos, Ubuntu, Windows等
+	OSDistribution string
+
+	// 系统名称。例如：CentOS 7.4 x86_64
+	OSName string
+
+	// 系统类型。例如：Linux, Windows，Kylin
+	OSType string
+
+	// 地域
+	Region string
+
+	// 架构名称。例如：x86_64
+	SetArch string
+
+	// 可用区
+	Zone string
+}
+
+/*
+LBInfo - 负载均衡信息
+*/
+type LBInfo struct {
+
+	// 告警模板ID
+	AlarmTemplateID string
+
+	// 虚拟机计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
+	ChargeType string
+
+	// 创建时间，时间戳
+	CreateTime int
+
+	// 过期时间，时间戳
+	ExpireTime int
+
+	// 负载均衡ID
+	LBID string
+
+	// 状态。Creating:创建中,Running:运行中,Deleting:删除中,Deleted:已删除
+	LBStatus string
+
+	// 负载均衡类型，枚举值，WAN:外网负载均衡，LAN:内网负载均衡。
+	LBType string
+
+	// 名称
+	Name string
+
+	// 负载均衡的内网 IP 地址，当LB为外网类型时，该值为空。
+	PrivateIP string
+
+	// 负载均衡的外网 IP 地址，当LB为内网类型时，该值为空。
+	PublicIP string
+
+	// 地域
+	Region string
+
+	// 描述
+	Remark string
+
+	// 安全组 ID ，当LB为内网类型时，该值为空。
+	SGID string
+
+	// 子网ID
+	SubnetID string
+
+	// VPCID
+	VPCID string
+
+	// VServer的数量
+	VSCount int
+
+	// 可用区
+	Zone string
+}
+
+/*
 MetricSet - 监控值
 */
 type MetricSet struct {
@@ -114,6 +210,213 @@ type MetricInfo struct {
 
 	// 监控指标。虚拟机的监控指标枚举值为：BlockProcessCount，表示阻塞进程数；CPUUtilization，表示CPU使用率；DiskReadOps，表示磁盘读次数；DiskWriteOps，表示磁盘写次数；IORead，表示磁盘读吞吐；IOWrite，表示磁盘写吞吐；LoadAvg，表示平均负载1分钟；MemUsage，表示内存使用率；NetPacketIn，表示网卡入包量；NetPacketOut，表示网卡出包量；NICIn，表示网卡入带宽；NICOut，表示网卡出带宽；SpaceUsage，表示空间使用率；TCPConnectCount，表示TCP连接数；
 	MetricName string
+}
+
+/*
+NATGWInfo - NAT网关信息
+*/
+type NATGWInfo struct {
+
+	// 告警模板ID
+	AlarmTemplateID string
+
+	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
+	ChargeType string
+
+	// 创建时间，时间戳
+	CreateTime int
+
+	// 虚拟IP
+	EIP string
+
+	// 过期时间，时间戳
+	ExpireTime int
+
+	// NAT网关ID
+	NATGWID string
+
+	// 状态。Creating:创建中, Running:运行中, Deleting:删除中, Deleted:已删除
+	NATGWStatus string
+
+	// 名称
+	Name string
+
+	// 地域
+	Region string
+
+	// 备注
+	Remark string
+
+	// NAT网关绑定的安全组ID
+	SGID string
+
+	// NAT网关实例所在的子网 ID
+	SubnetID string
+
+	// NAT网关实例所在的 VPC ID
+	VPCID string
+
+	// 可用区
+	Zone string
+}
+
+/*
+NATGWRuleInfo - NAT网关关联的白名单资源信息
+*/
+type NATGWRuleInfo struct {
+
+	// 绑定的资源ID
+	BindResourceID string
+
+	// 绑定资源的类型
+	BindResourceType string
+
+	// 创建时间，时间戳。
+	CreateTime int
+
+	// 白名单资源的内网IP地址
+	IP string
+
+	// NAT网关ID
+	NATGWID string
+
+	// nat网关类型
+	NATGWType string
+
+	// 添加的白名单资源名称
+	Name string
+
+	// 白名单ID
+	RuleID string
+
+	// 状态。Bounding:绑定中,Bound:已绑定,Unbounding:解绑中,Unbound：已解绑
+	RuleStatus string
+}
+
+/*
+PhysicalIPInfo - 物理IP信息
+*/
+type PhysicalIPInfo struct {
+
+	// 绑定资源ID
+	BindResourceID string
+
+	// 绑定资源类型
+	BindResourceType string
+
+	// 创建时间。时间戳
+	CreateTime int
+
+	// 物理IP
+	IP string
+
+	// 名称
+	Name string
+
+	// 线路
+	OperatorName string
+
+	// 物理IP的ID
+	PhysicalIPID string
+
+	// 地域
+	Region string
+
+	// 备注
+	Remark string
+
+	// 状态。Allocating：申请中,Free：未绑定,Bounding：绑定中,Bound：已绑定,Unbounding：解绑中,Deleted：已删除,Releasing：销毁中,Released：已销毁
+	Status string
+
+	// 过期时间。时间戳
+	UpdateTime int
+
+	// 可用区
+	Zone string
+}
+
+/*
+RSInfo - 转发规则关联的服务节点信息
+*/
+type RSInfo struct {
+
+	// 绑定的资源ID
+	BindResourceID string
+
+	// 创建时间，时间戳
+	CreateTime int
+
+	// 服务节点的内网 IP 地址
+	IP string
+
+	// 服务节点所属的负载均衡 ID
+	LBID string
+
+	// 服务节点的资源名称
+	Name string
+
+	// 服务节点暴露的服务端口号
+	Port int
+
+	// 服务节点的 ID
+	RSID string
+
+	// 节点模式。枚举值，Enabling:开启中,Enable:已启用,Disabling:禁用中,Disable:已禁用
+	RSMode string
+
+	// RSStatus 的描述修改为：状态，枚举值，Creating:创建中,Inactive:无效,Active:有效,Updating:更新中,Deleting:删除中,Deleted:已删除。其中有效代表节点服务健康，无效代表节点服务异常。
+	RSStatus string
+
+	// 更新时间，时间戳
+	UpdateTime int
+
+	// 服务节点所属的 VServer ID
+	VSID string
+
+	// 服务节点的权重
+	Weight int
+}
+
+/*
+RecycledResourceInfo - 回收站资源信息
+*/
+type RecycledResourceInfo struct {
+
+	// 创建时间
+	CreateTime int
+
+	// 删除时间
+	DeleteTime int
+
+	// 描述
+	Description string
+
+	// 过期时间
+	ExpireTime int
+
+	// 是否自动销户
+	IsAutoTerminated bool
+
+	// 名称
+	Name string
+
+	// 地域
+	Region string
+
+	// 资源ID
+	ResourceID string
+
+	// 资源类型：VM:虚拟机，Disk:硬盘，EIP:外网IP，PIP:物理IP，MySQL:数据库，Redis:缓存
+	ResourceType string
+
+	// 资源状态
+	Status string
+
+	// 销毁时间
+	WillTerminateTime int
+
+	// 可用区
+	Zone string
 }
 
 /*
@@ -177,6 +480,27 @@ type SGInfo struct {
 
 	// 更新时间，时间戳
 	UpdateTime int
+
+	// 可用区
+	Zone string
+}
+
+/*
+StorageTypeInfo - 存储类型信息
+*/
+type StorageTypeInfo struct {
+
+	// 地域
+	Region string
+
+	// 架构
+	SetArch string
+
+	// 存储类型
+	StorageType string
+
+	// 存储类型别名
+	StorageTypeAlias string
 
 	// 可用区
 	Zone string
@@ -387,6 +711,27 @@ type VMInstanceInfo struct {
 }
 
 /*
+VMTypeInfo - 主机机型信息
+*/
+type VMTypeInfo struct {
+
+	// 地域
+	Region string
+
+	// 架构
+	SetArch string
+
+	// 机型
+	VMType string
+
+	// 机型别名
+	VMTypeAlias string
+
+	// 可用区
+	Zone string
+}
+
+/*
 VPCInfo - VPC信息
 */
 type VPCInfo struct {
@@ -396,6 +741,9 @@ type VPCInfo struct {
 
 	// 名称
 	Name string
+
+	// 网段，比如10.0.0.0/16
+	Network string
 
 	// 地域。
 	Region string
@@ -420,6 +768,96 @@ type VPCInfo struct {
 
 	// 可用区
 	Zone string
+}
+
+/*
+VSPolicyInfo - 内容转发规则信息
+*/
+type VSPolicyInfo struct {
+
+	// 创建时间，时间戳
+	CreateTime int
+
+	// 内容转发规则关联的请求域名，值可为空，即代表仅匹配路径。
+	Domain string
+
+	// 负载均衡ID
+	LBID string
+
+	// 内容转发规则关联的请求访问路径，如 "/" 。
+	Path string
+
+	// 内容转发规则ID
+	PolicyID string
+
+	// 状态，枚举值，Available:有效,Deleted:已删除
+	PolicyStatus string
+
+	// 转发规则关联的服务节点信息
+	RSInfos []RSInfo
+
+	// 更新时间，时间戳
+	UpdateTime int
+
+	// VServerID
+	VSID string
+}
+
+/*
+VSInfo - RServer信息
+*/
+type VSInfo struct {
+
+	// 告警模板ID
+	AlarmTemplateID string
+
+	// 创建时间，时间戳
+	CreateTime int
+
+	// HTTP 健康检查时校验请求的 HOST 字段中的域名。当健康检查类型为端口检查时，该值为空。
+	Domain string
+
+	// 负载均衡的健康检查类型。枚举值：Port:端口检查；Path: HTTP检查 。
+	HealthcheckType string
+
+	// 负载均衡的连接空闲超时时间，单位为秒，默认值为 60s 。当 VServer 协议为 UDP 时，该值为空。
+	KeepaliveTimeout int
+
+	// VServer 所属的负载均衡 ID
+	LBID string
+
+	// HTTP 健康检查的路径。当健康检查类型为端口检查时，该值为空。
+	Path string
+
+	// 会话保持KEY，仅当 VServer 协议为 HTTP 且会话保持为手动时有效。
+	PersistenceKey string
+
+	// 会话保持类型。枚举值：None:关闭；Auto:自动生成；Manual:手动生成 。当协议为 TCP 时，该值为空；当协议为 UDP 时 Auto 表示开启会话保持 。
+	PersistenceType string
+
+	// 端口
+	Port int
+
+	// 协议
+	Protocol string
+
+	// 健康检查状态，枚举值，Empty:全部异常,Parts:部分异常,All:正常
+	RSHealthStatus string
+
+	// 前 VServer 中已添加的服务节点信息。
+	RSInfos []RSInfo
+
+	// 更新时间，时间戳
+	UpdateTime int
+
+	// VServer的ID
+	VSID string
+
+	// 转发规则 Policy 的规则信息
+	VSPolicyInfos []VSPolicyInfo
+
+	// VServer 的资源状态。枚举值，Available:可用,Updating:更新中,Deleted:已删除 。
+	VSStatus string
 }
 
 /*
