@@ -8,6 +8,8 @@ debug
 debug.test
 .vscode
 *.*~
+*.html
+*.json
 
 # Executable
 bin/
