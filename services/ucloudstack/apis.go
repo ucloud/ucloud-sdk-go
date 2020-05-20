@@ -61,7 +61,7 @@ func (c *UCloudStackClient) NewAllocateEIPRequest() *AllocateEIPRequest {
 /*
 API: AllocateEIP
 
-申请UCloudStack外网IP
+申请外网IP
 */
 func (c *UCloudStackClient) AllocateEIP(req *AllocateEIPRequest) (*AllocateEIPResponse, error) {
 	var err error
@@ -120,7 +120,7 @@ func (c *UCloudStackClient) NewAttachDiskRequest() *AttachDiskRequest {
 /*
 API: AttachDisk
 
-绑定UClouStack硬盘
+绑定硬盘
 */
 func (c *UCloudStackClient) AttachDisk(req *AttachDiskRequest) (*AttachDiskResponse, error) {
 	var err error
@@ -254,6 +254,124 @@ func (c *UCloudStackClient) BindEIP(req *BindEIPRequest) (*BindEIPResponse, erro
 	return &res, nil
 }
 
+// BindPhysicalIPRequest is request schema for BindPhysicalIP action
+type BindPhysicalIPRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。
+	// Zone *string `required:"true"`
+
+	// 物理IP的ID
+	PhysicalIPID *string `required:"true"`
+
+	// 资源ID
+	ResourceID *string `required:"true"`
+
+	// 资源类型。VM：虚拟机
+	ResourceType *string `required:"true"`
+}
+
+// BindPhysicalIPResponse is response schema for BindPhysicalIP action
+type BindPhysicalIPResponse struct {
+	response.CommonBase
+
+	// 返回描述
+	Message string
+}
+
+// NewBindPhysicalIPRequest will create request of BindPhysicalIP action.
+func (c *UCloudStackClient) NewBindPhysicalIPRequest() *BindPhysicalIPRequest {
+	req := &BindPhysicalIPRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BindPhysicalIP
+
+绑定物理 IP ，被绑定的资源必须处于运行中或有效状态。
+*/
+func (c *UCloudStackClient) BindPhysicalIP(req *BindPhysicalIPRequest) (*BindPhysicalIPResponse, error) {
+	var err error
+	var res BindPhysicalIPResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BindPhysicalIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// BindSecurityGroupRequest is request schema for BindSecurityGroup action
+type BindSecurityGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 网卡ID
+	NICID *string `required:"false"`
+
+	// 绑定的资源ID。调用方式举例：ResourceID=“one-id”。
+	ResourceID *string `required:"true"`
+
+	// 安全组ID
+	SGID *string `required:"true"`
+}
+
+// BindSecurityGroupResponse is response schema for BindSecurityGroup action
+type BindSecurityGroupResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewBindSecurityGroupRequest will create request of BindSecurityGroup action.
+func (c *UCloudStackClient) NewBindSecurityGroupRequest() *BindSecurityGroupRequest {
+	req := &BindSecurityGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BindSecurityGroup
+
+绑定安全组
+*/
+func (c *UCloudStackClient) BindSecurityGroup(req *BindSecurityGroupRequest) (*BindSecurityGroupResponse, error) {
+	var err error
+	var res BindSecurityGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BindSecurityGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CloneDiskRequest is request schema for CloneDisk action
 type CloneDiskRequest struct {
 	request.CommonBase
@@ -303,7 +421,7 @@ func (c *UCloudStackClient) NewCloneDiskRequest() *CloneDiskRequest {
 /*
 API: CloneDisk
 
-克隆UCloudStack硬盘
+克隆硬盘
 */
 func (c *UCloudStackClient) CloneDisk(req *CloneDiskRequest) (*CloneDiskResponse, error) {
 	var err error
@@ -312,6 +430,68 @@ func (c *UCloudStackClient) CloneDisk(req *CloneDiskRequest) (*CloneDiskResponse
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CloneDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateCustomImageRequest is request schema for CreateCustomImage action
+type CreateCustomImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 镜像描述。
+	ImageDescription *string `required:"false"`
+
+	// 镜像名称
+	ImageName *string `required:"true"`
+
+	// 虚拟机ID
+	VMID *string `required:"true"`
+}
+
+// CreateCustomImageResponse is response schema for CreateCustomImage action
+type CreateCustomImageResponse struct {
+	response.CommonBase
+
+	// 创建的自制镜像ID
+	ImageID string
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewCreateCustomImageRequest will create request of CreateCustomImage action.
+func (c *UCloudStackClient) NewCreateCustomImageRequest() *CreateCustomImageRequest {
+	req := &CreateCustomImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateCustomImage
+
+创建自制镜像
+*/
+func (c *UCloudStackClient) CreateCustomImage(req *CreateCustomImageRequest) (*CreateCustomImageResponse, error) {
+	var err error
+	var res CreateCustomImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCustomImage", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -371,7 +551,7 @@ func (c *UCloudStackClient) NewCreateDiskRequest() *CreateDiskRequest {
 /*
 API: CreateDisk
 
-创建UCloudStack硬盘
+创建硬盘
 */
 func (c *UCloudStackClient) CreateDisk(req *CreateDiskRequest) (*CreateDiskResponse, error) {
 	var err error
@@ -380,6 +560,361 @@ func (c *UCloudStackClient) CreateDisk(req *CreateDiskRequest) (*CreateDiskRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateLBRequest is request schema for CreateLB action
+type CreateLBRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
+	ChargeType *string `required:"true"`
+
+	// 外网IP的ID，创建外网LB时为必需
+	EIPID *string `required:"false"`
+
+	// 枚举值。LAN：内网，WAN:外网
+	LBType *string `required:"true"`
+
+	// 名称。
+	Name *string `required:"true"`
+
+	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
+	Quantity *int `required:"false"`
+
+	// 描述。
+	Remark *string `required:"false"`
+
+	// 安全组ID，创建外网LB时为必需
+	SGID *string `required:"false"`
+
+	// LB 实例所在的子网 ID 。
+	SubnetID *string `required:"true"`
+
+	// 运行负载均衡实例的主机机型。枚举值：如 Normal ，表示普通机型； SSD，表示 SSD 机型。（机型由平台管理员修改和指定，可参考获取主机机型接口）
+	VMType *string `required:"true"`
+
+	// LB实例所在的 VPC ID 。
+	VPCID *string `required:"true"`
+}
+
+// CreateLBResponse is response schema for CreateLB action
+type CreateLBResponse struct {
+	response.CommonBase
+
+	// 返回创建的负载均衡ID
+	LBID string
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewCreateLBRequest will create request of CreateLB action.
+func (c *UCloudStackClient) NewCreateLBRequest() *CreateLBRequest {
+	req := &CreateLBRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateLB
+
+创建负载均衡
+*/
+func (c *UCloudStackClient) CreateLB(req *CreateLBRequest) (*CreateLBResponse, error) {
+	var err error
+	var res CreateLBResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateLB", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateNATGWRequest is request schema for CreateNATGW action
+type CreateNATGWRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
+	ChargeType *string `required:"true"`
+
+	// 外网IP的ID
+	EIPID *string `required:"true"`
+
+	// 名称。
+	Name *string `required:"true"`
+
+	// 购买时长。默认值1。小时不生效，月范围【1，11】，年范围【1，5】。
+	Quantity *int `required:"false"`
+
+	// 描述
+	Remark *string `required:"false"`
+
+	// 安全组ID
+	SGID *string `required:"true"`
+
+	// NAT网关实例所在的子网 ID
+	SubnetID *string `required:"true"`
+
+	// 运行NAT网关实例的主机机型。枚举值：如 Normal ，表示普通机型； SSD，表示 SSD 机型。（机型由平台管理员修改和指定，可参考获取主机机型接口）
+	VMType *string `required:"true"`
+
+	// NAT网关实例所在的 VPC ID
+	VPCID *string `required:"true"`
+}
+
+// CreateNATGWResponse is response schema for CreateNATGW action
+type CreateNATGWResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+
+	// 返回创建的NAT网关ID
+	NATGWID string
+}
+
+// NewCreateNATGWRequest will create request of CreateNATGW action.
+func (c *UCloudStackClient) NewCreateNATGWRequest() *CreateNATGWRequest {
+	req := &CreateNATGWRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateNATGW
+
+创建NAT网关
+*/
+func (c *UCloudStackClient) CreateNATGW(req *CreateNATGWRequest) (*CreateNATGWResponse, error) {
+	var err error
+	var res CreateNATGWResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateNATGW", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateNATGWRuleRequest is request schema for CreateNATGWRule action
+type CreateNATGWRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 绑定的虚拟机资源ID
+	BindResourceID *string `required:"true"`
+
+	// NAT网关ID
+	NATGWID *string `required:"true"`
+
+	// NAT的类型。枚举值：SNAT，DNAT
+	NATGWType *string `required:"true"`
+}
+
+// CreateNATGWRuleResponse is response schema for CreateNATGWRule action
+type CreateNATGWRuleResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+
+	// 白名单ID
+	RuleID string
+}
+
+// NewCreateNATGWRuleRequest will create request of CreateNATGWRule action.
+func (c *UCloudStackClient) NewCreateNATGWRuleRequest() *CreateNATGWRuleRequest {
+	req := &CreateNATGWRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateNATGWRule
+
+添加NAT网关白名单
+*/
+func (c *UCloudStackClient) CreateNATGWRule(req *CreateNATGWRuleRequest) (*CreateNATGWRuleResponse, error) {
+	var err error
+	var res CreateNATGWRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreatePhysicalIPRequest is request schema for CreatePhysicalIP action
+type CreatePhysicalIPRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 物理IP名称，限制字符长度30
+	Name *string `required:"true"`
+
+	// 物理IP线路
+	OperatorName *string `required:"true"`
+
+	// 描述
+	Remark *string `required:"false"`
+}
+
+// CreatePhysicalIPResponse is response schema for CreatePhysicalIP action
+type CreatePhysicalIPResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+
+	// 返回创建的物理IP的ID
+	PhysicalIPID string
+}
+
+// NewCreatePhysicalIPRequest will create request of CreatePhysicalIP action.
+func (c *UCloudStackClient) NewCreatePhysicalIPRequest() *CreatePhysicalIPRequest {
+	req := &CreatePhysicalIPRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreatePhysicalIP
+
+创建物理 IP ，需确保平台已配置物理 IP 线路相关信息及物理网络联通性。
+*/
+func (c *UCloudStackClient) CreatePhysicalIP(req *CreatePhysicalIPRequest) (*CreatePhysicalIPResponse, error) {
+	var err error
+	var res CreatePhysicalIPResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreatePhysicalIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateRSRequest is request schema for CreateRS action
+type CreateRSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 服务节点的资源 ID ，仅支持添加与 LB 相同 VPC 的虚拟机资源
+	BindResourceID *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 服务节点暴露的服务端口号
+	Port *int `required:"true"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+
+	// 服务节点的权重
+	Weight *int `required:"true"`
+}
+
+// CreateRSResponse is response schema for CreateRS action
+type CreateRSResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+
+	// 返回创建的RSID
+	RSID string
+}
+
+// NewCreateRSRequest will create request of CreateRS action.
+func (c *UCloudStackClient) NewCreateRSRequest() *CreateRSRequest {
+	req := &CreateRSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateRS
+
+为负载均衡的 VServer 添加后端服务节点。
+*/
+func (c *UCloudStackClient) CreateRS(req *CreateRSRequest) (*CreateRSResponse, error) {
+	var err error
+	var res CreateRSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateRS", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -501,6 +1036,68 @@ func (c *UCloudStackClient) CreateSecurityGroupRule(req *CreateSecurityGroupRule
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateSecurityGroupRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateSnapshotRequest is request schema for CreateSnapshot action
+type CreateSnapshotRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 硬盘ID，输入“有效”状态的ID
+	DiskID *string `required:"true"`
+
+	// 快照名称，限制字符长度30
+	Name *string `required:"true"`
+
+	// 描述，限制字符长度100
+	Remark *string `required:"false"`
+}
+
+// CreateSnapshotResponse is response schema for CreateSnapshot action
+type CreateSnapshotResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+
+	// 创建的快照ID
+	SnapshotID string
+}
+
+// NewCreateSnapshotRequest will create request of CreateSnapshot action.
+func (c *UCloudStackClient) NewCreateSnapshotRequest() *CreateSnapshotRequest {
+	req := &CreateSnapshotRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateSnapshot
+
+创建硬盘快照
+*/
+func (c *UCloudStackClient) CreateSnapshot(req *CreateSnapshotRequest) (*CreateSnapshotResponse, error) {
+	var err error
+	var res CreateSnapshotResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateSnapshot", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -714,7 +1311,7 @@ func (c *UCloudStackClient) NewCreateVMInstanceRequest() *CreateVMInstanceReques
 /*
 API: CreateVMInstance
 
-创建UCloudStack虚拟机
+创建虚拟机
 */
 func (c *UCloudStackClient) CreateVMInstance(req *CreateVMInstanceRequest) (*CreateVMInstanceResponse, error) {
 	var err error
@@ -792,6 +1389,210 @@ func (c *UCloudStackClient) CreateVPC(req *CreateVPCRequest) (*CreateVPCResponse
 	return &res, nil
 }
 
+// CreateVSRequest is request schema for CreateVS action
+type CreateVSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// HTTP 健康检查时校验请求的 HOST 字段中的域名。当健康检查类型为端口检查时，该值为空。
+	Domain *string `required:"false"`
+
+	// 健康检查类型，枚举值，Port:端口,Path:域名。TCP和UDP协议只支持Port类型。
+	HealthcheckType *string `required:"true"`
+
+	// 负载均衡的连接空闲超时时间，单位为秒，默认值为 60s 。
+	KeepaliveTimeout *int `required:"false"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// HTTP 健康检查的路径，健康检查类型为 HTTP 检查时为必填项。当健康检查类型为端口检查时，该值为空。
+	Path *string `required:"false"`
+
+	// 会话保持KEY，会话保持类型为Manual时为必填项，仅当 VServer 协议为 HTTP 时有效。
+	PersistenceKey *string `required:"false"`
+
+	// 会话保持类型。枚举值：None:关闭；Auto:自动生成；Manual:手动生成 。当协议为 TCP 时，该值不生效，会话保持和选择的调度算法相关；当协议为 UDP 时 Auto 表示开启会话保持 。
+	PersistenceType *string `required:"false"`
+
+	// VServer 的监听端口。端口范围为 1~65535 ，其中 323、9102、9103、9104、9105、60909、60910 被系统占用。
+	Port *int `required:"true"`
+
+	// VServer 的监听协议。枚举值：支持 TCP、UDP、HTTP 三种协议转发。
+	Protocol *string `required:"true"`
+
+	// 负载均衡的调度算法。枚举值：wrr:加权轮训；lc:最小连接数；hash:原地址。
+	Scheduler *string `required:"true"`
+}
+
+// CreateVSResponse is response schema for CreateVS action
+type CreateVSResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+
+	// 返回创建的VSID
+	VSID string
+}
+
+// NewCreateVSRequest will create request of CreateVS action.
+func (c *UCloudStackClient) NewCreateVSRequest() *CreateVSRequest {
+	req := &CreateVSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateVS
+
+创建负载均衡VServer
+*/
+func (c *UCloudStackClient) CreateVS(req *CreateVSRequest) (*CreateVSResponse, error) {
+	var err error
+	var res CreateVSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateVS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateVSPolicyRequest is request schema for CreateVSPolicy action
+type CreateVSPolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 内容转发规则关联的请求域名，值可为空，即代表仅匹配路径。域名和路径至少需要指定一项，且域名和路径的组合在一个 VServer 中必须唯一。
+	Domain *string `required:"false"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 内容转发规则关联的请求访问路径，如 "/" 。域名和路径至少需要指定一项，且域名和路径的组合在一个 VServer 中必须唯一。
+	Path *string `required:"false"`
+
+	// 【数组】内容转发规则应用的服务节点的 ID，来源于 VServer 中添加的服务节点。调用方式举例：RSIDs.0=“one-id”、RSIDs.1=“two-id”。
+	RSIDs []string `required:"true"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+}
+
+// CreateVSPolicyResponse is response schema for CreateVSPolicy action
+type CreateVSPolicyResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+
+	// 返回创建的内容转发规则ID
+	PolicyID string
+}
+
+// NewCreateVSPolicyRequest will create request of CreateVSPolicy action.
+func (c *UCloudStackClient) NewCreateVSPolicyRequest() *CreateVSPolicyRequest {
+	req := &CreateVSPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateVSPolicy
+
+创建七层负载均衡内容转发规则，仅当 VServer 的监听协议为 HTTP 时有效。
+*/
+func (c *UCloudStackClient) CreateVSPolicy(req *CreateVSPolicyRequest) (*CreateVSPolicyResponse, error) {
+	var err error
+	var res CreateVSPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateVSPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCustomImageRequest is request schema for DeleteCustomImage action
+type DeleteCustomImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 自制镜像ID
+	ImageID *string `required:"true"`
+}
+
+// DeleteCustomImageResponse is response schema for DeleteCustomImage action
+type DeleteCustomImageResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteCustomImageRequest will create request of DeleteCustomImage action.
+func (c *UCloudStackClient) NewDeleteCustomImageRequest() *DeleteCustomImageRequest {
+	req := &DeleteCustomImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCustomImage
+
+删除自制镜像
+*/
+func (c *UCloudStackClient) DeleteCustomImage(req *DeleteCustomImageRequest) (*DeleteCustomImageResponse, error) {
+	var err error
+	var res DeleteCustomImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCustomImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteDiskRequest is request schema for DeleteDisk action
 type DeleteDiskRequest struct {
 	request.CommonBase
@@ -829,7 +1630,7 @@ func (c *UCloudStackClient) NewDeleteDiskRequest() *DeleteDiskRequest {
 /*
 API: DeleteDisk
 
-删除UCloudStack硬盘
+删除硬盘
 */
 func (c *UCloudStackClient) DeleteDisk(req *DeleteDiskRequest) (*DeleteDiskResponse, error) {
 	var err error
@@ -838,6 +1639,280 @@ func (c *UCloudStackClient) DeleteDisk(req *DeleteDiskRequest) (*DeleteDiskRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteLBRequest is request schema for DeleteLB action
+type DeleteLBRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+}
+
+// DeleteLBResponse is response schema for DeleteLB action
+type DeleteLBResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteLBRequest will create request of DeleteLB action.
+func (c *UCloudStackClient) NewDeleteLBRequest() *DeleteLBRequest {
+	req := &DeleteLBRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteLB
+
+删除负载均衡
+*/
+func (c *UCloudStackClient) DeleteLB(req *DeleteLBRequest) (*DeleteLBResponse, error) {
+	var err error
+	var res DeleteLBResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteLB", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteNATGWRequest is request schema for DeleteNATGW action
+type DeleteNATGWRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// NAT网关ID
+	NATGWID *string `required:"true"`
+}
+
+// DeleteNATGWResponse is response schema for DeleteNATGW action
+type DeleteNATGWResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteNATGWRequest will create request of DeleteNATGW action.
+func (c *UCloudStackClient) NewDeleteNATGWRequest() *DeleteNATGWRequest {
+	req := &DeleteNATGWRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteNATGW
+
+删除NAT网关
+*/
+func (c *UCloudStackClient) DeleteNATGW(req *DeleteNATGWRequest) (*DeleteNATGWResponse, error) {
+	var err error
+	var res DeleteNATGWResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteNATGW", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteNATGWRuleRequest is request schema for DeleteNATGWRule action
+type DeleteNATGWRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// nat网关ID
+	NATGWID *string `required:"true"`
+
+	// 白名单ID
+	RuleID *string `required:"true"`
+}
+
+// DeleteNATGWRuleResponse is response schema for DeleteNATGWRule action
+type DeleteNATGWRuleResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteNATGWRuleRequest will create request of DeleteNATGWRule action.
+func (c *UCloudStackClient) NewDeleteNATGWRuleRequest() *DeleteNATGWRuleRequest {
+	req := &DeleteNATGWRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteNATGWRule
+
+删除NAT网关白名单
+*/
+func (c *UCloudStackClient) DeleteNATGWRule(req *DeleteNATGWRuleRequest) (*DeleteNATGWRuleResponse, error) {
+	var err error
+	var res DeleteNATGWRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeletePhysicalIPRequest is request schema for DeletePhysicalIP action
+type DeletePhysicalIPRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。
+	// Zone *string `required:"true"`
+
+	// 物理IP的ID
+	PhysicalIPID *string `required:"true"`
+}
+
+// DeletePhysicalIPResponse is response schema for DeletePhysicalIP action
+type DeletePhysicalIPResponse struct {
+	response.CommonBase
+
+	// 返回状态描述
+	Message string
+}
+
+// NewDeletePhysicalIPRequest will create request of DeletePhysicalIP action.
+func (c *UCloudStackClient) NewDeletePhysicalIPRequest() *DeletePhysicalIPRequest {
+	req := &DeletePhysicalIPRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeletePhysicalIP
+
+删除物理IP
+*/
+func (c *UCloudStackClient) DeletePhysicalIP(req *DeletePhysicalIPRequest) (*DeletePhysicalIPResponse, error) {
+	var err error
+	var res DeletePhysicalIPResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeletePhysicalIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteRSRequest is request schema for DeleteRS action
+type DeleteRSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// RServer的ID
+	RSID *string `required:"true"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+}
+
+// DeleteRSResponse is response schema for DeleteRS action
+type DeleteRSResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteRSRequest will create request of DeleteRS action.
+func (c *UCloudStackClient) NewDeleteRSRequest() *DeleteRSRequest {
+	req := &DeleteRSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteRS
+
+移除负载均衡的单个服务节点
+*/
+func (c *UCloudStackClient) DeleteRS(req *DeleteRSRequest) (*DeleteRSResponse, error) {
+	var err error
+	var res DeleteRSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteRS", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -954,6 +2029,59 @@ func (c *UCloudStackClient) DeleteSecurityGroupRule(req *DeleteSecurityGroupRule
 	return &res, nil
 }
 
+// DeleteSnapshotRequest is request schema for DeleteSnapshot action
+type DeleteSnapshotRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 快照ID
+	SnapshotID *string `required:"true"`
+}
+
+// DeleteSnapshotResponse is response schema for DeleteSnapshot action
+type DeleteSnapshotResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewDeleteSnapshotRequest will create request of DeleteSnapshot action.
+func (c *UCloudStackClient) NewDeleteSnapshotRequest() *DeleteSnapshotRequest {
+	req := &DeleteSnapshotRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteSnapshot
+
+删除快照，仅支持状态为正常的快照进行删除操作。
+*/
+func (c *UCloudStackClient) DeleteSnapshot(req *DeleteSnapshotRequest) (*DeleteSnapshotResponse, error) {
+	var err error
+	var res DeleteSnapshotResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteSnapshot", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteSubnetRequest is request schema for DeleteSubnet action
 type DeleteSubnetRequest struct {
 	request.CommonBase
@@ -1044,7 +2172,7 @@ func (c *UCloudStackClient) NewDeleteVMInstanceRequest() *DeleteVMInstanceReques
 /*
 API: DeleteVMInstance
 
-删除UCloudStack虚拟机
+删除虚拟机
 */
 func (c *UCloudStackClient) DeleteVMInstance(req *DeleteVMInstanceRequest) (*DeleteVMInstanceResponse, error) {
 	var err error
@@ -1113,6 +2241,127 @@ func (c *UCloudStackClient) DeleteVPC(req *DeleteVPCRequest) (*DeleteVPCResponse
 	return &res, nil
 }
 
+// DeleteVSRequest is request schema for DeleteVS action
+type DeleteVSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// VServer 监听器所属的负载均衡 ID
+	LBID *string `required:"true"`
+
+	// 负载均衡VServer监听器ID
+	VSID *string `required:"true"`
+}
+
+// DeleteVSResponse is response schema for DeleteVS action
+type DeleteVSResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteVSRequest will create request of DeleteVS action.
+func (c *UCloudStackClient) NewDeleteVSRequest() *DeleteVSRequest {
+	req := &DeleteVSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteVS
+
+删除VServer
+*/
+func (c *UCloudStackClient) DeleteVS(req *DeleteVSRequest) (*DeleteVSResponse, error) {
+	var err error
+	var res DeleteVSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteVS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteVSPolicyRequest is request schema for DeleteVSPolicy action
+type DeleteVSPolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 内容转发规则ID
+	PolicyID *string `required:"true"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+}
+
+// DeleteVSPolicyResponse is response schema for DeleteVSPolicy action
+type DeleteVSPolicyResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 返回信息描述。
+	Message string
+
+	// 返回码
+	RetCode int
+}
+
+// NewDeleteVSPolicyRequest will create request of DeleteVSPolicy action.
+func (c *UCloudStackClient) NewDeleteVSPolicyRequest() *DeleteVSPolicyRequest {
+	req := &DeleteVSPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteVSPolicy
+
+删除七层负载均衡内容转发规则，仅当 VServer 的监听协议为 HTTP 时有效。
+*/
+func (c *UCloudStackClient) DeleteVSPolicy(req *DeleteVSPolicyRequest) (*DeleteVSPolicyResponse, error) {
+	var err error
+	var res DeleteVSPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteVSPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeDiskRequest is request schema for DescribeDisk action
 type DescribeDiskRequest struct {
 	request.CommonBase
@@ -1162,7 +2411,7 @@ func (c *UCloudStackClient) NewDescribeDiskRequest() *DescribeDiskRequest {
 /*
 API: DescribeDisk
 
-获取UCloudStack硬盘信息
+获取硬盘信息
 */
 func (c *UCloudStackClient) DescribeDisk(req *DescribeDiskRequest) (*DescribeDiskResponse, error) {
 	var err error
@@ -1227,7 +2476,7 @@ func (c *UCloudStackClient) NewDescribeEIPRequest() *DescribeEIPRequest {
 /*
 API: DescribeEIP
 
-获取UCloudStack外网IP的信息
+获取外网IP的信息
 */
 func (c *UCloudStackClient) DescribeEIP(req *DescribeEIPRequest) (*DescribeEIPResponse, error) {
 	var err error
@@ -1236,6 +2485,145 @@ func (c *UCloudStackClient) DescribeEIP(req *DescribeEIPRequest) (*DescribeEIPRe
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeEIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeImageRequest is request schema for DescribeImage action
+type DescribeImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 【数组】镜像的 ID。输入有效的 ID。调用方式举例：ImageIDs.0=“one-id”、ImageIDs.1=“two-id”。
+	ImageIDs []string `required:"false"`
+
+	// 镜像类型。枚举值：Base(基础镜像，平台默认提供的镜像)，Custom(自制镜像，通过虚拟机导出的镜像) 。若该值为空，默认查询所有镜像。
+	ImageType *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+}
+
+// DescribeImageResponse is response schema for DescribeImage action
+type DescribeImageResponse struct {
+	response.CommonBase
+
+	// 【数组】返回镜像对象数组
+	Infos []ImageInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回镜像的总个数。
+	TotalCount int
+}
+
+// NewDescribeImageRequest will create request of DescribeImage action.
+func (c *UCloudStackClient) NewDescribeImageRequest() *DescribeImageRequest {
+	req := &DescribeImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeImage
+
+获取镜像信息，包括默认镜像和自制镜像。
+*/
+func (c *UCloudStackClient) DescribeImage(req *DescribeImageRequest) (*DescribeImageResponse, error) {
+	var err error
+	var res DescribeImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeLBRequest is request schema for DescribeLB action
+type DescribeLBRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 【数组】负载均衡的 ID。调用方式举例：LBIDs.0=“one-id”、LBIDs.1=“two-id”。
+	LBIDs []string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+
+	// 子网ID
+	SubnetID *string `required:"false"`
+
+	// VPCID
+	VPCID *string `required:"false"`
+}
+
+// DescribeLBResponse is response schema for DescribeLB action
+type DescribeLBResponse struct {
+	response.CommonBase
+
+	// 【数组】返回负载均衡对象数组
+	Infos []LBInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回负载均衡总个数。
+	TotalCount int
+}
+
+// NewDescribeLBRequest will create request of DescribeLB action.
+func (c *UCloudStackClient) NewDescribeLBRequest() *DescribeLBRequest {
+	req := &DescribeLBRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeLB
+
+获取负载均衡信息
+*/
+func (c *UCloudStackClient) DescribeLB(req *DescribeLBRequest) (*DescribeLBResponse, error) {
+	var err error
+	var res DescribeLBResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeLB", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1314,6 +2702,343 @@ func (c *UCloudStackClient) DescribeMetric(req *DescribeMetricRequest) (*Describ
 	return &res, nil
 }
 
+// DescribeNATGWRequest is request schema for DescribeNATGW action
+type DescribeNATGWRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 【数组】NAT网关的 ID。调用方式举例：NATGWIDs.0=“one-id”、NATGWIDs.1=“two-id”。
+	NATGWIDs []string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+}
+
+// DescribeNATGWResponse is response schema for DescribeNATGW action
+type DescribeNATGWResponse struct {
+	response.CommonBase
+
+	// 【数组】返回nat网关对象数组
+	Infos []NATGWInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回NAT网关总个数
+	TotalCount int
+}
+
+// NewDescribeNATGWRequest will create request of DescribeNATGW action.
+func (c *UCloudStackClient) NewDescribeNATGWRequest() *DescribeNATGWRequest {
+	req := &DescribeNATGWRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeNATGW
+
+获取NAT网关信息
+*/
+func (c *UCloudStackClient) DescribeNATGW(req *DescribeNATGWRequest) (*DescribeNATGWResponse, error) {
+	var err error
+	var res DescribeNATGWResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeNATGW", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeNATGWRuleRequest is request schema for DescribeNATGWRule action
+type DescribeNATGWRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 【数组】NAT网关白名单资源ID。调用方式举例：NATGWRules.0=“one-id”、NATGWRules.1=“two-id”。
+	BindResourceIDs []string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// NAT网关ID
+	NATGWID *string `required:"true"`
+
+	// NAT类型。枚举值：SNAT，DNAT
+	NATGWType *string `required:"true"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+
+	// 【数组】NAT网关白名单ID。调用方式举例：NATGWRules.0=“one-id”、NATGWRules.1=“two-id”。
+	RuleIDs []string `required:"false"`
+}
+
+// DescribeNATGWRuleResponse is response schema for DescribeNATGWRule action
+type DescribeNATGWRuleResponse struct {
+	response.CommonBase
+
+	// 【数组】返回nat网关白名单对象数组
+	Infos []NATGWRuleInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回NAT网关白名单资源总个数。
+	TotalCount int
+}
+
+// NewDescribeNATGWRuleRequest will create request of DescribeNATGWRule action.
+func (c *UCloudStackClient) NewDescribeNATGWRuleRequest() *DescribeNATGWRuleRequest {
+	req := &DescribeNATGWRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeNATGWRule
+
+获取NAT网关白名单信息
+*/
+func (c *UCloudStackClient) DescribeNATGWRule(req *DescribeNATGWRuleRequest) (*DescribeNATGWRuleResponse, error) {
+	var err error
+	var res DescribeNATGWRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribePhysicalIPRequest is request schema for DescribePhysicalIP action
+type DescribePhysicalIPRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *string `required:"false"`
+
+	// 【数组】物理IP的 ID。输入有效的 ID。调用方式举例：PhysicalIPIDs.0=“one-id”、PhysicalIPIDs.1=“two-id”
+	PhysicalIPIDs []string `required:"false"`
+}
+
+// DescribePhysicalIPResponse is response schema for DescribePhysicalIP action
+type DescribePhysicalIPResponse struct {
+	response.CommonBase
+
+	// 物理IP数组
+	Infos []PhysicalIPInfo
+
+	// 返回信息描述
+	Message string
+
+	// 返回现有物理IP总数
+	TotalCount int
+}
+
+// NewDescribePhysicalIPRequest will create request of DescribePhysicalIP action.
+func (c *UCloudStackClient) NewDescribePhysicalIPRequest() *DescribePhysicalIPRequest {
+	req := &DescribePhysicalIPRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribePhysicalIP
+
+获取物理IP信息
+*/
+func (c *UCloudStackClient) DescribePhysicalIP(req *DescribePhysicalIPRequest) (*DescribePhysicalIPResponse, error) {
+	var err error
+	var res DescribePhysicalIPResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribePhysicalIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeRSRequest is request schema for DescribeRS action
+type DescribeRSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+
+	// 【数组】RServer的 ID。调用方式举例：RSIDs.0=“one-id”、RSIDs.1=“two-id”。
+	RSIDs []string `required:"false"`
+
+	// VServer的ID
+	VSID *string `required:"false"`
+}
+
+// DescribeRSResponse is response schema for DescribeRS action
+type DescribeRSResponse struct {
+	response.CommonBase
+
+	// 【数组】返回VServer对象数组
+	Infos []RSInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回该负载均衡下VServer的总个数。
+	TotalCount int
+}
+
+// NewDescribeRSRequest will create request of DescribeRS action.
+func (c *UCloudStackClient) NewDescribeRSRequest() *DescribeRSRequest {
+	req := &DescribeRSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeRS
+
+获取负载均衡服务的服务节点信息
+*/
+func (c *UCloudStackClient) DescribeRS(req *DescribeRSRequest) (*DescribeRSResponse, error) {
+	var err error
+	var res DescribeRSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeRS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeRecycledResourceRequest is request schema for DescribeRecycledResource action
+type DescribeRecycledResourceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+
+	// 【数组】资源ID，输入“有效”的ID。调用方式举例：ResourceIDs.0=“one-id”、ResourceIDs.1=“two-id”。
+	ResourceIDs []string `required:"false"`
+}
+
+// DescribeRecycledResourceResponse is response schema for DescribeRecycledResource action
+type DescribeRecycledResourceResponse struct {
+	response.CommonBase
+
+	// 【数组】返回资源对象数组
+	Infos []RecycledResourceInfo
+
+	// 返回回收站资源的总个数
+	TotalCount int
+}
+
+// NewDescribeRecycledResourceRequest will create request of DescribeRecycledResource action.
+func (c *UCloudStackClient) NewDescribeRecycledResourceRequest() *DescribeRecycledResourceRequest {
+	req := &DescribeRecycledResourceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeRecycledResource
+
+查询回收站资源
+*/
+func (c *UCloudStackClient) DescribeRecycledResource(req *DescribeRecycledResourceRequest) (*DescribeRecycledResourceResponse, error) {
+	var err error
+	var res DescribeRecycledResourceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeRecycledResource", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeSecurityGroupRequest is request schema for DescribeSecurityGroup action
 type DescribeSecurityGroupRequest struct {
 	request.CommonBase
@@ -1372,6 +3097,63 @@ func (c *UCloudStackClient) DescribeSecurityGroup(req *DescribeSecurityGroupRequ
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeSecurityGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeStorageTypeRequest is request schema for DescribeStorageType action
+type DescribeStorageTypeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。
+	// Zone *string `required:"true"`
+
+}
+
+// DescribeStorageTypeResponse is response schema for DescribeStorageType action
+type DescribeStorageTypeResponse struct {
+	response.CommonBase
+
+	// 存储类型的信息列表
+	Infos []StorageTypeInfo
+
+	// 返回信息描述；
+	Message string
+
+	// 存储类型的总数
+	TotalCount int
+}
+
+// NewDescribeStorageTypeRequest will create request of DescribeStorageType action.
+func (c *UCloudStackClient) NewDescribeStorageTypeRequest() *DescribeStorageTypeRequest {
+	req := &DescribeStorageTypeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeStorageType
+
+查询存储类型
+*/
+func (c *UCloudStackClient) DescribeStorageType(req *DescribeStorageTypeRequest) (*DescribeStorageTypeResponse, error) {
+	var err error
+	var res DescribeStorageTypeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeStorageType", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1490,7 +3272,7 @@ func (c *UCloudStackClient) NewDescribeUserRequest() *DescribeUserRequest {
 /*
 API: DescribeUser
 
-查询UcloudStack租户信息
+查询租户信息
 */
 func (c *UCloudStackClient) DescribeUser(req *DescribeUserRequest) (*DescribeUserResponse, error) {
 	var err error
@@ -1561,7 +3343,7 @@ func (c *UCloudStackClient) NewDescribeVMInstanceRequest() *DescribeVMInstanceRe
 /*
 API: DescribeVMInstance
 
-查询UCloudStack虚拟机
+查询虚拟机
 */
 func (c *UCloudStackClient) DescribeVMInstance(req *DescribeVMInstanceRequest) (*DescribeVMInstanceResponse, error) {
 	var err error
@@ -1570,6 +3352,63 @@ func (c *UCloudStackClient) DescribeVMInstance(req *DescribeVMInstanceRequest) (
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeVMInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeVMTypeRequest is request schema for DescribeVMType action
+type DescribeVMTypeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。
+	// Zone *string `required:"true"`
+
+}
+
+// DescribeVMTypeResponse is response schema for DescribeVMType action
+type DescribeVMTypeResponse struct {
+	response.CommonBase
+
+	// 主机机型的信息列表
+	Infos []VMTypeInfo
+
+	// 返回信息描述；
+	Message string
+
+	// 主机机型的总数
+	TotalCount int
+}
+
+// NewDescribeVMTypeRequest will create request of DescribeVMType action.
+func (c *UCloudStackClient) NewDescribeVMTypeRequest() *DescribeVMTypeRequest {
+	req := &DescribeVMTypeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeVMType
+
+查询主机机型
+*/
+func (c *UCloudStackClient) DescribeVMType(req *DescribeVMTypeRequest) (*DescribeVMTypeResponse, error) {
+	var err error
+	var res DescribeVMTypeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeVMType", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1642,6 +3481,145 @@ func (c *UCloudStackClient) DescribeVPC(req *DescribeVPCRequest) (*DescribeVPCRe
 	return &res, nil
 }
 
+// DescribeVSRequest is request schema for DescribeVS action
+type DescribeVSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+
+	// 【数组】VServer的 ID。调用方式举例：VSIDs.0=“one-id”、VSIDs.1=“two-id”。
+	VSIDs []string `required:"false"`
+}
+
+// DescribeVSResponse is response schema for DescribeVS action
+type DescribeVSResponse struct {
+	response.CommonBase
+
+	// 【数组】返回VServer对象数组
+	Infos []VSInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回当前负载均衡 VServer 总个数。
+	TotalCount int
+}
+
+// NewDescribeVSRequest will create request of DescribeVS action.
+func (c *UCloudStackClient) NewDescribeVSRequest() *DescribeVSRequest {
+	req := &DescribeVSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeVS
+
+获取负载均衡 VServer 信息
+*/
+func (c *UCloudStackClient) DescribeVS(req *DescribeVSRequest) (*DescribeVSResponse, error) {
+	var err error
+	var res DescribeVSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeVS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeVSPolicyRequest is request schema for DescribeVSPolicy action
+type DescribeVSPolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+
+	// 【数组】七层负载均衡内容转发规则的 ID。调用方式举例：PolicyIDs.0=“one-id”、PolicyIDs.1=“two-id”
+	PolicyIDs []string `required:"false"`
+
+	// VServerID
+	VSID *string `required:"false"`
+}
+
+// DescribeVSPolicyResponse is response schema for DescribeVSPolicy action
+type DescribeVSPolicyResponse struct {
+	response.CommonBase
+
+	// 【数组】返回内容分转发规则对象数组
+	Infos []VSPolicyInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回内容转发规则的总个数。
+	TotalCount int
+}
+
+// NewDescribeVSPolicyRequest will create request of DescribeVSPolicy action.
+func (c *UCloudStackClient) NewDescribeVSPolicyRequest() *DescribeVSPolicyRequest {
+	req := &DescribeVSPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeVSPolicy
+
+获取七层负载均衡内容转发规则信息，仅当 VServer 的监听协议为 HTTP 时有效。
+*/
+func (c *UCloudStackClient) DescribeVSPolicy(req *DescribeVSPolicyRequest) (*DescribeVSPolicyResponse, error) {
+	var err error
+	var res DescribeVSPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeVSPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DetachDiskRequest is request schema for DetachDisk action
 type DetachDiskRequest struct {
 	request.CommonBase
@@ -1698,6 +3676,124 @@ func (c *UCloudStackClient) DetachDisk(req *DetachDiskRequest) (*DetachDiskRespo
 	return &res, nil
 }
 
+// DisableRSRequest is request schema for DisableRS action
+type DisableRSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// RServer的ID
+	RSID *string `required:"true"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+}
+
+// DisableRSResponse is response schema for DisableRS action
+type DisableRSResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDisableRSRequest will create request of DisableRS action.
+func (c *UCloudStackClient) NewDisableRSRequest() *DisableRSRequest {
+	req := &DisableRSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DisableRS
+
+禁用负载均衡的单个服务节点
+*/
+func (c *UCloudStackClient) DisableRS(req *DisableRSRequest) (*DisableRSResponse, error) {
+	var err error
+	var res DisableRSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DisableRS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// EnableRSRequest is request schema for EnableRS action
+type EnableRSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// RServer的ID
+	RSID *string `required:"true"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+}
+
+// EnableRSResponse is response schema for EnableRS action
+type EnableRSResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewEnableRSRequest will create request of EnableRS action.
+func (c *UCloudStackClient) NewEnableRSRequest() *EnableRSRequest {
+	req := &EnableRSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: EnableRS
+
+启用负载均衡的单个服务节点
+*/
+func (c *UCloudStackClient) EnableRS(req *EnableRSRequest) (*EnableRSResponse, error) {
+	var err error
+	var res EnableRSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("EnableRS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetDiskPriceRequest is request schema for GetDiskPrice action
 type GetDiskPriceRequest struct {
 	request.CommonBase
@@ -1747,7 +3843,7 @@ func (c *UCloudStackClient) NewGetDiskPriceRequest() *GetDiskPriceRequest {
 /*
 API: GetDiskPrice
 
-获取UCloudStack硬盘价格
+获取硬盘价格
 */
 func (c *UCloudStackClient) GetDiskPrice(req *GetDiskPriceRequest) (*GetDiskPriceResponse, error) {
 	var err error
@@ -1812,7 +3908,7 @@ func (c *UCloudStackClient) NewGetEIPPriceRequest() *GetEIPPriceRequest {
 /*
 API: GetEIPPrice
 
-获取UCloudStack外网IP价格
+获取外网IP价格
 */
 func (c *UCloudStackClient) GetEIPPrice(req *GetEIPPriceRequest) (*GetEIPPriceResponse, error) {
 	var err error
@@ -1898,7 +3994,7 @@ func (c *UCloudStackClient) NewGetVMInstancePriceRequest() *GetVMInstancePriceRe
 /*
 API: GetVMInstancePrice
 
-获取UCloudStack虚拟机价格
+获取虚拟机价格
 */
 func (c *UCloudStackClient) GetVMInstancePrice(req *GetVMInstancePriceRequest) (*GetVMInstancePriceResponse, error) {
 	var err error
@@ -1907,56 +4003,6 @@ func (c *UCloudStackClient) GetVMInstancePrice(req *GetVMInstancePriceRequest) (
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetVMInstancePrice", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// LoginByPasswordRequest is request schema for LoginByPassword action
-type LoginByPasswordRequest struct {
-	request.CommonBase
-
-	// 密码
-	Password *string `required:"true"`
-
-	// 邮箱
-	UserEmail *string `required:"true"`
-}
-
-// LoginByPasswordResponse is response schema for LoginByPassword action
-type LoginByPasswordResponse struct {
-	response.CommonBase
-
-	//
-	Message string
-}
-
-// NewLoginByPasswordRequest will create request of LoginByPassword action.
-func (c *UCloudStackClient) NewLoginByPasswordRequest() *LoginByPasswordRequest {
-	req := &LoginByPasswordRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: LoginByPassword
-
-登录账户
-*/
-func (c *UCloudStackClient) LoginByPassword(req *LoginByPasswordRequest) (*LoginByPasswordResponse, error) {
-	var err error
-	var res LoginByPasswordResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("LoginByPassword", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2079,6 +4125,59 @@ func (c *UCloudStackClient) ModifyNameAndRemark(req *ModifyNameAndRemarkRequest)
 	return &res, nil
 }
 
+// PoweroffVMInstanceRequest is request schema for PoweroffVMInstance action
+type PoweroffVMInstanceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 虚拟机ID
+	VMID *string `required:"true"`
+}
+
+// PoweroffVMInstanceResponse is response schema for PoweroffVMInstance action
+type PoweroffVMInstanceResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewPoweroffVMInstanceRequest will create request of PoweroffVMInstance action.
+func (c *UCloudStackClient) NewPoweroffVMInstanceRequest() *PoweroffVMInstanceRequest {
+	req := &PoweroffVMInstanceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: PoweroffVMInstance
+
+断电虚拟机，可能导致丢失数据甚至损坏操作系统，仅适用于虚拟机死机及级端测试场景。
+*/
+func (c *UCloudStackClient) PoweroffVMInstance(req *PoweroffVMInstanceRequest) (*PoweroffVMInstanceResponse, error) {
+	var err error
+	var res PoweroffVMInstanceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("PoweroffVMInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // RechargeRequest is request schema for Recharge action
 type RechargeRequest struct {
 	request.CommonBase
@@ -2119,7 +4218,7 @@ func (c *UCloudStackClient) NewRechargeRequest() *RechargeRequest {
 /*
 API: Recharge
 
-UCloudStack管理员给租户充值
+管理员给租户充值
 */
 func (c *UCloudStackClient) Recharge(req *RechargeRequest) (*RechargeResponse, error) {
 	var err error
@@ -2237,6 +4336,62 @@ func (c *UCloudStackClient) ReleaseEIP(req *ReleaseEIPRequest) (*ReleaseEIPRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ReleaseEIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// RenewResourceRequest is request schema for RenewResource action
+type RenewResourceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 购买时长，默认为 1。按小时(Dynamic)付费的资源无需此参数，按月付费的资源传 0 时，代表购买至月末。
+	Quantity *int `required:"false"`
+
+	// 待续续的资源ID
+	ResourceID *string `required:"true"`
+}
+
+// RenewResourceResponse is response schema for RenewResource action
+type RenewResourceResponse struct {
+	response.CommonBase
+
+	// 返回描述信息
+	Message string
+}
+
+// NewRenewResourceRequest will create request of RenewResource action.
+func (c *UCloudStackClient) NewRenewResourceRequest() *RenewResourceRequest {
+	req := &RenewResourceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RenewResource
+
+续费回收站资源
+*/
+func (c *UCloudStackClient) RenewResource(req *RenewResourceRequest) (*RenewResourceResponse, error) {
+	var err error
+	var res RenewResourceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RenewResource", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2412,6 +4567,115 @@ func (c *UCloudStackClient) RestartVMInstance(req *RestartVMInstanceRequest) (*R
 	return &res, nil
 }
 
+// RollbackResourceRequest is request schema for RollbackResource action
+type RollbackResourceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 待恢复的资源ID
+	ResourceID *string `required:"true"`
+}
+
+// RollbackResourceResponse is response schema for RollbackResource action
+type RollbackResourceResponse struct {
+	response.CommonBase
+
+	// 返回描述信息
+	Message string
+}
+
+// NewRollbackResourceRequest will create request of RollbackResource action.
+func (c *UCloudStackClient) NewRollbackResourceRequest() *RollbackResourceRequest {
+	req := &RollbackResourceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RollbackResource
+
+恢复回收站资源
+*/
+func (c *UCloudStackClient) RollbackResource(req *RollbackResourceRequest) (*RollbackResourceResponse, error) {
+	var err error
+	var res RollbackResourceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RollbackResource", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// RollbackSnapshotRequest is request schema for RollbackSnapshot action
+type RollbackSnapshotRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：如 cn,表示中国。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：如 zone-01，表示可用区1。
+	// Zone *string `required:"true"`
+
+	// 对应的云硬盘 ID；
+	DiskID *string `required:"true"`
+
+	// 快照ID
+	SnapshotID *string `required:"true"`
+}
+
+// RollbackSnapshotResponse is response schema for RollbackSnapshot action
+type RollbackSnapshotResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewRollbackSnapshotRequest will create request of RollbackSnapshot action.
+func (c *UCloudStackClient) NewRollbackSnapshotRequest() *RollbackSnapshotRequest {
+	req := &RollbackSnapshotRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RollbackSnapshot
+
+将某个快照内的数据回滚到原云硬盘，仅支持正常状态的快照进行回滚操作，回滚时硬盘必须处于未绑定或其挂载的主机为关机状态。
+*/
+func (c *UCloudStackClient) RollbackSnapshot(req *RollbackSnapshotRequest) (*RollbackSnapshotResponse, error) {
+	var err error
+	var res RollbackSnapshotResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RollbackSnapshot", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // StartVMInstanceRequest is request schema for StartVMInstance action
 type StartVMInstanceRequest struct {
 	request.CommonBase
@@ -2449,7 +4713,7 @@ func (c *UCloudStackClient) NewStartVMInstanceRequest() *StartVMInstanceRequest 
 /*
 API: StartVMInstance
 
-开启UCloudStack虚拟机
+开启虚拟机
 */
 func (c *UCloudStackClient) StartVMInstance(req *StartVMInstanceRequest) (*StartVMInstanceResponse, error) {
 	var err error
@@ -2505,7 +4769,7 @@ func (c *UCloudStackClient) NewStopVMInstanceRequest() *StopVMInstanceRequest {
 /*
 API: StopVMInstance
 
-关闭UCloudStack虚拟机
+关闭虚拟机
 */
 func (c *UCloudStackClient) StopVMInstance(req *StopVMInstanceRequest) (*StopVMInstanceResponse, error) {
 	var err error
@@ -2514,6 +4778,59 @@ func (c *UCloudStackClient) StopVMInstance(req *StopVMInstanceRequest) (*StopVMI
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("StopVMInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// TerminateResourceRequest is request schema for TerminateResource action
+type TerminateResourceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。
+	// Zone *string `required:"true"`
+
+	// 资源id
+	ResourceID *string `required:"true"`
+}
+
+// TerminateResourceResponse is response schema for TerminateResource action
+type TerminateResourceResponse struct {
+	response.CommonBase
+
+	// 返回描述信息
+	Message string
+}
+
+// NewTerminateResourceRequest will create request of TerminateResource action.
+func (c *UCloudStackClient) NewTerminateResourceRequest() *TerminateResourceRequest {
+	req := &TerminateResourceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: TerminateResource
+
+销毁资源
+*/
+func (c *UCloudStackClient) TerminateResource(req *TerminateResourceRequest) (*TerminateResourceResponse, error) {
+	var err error
+	var res TerminateResourceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("TerminateResource", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2580,6 +4897,62 @@ func (c *UCloudStackClient) UnBindEIP(req *UnBindEIPRequest) (*UnBindEIPResponse
 	return &res, nil
 }
 
+// UnBindSecurityGroupRequest is request schema for UnBindSecurityGroup action
+type UnBindSecurityGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 解绑的资源ID。调用方式举例：ResourceID=“one-id”。
+	ResourceID *string `required:"true"`
+
+	// 安全组ID
+	SGID *string `required:"true"`
+}
+
+// UnBindSecurityGroupResponse is response schema for UnBindSecurityGroup action
+type UnBindSecurityGroupResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewUnBindSecurityGroupRequest will create request of UnBindSecurityGroup action.
+func (c *UCloudStackClient) NewUnBindSecurityGroupRequest() *UnBindSecurityGroupRequest {
+	req := &UnBindSecurityGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UnBindSecurityGroup
+
+解绑安全组
+*/
+func (c *UCloudStackClient) UnBindSecurityGroup(req *UnBindSecurityGroupRequest) (*UnBindSecurityGroupResponse, error) {
+	var err error
+	var res UnBindSecurityGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UnBindSecurityGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UnbindAlarmTemplateRequest is request schema for UnbindAlarmTemplate action
 type UnbindAlarmTemplateRequest struct {
 	request.CommonBase
@@ -2589,6 +4962,9 @@ type UnbindAlarmTemplateRequest struct {
 
 	// [公共参数] 可用区。枚举值：zone-01，表示中国；
 	// Zone *string `required:"true"`
+
+	// 告警模板ID
+	AlarmTemplateID *string `required:"true"`
 
 	// 【数组】资源的 ID。调用方式举例：ResourceIDs.0=“one-id”、ResourceIDs.1=“two-id”。
 	ResourceIDs []string `required:"true"`
@@ -2629,6 +5005,213 @@ func (c *UCloudStackClient) UnbindAlarmTemplate(req *UnbindAlarmTemplateRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UnbindAlarmTemplate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UnbindPhysicalIPRequest is request schema for UnbindPhysicalIP action
+type UnbindPhysicalIPRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。
+	// Zone *string `required:"true"`
+
+	// 物理IP的ID
+	PhysicalIPID *string `required:"true"`
+
+	// 资源ID
+	ResourceID *string `required:"true"`
+
+	// 资源类型。VM：虚拟机
+	ResourceType *string `required:"true"`
+}
+
+// UnbindPhysicalIPResponse is response schema for UnbindPhysicalIP action
+type UnbindPhysicalIPResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewUnbindPhysicalIPRequest will create request of UnbindPhysicalIP action.
+func (c *UCloudStackClient) NewUnbindPhysicalIPRequest() *UnbindPhysicalIPRequest {
+	req := &UnbindPhysicalIPRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UnbindPhysicalIP
+
+解绑物理IP
+*/
+func (c *UCloudStackClient) UnbindPhysicalIP(req *UnbindPhysicalIPRequest) (*UnbindPhysicalIPResponse, error) {
+	var err error
+	var res UnbindPhysicalIPResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UnbindPhysicalIP", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateAlarmTemplateRuleRequest is request schema for UpdateAlarmTemplateRule action
+type UpdateAlarmTemplateRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区
+	// Zone *string `required:"true"`
+
+	// 瘦脸策略
+	AlarmStrategy *string `required:"true"`
+
+	// 告警模板ID
+	AlarmTemplateID *string `required:"true"`
+
+	// 告警规则ID
+	AlarmTemplateRuleID *string `required:"true"`
+
+	// 对比方式
+	Compare *string `required:"true"`
+
+	// 通知组ID
+	ContactGroupID *string `required:"true"`
+
+	// 监控指标名称
+	MetricName *string `required:"true"`
+
+	// 资源类型
+	ResourceType *string `required:"true"`
+
+	// 告警阈值
+	Threshold *string `required:"true"`
+
+	// 连续触发次数
+	TriggerCount *string `required:"true"`
+}
+
+// UpdateAlarmTemplateRuleResponse is response schema for UpdateAlarmTemplateRule action
+type UpdateAlarmTemplateRuleResponse struct {
+	response.CommonBase
+
+	// 返回描述信息
+	Message string
+}
+
+// NewUpdateAlarmTemplateRuleRequest will create request of UpdateAlarmTemplateRule action.
+func (c *UCloudStackClient) NewUpdateAlarmTemplateRuleRequest() *UpdateAlarmTemplateRuleRequest {
+	req := &UpdateAlarmTemplateRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateAlarmTemplateRule
+
+更新告警模板规则
+*/
+func (c *UCloudStackClient) UpdateAlarmTemplateRule(req *UpdateAlarmTemplateRuleRequest) (*UpdateAlarmTemplateRuleResponse, error) {
+	var err error
+	var res UpdateAlarmTemplateRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateAlarmTemplateRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateRSRequest is request schema for UpdateRS action
+type UpdateRSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// VServer 监听器所属的负载均衡 ID
+	LBID *string `required:"true"`
+
+	// 端口号
+	Port *int `required:"false"`
+
+	// RServer的ID
+	RSID *string `required:"true"`
+
+	// RServer所属的VServer的ID
+	VSID *string `required:"true"`
+
+	// 权重
+	Weight *int `required:"false"`
+}
+
+// UpdateRSResponse is response schema for UpdateRS action
+type UpdateRSResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 返回信息描述。
+	Message string
+
+	// 返回码
+	RetCode int
+}
+
+// NewUpdateRSRequest will create request of UpdateRS action.
+func (c *UCloudStackClient) NewUpdateRSRequest() *UpdateRSRequest {
+	req := &UpdateRSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateRS
+
+修改负载均衡的服务节点
+*/
+func (c *UCloudStackClient) UpdateRS(req *UpdateRSRequest) (*UpdateRSResponse, error) {
+	var err error
+	var res UpdateRSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateRS", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2685,6 +5268,225 @@ func (c *UCloudStackClient) UpdateSecurityGroupRule(req *UpdateSecurityGroupRule
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateSecurityGroupRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateVSRequest is request schema for UpdateVS action
+type UpdateVSRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// CA证书ID，用于验证客户端证书的签名，仅当VServer监听协议为 HTTPS 且 SSLMode 为双向认证时有效。
+	CACertificateID *string `required:"false"`
+
+	// HTTP 健康检查时校验请求的 HOST 字段中的域名。当健康检查类型为端口检查时，该值为空。
+	Domain *string `required:"false"`
+
+	// 负载均衡的健康检查类型。枚举值：Port:端口检查；Path: HTTP检查 。仅当 VServer 协议类型为 HTTP 时，才可进行 HTTP 检查。
+	HealthcheckType *string `required:"false"`
+
+	// 负载均衡的连接空闲超时时间，单位为秒，默认值为 60s 。当 VServer 协议为 UDP 时，该值为空。
+	KeepaliveTimeout *int `required:"false"`
+
+	// VServer 监听器所属的负载均衡 ID
+	LBID *string `required:"true"`
+
+	// HTTP 健康检查的路径，健康检查类型为 HTTP 检查时为必填项。当健康检查类型为端口检查时，该值为空。
+	Path *string `required:"false"`
+
+	// 会话保持KEY，会话保持类型为Manual时为必填项，仅当 VServer 协议为 HTTP 时有效。
+	PersistenceKey *string `required:"false"`
+
+	// 会话保持类型。枚举值：None:关闭；Auto:自动生成；Manual:手动生成 。当协议为 TCP 时，该值不生效，会话保持和选择的调度算法相关；当协议为 UDP 时 Auto 表示开启会话保持 。
+	PersistenceType *string `required:"false"`
+
+	// VServer 监听端口
+	Port *int `required:"false"`
+
+	// HTTPS SSL 认证解析模式。玫举值：UNIDIRECTIONAL:单向认证，MUTUAL:双向认证 。仅当VServer监听协议为 HTTPS 时有效。
+	SSLMode *string `required:"false"`
+
+	// 负载均衡的调度算法。枚举值：wrr:加权轮训；least_conn:最小连接数；hash:原地址,四层lb使用。ip_hash:七层lb使用
+	Scheduler *string `required:"false"`
+
+	// 服务器证书ID，用于证明服务器的身份，仅当 VServer监听协议为 HTTPS 时有效。
+	ServerCertificateID *string `required:"false"`
+
+	// 需要更新的VSID
+	VSID *string `required:"true"`
+}
+
+// UpdateVSResponse is response schema for UpdateVS action
+type UpdateVSResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 返回信息描述。
+	Message string
+
+	// 返回码
+	RetCode int
+}
+
+// NewUpdateVSRequest will create request of UpdateVS action.
+func (c *UCloudStackClient) NewUpdateVSRequest() *UpdateVSRequest {
+	req := &UpdateVSRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateVS
+
+修改负载均衡VServer
+*/
+func (c *UCloudStackClient) UpdateVS(req *UpdateVSRequest) (*UpdateVSResponse, error) {
+	var err error
+	var res UpdateVSResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateVS", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateVSPolicyRequest is request schema for UpdateVSPolicy action
+type UpdateVSPolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 内容转发规则关联的请求域名，值可为空，即代表仅匹配路径。
+	Domain *string `required:"false"`
+
+	// 负载均衡ID
+	LBID *string `required:"true"`
+
+	// 内容转发规则关联的请求访问路径，如 "/" 。
+	Path *string `required:"false"`
+
+	// 内容转发规则ID
+	PolicyID *string `required:"true"`
+
+	// 【数组】RServer的 ID。调用方式举例：RSIDs.0=“one-id”、RSIDs.1=“two-id”。
+	RSIDs []string `required:"false"`
+
+	// VServer的ID
+	VSID *string `required:"true"`
+}
+
+// UpdateVSPolicyResponse is response schema for UpdateVSPolicy action
+type UpdateVSPolicyResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewUpdateVSPolicyRequest will create request of UpdateVSPolicy action.
+func (c *UCloudStackClient) NewUpdateVSPolicyRequest() *UpdateVSPolicyRequest {
+	req := &UpdateVSPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateVSPolicy
+
+更新七层负载均衡内容转发规则，仅当 VServer 的监听协议为 HTTP 时有效。
+*/
+func (c *UCloudStackClient) UpdateVSPolicy(req *UpdateVSPolicyRequest) (*UpdateVSPolicyResponse, error) {
+	var err error
+	var res UpdateVSPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateVSPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpgradeDiskRequest is request schema for UpgradeDisk action
+type UpgradeDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 硬盘ID
+	DiskID *string `required:"true"`
+
+	// 硬盘升级后的容量， 不能小于原硬盘容量，单位为 GB 。
+	DiskSpace *int `required:"true"`
+}
+
+// UpgradeDiskResponse is response schema for UpgradeDisk action
+type UpgradeDiskResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewUpgradeDiskRequest will create request of UpgradeDisk action.
+func (c *UCloudStackClient) NewUpgradeDiskRequest() *UpgradeDiskRequest {
+	req := &UpgradeDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpgradeDisk
+
+升级硬盘
+*/
+func (c *UCloudStackClient) UpgradeDisk(req *UpgradeDiskRequest) (*UpgradeDiskResponse, error) {
+	var err error
+	var res UpgradeDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpgradeDisk", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
