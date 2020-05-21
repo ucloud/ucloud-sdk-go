@@ -1,3 +1,10 @@
+## 0.16.1 (2020-05-21)
+
+ENHANCEMENTS:
+
+- Update `UCloudStack` apis to be consistent with official document
+- Deprecated the api about `LoginByPassword`
+
 ## 0.16.0 (2020-04-23)
 
 FEATURES:
