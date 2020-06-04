@@ -570,6 +570,30 @@ type UserInfo struct {
 }
 
 /*
+VMDiskInfo - UCloudStack虚拟机磁盘信息
+*/
+type VMDiskInfo struct {
+
+	// 磁盘 ID
+	DiskID string
+
+	// 磁盘盘符
+	Drive string
+
+	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
+	IsElastic string
+
+	// 磁盘名称
+	Name string
+
+	// 磁盘大小，单位 GB
+	Size int
+
+	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
+	Type string
+}
+
+/*
 VMIPInfo - UCloudStack虚拟机IP信息
 */
 type VMIPInfo struct {
@@ -606,30 +630,6 @@ type VMIPInfo struct {
 
 	// VPC 名称
 	VPCName string
-}
-
-/*
-VMDiskInfo - UCloudStack虚拟机磁盘信息
-*/
-type VMDiskInfo struct {
-
-	// 磁盘 ID
-	DiskID string
-
-	// 磁盘盘符
-	Drive string
-
-	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
-	IsElastic string
-
-	// 磁盘名称
-	Name string
-
-	// 磁盘大小，单位 GB
-	Size int
-
-	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
-	Type string
 }
 
 /*
