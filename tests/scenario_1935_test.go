@@ -6,15 +6,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/udisk"
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
-
-	"github.com/ucloud/ucloud-sdk-go/services/udisk"
-
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
 func TestScenario1935(t *testing.T) {
@@ -130,12 +127,14 @@ var testStep1935CreateUHostInstance02 = &driver.Step{
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":      step.Scenario.GetVar("Zone"),
 			"UHostType": step.Scenario.GetVar("UHostType"),
+			"SetId":     step.Scenario.GetVar("SetId"),
 			"Region":    step.Scenario.GetVar("Region"),
 			"Password":  "VXFhNzg5VGVzdCFAIyQ7LA==",
 			"Name":      step.Scenario.GetVar("UhostName"),
 			"Memory":    1024,
 			"LoginMode": "Password",
 			"ImageId":   step.Scenario.GetVar("ImageID"),
+			"HostIp":    step.Scenario.GetVar("HostIp"),
 			"Disks": []map[string]interface{}{
 				{
 					"BackupType": step.Scenario.GetVar("BootBackup"),
@@ -529,9 +528,9 @@ var testStep1935CreateUDiskSnapshot11 = &driver.Step{
 			validation.Builtins.NewValidator("Action", "CreateUDiskSnapshotResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	StartupDelay:  time.Duration(120) * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 20 * time.Second,
 	Title:         "创建快照",
 	FastFail:      true,
 }

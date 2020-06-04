@@ -6,16 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/ubill"
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
-
-	"github.com/ucloud/ucloud-sdk-go/services/ubill"
-
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
 func TestScenario3608(t *testing.T) {

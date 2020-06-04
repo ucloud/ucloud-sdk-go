@@ -87,39 +87,6 @@ type IsolationGroup struct {
 }
 
 /*
-UHostIPSet - DescribeUHostInstance
-*/
-type UHostIPSet struct {
-
-	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 【暂未支持】是否为默认网卡。true: 是默认网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// 外网IP资源ID 。(内网IP无对应的资源ID)
-	IPId string
-
-	// 当前网卡的Mac。
-	Mac string
-
-	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
-	VPCId string
-
-	// 当前EIP的权重。权重最大的为当前的出口IP。
-	Weight int
-}
-
-/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -153,6 +120,42 @@ type UHostDiskSet struct {
 }
 
 /*
+UHostIPSet - DescribeUHostInstance
+*/
+type UHostIPSet struct {
+
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 【暂未支持】是否为默认网卡。true: 是默认网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
+	IPId string
+
+	// IPv4/IPv6；
+	IPMode string
+
+	// 当前网卡的Mac。
+	Mac string
+
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
+	VPCId string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
+}
+
+/*
 UHostInstanceSet - DescribeUHostInstance
 */
 type UHostInstanceSet struct {
@@ -177,6 +180,9 @@ type UHostInstanceSet struct {
 
 	// true，支持cloutinit方式初始化；false,不支持
 	CloudInitFeature bool
+
+	// 云主机CPU平台。参考[[api:uhost-api:uhost_type#主机概念20版本|云主机机型说明]]。
+	CpuPlatform string
 
 	// 创建时间，格式为Unix时间戳
 	CreateTime int
@@ -204,6 +210,9 @@ type UHostInstanceSet struct {
 
 	//
 	IPs []string `deprecated:"true"`
+
+	// true:有ipv6特性；false，没有ipv6特性
+	IPv6Feature bool
 
 	// 【建议不再使用】主机的系统盘ID。
 	ImageId string

@@ -211,6 +211,18 @@ type CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+
+	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址
+	Adress *string `required:"false"`
+
+	// 第N块网卡中IPv6对应的共享带宽id，默认不带外网
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -235,18 +247,9 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
+CreateUHostInstanceParamDisks is request schema for complex param
 */
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-}
-
-/*
-UHostDisk is request schema for complex param
-*/
-type UHostDisk struct {
+type CreateUHostInstanceParamDisks struct {
 
 	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > DATAARK，数据方舟 \\ 当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]]
 	BackupType *string `required:"false"`
@@ -268,6 +271,18 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+
+	//
+	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -302,7 +317,7 @@ type CreateUHostInstanceRequest struct {
 	DiskSpace *int `required:"false" deprecated:"true"`
 
 	//
-	Disks []UHostDisk `required:"false"`
+	Disks []CreateUHostInstanceParamDisks `required:"false"`
 
 	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
 	GPU *int `required:"false"`
@@ -659,6 +674,9 @@ type DescribeUHostInstanceRequest struct {
 	// 要查询的业务组名称
 	Tag *string `required:"false"`
 
+	// 要挂载的云盘id，过滤返回能被UDiskId挂载的云主机。目前主要针对rssd云盘使用
+	UDiskIdForAttachment *string `required:"false"`
+
 	// 【数组】UHost主机的资源ID，例如UHostIds.0代表希望获取信息 的主机1，UHostIds.1代表主机2。 如果不传入，则返回当前Region 所有符合条件的UHost实例。
 	UHostIds []string `required:"false"`
 
@@ -730,7 +748,7 @@ type DescribeUHostTagsResponse struct {
 	// 业务组集合见 UHostTagSet
 	TagSet []UHostTagSet
 
-	// 已有主机的业务组总个数
+	// 已有主机的业务组总数
 	TotalCount int
 }
 
@@ -831,9 +849,9 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-getUHostInstancePriceParamDisks is request schema for complex param
+GetUHostInstancePriceParamDisks is request schema for complex param
 */
-type getUHostInstancePriceParamDisks struct {
+type GetUHostInstancePriceParamDisks struct {
 
 	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > DATAARK，数据方舟 \\ 当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]]
 	BackupType *string `required:"false"`
@@ -877,7 +895,7 @@ type GetUHostInstancePriceRequest struct {
 	DiskSpace *int `required:"false" deprecated:"true"`
 
 	//
-	Disks []UHostDisk `required:"false"`
+	Disks []GetUHostInstancePriceParamDisks `required:"false"`
 
 	// GPU卡核心数。仅GPU机型支持此字段。
 	GPU *int `required:"false"`
@@ -1422,7 +1440,7 @@ type PoweroffUHostInstanceRequest struct {
 type PoweroffUHostInstanceResponse struct {
 	response.CommonBase
 
-	// UHost实例ID
+	// UHost的实例ID
 	UhostId string
 }
 
