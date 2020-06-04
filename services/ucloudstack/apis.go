@@ -437,6 +437,74 @@ func (c *UCloudStackClient) CloneDisk(req *CloneDiskRequest) (*CloneDiskResponse
 	return &res, nil
 }
 
+// CreateCertificateRequest is request schema for CreateCertificate action
+type CreateCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 证书内容
+	Certificate *string `required:"true"`
+
+	// 证书类型，枚举值["ServerCrt","CACrt"]。分别表示服务器证书和CA证书。只有在双向认证的时候才需要CA证书
+	CertificateType *string `required:"true"`
+
+	// 证书名称
+	Name *string `required:"true"`
+
+	// 私钥内容,服务器证书必传,CA证书不用传递
+	PrivateKey *string `required:"false"`
+
+	// 证书描述
+	Remark *string `required:"false"`
+}
+
+// CreateCertificateResponse is response schema for CreateCertificate action
+type CreateCertificateResponse struct {
+	response.CommonBase
+
+	// 证书ID
+	CertificateID string
+
+	// 错误描述
+	Message string
+}
+
+// NewCreateCertificateRequest will create request of CreateCertificate action.
+func (c *UCloudStackClient) NewCreateCertificateRequest() *CreateCertificateRequest {
+	req := &CreateCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateCertificate
+
+创建证书
+*/
+func (c *UCloudStackClient) CreateCertificate(req *CreateCertificateRequest) (*CreateCertificateResponse, error) {
+	var err error
+	var res CreateCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCertificate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateCustomImageRequest is request schema for CreateCustomImage action
 type CreateCustomImageRequest struct {
 	request.CommonBase
@@ -1567,6 +1635,59 @@ func (c *UCloudStackClient) CreateVSPolicy(req *CreateVSPolicyRequest) (*CreateV
 	return &res, nil
 }
 
+// DeleteCertificateRequest is request schema for DeleteCertificate action
+type DeleteCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 证书ID
+	CertificateID *string `required:"true"`
+}
+
+// DeleteCertificateResponse is response schema for DeleteCertificate action
+type DeleteCertificateResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewDeleteCertificateRequest will create request of DeleteCertificate action.
+func (c *UCloudStackClient) NewDeleteCertificateRequest() *DeleteCertificateRequest {
+	req := &DeleteCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCertificate
+
+删除证书
+*/
+func (c *UCloudStackClient) DeleteCertificate(req *DeleteCertificateRequest) (*DeleteCertificateResponse, error) {
+	var err error
+	var res DeleteCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCertificate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteCustomImageRequest is request schema for DeleteCustomImage action
 type DeleteCustomImageRequest struct {
 	request.CommonBase
@@ -2389,6 +2510,74 @@ func (c *UCloudStackClient) DeleteVSPolicy(req *DeleteVSPolicyRequest) (*DeleteV
 	return &res, nil
 }
 
+// DescribeCertificateRequest is request schema for DescribeCertificate action
+type DescribeCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 证书ID列表
+	CertificateIDs []string `required:"false"`
+
+	// 证书类型，枚举值["ServerCrt","CACrt"]。分别表示服务器证书和CA证书。
+	CertificateType *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// DescribeCertificateResponse is response schema for DescribeCertificate action
+type DescribeCertificateResponse struct {
+	response.CommonBase
+
+	// [数组]证书对象数组
+	Infos []CertificateInfo
+
+	// 返回信息描述
+	Message string
+
+	// 证书总个数
+	TotalCount int
+}
+
+// NewDescribeCertificateRequest will create request of DescribeCertificate action.
+func (c *UCloudStackClient) NewDescribeCertificateRequest() *DescribeCertificateRequest {
+	req := &DescribeCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCertificate
+
+查询证书
+*/
+func (c *UCloudStackClient) DescribeCertificate(req *DescribeCertificateRequest) (*DescribeCertificateResponse, error) {
+	var err error
+	var res DescribeCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCertificate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeDiskRequest is request schema for DescribeDisk action
 type DescribeDiskRequest struct {
 	request.CommonBase
@@ -2546,11 +2735,17 @@ type DescribeImageRequest struct {
 type DescribeImageResponse struct {
 	response.CommonBase
 
+	// 操作名称
+	Action string
+
 	// 【数组】返回镜像对象数组
 	Infos []ImageInfo
 
 	// 返回信息描述。
 	Message string
+
+	// 返回码
+	RetCode int
 
 	// 返回镜像的总个数。
 	TotalCount int
@@ -2861,6 +3056,83 @@ func (c *UCloudStackClient) DescribeNATGWRule(req *DescribeNATGWRuleRequest) (*D
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeOPLogsRequest is request schema for DescribeOPLogs action
+type DescribeOPLogsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 开始时间
+	BeginTime *int `required:"true"`
+
+	// 结束时间
+	EndTime *int `required:"true"`
+
+	// 是否操作成功
+	IsSuccess *string `required:"false"`
+
+	//
+	Limit *int `required:"false"`
+
+	//
+	Offset *int `required:"false"`
+
+	// 资源ID
+	ResourceID *string `required:"false"`
+
+	// 资源类型
+	ResourceType *string `required:"false"`
+}
+
+// DescribeOPLogsResponse is response schema for DescribeOPLogs action
+type DescribeOPLogsResponse struct {
+	response.CommonBase
+
+	//
+	Infos []OPLogInfo
+
+	// 错误信息
+	Message string
+
+	// 总数
+	TotalCount int
+}
+
+// NewDescribeOPLogsRequest will create request of DescribeOPLogs action.
+func (c *UCloudStackClient) NewDescribeOPLogsRequest() *DescribeOPLogsRequest {
+	req := &DescribeOPLogsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeOPLogs
+
+查询操作日志
+*/
+func (c *UCloudStackClient) DescribeOPLogs(req *DescribeOPLogsRequest) (*DescribeOPLogsResponse, error) {
+	var err error
+	var res DescribeOPLogsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeOPLogs", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

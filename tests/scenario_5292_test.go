@@ -446,9 +446,8 @@ var testStep5292UCloudStackCreateCertificate10 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateCertificate")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateCertificateRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":            step.Scenario.GetVar("Zone"),
 			"Region":          step.Scenario.GetVar("Region"),
 			"PrivateKey":      "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA8QbLsBnQmXRFLONEkHL1LfvYZZi04HH5Kv4fX9UFT8S6vzwv\njrBu+oToMujfH+5O8eV4LTyovTuMnRZfFYmIRF0Y2EHFK05t5bu7PVE9gCFJitHS\nPj2YBVOYA8IfH0C6C9uE9pT35A/U54Apw2p36N8W8f3vYbCZH+4SlosfM68bWGAl\nE7feqU6UHlo6+4IJdmwxH02siTTPoucaBgT4kBXcT5ylgozZl4tncLNHdsIYtXrk\nVoCOcCF44uVin1H+hL8xtFM8+ovL7Eixr/KS+wtALlCODKzzQ3rBXgNixGHJUJKR\nxBOPQZKULwqJAlvXfP6+QElK8vu0qySJ3FOhcQIDAQABAoIBAAPvZnfzk/JNcauv\n8jihh9s+V2QhQCLB+Z14FK8N3U5WGe5xXx1nSAiTDu912d69l1BfvLyQVvjv9fXC\nnb7ORglHs9YkDMIOP8EWdZIkt2pWIMtBbbtSah78JGk7TCLIfcEfzmXwPLPehk1Z\nTFVCcb69lbRRvwzLQ1TAIFGQ5+uCEkW02KAl6kx+JnVpsE8/BjqZKG1Ne+sM6dOC\nGRd44hgiNHKUT3Xtbw6jttiUFDLKYMYtb7PpRAkZFM8tgnBV6dWWJ3xTYW9kOjPh\nXnScNARfphUZVibRhA04og5p1q/MUz9Sz9g2DURuSlo/MP3WZMbVRvZiUN1xhz5v\n2WhsddkCgYEA+gWPFo0TbVbZXUrx9J/ptI9NXNx5zjyUrv87MDt1pnmMDgWrsCEI\nRqQR4Lp2G11GA7IudiA/ipcZqgcRIIFvb+gu1kObox3BGGs59x+DqFeAPXt6dFG2\nW10f9k96/tcbdursurqwd3Zv3cqQqRTKgaP4xHFmexlcwGCF5YwewWMCgYEA9sos\n2acNINXwcNRUPnpg82DOrG9Zjr1aiNo9PDJmwGEdC9QMOUWM85dq0M9g388ttiLU\nWr/U4r5yDuqWJPcKtff2BaxSsZpcQ4Id9eddD9L+sxaBGyD23RtOC+IOlkG6WS4g\niUYulQvW69tBHWiwxQu7YMSIE2B3EuySPOQYlBsCgYEAxNwvqB/4lfT2PUDPdj+b\ncnILBf0LY1nL8GZCol2O6z91CW1pm8rGi2iQMxRd/nnYsPxRHO2TWnpS2M+rqp5/\nsettRYQCPdMlwSZcg7oqnhgXf1GEP6Y/IX0Xt4cpXxLcKywarYRlggqdVlMyyA74\nzE7hhzuK5442u7rEctN7O+UCgYAoM78ipafp1XAZsT0YAG+Stg504J7CNe5tpL+c\n8sjyRd+pcZ2cJsxTUjNAWMf7LZDQvtPBBMb1OPjznRtgYi4IfqBBRFUkQXUOOkAP\nMuViEokTO3NErBYK5svL+8NMjuCAbpc2RYyJEyiru0fcNpW1Q7f+h4VzQp+jIY6h\nBLdMSQKBgGauU7OQksZCEY2MVAcD5dShYYvWLxOkj4dVVwISN1M6ImCAHwXZ6Nak\n6YlzCGT+NbRJbB2cPfsrKXtAJVX15I3iDCKAoGkb+9kiHnPj7Q71KVuWQE6BQx7E\nvE88TSsshwtX1s+qU9UWUrMPodK32q5nO3p8N033NvS9wLNfbcdc\n-----END RSA PRIVATE KEY-----",
@@ -459,7 +458,8 @@ var testStep5292UCloudStackCreateCertificate10 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.CreateCertificate(req)
 		if err != nil {
 			return resp, err
 		}
@@ -488,9 +488,8 @@ var testStep5292UCloudStackCreateCertificate11 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateCertificate")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateCertificateRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":            step.Scenario.GetVar("Zone"),
 			"Region":          step.Scenario.GetVar("Region"),
 			"Name":            "ssl_client",
@@ -500,7 +499,8 @@ var testStep5292UCloudStackCreateCertificate11 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.CreateCertificate(req)
 		if err != nil {
 			return resp, err
 		}
@@ -529,9 +529,8 @@ var testStep5292UCloudStackDescribeCertificate12 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeCertificate")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeCertificateRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":            step.Scenario.GetVar("Zone"),
 			"Region":          step.Scenario.GetVar("Region"),
 			"CertificateType": "ServerCrt",
@@ -542,7 +541,8 @@ var testStep5292UCloudStackDescribeCertificate12 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DescribeCertificate(req)
 		if err != nil {
 			return resp, err
 		}
@@ -571,9 +571,8 @@ var testStep5292UCloudStackDescribeCertificate13 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeCertificate")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeCertificateRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":            step.Scenario.GetVar("Zone"),
 			"Region":          step.Scenario.GetVar("Region"),
 			"CertificateType": "CACrt",
@@ -584,7 +583,8 @@ var testStep5292UCloudStackDescribeCertificate13 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DescribeCertificate(req)
 		if err != nil {
 			return resp, err
 		}
@@ -942,9 +942,8 @@ var testStep5292UCloudStackDescribeOPLogs22 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeOPLogs")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeOPLogsRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":         step.Scenario.GetVar("Zone"),
 			"ResourceType": "lb",
 			"ResourceID":   step.Scenario.GetVar("LBID"),
@@ -958,7 +957,8 @@ var testStep5292UCloudStackDescribeOPLogs22 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DescribeOPLogs(req)
 		if err != nil {
 			return resp, err
 		}
@@ -1024,9 +1024,8 @@ var testStep5292UCloudStackDeleteCertificate24 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteCertificate")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteCertificateRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":          step.Scenario.GetVar("Zone"),
 			"Region":        step.Scenario.GetVar("Region"),
 			"CertificateID": step.Scenario.GetVar("CertificateID_server"),
@@ -1034,7 +1033,8 @@ var testStep5292UCloudStackDeleteCertificate24 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DeleteCertificate(req)
 		if err != nil {
 			return resp, err
 		}
@@ -1062,9 +1062,8 @@ var testStep5292UCloudStackDeleteCertificate25 = &driver.Step{
 		}
 		client := c.(*ucloudstack.UCloudStackClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DeleteCertificate")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDeleteCertificateRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":          step.Scenario.GetVar("Zone"),
 			"Region":        step.Scenario.GetVar("Region"),
 			"CertificateID": step.Scenario.GetVar("CertificateID_client"),
@@ -1072,7 +1071,8 @@ var testStep5292UCloudStackDeleteCertificate25 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DeleteCertificate(req)
 		if err != nil {
 			return resp, err
 		}

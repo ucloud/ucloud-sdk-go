@@ -3,6 +3,75 @@
 package ucloudstack
 
 /*
+BindVSInfo - 证书绑定的vs信息
+*/
+type BindVSInfo struct {
+
+	// LB ID
+	LBID string
+
+	// LB名称
+	LBName string
+
+	// VS的端口
+	Port int
+
+	// VS的协议
+	Protocol string
+
+	// VS ID
+	VSID string
+}
+
+/*
+CertificateInfo - 证书信息
+*/
+type CertificateInfo struct {
+
+	// 证书内容
+	CertificateContent string
+
+	// 证书ID
+	CertificateID string
+
+	// 证书类型，枚举值["ServerCrt","CACrt"]
+	CertificateType string
+
+	// 主域名
+	CommonName string
+
+	// 创建时间（平台创建时间）
+	CreateTime int
+
+	// 证书内容的过期时间
+	ExpireTime int
+
+	// 证书指纹
+	Fingerprint string
+
+	// 证书名
+	Name string
+
+	// 私钥内容
+	Privatekey string
+
+	// 地域
+	Region string
+
+	// 证书描述
+	Remark string
+
+	// 备域名
+	SubjectAlternativeNames []string
+
+	// 关联的vs的信息
+	VSInfos []BindVSInfo
+
+	// 可用区
+	Zone string
+}
+
+/*
 DiskInfo - 磁盘信息
 */
 type DiskInfo struct {
@@ -103,7 +172,7 @@ type ImageInfo struct {
 	// 镜像ID
 	ImageID string
 
-	// 镜像状态。枚举类型：Making（创建中）,Available（可用）,Unavailable（不可用）,Terminating（销毁中）,Used（被使用中）,Deleting（删除中）,Deleted（已删除）
+	// 镜像状态。枚举类型：Making（创建中）,Available（可用）,Unavailable（不可用）,Terminating（销毁中）,Used（被使用中）,Deleting（删除中）,Deleted（已删除）, Uploading（导入中）
 	ImageStatus string
 
 	// 镜像类型。枚举类型：Base(基础镜像),Custom（自制镜像）。
@@ -291,6 +360,48 @@ type NATGWRuleInfo struct {
 
 	// 状态。Bounding:绑定中,Bound:已绑定,Unbounding:解绑中,Unbound：已解绑
 	RuleStatus string
+}
+
+/*
+OPLogInfo - 操作日志
+*/
+type OPLogInfo struct {
+
+	// 创建时间
+	CreateTime int
+
+	// 是否操作成功， Yes, No
+	IsSuccess string
+
+	// 日志ID
+	OPLogsID string
+
+	// API
+	OPName string
+
+	// 操作时间
+	OPTime int
+
+	// 错误信息
+	OpMessage string
+
+	//
+	Region string
+
+	// 资源ID
+	ResourceID string
+
+	// 资源类型
+	ResourceType int
+
+	// 状态码
+	RetCode int
+
+	// 账号邮箱
+	UserEmail string
+
+	//
+	Zone string
 }
 
 /*
@@ -570,30 +681,6 @@ type UserInfo struct {
 }
 
 /*
-VMDiskInfo - UCloudStack虚拟机磁盘信息
-*/
-type VMDiskInfo struct {
-
-	// 磁盘 ID
-	DiskID string
-
-	// 磁盘盘符
-	Drive string
-
-	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
-	IsElastic string
-
-	// 磁盘名称
-	Name string
-
-	// 磁盘大小，单位 GB
-	Size int
-
-	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
-	Type string
-}
-
-/*
 VMIPInfo - UCloudStack虚拟机IP信息
 */
 type VMIPInfo struct {
@@ -630,6 +717,30 @@ type VMIPInfo struct {
 
 	// VPC 名称
 	VPCName string
+}
+
+/*
+VMDiskInfo - UCloudStack虚拟机磁盘信息
+*/
+type VMDiskInfo struct {
+
+	// 磁盘 ID
+	DiskID string
+
+	// 磁盘盘符
+	Drive string
+
+	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
+	IsElastic string
+
+	// 磁盘名称
+	Name string
+
+	// 磁盘大小，单位 GB
+	Size int
+
+	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
+	Type string
 }
 
 /*
