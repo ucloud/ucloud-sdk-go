@@ -487,7 +487,7 @@ var testStep2468GetNetworkAclTargetResource11 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("TargetResourceList", 1, "len_eq"),
+			validation.Builtins.NewValidator("TargetResourceList", 1, "len_ge"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
