@@ -681,12 +681,39 @@ type UserInfo struct {
 }
 
 /*
+VMDiskInfo - UCloudStack虚拟机磁盘信息
+*/
+type VMDiskInfo struct {
+
+	// 磁盘 ID
+	DiskID string
+
+	// 磁盘盘符
+	Drive string
+
+	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
+	IsElastic string
+
+	// 磁盘名称
+	Name string
+
+	// 磁盘大小，单位 GB
+	Size int
+
+	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
+	Type string
+}
+
+/*
 VMIPInfo - UCloudStack虚拟机IP信息
 */
 type VMIPInfo struct {
 
 	// IP 值
 	IP string
+
+	// IP版本,支持值：IPv4\IPv6
+	IPVersion string
 
 	// 网卡 ID
 	InterfaceID string
@@ -717,30 +744,6 @@ type VMIPInfo struct {
 
 	// VPC 名称
 	VPCName string
-}
-
-/*
-VMDiskInfo - UCloudStack虚拟机磁盘信息
-*/
-type VMDiskInfo struct {
-
-	// 磁盘 ID
-	DiskID string
-
-	// 磁盘盘符
-	Drive string
-
-	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
-	IsElastic string
-
-	// 磁盘名称
-	Name string
-
-	// 磁盘大小，单位 GB
-	Size int
-
-	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
-	Type string
 }
 
 /*
@@ -790,7 +793,7 @@ type VMInstanceInfo struct {
 	// 备注
 	Remark string
 
-	// 虚拟机状态。枚举值：Initializing，表示初始化；Starting，表示启动中；Restarting，表示重启中；Running，表示运行；Stopping，表示关机中；Stopped，表示关机；Deleted，表示已删除；Resizing，表示修改配置中；Terminating，表示销毁中；Terminated，表示已销毁；Migrating，表示迁移中；WaitReinstall，表示重装中；Reinstalling，表示重装中；Poweroffing，表示断电中；ChangeSGing，表示修改防火墙中；
+	// 虚拟机状态。枚举值：Initializing，表示初始化；Starting，表示启动中；Restarting，表示重启中；Running，表示运行；Stopping，表示关机中；Stopped，表示关机；Deleted，表示已删除；Resizing，表示修改配置中；Terminating，表示销毁中；Terminated，表示已销毁；Migrating，表示迁移中；WaitReinstall，表示等待重装系统；Reinstalling，表示重装中；Poweroffing，表示断电中；ChangeSGing，表示修改防火墙中；
 	State string
 
 	// 子网 ID
