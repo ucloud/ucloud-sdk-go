@@ -8,6 +8,7 @@ import (
 
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/ulb"
+	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
@@ -33,28 +34,32 @@ func TestScenario4377(t *testing.T) {
 		Title:  "内网-外网-ulb7自动化回归-基本操作-01",
 		Steps: []*driver.Step{
 			testStep4377DescribeImage01,
-			testStep4377CreateUHostInstance02,
-			testStep4377CreateULB03,
-			testStep4377DescribeULB04,
-			testStep4377CreateVServer05,
-			testStep4377DescribeVServer06,
-			testStep4377AllocateBackendBatch07,
+			testStep4377CreateVPC02,
+			testStep4377CreateSubnet03,
+			testStep4377CreateUHostInstance04,
+			testStep4377CreateULB05,
+			testStep4377DescribeULB06,
+			testStep4377CreateVServer07,
 			testStep4377DescribeVServer08,
-			testStep4377UpdateBackendAttribute09,
-			testStep4377UpdateBackendAttributeBatch10,
-			testStep4377ReleaseBackend11,
-			testStep4377DescribeVServer12,
-			testStep4377AllocateBackend13,
+			testStep4377AllocateBackendBatch09,
+			testStep4377DescribeVServer10,
+			testStep4377UpdateBackendAttribute11,
+			testStep4377UpdateBackendAttributeBatch12,
+			testStep4377ReleaseBackend13,
 			testStep4377DescribeVServer14,
-			testStep4377UpdateULBAttribute15,
-			testStep4377UpdateVServerAttribute16,
-			testStep4377DescribeVServer17,
-			testStep4377DeleteVServer18,
+			testStep4377AllocateBackend15,
+			testStep4377DescribeVServer16,
+			testStep4377UpdateULBAttribute17,
+			testStep4377UpdateVServerAttribute18,
 			testStep4377DescribeVServer19,
-			testStep4377DeleteULB20,
-			testStep4377DescribeULBSimple21,
-			testStep4377PoweroffUHostInstance22,
-			testStep4377TerminateUHostInstance23,
+			testStep4377DeleteVServer20,
+			testStep4377DescribeVServer21,
+			testStep4377DeleteULB22,
+			testStep4377DescribeULBSimple23,
+			testStep4377PoweroffUHostInstance24,
+			testStep4377TerminateUHostInstance25,
+			testStep4377DeleteSubnet26,
+			testStep4377DeleteVPC27,
 		},
 	})
 }
@@ -99,7 +104,88 @@ var testStep4377DescribeImage01 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377CreateUHostInstance02 = &driver.Step{
+var testStep4377CreateVPC02 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewCreateVPCRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"Network": []interface{}{
+				"192.168.0.0/16",
+			},
+			"Name": "ulb_test2",
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CreateVPC(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("vpc_id", step.Must(utils.GetValue(resp, "VPCId")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateVPCResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建VPC",
+	FastFail:      false,
+}
+
+var testStep4377CreateSubnet03 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewCreateSubnetRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":      step.Scenario.GetVar("vpc_id"),
+			"SubnetName": "ulb_subnet_test2",
+			"Subnet":     "192.168.22.0",
+			"Region":     step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CreateSubnet(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("subnet_id", step.Must(utils.GetValue(resp, "SubnetId")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateSubnetResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建子网",
+	FastFail:      false,
+}
+
+var testStep4377CreateUHostInstance04 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -110,7 +196,9 @@ var testStep4377CreateUHostInstance02 = &driver.Step{
 		req := client.NewCreateUHostInstanceRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":        step.Scenario.GetVar("Zone"),
+			"VPCId":       step.Scenario.GetVar("vpc_id"),
 			"Tag":         "Default",
+			"SubnetId":    step.Scenario.GetVar("subnet_id"),
 			"Region":      step.Scenario.GetVar("Region"),
 			"Password":    "VXFhNzg5VGVzdCFAIyQ7LA==",
 			"Name":        "ulb-host",
@@ -152,7 +240,7 @@ var testStep4377CreateUHostInstance02 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377CreateULB03 = &driver.Step{
+var testStep4377CreateULB05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -162,8 +250,10 @@ var testStep4377CreateULB03 = &driver.Step{
 
 		req := client.NewCreateULBRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":     step.Scenario.GetVar("vpc_id"),
 			"ULBName":   "测试",
 			"Tag":       "Default",
+			"SubnetId":  step.Scenario.GetVar("subnet_id"),
 			"Region":    step.Scenario.GetVar("Region"),
 			"InnerMode": "No",
 		})
@@ -191,7 +281,7 @@ var testStep4377CreateULB03 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeULB04 = &driver.Step{
+var testStep4377DescribeULB06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -230,7 +320,7 @@ var testStep4377DescribeULB04 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377CreateVServer05 = &driver.Step{
+var testStep4377CreateVServer07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -274,7 +364,7 @@ var testStep4377CreateVServer05 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeVServer06 = &driver.Step{
+var testStep4377DescribeVServer08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -317,7 +407,7 @@ var testStep4377DescribeVServer06 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377AllocateBackendBatch07 = &driver.Step{
+var testStep4377AllocateBackendBatch09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -358,7 +448,7 @@ var testStep4377AllocateBackendBatch07 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeVServer08 = &driver.Step{
+var testStep4377DescribeVServer10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -401,7 +491,7 @@ var testStep4377DescribeVServer08 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377UpdateBackendAttribute09 = &driver.Step{
+var testStep4377UpdateBackendAttribute11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -441,7 +531,7 @@ var testStep4377UpdateBackendAttribute09 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377UpdateBackendAttributeBatch10 = &driver.Step{
+var testStep4377UpdateBackendAttributeBatch12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -480,7 +570,7 @@ var testStep4377UpdateBackendAttributeBatch10 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377ReleaseBackend11 = &driver.Step{
+var testStep4377ReleaseBackend13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -517,7 +607,7 @@ var testStep4377ReleaseBackend11 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeVServer12 = &driver.Step{
+var testStep4377DescribeVServer14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -554,7 +644,7 @@ var testStep4377DescribeVServer12 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377AllocateBackend13 = &driver.Step{
+var testStep4377AllocateBackend15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -596,7 +686,7 @@ var testStep4377AllocateBackend13 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeVServer14 = &driver.Step{
+var testStep4377DescribeVServer16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -633,7 +723,7 @@ var testStep4377DescribeVServer14 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377UpdateULBAttribute15 = &driver.Step{
+var testStep4377UpdateULBAttribute17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -670,7 +760,7 @@ var testStep4377UpdateULBAttribute15 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377UpdateVServerAttribute16 = &driver.Step{
+var testStep4377UpdateVServerAttribute18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -710,7 +800,7 @@ var testStep4377UpdateVServerAttribute16 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeVServer17 = &driver.Step{
+var testStep4377DescribeVServer19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -748,7 +838,7 @@ var testStep4377DescribeVServer17 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DeleteVServer18 = &driver.Step{
+var testStep4377DeleteVServer20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -785,7 +875,7 @@ var testStep4377DeleteVServer18 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeVServer19 = &driver.Step{
+var testStep4377DescribeVServer21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -822,7 +912,7 @@ var testStep4377DescribeVServer19 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DeleteULB20 = &driver.Step{
+var testStep4377DeleteULB22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("ULB")
 		if err != nil {
@@ -858,7 +948,7 @@ var testStep4377DeleteULB20 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377DescribeULBSimple21 = &driver.Step{
+var testStep4377DescribeULBSimple23 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -894,7 +984,7 @@ var testStep4377DescribeULBSimple21 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377PoweroffUHostInstance22 = &driver.Step{
+var testStep4377PoweroffUHostInstance24 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -929,7 +1019,7 @@ var testStep4377PoweroffUHostInstance22 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4377TerminateUHostInstance23 = &driver.Step{
+var testStep4377TerminateUHostInstance25 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -961,5 +1051,73 @@ var testStep4377TerminateUHostInstance23 = &driver.Step{
 	MaxRetries:    30,
 	RetryInterval: 10 * time.Second,
 	Title:         "删除云主机",
+	FastFail:      false,
+}
+
+var testStep4377DeleteSubnet26 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteSubnetRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"SubnetId": step.Scenario.GetVar("subnet_id"),
+			"Region":   step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteSubnet(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除子网",
+	FastFail:      false,
+}
+
+var testStep4377DeleteVPC27 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteVPCRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":  step.Scenario.GetVar("vpc_id"),
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteVPC(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(10) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除VPC",
 	FastFail:      false,
 }
