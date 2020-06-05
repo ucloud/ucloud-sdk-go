@@ -1,3 +1,15 @@
+## 0.16.2 (2020-06-05)
+
+ENHANCEMENTS:
+
+- Add `CreateCertificate` api (#156)
+- Add `DescribeCertificate` api (#156)
+- Add `DeleteCertificate` api (#156)
+- Add `DescribeOPLogs` api (#156)
+- Update `DescribeVMInstance` api (#156)
+- Update `CreateVS` api (#156)
+- Update `UHost` apis to be consistent with official document(#155 )
+
 ## 0.16.1 (2020-05-21)
 
 ENHANCEMENTS:
