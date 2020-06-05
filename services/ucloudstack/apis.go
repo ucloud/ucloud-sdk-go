@@ -437,6 +437,74 @@ func (c *UCloudStackClient) CloneDisk(req *CloneDiskRequest) (*CloneDiskResponse
 	return &res, nil
 }
 
+// CreateCertificateRequest is request schema for CreateCertificate action
+type CreateCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 证书内容
+	Certificate *string `required:"true"`
+
+	// 证书类型，枚举值["ServerCrt","CACrt"]。分别表示服务器证书和CA证书。只有在双向认证的时候才需要CA证书
+	CertificateType *string `required:"true"`
+
+	// 证书名称
+	Name *string `required:"true"`
+
+	// 私钥内容,服务器证书必传,CA证书不用传递
+	PrivateKey *string `required:"false"`
+
+	// 证书描述
+	Remark *string `required:"false"`
+}
+
+// CreateCertificateResponse is response schema for CreateCertificate action
+type CreateCertificateResponse struct {
+	response.CommonBase
+
+	// 证书ID
+	CertificateID string
+
+	// 错误描述
+	Message string
+}
+
+// NewCreateCertificateRequest will create request of CreateCertificate action.
+func (c *UCloudStackClient) NewCreateCertificateRequest() *CreateCertificateRequest {
+	req := &CreateCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateCertificate
+
+创建证书
+*/
+func (c *UCloudStackClient) CreateCertificate(req *CreateCertificateRequest) (*CreateCertificateResponse, error) {
+	var err error
+	var res CreateCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCertificate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateCustomImageRequest is request schema for CreateCustomImage action
 type CreateCustomImageRequest struct {
 	request.CommonBase
@@ -1233,6 +1301,9 @@ type CreateVMInstanceRequest struct {
 	// [公共参数] 可用区。枚举值：zone-01，表示中国；
 	// Zone *string `required:"true"`
 
+	// 带宽
+	Bandwidth *string `required:"false"`
+
 	// 系统盘类型。枚举值：Normal，表示普通；SSD，表示SSD；
 	BootDiskSetType *string `required:"true"`
 
@@ -1251,11 +1322,17 @@ type CreateVMInstanceRequest struct {
 	// GPU 卡核心的占用个数。枚举值：【1,2,4】。GPU与CPU、内存大小关系：CPU个数>=4*GPU个数，同时内存与CPU规格匹配.
 	GPU *int `required:"false"`
 
+	// 外网IP版本，默认IPv4
+	IPVersion *string `required:"false"`
+
 	// 镜像 ID。基础镜像 ID 或者自制镜像 ID。如：cn-image-centos-74。
 	ImageID *string `required:"true"`
 
 	// 指定内网IP。输入有效的指定内网 IP。默认为系统自动分配内网 IP。
 	InternalIP *string `required:"false"`
+
+	// 指定外网IP
+	InternetIP *string `required:"false"`
 
 	// 内网安全组 ID。输入“有效”状态的安全组的ID。
 	LANSGID *string `required:"false"`
@@ -1265,6 +1342,9 @@ type CreateVMInstanceRequest struct {
 
 	// 虚拟机名称。可输入如：myVM。名称只能包含中英文、数字以及- _ .且1-30个字符。
 	Name *string `required:"true"`
+
+	// 线路
+	OperatorName *string `required:"false"`
 
 	// 密码。可输入如：ucloud.cn。密码长度限6-30个字符；需要同时包含两项或以上（大写字母/小写字母/数字/特殊符号)；windows不能包含用户名（administrator）中超过2个连续字符的部分。
 	Password *string `required:"true"`
@@ -1289,10 +1369,16 @@ type CreateVMInstanceRequest struct {
 type CreateVMInstanceResponse struct {
 	response.CommonBase
 
+	// 返回创建数据盘的 ID
+	DiskID string
+
+	// 返回创建外网IP的 ID
+	EIPID string
+
 	// 返回信息描述。
 	Message string
 
-	// 返回创建虚拟机的 ID 数组。
+	// 返回创建虚拟机的 ID
 	VMID string
 }
 
@@ -1399,6 +1485,9 @@ type CreateVSRequest struct {
 	// [公共参数] 可用区。枚举值：zone-01，表示中国；
 	// Zone *string `required:"true"`
 
+	// CA证书ID，用于验证客户端证书的签名，仅当VServer监听协议为 HTTPS 且 SSLMode 为双向认证时有效。
+	CACertificateID *string `required:"false"`
+
 	// HTTP 健康检查时校验请求的 HOST 字段中的域名。当健康检查类型为端口检查时，该值为空。
 	Domain *string `required:"false"`
 
@@ -1423,11 +1512,17 @@ type CreateVSRequest struct {
 	// VServer 的监听端口。端口范围为 1~65535 ，其中 323、9102、9103、9104、9105、60909、60910 被系统占用。
 	Port *int `required:"true"`
 
-	// VServer 的监听协议。枚举值：支持 TCP、UDP、HTTP 三种协议转发。
+	// VServer 的监听协议。枚举值：支持 TCP、UDP、HTTP、HTTPS 四种协议转发。
 	Protocol *string `required:"true"`
 
-	// 负载均衡的调度算法。枚举值：wrr:加权轮训；lc:最小连接数；hash:原地址。
+	// SSL认证模式,HTTPS协议下必传,取值范围["simplex","duplex"]分别表示单向认证和双向认证。
+	SSLMode *string `required:"false"`
+
+	// 负载均衡的调度算法。枚举值：wrr:加权轮训；least_conn:最小连接数；hash:原地址,四层lb使用。ip_hash:七层lb使用
 	Scheduler *string `required:"true"`
+
+	// 服务器证书ID，用于证明服务器的身份，仅当 VServer监听协议为 HTTPS时有效。
+	ServerCertificateID *string `required:"false"`
 }
 
 // CreateVSResponse is response schema for CreateVS action
@@ -1533,6 +1628,59 @@ func (c *UCloudStackClient) CreateVSPolicy(req *CreateVSPolicyRequest) (*CreateV
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateVSPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCertificateRequest is request schema for DeleteCertificate action
+type DeleteCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 证书ID
+	CertificateID *string `required:"true"`
+}
+
+// DeleteCertificateResponse is response schema for DeleteCertificate action
+type DeleteCertificateResponse struct {
+	response.CommonBase
+
+	// 返回信息描述
+	Message string
+}
+
+// NewDeleteCertificateRequest will create request of DeleteCertificate action.
+func (c *UCloudStackClient) NewDeleteCertificateRequest() *DeleteCertificateRequest {
+	req := &DeleteCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCertificate
+
+删除证书
+*/
+func (c *UCloudStackClient) DeleteCertificate(req *DeleteCertificateRequest) (*DeleteCertificateResponse, error) {
+	var err error
+	var res DeleteCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCertificate", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2321,14 +2469,14 @@ type DeleteVSPolicyRequest struct {
 type DeleteVSPolicyResponse struct {
 	response.CommonBase
 
-	// 操作名称
-	Action string
+	// 【该字段已废弃，请谨慎使用】
+	Action string `deprecated:"true"`
 
 	// 返回信息描述。
 	Message string
 
-	// 返回码
-	RetCode int
+	// 【该字段已废弃，请谨慎使用】
+	RetCode int `deprecated:"true"`
 }
 
 // NewDeleteVSPolicyRequest will create request of DeleteVSPolicy action.
@@ -2355,6 +2503,74 @@ func (c *UCloudStackClient) DeleteVSPolicy(req *DeleteVSPolicyRequest) (*DeleteV
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteVSPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCertificateRequest is request schema for DescribeCertificate action
+type DescribeCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 证书ID列表
+	CertificateIDs []string `required:"false"`
+
+	// 证书类型，枚举值["ServerCrt","CACrt"]。分别表示服务器证书和CA证书。
+	CertificateType *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// DescribeCertificateResponse is response schema for DescribeCertificate action
+type DescribeCertificateResponse struct {
+	response.CommonBase
+
+	// [数组]证书对象数组
+	Infos []CertificateInfo
+
+	// 返回信息描述
+	Message string
+
+	// 证书总个数
+	TotalCount int
+}
+
+// NewDescribeCertificateRequest will create request of DescribeCertificate action.
+func (c *UCloudStackClient) NewDescribeCertificateRequest() *DescribeCertificateRequest {
+	req := &DescribeCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCertificate
+
+查询证书
+*/
+func (c *UCloudStackClient) DescribeCertificate(req *DescribeCertificateRequest) (*DescribeCertificateResponse, error) {
+	var err error
+	var res DescribeCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCertificate", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2519,11 +2735,17 @@ type DescribeImageRequest struct {
 type DescribeImageResponse struct {
 	response.CommonBase
 
+	// 操作名称
+	Action string
+
 	// 【数组】返回镜像对象数组
 	Infos []ImageInfo
 
 	// 返回信息描述。
 	Message string
+
+	// 返回码
+	RetCode int
 
 	// 返回镜像的总个数。
 	TotalCount int
@@ -2834,6 +3056,83 @@ func (c *UCloudStackClient) DescribeNATGWRule(req *DescribeNATGWRuleRequest) (*D
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeOPLogsRequest is request schema for DescribeOPLogs action
+type DescribeOPLogsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 开始时间
+	BeginTime *int `required:"true"`
+
+	// 结束时间
+	EndTime *int `required:"true"`
+
+	// 是否操作成功
+	IsSuccess *string `required:"false"`
+
+	//
+	Limit *int `required:"false"`
+
+	//
+	Offset *int `required:"false"`
+
+	// 资源ID
+	ResourceID *string `required:"false"`
+
+	// 资源类型
+	ResourceType *string `required:"false"`
+}
+
+// DescribeOPLogsResponse is response schema for DescribeOPLogs action
+type DescribeOPLogsResponse struct {
+	response.CommonBase
+
+	//
+	Infos []OPLogInfo
+
+	// 错误信息
+	Message string
+
+	// 总数
+	TotalCount int
+}
+
+// NewDescribeOPLogsRequest will create request of DescribeOPLogs action.
+func (c *UCloudStackClient) NewDescribeOPLogsRequest() *DescribeOPLogsRequest {
+	req := &DescribeOPLogsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeOPLogs
+
+查询操作日志
+*/
+func (c *UCloudStackClient) DescribeOPLogs(req *DescribeOPLogsRequest) (*DescribeOPLogsResponse, error) {
+	var err error
+	var res DescribeOPLogsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeOPLogs", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -5178,14 +5477,14 @@ type UpdateRSRequest struct {
 type UpdateRSResponse struct {
 	response.CommonBase
 
-	// 操作名称
-	Action string
+	// 【该字段已废弃，请谨慎使用】
+	Action string `deprecated:"true"`
 
 	// 返回信息描述。
 	Message string
 
-	// 返回码
-	RetCode int
+	// 【该字段已废弃，请谨慎使用】
+	RetCode int `deprecated:"true"`
 }
 
 // NewUpdateRSRequest will create request of UpdateRS action.
@@ -5312,7 +5611,7 @@ type UpdateVSRequest struct {
 	// VServer 监听端口
 	Port *int `required:"false"`
 
-	// HTTPS SSL 认证解析模式。玫举值：UNIDIRECTIONAL:单向认证，MUTUAL:双向认证 。仅当VServer监听协议为 HTTPS 时有效。
+	// SSL认证模式,HTTPS协议下必传,取值范围["simplex","duplex"]分别表示单向认证和双向认证。
 	SSLMode *string `required:"false"`
 
 	// 负载均衡的调度算法。枚举值：wrr:加权轮训；least_conn:最小连接数；hash:原地址,四层lb使用。ip_hash:七层lb使用
@@ -5329,14 +5628,14 @@ type UpdateVSRequest struct {
 type UpdateVSResponse struct {
 	response.CommonBase
 
-	// 操作名称
-	Action string
+	// 【该字段已废弃，请谨慎使用】
+	Action string `deprecated:"true"`
 
 	// 返回信息描述。
 	Message string
 
-	// 返回码
-	RetCode int
+	// 【该字段已废弃，请谨慎使用】
+	RetCode int `deprecated:"true"`
 }
 
 // NewUpdateVSRequest will create request of UpdateVS action.

@@ -123,7 +123,7 @@ func testSetup() {
 	cfg.SetActionLevel("DescribeUDBParamGroup", log.WarnLevel)
 
 	ustackCfg := ucloud.NewConfig()
-	ustackCfg.BaseUrl = "http://192.168.179.2/api"
+	ustackCfg.BaseUrl = "http://console.pre.ucloudstack.com/api"
 	ustackCfg.MaxRetries = 1
 	ustackCfg.LogLevel = log.DebugLevel
 	ustackCfg.Region = "cn"
