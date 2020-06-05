@@ -6,16 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ucloud/ucloud-sdk-go/services/udisk"
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
-
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
-
-	"github.com/ucloud/ucloud-sdk-go/services/udisk"
-
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 )
 
 func TestScenario521(t *testing.T) {
@@ -754,7 +751,7 @@ var testStep521CloneUDiskUDataArk17 = &driver.Step{
 			validation.Builtins.NewValidator("Action", "CloneUDiskUDataArkResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(90) * time.Second,
+	StartupDelay:  time.Duration(300) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "从数据方舟的备份创建UDisk",

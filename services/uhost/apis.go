@@ -211,6 +211,18 @@ type CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+
+	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址
+	Adress *string `required:"false"`
+
+	// 第N块网卡中IPv6对应的共享带宽id，默认不带外网
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -241,6 +253,9 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+
+	//
+	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
 }
 
 /*
@@ -659,6 +674,9 @@ type DescribeUHostInstanceRequest struct {
 	// 要查询的业务组名称
 	Tag *string `required:"false"`
 
+	// 要挂载的云盘id，过滤返回能被UDiskId挂载的云主机。目前主要针对rssd云盘使用
+	UDiskIdForAttachment *string `required:"false"`
+
 	// 【数组】UHost主机的资源ID，例如UHostIds.0代表希望获取信息 的主机1，UHostIds.1代表主机2。 如果不传入，则返回当前Region 所有符合条件的UHost实例。
 	UHostIds []string `required:"false"`
 
@@ -730,7 +748,7 @@ type DescribeUHostTagsResponse struct {
 	// 业务组集合见 UHostTagSet
 	TagSet []UHostTagSet
 
-	// 已有主机的业务组总个数
+	// 已有主机的业务组总数
 	TotalCount int
 }
 
@@ -1422,7 +1440,7 @@ type PoweroffUHostInstanceRequest struct {
 type PoweroffUHostInstanceResponse struct {
 	response.CommonBase
 
-	// UHost实例ID
+	// UHost的实例ID
 	UhostId string
 }
 

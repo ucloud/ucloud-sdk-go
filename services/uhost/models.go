@@ -103,6 +103,9 @@ type UHostIPSet struct {
 	// 外网IP资源ID 。(内网IP无对应的资源ID)
 	IPId string
 
+	// IPv4/IPv6；
+	IPMode string
+
 	// 当前网卡的Mac。
 	Mac string
 
@@ -178,6 +181,9 @@ type UHostInstanceSet struct {
 	// true，支持cloutinit方式初始化；false,不支持
 	CloudInitFeature bool
 
+	// 云主机CPU平台。参考[[api:uhost-api:uhost_type#主机概念20版本|云主机机型说明]]。
+	CpuPlatform string
+
 	// 创建时间，格式为Unix时间戳
 	CreateTime int
 
@@ -204,6 +210,9 @@ type UHostInstanceSet struct {
 
 	//
 	IPs []string `deprecated:"true"`
+
+	// true:有ipv6特性；false，没有ipv6特性
+	IPv6Feature bool
 
 	// 【建议不再使用】主机的系统盘ID。
 	ImageId string
