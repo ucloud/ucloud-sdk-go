@@ -214,12 +214,6 @@ type CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH struct {
 CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-
-	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址
-	Adress *string `required:"false"`
-
-	// 第N块网卡中IPv6对应的共享带宽id，默认不带外网
-	ShareBandwidthId *string `required:"false"`
 }
 
 /*
@@ -247,18 +241,6 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-
-	//
-	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
-}
-
-/*
 UHostDisk is request schema for complex param
 */
 type UHostDisk struct {
@@ -283,6 +265,15 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1235,6 +1226,71 @@ func (c *UHostClient) LeaveIsolationGroup(req *LeaveIsolationGroupRequest) (*Lea
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("LeaveIsolationGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyUHostIPRequest is request schema for ModifyUHostIP action
+type ModifyUHostIPRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写时为默认项目。请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Zone *string `required:"true"`
+
+	// 需要修改为的 IP 地址。新的IP地址和旧IP地址必须属于统一子网，且和主机内部的配置文件一致。
+	PresentIpAddress *string `required:"true"`
+
+	// 所需修改的原 IP 地址 ，当云主机只有一个IP地址时，此参数不必填写。
+	PreviousIpAddress *string `required:"false"`
+
+	// 指定云主机 ID。
+	UHostId *string `required:"true"`
+}
+
+// ModifyUHostIPResponse is response schema for ModifyUHostIP action
+type ModifyUHostIPResponse struct {
+	response.CommonBase
+
+	// 输出错误的信息
+	Message string
+
+	// 目标云主机 ID
+	UHostId string
+}
+
+// NewModifyUHostIPRequest will create request of ModifyUHostIP action.
+func (c *UHostClient) NewModifyUHostIPRequest() *ModifyUHostIPRequest {
+	req := &ModifyUHostIPRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUHostIP
+
+修改云主机内网 IP 地址
+*/
+func (c *UHostClient) ModifyUHostIP(req *ModifyUHostIPRequest) (*ModifyUHostIPResponse, error) {
+	var err error
+	var res ModifyUHostIPResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUHostIP", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
