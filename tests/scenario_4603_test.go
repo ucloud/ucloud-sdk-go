@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
@@ -580,15 +579,14 @@ var testStep4603DescribeUHostInstance11 = &driver.Step{
 
 var testStep4603ModifyUHostIP12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UHost")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*uhost.UHostClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("ModifyUHostIP")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewModifyUHostIPRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":             step.Scenario.GetVar("Zone"),
 			"UHostId":          step.Scenario.GetVar("hostId1"),
 			"Region":           step.Scenario.GetVar("Region"),
@@ -597,7 +595,8 @@ var testStep4603ModifyUHostIP12 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.ModifyUHostIP(req)
 		if err != nil {
 			return resp, err
 		}

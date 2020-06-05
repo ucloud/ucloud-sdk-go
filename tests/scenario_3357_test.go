@@ -48,25 +48,26 @@ func TestScenario3357(t *testing.T) {
 		Steps: []*driver.Step{
 			testStep3357DescribeImage01,
 			testStep3357DescribeImage02,
-			testStep3357GetUImagePrice03,
-			testStep3357GetRestResource04,
-			testStep3357GetUHostInstancePrice05,
-			testStep3357CreateUHostInstance06,
-			testStep3357DescribeUHostInstance07,
-			testStep3357DescribeOrderDetailInfo08,
-			testStep3357StopUHostInstance09,
-			testStep3357DescribeUHostInstance10,
-			testStep3357TerminateLocalDataDisk11,
-			testStep3357DescribeOrderDetailInfo12,
-			testStep3357GetUHostUpgradePrice13,
-			testStep3357ResizeUHostInstance14,
-			testStep3357DescribeOrderDetailInfo15,
-			testStep3357StartUHostInstance16,
-			testStep3357DescribeUHostInstance17,
-			testStep3357PoweroffUHostInstance18,
-			testStep3357DescribeUHostInstance19,
-			testStep3357TerminateUHostInstance20,
-			testStep3357DescribeOrderDetailInfo21,
+			testStep3357DescribeImage03,
+			testStep3357GetUImagePrice04,
+			testStep3357GetRestResource05,
+			testStep3357GetUHostInstancePrice06,
+			testStep3357CreateUHostInstance07,
+			testStep3357DescribeUHostInstance08,
+			testStep3357DescribeOrderDetailInfo09,
+			testStep3357StopUHostInstance10,
+			testStep3357DescribeUHostInstance11,
+			testStep3357TerminateLocalDataDisk12,
+			testStep3357DescribeOrderDetailInfo13,
+			testStep3357GetUHostUpgradePrice14,
+			testStep3357ResizeUHostInstance15,
+			testStep3357DescribeOrderDetailInfo16,
+			testStep3357StartUHostInstance17,
+			testStep3357DescribeUHostInstance18,
+			testStep3357PoweroffUHostInstance19,
+			testStep3357DescribeUHostInstance20,
+			testStep3357TerminateUHostInstance21,
+			testStep3357DescribeOrderDetailInfo22,
 		},
 	})
 }
@@ -125,6 +126,47 @@ var testStep3357DescribeImage02 = &driver.Step{
 			"Zone":      step.Scenario.GetVar("Zone"),
 			"Region":    step.Scenario.GetVar("Region"),
 			"OsType":    "Linux",
+			"Limit":     200,
+			"ImageType": "Base",
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeImage(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("ImageSet", step.Must(utils.GetValue(resp, "ImageSet")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeImageResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取镜像列表",
+	FastFail:      false,
+}
+
+var testStep3357DescribeImage03 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewDescribeImageRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":      step.Scenario.GetVar("Zone"),
+			"Region":    step.Scenario.GetVar("Region"),
+			"OsType":    "Linux",
 			"ImageType": "Base",
 			"ImageId":   step.Must(functions.SearchValue(step.Scenario.GetVar("ImageSet"), "OsName", "CentOS 6.5 64位", "ImageId")),
 		})
@@ -153,7 +195,7 @@ var testStep3357DescribeImage02 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357GetUImagePrice03 = &driver.Step{
+var testStep3357GetUImagePrice04 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -191,7 +233,7 @@ var testStep3357GetUImagePrice03 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357GetRestResource04 = &driver.Step{
+var testStep3357GetRestResource05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -228,7 +270,7 @@ var testStep3357GetRestResource04 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357GetUHostInstancePrice05 = &driver.Step{
+var testStep3357GetUHostInstancePrice06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -286,7 +328,7 @@ var testStep3357GetUHostInstancePrice05 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357CreateUHostInstance06 = &driver.Step{
+var testStep3357CreateUHostInstance07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -347,7 +389,7 @@ var testStep3357CreateUHostInstance06 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeUHostInstance07 = &driver.Step{
+var testStep3357DescribeUHostInstance08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -400,7 +442,7 @@ var testStep3357DescribeUHostInstance07 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeOrderDetailInfo08 = &driver.Step{
+var testStep3357DescribeOrderDetailInfo09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UBill")
 		if err != nil {
@@ -445,7 +487,7 @@ var testStep3357DescribeOrderDetailInfo08 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357StopUHostInstance09 = &driver.Step{
+var testStep3357StopUHostInstance10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -483,7 +525,7 @@ var testStep3357StopUHostInstance09 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeUHostInstance10 = &driver.Step{
+var testStep3357DescribeUHostInstance11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -528,7 +570,7 @@ var testStep3357DescribeUHostInstance10 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357TerminateLocalDataDisk11 = &driver.Step{
+var testStep3357TerminateLocalDataDisk12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -566,7 +608,7 @@ var testStep3357TerminateLocalDataDisk11 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeOrderDetailInfo12 = &driver.Step{
+var testStep3357DescribeOrderDetailInfo13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UBill")
 		if err != nil {
@@ -609,7 +651,7 @@ var testStep3357DescribeOrderDetailInfo12 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357GetUHostUpgradePrice13 = &driver.Step{
+var testStep3357GetUHostUpgradePrice14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -649,7 +691,7 @@ var testStep3357GetUHostUpgradePrice13 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357ResizeUHostInstance14 = &driver.Step{
+var testStep3357ResizeUHostInstance15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -688,7 +730,7 @@ var testStep3357ResizeUHostInstance14 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeOrderDetailInfo15 = &driver.Step{
+var testStep3357DescribeOrderDetailInfo16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UBill")
 		if err != nil {
@@ -733,7 +775,7 @@ var testStep3357DescribeOrderDetailInfo15 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357StartUHostInstance16 = &driver.Step{
+var testStep3357StartUHostInstance17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -771,7 +813,7 @@ var testStep3357StartUHostInstance16 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeUHostInstance17 = &driver.Step{
+var testStep3357DescribeUHostInstance18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -812,7 +854,7 @@ var testStep3357DescribeUHostInstance17 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357PoweroffUHostInstance18 = &driver.Step{
+var testStep3357PoweroffUHostInstance19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -850,7 +892,7 @@ var testStep3357PoweroffUHostInstance18 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeUHostInstance19 = &driver.Step{
+var testStep3357DescribeUHostInstance20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -891,7 +933,7 @@ var testStep3357DescribeUHostInstance19 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357TerminateUHostInstance20 = &driver.Step{
+var testStep3357TerminateUHostInstance21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -926,7 +968,7 @@ var testStep3357TerminateUHostInstance20 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3357DescribeOrderDetailInfo21 = &driver.Step{
+var testStep3357DescribeOrderDetailInfo22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UBill")
 		if err != nil {

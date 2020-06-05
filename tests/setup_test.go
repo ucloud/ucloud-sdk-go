@@ -123,7 +123,7 @@ func testSetup() {
 	cfg.SetActionLevel("DescribeUDBParamGroup", log.WarnLevel)
 
 	ustackCfg := ucloud.NewConfig()
-	ustackCfg.BaseUrl = "http://console.pre.ucloudstack.com/api"
+	ustackCfg.BaseUrl = "http://192.168.179.2/api"
 	ustackCfg.MaxRetries = 1
 	ustackCfg.LogLevel = log.DebugLevel
 	ustackCfg.Region = "cn"
@@ -149,9 +149,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UBill", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ubill.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UCloudStack", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ucloudstack.NewClient(&ustackCfg, &ustackCred), nil
 	}))
 	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udb.NewClient(&cfg, &credential), nil
