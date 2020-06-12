@@ -1,3 +1,9 @@
+## 0.16.3 (2020-06-12)
+
+ENHANCEMENTS:
+
+- update external `LoadSTSConfig` to set default `Region`, `Zone`, `BaseUrl` for `ConfigProvider`
+
 ## 0.16.2 (2020-06-05)
 
 ENHANCEMENTS:
