@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	c, err := external.LoadSTSConfig(external.AssumeRoleRequest{RoleName: "UHostInstance"})
+	c, err := external.LoadSTSConfig(external.AssumeRoleRequest{RoleName: "Uk8sServiceCharacter"})
 	if err != nil {
 		fmt.Printf("[ERROR] %s\n", err)
 	}
