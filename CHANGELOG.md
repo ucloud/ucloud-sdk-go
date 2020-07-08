@@ -1,3 +1,20 @@
+## 0.16.4 (2020-07-08)
+
+ENHANCEMENTS:
+
+- Add request uuid into response logging (#166)
+- Add `CreateAttachUDisk` api (#165)
+- Add `CreateNIC` api (#164)
+- Add `DescribeNIC` api (#164)
+- Add `AttachNIC` api (#164)
+- Add `DetachNIC` api (#164)
+- Add `DeleteNIC` api (#164)
+- Update `DescribeVMInstance` api (#164)
+- Update `CreateVMInstance` api (#164)
+- Update `DescribeEIP` api (#164)
+- Update `AllocateEIP` api (#164)
+- Update `DescribeDisk` api (#164)
+
 ## 0.16.3 (2020-06-12)
 
 ENHANCEMENTS:
