@@ -48,18 +48,23 @@ func TestScenario3951(t *testing.T) {
 			testStep3951DescribeImage01,
 			testStep3951DescribeImage02,
 			testStep3951CreateUHostInstance03,
-			testStep3951DescribeUHostInstance04,
-			testStep3951DescribeUDisk05,
-			testStep3951DescribeUDisk06,
-			testStep3951DescribeEIP07,
-			testStep3951ModifyUHostInstanceTag08,
-			testStep3951DescribeUHostInstance09,
-			testStep3951DescribeUDisk10,
-			testStep3951DescribeUDisk11,
-			testStep3951DescribeEIP12,
-			testStep3951PoweroffUHostInstance13,
-			testStep3951DescribeUHostInstance14,
-			testStep3951TerminateUHostInstance15,
+			testStep3951CreateUHostInstance04,
+			testStep3951DescribeUHostInstance05,
+			testStep3951DescribeUHostInstance06,
+			testStep3951DescribeUDisk07,
+			testStep3951DescribeUDisk08,
+			testStep3951DescribeEIP09,
+			testStep3951ModifyUHostInstanceTag10,
+			testStep3951DescribeUHostInstance11,
+			testStep3951DescribeUDisk12,
+			testStep3951DescribeUDisk13,
+			testStep3951DescribeEIP14,
+			testStep3951PoweroffUHostInstance15,
+			testStep3951PoweroffUHostInstance16,
+			testStep3951DescribeUHostInstance17,
+			testStep3951DescribeUHostInstance18,
+			testStep3951TerminateUHostInstance19,
+			testStep3951TerminateUHostInstance20,
 		},
 	})
 }
@@ -158,11 +163,12 @@ var testStep3951CreateUHostInstance03 = &driver.Step{
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":     step.Scenario.GetVar("Zone"),
 			"Tag":      step.Scenario.GetVar("create_tag"),
+			"SetId":    step.Scenario.GetVar("SetId"),
 			"Region":   step.Scenario.GetVar("Region"),
 			"Quantity": 1,
 			"Password": "VXFhNzg5VGVzdCFAIyQ7LA==",
 			"NetworkInterface": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"EIP": map[string]interface{}{
 						"Bandwidth":    1,
 						"OperatorName": "Bgp",
@@ -176,14 +182,15 @@ var testStep3951CreateUHostInstance03 = &driver.Step{
 			"MachineType":        step.Scenario.GetVar("MachineType"),
 			"LoginMode":          "Password",
 			"ImageId":            step.Scenario.GetVar("ImageID"),
+			"HostIp":             step.Scenario.GetVar("HostIp"),
 			"Disks": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("BootBackup"),
 					"IsBoot":     "True",
 					"Size":       step.Scenario.GetVar("BootSize"),
 					"Type":       step.Scenario.GetVar("BootType"),
 				},
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("DiskBackup"),
 					"IsBoot":     "False",
 					"Size":       step.Scenario.GetVar("DiskSize"),
@@ -217,7 +224,79 @@ var testStep3951CreateUHostInstance03 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUHostInstance04 = &driver.Step{
+var testStep3951CreateUHostInstance04 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewCreateUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":     step.Scenario.GetVar("Zone"),
+			"SetId":    step.Scenario.GetVar("SetId"),
+			"Region":   step.Scenario.GetVar("Region"),
+			"Quantity": 1,
+			"Password": "VXFhNzg5VGVzdCFAIyQ7LA==",
+			"NetworkInterface": []map[string]interface{}{
+				map[string]interface{}{
+					"EIP": map[string]interface{}{
+						"Bandwidth":    1,
+						"OperatorName": "Bgp",
+						"PayMode":      "Bandwidth",
+					},
+				},
+			},
+			"Name":               step.Scenario.GetVar("Name"),
+			"MinimalCpuPlatform": step.Scenario.GetVar("MinimalCpuPlatform"),
+			"Memory":             step.Scenario.GetVar("CreateMem"),
+			"MachineType":        step.Scenario.GetVar("MachineType"),
+			"LoginMode":          "Password",
+			"ImageId":            step.Scenario.GetVar("ImageID"),
+			"HostIp":             step.Scenario.GetVar("HostIp"),
+			"Disks": []map[string]interface{}{
+				map[string]interface{}{
+					"BackupType": step.Scenario.GetVar("BootBackup"),
+					"IsBoot":     "True",
+					"Size":       step.Scenario.GetVar("BootSize"),
+					"Type":       step.Scenario.GetVar("BootType"),
+				},
+				map[string]interface{}{
+					"BackupType": step.Scenario.GetVar("DiskBackup"),
+					"IsBoot":     "False",
+					"Size":       step.Scenario.GetVar("DiskSize"),
+					"Type":       step.Scenario.GetVar("DiskType"),
+				},
+			},
+			"ChargeType": step.Scenario.GetVar("ChargeType"),
+			"CPU":        step.Scenario.GetVar("CreateCPU"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CreateUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("hostId2", step.Must(utils.GetValue(resp, "UHostIds.0")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建云主机",
+	FastFail:      false,
+}
+
+var testStep3951DescribeUHostInstance05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -275,7 +354,47 @@ var testStep3951DescribeUHostInstance04 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUDisk05 = &driver.Step{
+var testStep3951DescribeUHostInstance06 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewDescribeUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":   step.Scenario.GetVar("Zone"),
+			"Tag":    step.Scenario.GetVar("create_tag"),
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("UHostSet.0.State", "Running", "str_eq"),
+			validation.Builtins.NewValidator("UHostSet.0.Tag", step.Scenario.GetVar("create_tag"), "str_eq"),
+			validation.Builtins.NewValidator("UHostSet", step.Scenario.GetVar("hostId2"), "object_not_contains"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
+	Title:         "获取主机信息",
+	FastFail:      true,
+}
+
+var testStep3951DescribeUDisk07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -314,7 +433,7 @@ var testStep3951DescribeUDisk05 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUDisk06 = &driver.Step{
+var testStep3951DescribeUDisk08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -353,7 +472,7 @@ var testStep3951DescribeUDisk06 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeEIP07 = &driver.Step{
+var testStep3951DescribeEIP09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -393,7 +512,7 @@ var testStep3951DescribeEIP07 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951ModifyUHostInstanceTag08 = &driver.Step{
+var testStep3951ModifyUHostInstanceTag10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -431,7 +550,7 @@ var testStep3951ModifyUHostInstanceTag08 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUHostInstance09 = &driver.Step{
+var testStep3951DescribeUHostInstance11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -475,7 +594,7 @@ var testStep3951DescribeUHostInstance09 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUDisk10 = &driver.Step{
+var testStep3951DescribeUDisk12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -514,7 +633,7 @@ var testStep3951DescribeUDisk10 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUDisk11 = &driver.Step{
+var testStep3951DescribeUDisk13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -553,7 +672,7 @@ var testStep3951DescribeUDisk11 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeEIP12 = &driver.Step{
+var testStep3951DescribeEIP14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -593,7 +712,7 @@ var testStep3951DescribeEIP12 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951PoweroffUHostInstance13 = &driver.Step{
+var testStep3951PoweroffUHostInstance15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -631,7 +750,45 @@ var testStep3951PoweroffUHostInstance13 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951DescribeUHostInstance14 = &driver.Step{
+var testStep3951PoweroffUHostInstance16 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewPoweroffUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UHostId": step.Scenario.GetVar("hostId2"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.PoweroffUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "PoweroffUHostInstanceResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
+	Title:         "模拟主机掉电",
+	FastFail:      false,
+}
+
+var testStep3951DescribeUHostInstance17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -672,7 +829,48 @@ var testStep3951DescribeUHostInstance14 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3951TerminateUHostInstance15 = &driver.Step{
+var testStep3951DescribeUHostInstance18 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewDescribeUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone": step.Scenario.GetVar("Zone"),
+			"UHostIds": []interface{}{
+				step.Scenario.GetVar("hostId2"),
+			},
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
+			validation.Builtins.NewValidator("UHostSet.0.MachineType", step.Scenario.GetVar("MachineType"), "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
+	Title:         "获取主机信息",
+	FastFail:      false,
+}
+
+var testStep3951TerminateUHostInstance19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -707,4 +905,41 @@ var testStep3951TerminateUHostInstance15 = &driver.Step{
 	RetryInterval: 10 * time.Second,
 	Title:         "删除云主机",
 	FastFail:      true,
+}
+
+var testStep3951TerminateUHostInstance20 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewTerminateUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":         step.Scenario.GetVar("Zone"),
+			"UHostId":      step.Scenario.GetVar("hostId2"),
+			"ReleaseUDisk": "true",
+			"ReleaseEIP":   "true",
+			"Region":       step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.TerminateUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{}
+	},
+	StartupDelay:  time.Duration(10) * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
+	Title:         "删除云主机",
+	FastFail:      false,
 }

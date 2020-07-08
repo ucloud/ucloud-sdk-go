@@ -127,20 +127,22 @@ var testStep1935CreateUHostInstance02 = &driver.Step{
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":      step.Scenario.GetVar("Zone"),
 			"UHostType": step.Scenario.GetVar("UHostType"),
+			"SetId":     step.Scenario.GetVar("SetId"),
 			"Region":    step.Scenario.GetVar("Region"),
 			"Password":  "VXFhNzg5VGVzdCFAIyQ7LA==",
 			"Name":      step.Scenario.GetVar("UhostName"),
 			"Memory":    1024,
 			"LoginMode": "Password",
 			"ImageId":   step.Scenario.GetVar("ImageID"),
+			"HostIp":    step.Scenario.GetVar("HostIp"),
 			"Disks": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("BootBackup"),
 					"IsBoot":     "True",
 					"Size":       step.Scenario.GetVar("BootSize"),
 					"Type":       step.Scenario.GetVar("BootType"),
 				},
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("DiskBackup"),
 					"IsBoot":     "False",
 					"Size":       step.Scenario.GetVar("DiskSize"),

@@ -123,13 +123,13 @@ var testStep3299GetUHostInstancePrice02 = &driver.Step{
 			"MachineType": step.Scenario.GetVar("MachineType"),
 			"ImageId":     step.Scenario.GetVar("ImageID"),
 			"Disks": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("Disk0Backup"),
 					"IsBoot":     "True",
 					"Size":       step.Scenario.GetVar("Disk0Size"),
 					"Type":       step.Scenario.GetVar("Disk0Type"),
 				},
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("Disk1Backup"),
 					"IsBoot":     "False",
 					"Size":       step.Scenario.GetVar("Disk1Size"),
@@ -184,13 +184,13 @@ var testStep3299CreateUHostInstance03 = &driver.Step{
 			"LoginMode":          "Password",
 			"ImageId":            step.Scenario.GetVar("ImageID"),
 			"Disks": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("Disk0Backup"),
 					"IsBoot":     "True",
 					"Size":       20,
 					"Type":       step.Scenario.GetVar("Disk0Type"),
 				},
-				{
+				map[string]interface{}{
 					"BackupType": step.Scenario.GetVar("Disk1Backup"),
 					"IsBoot":     "False",
 					"Size":       20,
