@@ -118,14 +118,23 @@ func logDebugHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpRespon
 		c.logActionErrorf(action, "%s", err)
 	}
 
+	// try to get request uuid
+	requestUUID := ""
+	if resp != nil {
+		requestUUID = resp.GetHeaders().Get(headerKeyRequestUUID)
+	}
+	if requestUUID == "" {
+		requestUUID = "*"
+	}
+
 	// logging response code text
 	if resp != nil && resp.GetStatusCode() >= 400 {
-		c.logActionWarnf(action, "%s", resp.GetStatusCode())
+		c.logActionWarnf(action, "[%s] HTTP Status Error %v", requestUUID, resp.GetStatusCode())
 	}
 
 	// logging response body
 	if resp != nil && resp.GetStatusCode() < 400 {
-		c.logActionDebugf(action, "%s - %v", resp.GetBody(), resp.GetStatusCode())
+		c.logActionDebugf(action, "[%s] %s - %v", requestUUID, resp.GetBody(), resp.GetStatusCode())
 	}
 
 	return resp, err
