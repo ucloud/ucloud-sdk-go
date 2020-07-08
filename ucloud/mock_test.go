@@ -168,6 +168,16 @@ func TestClient_http_mock(t *testing.T) {
 		{
 			InputVector: "HTTPMockStatus400",
 			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				httpResponse.SetStatusCode(400)
+				return http.NewStatusError(400, "Bad Request")
+			},
+			GoldenErr: true,
+		},
+		{
+			InputVector: "HTTPMockStatus400WithRequestUUID",
+			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				httpResponse.GetHeaders().Set(headerKeyRequestUUID, "foo-bar")
+				httpResponse.SetStatusCode(400)
 				return http.NewStatusError(400, "Bad Request")
 			},
 			GoldenErr: true,

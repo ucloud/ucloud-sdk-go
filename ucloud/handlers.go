@@ -129,7 +129,7 @@ func logDebugHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpRespon
 
 	// logging response code text
 	if resp != nil && resp.GetStatusCode() >= 400 {
-		c.logActionWarnf(action, "[%s] %s", requestUUID, resp.GetStatusCode())
+		c.logActionWarnf(action, "[%s] HTTP Status Error %v", requestUUID, resp.GetStatusCode())
 	}
 
 	// logging response body
