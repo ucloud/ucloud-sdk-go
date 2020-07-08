@@ -88,8 +88,11 @@ type DiskInfo struct {
 	// 硬盘ID
 	DiskID string
 
-	// 硬盘状态。Creating：创建中,BeingCloned：正在被克隆中,Unbound：已解绑,Unbounding：解绑中,Bounding：绑定中,Bound：已绑定,Upgrading：升级中,Deleting：删除中,Deleted：已删除,Releasing：销毁中,Released：已销毁
+	// 硬盘状态。Creating：创建中,BeingCloned：正在被克隆中,Unbound：已解绑,Unbounding：解绑中,Bounding：绑定中,Bound：已绑定,Upgrading：升级中,Deleting：删除中,Deleted：已删除,Releasing：销毁中,Released：已销毁；Snapshoting（快照中）；Rollbacking（回滚中）
 	DiskStatus string
+
+	// 硬盘用途类型，Boot（系统盘）、Data（数据盘）
+	DiskType string
 
 	// 过期时间。时间戳
 	ExpireTime int
@@ -141,6 +144,9 @@ type EIPInfo struct {
 
 	// 外网IP
 	IP string
+
+	// IP版本,支持值：IPv4\IPv6
+	IPVersion string
 
 	// 名称
 	Name string
@@ -360,6 +366,51 @@ type NATGWRuleInfo struct {
 
 	// 状态。Bounding:绑定中,Bound:已绑定,Unbounding:解绑中,Unbound：已解绑
 	RuleStatus string
+}
+
+/*
+NICInfo - 网卡信息
+*/
+type NICInfo struct {
+
+	// 绑定资源ID
+	BindResourceID string
+
+	// 创建时间。时间戳
+	CreateTime int
+
+	// IP
+	IP string
+
+	// mac 地址
+	MAC string
+
+	// 网卡ID
+	NICID string
+
+	// 网卡状态。枚举值。Creating：创建中,Free：未绑定,Unbounding：解绑中,Bounding：绑定中,Bound：已绑定,BindSGing：绑定安全组中,UnbindSGing：解绑安全组中,UpdateSGing：更新安全组中,Deleting：删除中,Deleted：已删除,Releasing：销毁中,Released：已销毁
+	NICStatus string
+
+	// 名称
+	Name string
+
+	// 地域
+	Region string
+
+	// 备注
+	Remark string
+
+	// 安全组ID
+	SGID string
+
+	// Subnet ID
+	SubnetID string
+
+	// VPC ID
+	VPCID string
+
+	// 可用区
+	Zone string
 }
 
 /*
@@ -681,30 +732,6 @@ type UserInfo struct {
 }
 
 /*
-VMDiskInfo - UCloudStack虚拟机磁盘信息
-*/
-type VMDiskInfo struct {
-
-	// 磁盘 ID
-	DiskID string
-
-	// 磁盘盘符
-	Drive string
-
-	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
-	IsElastic string
-
-	// 磁盘名称
-	Name string
-
-	// 磁盘大小，单位 GB
-	Size int
-
-	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
-	Type string
-}
-
-/*
 VMIPInfo - UCloudStack虚拟机IP信息
 */
 type VMIPInfo struct {
@@ -744,6 +771,30 @@ type VMIPInfo struct {
 
 	// VPC 名称
 	VPCName string
+}
+
+/*
+VMDiskInfo - UCloudStack虚拟机磁盘信息
+*/
+type VMDiskInfo struct {
+
+	// 磁盘 ID
+	DiskID string
+
+	// 磁盘盘符
+	Drive string
+
+	// 是否是弹性磁盘。枚举值为：Y，表示是；N，表示否；
+	IsElastic string
+
+	// 磁盘名称
+	Name string
+
+	// 磁盘大小，单位 GB
+	Size int
+
+	// 磁盘类型。枚举值：Boot，表示系统盘；Data，表示数据盘；
+	Type string
 }
 
 /*

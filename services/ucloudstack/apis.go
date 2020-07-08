@@ -25,6 +25,12 @@ type AllocateEIPRequest struct {
 	// 计费模式。枚举值：Dynamic，表示小时；Month，表示月；Year，表示年；
 	ChargeType *string `required:"true"`
 
+	// 指定IP
+	IP *string `required:"false"`
+
+	// IP版本，默认值IPv4，支持值：IPv4\IPv6
+	IPVersion *string `required:"false"`
+
 	// 名称
 	Name *string `required:"true"`
 
@@ -129,6 +135,62 @@ func (c *UCloudStackClient) AttachDisk(req *AttachDiskRequest) (*AttachDiskRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("AttachDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AttachNICRequest is request schema for AttachNIC action
+type AttachNICRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 网卡ID
+	NICID *string `required:"true"`
+
+	// 绑定的资源ID
+	ResourceID *string `required:"true"`
+}
+
+// AttachNICResponse is response schema for AttachNIC action
+type AttachNICResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewAttachNICRequest will create request of AttachNIC action.
+func (c *UCloudStackClient) NewAttachNICRequest() *AttachNICRequest {
+	req := &AttachNICRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachNIC
+
+绑定UCloudStack网卡
+*/
+func (c *UCloudStackClient) AttachNIC(req *AttachNICRequest) (*AttachNICResponse, error) {
+	var err error
+	var res AttachNICResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachNIC", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -853,6 +915,74 @@ func (c *UCloudStackClient) CreateNATGWRule(req *CreateNATGWRuleRequest) (*Creat
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateNICRequest is request schema for CreateNIC action
+type CreateNICRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 指定IP
+	IP *string `required:"false"`
+
+	// 名称
+	Name *string `required:"true"`
+
+	// 安全组 ID
+	SGID *string `required:"false"`
+
+	// Subnet ID
+	SubnetID *string `required:"true"`
+
+	// VPC ID
+	VPCID *string `required:"true"`
+}
+
+// CreateNICResponse is response schema for CreateNIC action
+type CreateNICResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+
+	// 创建的网卡 ID
+	NICID string
+}
+
+// NewCreateNICRequest will create request of CreateNIC action.
+func (c *UCloudStackClient) NewCreateNICRequest() *CreateNICRequest {
+	req := &CreateNICRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CreateNIC
+
+创建网卡
+*/
+func (c *UCloudStackClient) CreateNIC(req *CreateNICRequest) (*CreateNICResponse, error) {
+	var err error
+	var res CreateNICResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateNIC", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1956,6 +2086,59 @@ func (c *UCloudStackClient) DeleteNATGWRule(req *DeleteNATGWRuleRequest) (*Delet
 	return &res, nil
 }
 
+// DeleteNICRequest is request schema for DeleteNIC action
+type DeleteNICRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 被删除的网卡 ID
+	NICID *string `required:"true"`
+}
+
+// DeleteNICResponse is response schema for DeleteNIC action
+type DeleteNICResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDeleteNICRequest will create request of DeleteNIC action.
+func (c *UCloudStackClient) NewDeleteNICRequest() *DeleteNICRequest {
+	req := &DeleteNICRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteNIC
+
+删除网卡
+*/
+func (c *UCloudStackClient) DeleteNIC(req *DeleteNICRequest) (*DeleteNICResponse, error) {
+	var err error
+	var res DeleteNICResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteNIC", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeletePhysicalIPRequest is request schema for DeletePhysicalIP action
 type DeletePhysicalIPRequest struct {
 	request.CommonBase
@@ -2469,14 +2652,8 @@ type DeleteVSPolicyRequest struct {
 type DeleteVSPolicyResponse struct {
 	response.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	Action string `deprecated:"true"`
-
 	// 返回信息描述。
 	Message string
-
-	// 【该字段已废弃，请谨慎使用】
-	RetCode int `deprecated:"true"`
 }
 
 // NewDeleteVSPolicyRequest will create request of DeleteVSPolicy action.
@@ -2591,6 +2768,9 @@ type DescribeDiskRequest struct {
 	// 【数组】磁盘的 ID。输入有效的 ID。调用方式举例：DiskIDs.0=“one-id”、DiskIDs.1=“two-id”。
 	DiskIDs []string `required:"false"`
 
+	// 硬盘用途类型，默认空返回虚拟机所有硬盘，支持值：Boot（系统盘）、Data（数据盘）
+	DiskType *string `required:"false"`
+
 	// 返回数据长度，默认为20，最大100。
 	Limit *int `required:"false"`
 
@@ -2655,6 +2835,9 @@ type DescribeEIPRequest struct {
 
 	// 【数组】外网的 ID。输入有效的 ID。调用方式举例：EIPIDs.0=“one-id”、EIPIDs.1=“two-id”
 	EIPIDs []string `required:"false"`
+
+	// 版本，支持IPv4、IPv6
+	IPVersion *string `required:"false"`
 
 	// 返回数据长度，默认为20，最大100。
 	Limit *string `required:"false"`
@@ -3056,6 +3239,71 @@ func (c *UCloudStackClient) DescribeNATGWRule(req *DescribeNATGWRuleRequest) (*D
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeNATGWRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeNICRequest is request schema for DescribeNIC action
+type DescribeNICRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值： cn，表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100。
+	Limit *int `required:"false"`
+
+	// 【数组】网卡的 ID。输入有效的 ID。调用方式举例：NICIDs.0=“one-id”、NICIDs.1=“two-id”。
+	NICIDs []string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0。
+	Offset *int `required:"false"`
+}
+
+// DescribeNICResponse is response schema for DescribeNIC action
+type DescribeNICResponse struct {
+	response.CommonBase
+
+	// 【数组】返回网卡对象数组
+	Infos []NICInfo
+
+	// 返回信息描述。
+	Message string
+
+	// 返回网卡总个数。
+	TotalCount int
+}
+
+// NewDescribeNICRequest will create request of DescribeNIC action.
+func (c *UCloudStackClient) NewDescribeNICRequest() *DescribeNICRequest {
+	req := &DescribeNICRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeNIC
+
+获取网卡信息
+*/
+func (c *UCloudStackClient) DescribeNIC(req *DescribeNICRequest) (*DescribeNICResponse, error) {
+	var err error
+	var res DescribeNICResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeNIC", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -3968,6 +4216,62 @@ func (c *UCloudStackClient) DetachDisk(req *DetachDiskRequest) (*DetachDiskRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DetachDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DetachNICRequest is request schema for DetachNIC action
+type DetachNICRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。枚举值：cn,表示中国；
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。枚举值：zone-01，表示中国；
+	// Zone *string `required:"true"`
+
+	// 网卡ID
+	NICID *string `required:"true"`
+
+	// 绑定的资源ID
+	ResourceID *string `required:"true"`
+}
+
+// DetachNICResponse is response schema for DetachNIC action
+type DetachNICResponse struct {
+	response.CommonBase
+
+	// 返回信息描述。
+	Message string
+}
+
+// NewDetachNICRequest will create request of DetachNIC action.
+func (c *UCloudStackClient) NewDetachNICRequest() *DetachNICRequest {
+	req := &DetachNICRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachNIC
+
+解绑UClouStack网卡
+*/
+func (c *UCloudStackClient) DetachNIC(req *DetachNICRequest) (*DetachNICResponse, error) {
+	var err error
+	var res DetachNICResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachNIC", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -5477,14 +5781,8 @@ type UpdateRSRequest struct {
 type UpdateRSResponse struct {
 	response.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	Action string `deprecated:"true"`
-
 	// 返回信息描述。
 	Message string
-
-	// 【该字段已废弃，请谨慎使用】
-	RetCode int `deprecated:"true"`
 }
 
 // NewUpdateRSRequest will create request of UpdateRS action.
@@ -5628,14 +5926,8 @@ type UpdateVSRequest struct {
 type UpdateVSResponse struct {
 	response.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	Action string `deprecated:"true"`
-
 	// 返回信息描述。
 	Message string
-
-	// 【该字段已废弃，请谨慎使用】
-	RetCode int `deprecated:"true"`
 }
 
 // NewUpdateVSRequest will create request of UpdateVS action.
