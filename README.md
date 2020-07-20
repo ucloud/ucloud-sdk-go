@@ -83,8 +83,8 @@ func main() {
 
     // replace the public/private key by your own
     credential := auth.NewCredential()
-    credential.PrivateKey = "my_private_key"
     credential.PublicKey = "my_public_key"
+    credential.PrivateKey = "my_private_key"
 
     uhostClient := uhost.NewClient(&cfg, &credential)
 
