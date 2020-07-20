@@ -22,6 +22,7 @@ func TestClientError(t *testing.T) {
 
 	assert.True(t, IsNetworkError(net.UnknownNetworkError("net error")))
 	assert.False(t, IsNetworkError(nil))
+	assert.True(t, IsNetworkError(errors.New("net/http: request canceled")))
 
 	assert.True(t, isRetryableName(ErrNetwork))
 	assert.False(t, isRetryableName(ErrUnexpected))

@@ -14,7 +14,8 @@ type UCloudStackClient struct {
 
 // NewClient will return a instance of UCloudStackClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *UCloudStackClient {
-	client := ucloud.NewClient(config, credential)
+	meta := ucloud.ClientMeta{Product: "UCloudStack"}
+	client := ucloud.NewClientWithMeta(config, credential, meta)
 	return &UCloudStackClient{
 		client,
 	}

@@ -1,18 +1,18 @@
 package main
 
 import (
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
+	"fmt"
 	"os"
 
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 )
 
 const region = "cn-bj2"
 const zone = "cn-bj2-05"
-const imageID = "uimage-kg0w4u"
 
 var uhostClient *uhost.UHostClient
 var unetClient *unet.UNetClient
@@ -27,7 +27,12 @@ func main() {
 		panic(err)
 	}
 
-	uhostID, err := createUHost("sdk-example-uhost")
+	imageId, err := describeRandomImageId()
+	if err != nil {
+		panic(err)
+	}
+
+	uhostID, err := createUHost("sdk-example-uhost", imageId)
 	if err != nil {
 		panic(err)
 	}
@@ -66,6 +71,22 @@ func bindEIPToUHost(eipID, uhostID string) error {
 	return nil
 }
 
+func describeRandomImageId() (string, error) {
+	req := uhostClient.NewDescribeImageRequest()
+	req.ImageType = ucloud.String("Base")
+	req.OsType = ucloud.String("Linux")
+
+	resp, err := uhostClient.DescribeImage(req)
+	if err != nil {
+		return "", err
+	}
+
+	if len(resp.ImageSet) == 0 {
+		return "", fmt.Errorf("can not found any image")
+	}
+	return resp.ImageSet[0].ImageId, nil
+}
+
 func createEIP(name string) (string, error) {
 	req := unetClient.NewAllocateEIPRequest()
 	req.Name = ucloud.String(name)
@@ -80,11 +101,11 @@ func createEIP(name string) (string, error) {
 	return resp.EIPSet[0].EIPId, nil
 }
 
-func createUHost(name string) (string, error) {
+func createUHost(name, imageId string) (string, error) {
 	req := uhostClient.NewCreateUHostInstanceRequest()
 	req.Name = ucloud.String(name)
-	req.Zone = ucloud.String(zone)       // TODO: use random zone
-	req.ImageId = ucloud.String(imageID) // TODO: use random image
+	req.Zone = ucloud.String(zone)
+	req.ImageId = ucloud.String(imageId)
 	req.LoginMode = ucloud.String("Password")
 	req.Password = ucloud.String("somePassword_")
 	req.ChargeType = ucloud.String("Dynamic")

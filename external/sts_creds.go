@@ -11,6 +11,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/metadata"
 )
 
+const internalBaseUrl = "http://api.service.ucloud.cn"
+
 type AssumeRoleRequest struct {
 	RoleName string
 }
@@ -35,9 +37,10 @@ type assumeRoleData struct {
 	PrivateKey    string
 	ProjectID     string
 	PublicKey     string
-	RoleName      string
+	CharacterName string
 	SecurityToken string
 	UHostID       string
+	UPHostId      string
 }
 
 type assumeRoleResponse struct {
@@ -47,7 +50,7 @@ type assumeRoleResponse struct {
 }
 
 func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvider, error) {
-	path := "/ram/token"
+	path := "/meta-data/v1/uam/security-credentials"
 	if len(req.RoleName) != 0 {
 		path += "/" + req.RoleName
 	}
@@ -62,6 +65,16 @@ func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvid
 		return nil, errors.Errorf("failed to decode sts credential, %s", err)
 	}
 
+	region, err := client.SendRequest("/meta-data/latest/uhost/region")
+	if err != nil {
+		return nil, err
+	}
+
+	zone, err := client.SendRequest("/meta-data/latest/uhost/zone")
+	if err != nil {
+		return nil, err
+	}
+
 	roleData := roleResp.Data
 	stsConfig := &config{
 		CanExpire:     true,
@@ -70,6 +83,9 @@ func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvid
 		PublicKey:     roleData.PublicKey,
 		SecurityToken: roleData.SecurityToken,
 		ProjectId:     roleData.ProjectID,
+		Region:        region,
+		Zone:          zone,
+		BaseUrl:       internalBaseUrl,
 	}
 	return stsConfig, nil
 }

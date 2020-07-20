@@ -8,6 +8,8 @@ debug
 debug.test
 .vscode
 *.*~
+*.html
+*.json
 
 # Executable
 bin/
@@ -23,4 +25,5 @@ c.out
 examples/debug
 scripts/gen-apis.sh
 scripts/gen-tests.sh
+
 build/
