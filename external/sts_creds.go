@@ -65,12 +65,12 @@ func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvid
 		return nil, errors.Errorf("failed to decode sts credential, %s", err)
 	}
 
-	region, err := client.SendRequest("/meta-data/latest/uhost/region")
+	region, err := client.SendRequest("/meta-data/latest/region")
 	if err != nil {
 		return nil, err
 	}
 
-	zone, err := client.SendRequest("/meta-data/latest/uhost/zone")
+	zone, err := client.SendRequest("/meta-data/latest/availability-zone")
 	if err != nil {
 		return nil, err
 	}

@@ -182,6 +182,27 @@ func TestClient_http_mock(t *testing.T) {
 			},
 			GoldenErr: true,
 		},
+		{
+			InputVector: "ResponseBodyError",
+			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				b := `"{}"`
+				if err := httpResponse.SetBody([]byte(b)); err != nil {
+					return err
+				}
+				return uerr.NewResponseBodyError(nil, string(httpResponse.GetBody()))
+			},
+			GoldenErr: true,
+		},
+		{
+			InputVector: "NullResponseBodyError",
+			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				if err := httpResponse.SetBody(nil); err != nil {
+					return err
+				}
+				return uerr.NewNullResponseBodyError()
+			},
+			GoldenErr: true,
+		},
 	}
 	for _, test := range tests {
 		client := newTestClient()

@@ -71,6 +71,9 @@ func errorHandler(c *Client, req request.Common, resp response.Common, err error
 		if uerr.IsNetworkError(err) {
 			return resp, uerr.NewClientError(uerr.ErrNetwork, err)
 		}
+		if bodyError, ok := err.(uerr.BodyError); ok {
+			return resp, bodyError
+		}
 		return resp, uerr.NewClientError(uerr.ErrSendRequest, err)
 	}
 
