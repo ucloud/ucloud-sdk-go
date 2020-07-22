@@ -62,10 +62,11 @@ func NewServerCodeError(retCode int, message string) ServerError {
 func NewResponseBodyError(err error, body string) ServerError {
 	message := fmt.Sprintf("response body\n[%v] got error, %s", body, err)
 	return ServerError{
-		name:      ErrResponseBodyError,
-		err:       fmt.Errorf("%s", message),
-		message:   message,
-		retryable: false,
+		name:       ErrResponseBodyError,
+		err:        fmt.Errorf("%s", message),
+		message:    message,
+		statusCode: 200,
+		retryable:  false,
 	}
 }
 
@@ -73,10 +74,11 @@ func NewResponseBodyError(err error, body string) ServerError {
 func NewEmptyResponseBodyError() ServerError {
 	message := fmt.Sprintf("response body got empty")
 	return ServerError{
-		name:      ErrEmptyResponseBodyError,
-		err:       fmt.Errorf("%s", message),
-		message:   message,
-		retryable: false,
+		name:       ErrEmptyResponseBodyError,
+		err:        fmt.Errorf("%s", message),
+		message:    message,
+		statusCode: 200,
+		retryable:  false,
 	}
 }
 
