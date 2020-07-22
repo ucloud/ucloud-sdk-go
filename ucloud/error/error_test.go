@@ -50,6 +50,28 @@ func TestServerError(t *testing.T) {
 	assert.Error(t, err.OriginError())
 	assert.Equal(t, err.Retryable(), false)
 	assert.Equal(t, err.StatusCode(), 400)
+
+	err = NewResponseBodyError(nil, "o")
+
+	assert.NotZero(t, err.Error())
+	assert.NotZero(t, err.Message())
+	assert.False(t, IsCodeError(err))
+	assert.Equal(t, err.Name(), ErrResponseBodyError)
+	assert.Equal(t, err.Code(), 0)
+	assert.Error(t, err.OriginError())
+	assert.Equal(t, err.Retryable(), false)
+	assert.Equal(t, err.StatusCode(), 200)
+
+	err = NewEmptyResponseBodyError()
+
+	assert.NotZero(t, err.Error())
+	assert.NotZero(t, err.Message())
+	assert.False(t, IsCodeError(err))
+	assert.Equal(t, err.Name(), ErrEmptyResponseBodyError)
+	assert.Equal(t, err.Code(), 0)
+	assert.Error(t, err.OriginError())
+	assert.Equal(t, err.Retryable(), false)
+	assert.Equal(t, err.StatusCode(), 200)
 }
 
 func TestRetryableError(t *testing.T) {

@@ -2,6 +2,10 @@ package ucloud
 
 import (
 	"fmt"
+	"reflect"
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
@@ -10,9 +14,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
-	"reflect"
-	"testing"
-	"time"
 )
 
 type clientFactory func() Client
@@ -25,7 +26,7 @@ type ClientTestCase struct {
 	Name        string
 	InputVector clientFactory          // client factory to create test client
 	Mock        map[string]interface{} // mock data for http client, see `ucloud/helpers/mock`
-	Golden      clientCaseGolden       // return data
+	Golden      *clientCaseGolden      // return data
 	Error       string                 // error contained message, if not empty, means expect an error raised
 }
 
@@ -35,7 +36,7 @@ func TestClient(t *testing.T) {
 			Name:        "basic",
 			InputVector: newTestClient,
 			Mock:        map[string]interface{}{"Action": "Test", "RetCode": 0},
-			Golden:      clientCaseGolden{Action: "Test", RetCode: 0},
+			Golden:      &clientCaseGolden{Action: "Test", RetCode: 0},
 		},
 		{
 			Name:        "notFound",
@@ -45,7 +46,7 @@ func TestClient(t *testing.T) {
 				"RetCode": 161,
 				"Message": "Action [Test] not found",
 			},
-			Golden: clientCaseGolden{Action: "Test", RetCode: 161},
+			Golden: &clientCaseGolden{Action: "Test", RetCode: 161},
 			Error:  "not found",
 		},
 		{
@@ -59,7 +60,7 @@ func TestClient(t *testing.T) {
 				return client
 			},
 			Mock:   nil,
-			Golden: clientCaseGolden{Action: "Echo", RetCode: 0},
+			Golden: &clientCaseGolden{Action: "Echo", RetCode: 0},
 		},
 		{
 			Name: "requestHandler",
@@ -72,7 +73,7 @@ func TestClient(t *testing.T) {
 				return client
 			},
 			Mock:   nil,
-			Golden: clientCaseGolden{Action: "Echo", RetCode: 0},
+			Golden: &clientCaseGolden{Action: "Echo", RetCode: 0},
 		},
 		{
 			Name: "httpResponseHandler",
@@ -85,7 +86,7 @@ func TestClient(t *testing.T) {
 				return client
 			},
 			Mock:   nil,
-			Golden: clientCaseGolden{Action: "Mock", RetCode: 42},
+			Golden: &clientCaseGolden{Action: "Mock", RetCode: 42},
 		},
 		{
 			Name: "responseHandler",
@@ -100,7 +101,7 @@ func TestClient(t *testing.T) {
 				return client
 			},
 			Mock:   nil,
-			Golden: clientCaseGolden{Action: "Mock", RetCode: 42},
+			Golden: &clientCaseGolden{Action: "Mock", RetCode: 42},
 		},
 		{
 			Name: "invalidHTTPRequest",
@@ -146,21 +147,30 @@ func TestClient(t *testing.T) {
 
 			assert.Equal(t, resp.RetCode, test.Golden.RetCode)
 		} else {
-			assert.Error(t, err)
-			assert.Contains(t, err.Error(), test.Error)
+			if !assert.Error(t, err) {
+				t.FailNow()
+			}
+			if !assert.Contains(t, err.Error(), test.Error) {
+				t.FailNow()
+			}
 
-			if retCodeErr, ok := err.(uerr.ServerError); ok && test.Golden.RetCode != 0 {
-				assert.Equal(t, test.Golden.RetCode, retCodeErr.Code())
+			if test.Golden != nil {
+				retCodeErr, ok := err.(uerr.ServerError)
+				if !assert.Equal(t, ok, true) {
+					t.FailNow()
+				}
+				assert.Equal(t, retCodeErr.Code(), test.Golden.RetCode)
 			}
 		}
 	}
 }
 
 type httpMockedTest struct {
-	InputVector  string
-	MockedVector mock.Func
-	Golden       interface{}
-	GoldenErr    bool
+	InputVector   string
+	MockedVector  mock.Func
+	Golden        interface{}
+	GoldenErr     bool
+	GoldenErrName string
 }
 
 func TestClient_http_mock(t *testing.T) {
@@ -171,7 +181,8 @@ func TestClient_http_mock(t *testing.T) {
 				httpResponse.SetStatusCode(400)
 				return http.NewStatusError(400, "Bad Request")
 			},
-			GoldenErr: true,
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrHTTPStatus,
 		},
 		{
 			InputVector: "HTTPMockStatus400WithRequestUUID",
@@ -180,7 +191,31 @@ func TestClient_http_mock(t *testing.T) {
 				httpResponse.SetStatusCode(400)
 				return http.NewStatusError(400, "Bad Request")
 			},
-			GoldenErr: true,
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrHTTPStatus,
+		},
+		{
+			InputVector: "ResponseBodyError",
+			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				b := `"{}"`
+				if err := httpResponse.SetBody([]byte(b)); err != nil {
+					return err
+				}
+				return nil
+			},
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrResponseBodyError,
+		},
+		{
+			InputVector: "EmptyResponseBodyError",
+			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
+				if err := httpResponse.SetBody(nil); err != nil {
+					return err
+				}
+				return nil
+			},
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrEmptyResponseBodyError,
 		},
 	}
 	for _, test := range tests {
@@ -191,7 +226,16 @@ func TestClient_http_mock(t *testing.T) {
 		var resp MockResponse
 		err := client.InvokeAction(test.InputVector, &MockRequest{}, &resp)
 		if test.GoldenErr {
-			assert.Error(t, err)
+			if !assert.Error(t, err) {
+				t.FailNow()
+			}
+			if len(test.GoldenErrName) > 0 {
+				uErr, ok := err.(uerr.Error)
+				if !assert.Equal(t, ok, true) {
+					t.FailNow()
+				}
+				assert.Equal(t, uErr.Name(), test.GoldenErrName)
+			}
 		} else {
 			assert.NoError(t, err)
 			assert.Equal(t, test.Golden, resp)
@@ -259,7 +303,7 @@ func TestGenericClient(t *testing.T) {
 			Name:        "generic_ok",
 			InputVector: newTestClient,
 			Mock:        map[string]interface{}{"Action": "Test", "Message": "", "RetCode": 0.0},
-			Golden:      clientCaseGolden{Action: "Test", RetCode: 0},
+			Golden:      &clientCaseGolden{Action: "Test", RetCode: 0},
 			Error:       "",
 		},
 
@@ -267,7 +311,7 @@ func TestGenericClient(t *testing.T) {
 			Name:        "generic_no",
 			InputVector: newTestClient,
 			Mock:        map[string]interface{}{"Action": "Test", "Message": "Action [Test] not found", "RetCode": 161},
-			Golden:      clientCaseGolden{Action: "Test", RetCode: 0},
+			Golden:      &clientCaseGolden{Action: "Test", RetCode: 161},
 			Error:       "not found",
 		},
 	}
@@ -290,12 +334,17 @@ func TestGenericClient(t *testing.T) {
 			assert.Equal(t, resp.GetRetCode(), test.Golden.RetCode)
 			assert.Equal(t, test.Mock, resp.GetPayload())
 		} else {
-			assert.Error(t, err)
-			assert.Contains(t, err.Error(), test.Error)
-
-			if retCodeErr, ok := err.(uerr.ServerError); ok && test.Golden.RetCode != 0 {
-				assert.Equal(t, test.Golden.RetCode, retCodeErr.Code())
+			if !assert.Error(t, err) {
+				t.FailNow()
 			}
+			if !assert.Contains(t, err.Error(), test.Error) {
+				t.FailNow()
+			}
+			retCodeErr, ok := err.(uerr.ServerError)
+			if !assert.Equal(t, ok, true) {
+				t.FailNow()
+			}
+			assert.Equal(t, retCodeErr.Code(), test.Golden.RetCode)
 		}
 	}
 }
