@@ -3,9 +3,10 @@ package ucloud
 import (
 	"encoding/json"
 	"fmt"
-	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 	"runtime"
 	"strings"
+
+	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 
 	"github.com/pkg/errors"
 
@@ -78,7 +79,7 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 // unmarshalHTTPResponse will get body from http response and unmarshal it's data into response struct
 func (c *Client) unmarshalHTTPResponse(body []byte, resp response.Common) error {
 	if len(body) == 0 {
-		return uerr.NewNullResponseBodyError()
+		return uerr.NewEmptyResponseBodyError()
 	}
 
 	if r, ok := resp.(response.GenericResponse); ok {

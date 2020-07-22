@@ -11,6 +11,10 @@ var (
 	ErrHTTPStatus = "server.HTTPStatusError"
 	// ErrRetCode is error type of server return code is larger than 0
 	ErrRetCode = "server.RetCodeError"
+	// ErrResponseBodyError is error type of server response body
+	ErrResponseBodyError = "body.ResponseBodyError"
+	// ErrEmptyResponseBodyError is empty of server response body
+	ErrEmptyResponseBodyError = "body.EmptyResponseBodyError"
 )
 
 // ServerError is the ucloud common error for server response
@@ -51,6 +55,28 @@ func NewServerCodeError(retCode int, message string) ServerError {
 		name:       ErrRetCode,
 		err:        errors.Errorf("%s", message),
 		retryable:  retCode >= 2000,
+	}
+}
+
+// NewResponseBodyError will create a new response body error
+func NewResponseBodyError(err error, body string) ServerError {
+	message := fmt.Sprintf("response body\n[%v] got error, %s", body, err)
+	return ServerError{
+		name:      ErrResponseBodyError,
+		err:       fmt.Errorf("%s", message),
+		message:   message,
+		retryable: false,
+	}
+}
+
+// NewEmptyResponseBodyError will create a new response body error
+func NewEmptyResponseBodyError() ServerError {
+	message := fmt.Sprintf("response body got empty")
+	return ServerError{
+		name:      ErrEmptyResponseBodyError,
+		err:       fmt.Errorf("%s", message),
+		message:   message,
+		retryable: false,
 	}
 }
 

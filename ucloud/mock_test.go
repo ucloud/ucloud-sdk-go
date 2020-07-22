@@ -2,6 +2,10 @@ package ucloud
 
 import (
 	"fmt"
+	"reflect"
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
@@ -10,9 +14,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
-	"reflect"
-	"testing"
-	"time"
 )
 
 type clientFactory func() Client
@@ -157,10 +158,11 @@ func TestClient(t *testing.T) {
 }
 
 type httpMockedTest struct {
-	InputVector  string
-	MockedVector mock.Func
-	Golden       interface{}
-	GoldenErr    bool
+	InputVector   string
+	MockedVector  mock.Func
+	Golden        interface{}
+	GoldenErr     bool
+	GoldenErrName string
 }
 
 func TestClient_http_mock(t *testing.T) {
@@ -171,7 +173,8 @@ func TestClient_http_mock(t *testing.T) {
 				httpResponse.SetStatusCode(400)
 				return http.NewStatusError(400, "Bad Request")
 			},
-			GoldenErr: true,
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrHTTPStatus,
 		},
 		{
 			InputVector: "HTTPMockStatus400WithRequestUUID",
@@ -180,7 +183,8 @@ func TestClient_http_mock(t *testing.T) {
 				httpResponse.SetStatusCode(400)
 				return http.NewStatusError(400, "Bad Request")
 			},
-			GoldenErr: true,
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrHTTPStatus,
 		},
 		{
 			InputVector: "ResponseBodyError",
@@ -189,19 +193,21 @@ func TestClient_http_mock(t *testing.T) {
 				if err := httpResponse.SetBody([]byte(b)); err != nil {
 					return err
 				}
-				return uerr.NewResponseBodyError(nil, string(httpResponse.GetBody()))
+				return nil
 			},
-			GoldenErr: true,
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrResponseBodyError,
 		},
 		{
-			InputVector: "NullResponseBodyError",
+			InputVector: "EmptyResponseBodyError",
 			MockedVector: func(httpRequest *http.HttpRequest, httpResponse *http.HttpResponse) error {
 				if err := httpResponse.SetBody(nil); err != nil {
 					return err
 				}
-				return uerr.NewNullResponseBodyError()
+				return nil
 			},
-			GoldenErr: true,
+			GoldenErr:     true,
+			GoldenErrName: uerr.ErrEmptyResponseBodyError,
 		},
 	}
 	for _, test := range tests {
@@ -212,7 +218,16 @@ func TestClient_http_mock(t *testing.T) {
 		var resp MockResponse
 		err := client.InvokeAction(test.InputVector, &MockRequest{}, &resp)
 		if test.GoldenErr {
-			assert.Error(t, err)
+			if !assert.Error(t, err) {
+				t.FailNow()
+			}
+			if len(test.GoldenErrName) > 0 {
+				uErr, ok := err.(uerr.Error)
+				if !assert.Equal(t, ok, true) {
+					t.FailNow()
+				}
+				assert.Equal(t, uErr.Name(), test.GoldenErrName)
+			}
 		} else {
 			assert.NoError(t, err)
 			assert.Equal(t, test.Golden, resp)
