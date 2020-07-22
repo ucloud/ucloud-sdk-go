@@ -12,9 +12,9 @@ var (
 	// ErrRetCode is error type of server return code is larger than 0
 	ErrRetCode = "server.RetCodeError"
 	// ErrResponseBodyError is error type of server response body
-	ErrResponseBodyError = "body.ResponseBodyError"
+	ErrResponseBodyError = "server.ResponseBodyError"
 	// ErrEmptyResponseBodyError is empty of server response body
-	ErrEmptyResponseBodyError = "body.EmptyResponseBodyError"
+	ErrEmptyResponseBodyError = "server.EmptyResponseBodyError"
 )
 
 // ServerError is the ucloud common error for server response
