@@ -17,7 +17,6 @@ const imageID = "uimage-33ey05"
 func main() {
 	cfg, credential := loadConfig()
 	client := ucloud.NewClient(cfg, credential)
-	
 	password := base64.StdEncoding.EncodeToString([]byte("ucloud_password_test"))
 	reqCreate := client.NewGenericRequest()
 	err := reqCreate.SetPayload(map[string]interface{}{
