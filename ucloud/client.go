@@ -165,9 +165,11 @@ func (c *Client) InvokeActionWithPatcher(action string, req request.Common, resp
 		}
 
 		err = c.unmarshalHTTPResponse(body, resp)
-
-		uuid := httpResp.GetHeaders().Get(headerKeyRequestUUID)
-		resp.SetRequestUUID(uuid)
+	}
+	// try to get request uuid
+	if httpResp != nil {
+		requestUUID := httpResp.GetHeaders().Get(headerKeyRequestUUID)
+		resp.SetRequestUUID(requestUUID)
 	}
 
 	// use response middle to build and convert response when response has been created.

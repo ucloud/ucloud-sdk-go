@@ -99,24 +99,25 @@ func logHandler(c *Client, req request.Common, resp response.Common, err error) 
 	// get strictest logging level
 	level := c.config.GetActionLevel(action)
 
+	// try to get request uuid
+	requestUUID := ""
+	if resp != nil {
+		requestUUID = resp.GetRequestUUID()
+	}
+	if requestUUID == "" {
+		requestUUID = "*"
+	}
+
 	if err != nil && level >= log.WarnLevel {
-		c.logger.Warnf("do %s failed, %s", action, err)
+		c.logger.Warnf("[%s] do %s failed, %s", requestUUID, action, err)
 	} else if level >= log.InfoLevel {
-		c.logger.Infof("do %s successful!", action)
+		c.logger.Infof("[%s] do %s successful!", requestUUID, action)
 	}
 	return resp, err
 }
 
 func logDebugHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpResponse, err error) (*http.HttpResponse, error) {
 	action := req.GetQuery("Action")
-
-	// logging request
-	c.logActionDebugf(action, "%s", req)
-
-	// logging error
-	if err != nil {
-		c.logActionErrorf(action, "%s", err)
-	}
 
 	// try to get request uuid
 	requestUUID := ""
@@ -125,6 +126,14 @@ func logDebugHTTPHandler(c *Client, req *http.HttpRequest, resp *http.HttpRespon
 	}
 	if requestUUID == "" {
 		requestUUID = "*"
+	}
+
+	// logging request
+	c.logActionDebugf(action, "[%s] %s", requestUUID, req)
+
+	// logging error
+	if err != nil {
+		c.logActionErrorf(action, "[%s] %s", requestUUID, err)
 	}
 
 	// logging response code text
