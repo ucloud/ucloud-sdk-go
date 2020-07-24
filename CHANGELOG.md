@@ -1,3 +1,12 @@
+## 0.16.5 (2020-07-24)
+
+ENHANCEMENTS:
+
+- update response logging about request uuid (#72)
+- Add `ErrResponseBodyError` and `ErrEmptyResponseBodyError` as `ServerError`  (#171)
+- Update external `LoadSTSConfig` about `Region` and `Zone` to be compatible with `UPHost` and another. (#171)
+- refine the public and private keys example order
+
 ## 0.16.4 (2020-07-08)
 
 ENHANCEMENTS:
