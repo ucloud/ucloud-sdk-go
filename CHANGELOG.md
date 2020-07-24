@@ -2,7 +2,7 @@
 
 ENHANCEMENTS:
 
-- update response logging about request uuid (#72)
+- update response logging about request uuid (#172)
 - Add `ErrResponseBodyError` and `ErrEmptyResponseBodyError` as `ServerError`  (#171)
 - Update external `LoadSTSConfig` about `Region` and `Zone` to be compatible with `UPHost` and another. (#171)
 - refine the public and private keys example order
