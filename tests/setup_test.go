@@ -150,9 +150,6 @@ func testSetup() {
 	spec.AddFixture("UBill", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ubill.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UCloudStack", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ucloudstack.NewClient(&ustackCfg, &ustackCred), nil
-	}))
 	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udb.NewClient(&cfg, &credential), nil
 	}))

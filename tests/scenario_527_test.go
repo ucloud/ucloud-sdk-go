@@ -7,107 +7,65 @@ import (
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/services/udisk"
-	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
 )
 
-func TestScenario521(t *testing.T) {
+func TestScenario527(t *testing.T) {
 	spec.ParallelTest(t, &driver.Scenario{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Id: "521",
+		Id: "527",
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
-				"DiskType":       "DataDisk",
-				"Size":           1,
-				"UDataArkMode":   "Yes",
-				"Name":           "udisk_fz",
-				"imageid":        "#{u_get_image_resource($Region,$Zone)}",
-				"miaojifangzhou": scenario.Must(functions.Calculate("+", scenario.Must(functions.GetTimestamp(10)), 200)),
-				"Region":         "cn-bj2",
-				"Zone":           "cn-bj2-02",
+				"DiskType":                  "DataDisk",
+				"Size":                      1,
+				"UDataArkMode":              "Yes",
+				"Name":                      "udisk_ark",
+				"snapshot_name1":            "udisk_ark_snap1",
+				"snapshot_name2":            "udisk_ark_snap2",
+				"snapshot_comment1":         "snap1_comment",
+				"snapshot_comment2":         "snap2_comment",
+				"udiskName_ark_snapclone":   "udisk_ark_snapclone",
+				"udiskName_noark_snapclone": "udisk_noark_snapclone",
+				"Region":                    "cn-bj2",
+				"Zone":                      "cn-bj2-02",
 			}
 		},
 		Owners: []string{"chenoa.chen@ucloud.cn"},
-		Title:  "UDisk-普通方舟盘_01",
+		Title:  "UDisk-普通方舟盘_04",
 		Steps: []*driver.Step{
-			testStep521DescribeImage01,
-			testStep521DescribeUDiskPrice02,
-			testStep521CheckUDiskAllowance03,
-			testStep521CreateUDisk04,
-			testStep521DescribeUDisk05,
-			testStep521RenameUDisk06,
-			testStep521DescribeUDisk07,
-			testStep521DescribeImage08,
-			testStep521CreateUHostInstance09,
-			testStep521DescribeUHostInstance10,
-			testStep521DescribeUHostInstance11,
-			testStep521DescribeUHostLite12,
-			testStep521AttachUDisk13,
-			testStep521DescribeUDisk14,
-			testStep521DescribeVDiskTmList15,
-			testStep521CheckUDiskAllowance16,
-			testStep521CloneUDiskUDataArk17,
-			testStep521DescribeUDisk18,
-			testStep521DeleteUDisk19,
-			testStep521DetachUDisk20,
-			testStep521DescribeUDisk21,
-			testStep521RestoreUDisk22,
-			testStep521DescribeUDisk23,
-			testStep521DeleteUDisk24,
-			testStep521PoweroffUHostInstance25,
-			testStep521DescribeUHostInstance26,
-			testStep521TerminateUHostInstance27,
+			testStep527DescribeUDiskPrice01,
+			testStep527CheckUDiskAllowance02,
+			testStep527CreateUDisk03,
+			testStep527DescribeUDisk04,
+			testStep527SetUDiskUDataArkMode05,
+			testStep527DescribeUDisk06,
+			testStep527CreateUDiskSnapshot07,
+			testStep527DescribeUDiskSnapshot08,
+			testStep527UpdateUDiskSnapshotInfo09,
+			testStep527DescribeUDiskSnapshot10,
+			testStep527CloneUDiskSnapshot11,
+			testStep527DescribeUDisk12,
+			testStep527CloneUDiskSnapshot13,
+			testStep527DescribeUDisk14,
+			testStep527RestoreUDisk15,
+			testStep527DescribeUDisk16,
+			testStep527DeleteUDiskSnapshot17,
+			testStep527DescribeUDiskSnapshot18,
+			testStep527DescribeUDisk19,
+			testStep527DeleteUDisk20,
+			testStep527DeleteUDisk21,
+			testStep527DeleteUDisk22,
+			testStep527DescribeRecycleUDisk23,
 		},
 	})
 }
 
-var testStep521DescribeImage01 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*uhost.UHostClient)
-
-		req := client.NewDescribeImageRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":      step.Scenario.GetVar("Zone"),
-			"Region":    step.Scenario.GetVar("Region"),
-			"OsType":    "Linux",
-			"ImageType": "Base",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeImage(req)
-		if err != nil {
-			return resp, err
-		}
-
-		step.Scenario.SetVar("imageid", step.Must(utils.GetValue(resp, "ImageSet.0.ImageId")))
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeImageResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取镜像列表",
-	FastFail:      false,
-}
-
-var testStep521DescribeUDiskPrice02 = &driver.Step{
+var testStep527DescribeUDiskPrice01 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -139,16 +97,17 @@ var testStep521DescribeUDiskPrice02 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskPriceResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
 	Title:         "获取云硬盘价格",
 	FastFail:      false,
 }
 
-var testStep521CheckUDiskAllowance03 = &driver.Step{
+var testStep527CheckUDiskAllowance02 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -162,7 +121,7 @@ var testStep521CheckUDiskAllowance03 = &driver.Step{
 			"Zone":   step.Scenario.GetVar("Zone"),
 			"Size":   step.Scenario.GetVar("Size"),
 			"Region": step.Scenario.GetVar("Region"),
-			"Count":  1,
+			"Count":  3,
 		})
 		if err != nil {
 			return nil, err
@@ -177,16 +136,17 @@ var testStep521CheckUDiskAllowance03 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CheckUDiskAllowanceResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "检查UDisk资源余量",
-	FastFail:      true,
+	FastFail:      false,
 }
 
-var testStep521CreateUDisk04 = &driver.Step{
+var testStep527CreateUDisk03 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -214,22 +174,23 @@ var testStep521CreateUDisk04 = &driver.Step{
 			return resp, err
 		}
 
-		step.Scenario.SetVar("udisk_fz_id", step.Must(utils.GetValue(resp, "UDiskId.0")))
+		step.Scenario.SetVar("udisk_id", step.Must(utils.GetValue(resp, "UDiskId.0")))
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateUDiskResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(1) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
 	Title:         "创建云硬盘",
 	FastFail:      false,
 }
 
-var testStep521DescribeUDisk05 = &driver.Step{
+var testStep527DescribeUDisk04 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -240,7 +201,7 @@ var testStep521DescribeUDisk05 = &driver.Step{
 		req := client.NewDescribeUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
+			"UDiskId": step.Scenario.GetVar("udisk_id"),
 			"Region":  step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
@@ -258,18 +219,20 @@ var testStep521DescribeUDisk05 = &driver.Step{
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("Name"), "str_eq"),
 			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
-			validation.Builtins.NewValidator("DataSet.0.Tag", "Default", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Size", step.Scenario.GetVar("Size"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.UDataArkMode", "Yes", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	MaxRetries:    60,
+	RetryInterval: 3 * time.Second,
 	Title:         "获取云硬盘列表",
 	FastFail:      false,
 }
 
-var testStep521RenameUDisk06 = &driver.Step{
+var testStep527SetUDiskUDataArkMode05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -277,18 +240,18 @@ var testStep521RenameUDisk06 = &driver.Step{
 		}
 		client := c.(*udisk.UDiskClient)
 
-		req := client.NewRenameUDiskRequest()
+		req := client.NewSetUDiskUDataArkModeRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":      step.Scenario.GetVar("Zone"),
-			"UDiskName": step.Must(functions.Concat("auto_", step.Scenario.GetVar("Name"))),
-			"UDiskId":   step.Scenario.GetVar("udisk_fz_id"),
-			"Region":    step.Scenario.GetVar("Region"),
+			"Zone":         step.Scenario.GetVar("Zone"),
+			"UDiskId":      step.Scenario.GetVar("udisk_id"),
+			"UDataArkMode": "No",
+			"Region":       step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.RenameUDisk(req)
+		resp, err := client.SetUDiskUDataArkMode(req)
 		if err != nil {
 			return resp, err
 		}
@@ -303,11 +266,11 @@ var testStep521RenameUDisk06 = &driver.Step{
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    0,
 	RetryInterval: 0 * time.Second,
-	Title:         "重命名云硬盘",
+	Title:         "设置UDisk数据方舟的状态",
 	FastFail:      false,
 }
 
-var testStep521DescribeUDisk07 = &driver.Step{
+var testStep527DescribeUDisk06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -318,10 +281,8 @@ var testStep521DescribeUDisk07 = &driver.Step{
 		req := client.NewDescribeUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
+			"UDiskId": step.Scenario.GetVar("udisk_id"),
 			"Region":  step.Scenario.GetVar("Region"),
-			"Offset":  0,
-			"Limit":   100,
 		})
 		if err != nil {
 			return nil, err
@@ -337,130 +298,77 @@ var testStep521DescribeUDisk07 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("DataSet.0.Name", step.Must(functions.Concat("auto_", step.Scenario.GetVar("Name"))), "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("Name"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.UDataArkMode", "No", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    10,
+	RetryInterval: 2 * time.Second,
 	Title:         "获取云硬盘列表",
 	FastFail:      false,
 }
 
-var testStep521DescribeImage08 = &driver.Step{
+var testStep527CreateUDiskSnapshot07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
+		c, err := step.LoadFixture("UDisk")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*uhost.UHostClient)
+		client := c.(*udisk.UDiskClient)
 
-		req := client.NewDescribeImageRequest()
+		req := client.NewCreateUDiskSnapshotRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":      step.Scenario.GetVar("Zone"),
-			"Region":    step.Scenario.GetVar("Region"),
-			"OsType":    "Linux",
-			"ImageType": "Base",
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UDiskId": step.Scenario.GetVar("udisk_id"),
+			"Region":  step.Scenario.GetVar("Region"),
+			"Name":    step.Scenario.GetVar("snapshot_name1"),
+			"Comment": step.Scenario.GetVar("snapshot_comment1"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.DescribeImage(req)
+		resp, err := client.CreateUDiskSnapshot(req)
 		if err != nil {
 			return resp, err
 		}
 
-		step.Scenario.SetVar("imageid", step.Must(utils.GetValue(resp, "ImageSet.0.ImageId")))
+		step.Scenario.SetVar("snapshot_id", step.Must(utils.GetValue(resp, "SnapshotId.0")))
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeImageResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "获取镜像列表",
+	Title:         "创建快照",
 	FastFail:      false,
 }
 
-var testStep521CreateUHostInstance09 = &driver.Step{
+var testStep527DescribeUDiskSnapshot08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
+		c, err := step.LoadFixture("UDisk")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*uhost.UHostClient)
+		client := c.(*udisk.UDiskClient)
 
-		req := client.NewCreateUHostInstanceRequest()
+		req := client.NewDescribeUDiskSnapshotRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":               step.Scenario.GetVar("Zone"),
-			"UHostType":          "Normal",
-			"TimemachineFeature": "No",
-			"StorageType":        "LocalDisk",
-			"Region":             step.Scenario.GetVar("Region"),
-			"Quantity":           0,
-			"Password":           "VXFhNzg5VGVzdCFAIyQ7LA==",
-			"NetCapability":      "Normal",
-			"Name":               "auto_uhost-同AZ",
-			"Memory":             1024,
-			"LoginMode":          "Password",
-			"ImageId":            step.Scenario.GetVar("imageid"),
-			"HotplugFeature":     "false",
-			"HostType":           "N2",
-			"DiskSpace":          0,
-			"ChargeType":         "Month",
-			"CPU":                1,
-			"BootDiskSpace":      20,
+			"Zone":       step.Scenario.GetVar("Zone"),
+			"SnapshotId": step.Scenario.GetVar("snapshot_id"),
+			"Region":     step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.CreateUHostInstance(req)
-		if err != nil {
-			return resp, err
-		}
-
-		step.Scenario.SetVar("uhost_id", step.Must(utils.GetValue(resp, "UHostIds.0")))
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "创建云主机",
-	FastFail:      false,
-}
-
-var testStep521DescribeUHostInstance10 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*uhost.UHostClient)
-
-		req := client.NewDescribeUHostInstanceRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone": step.Scenario.GetVar("Zone"),
-			"UHostIds": []interface{}{
-				step.Scenario.GetVar("uhost_id"),
-			},
-			"Region": step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeUHostInstance(req)
+		resp, err := client.DescribeUDiskSnapshot(req)
 		if err != nil {
 			return resp, err
 		}
@@ -470,58 +378,20 @@ var testStep521DescribeUHostInstance10 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeUHostInstanceResponse", "str_eq"),
-			validation.Builtins.NewValidator("UHostSet.0.UHostId", step.Scenario.GetVar("uhost_id"), "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskSnapshotResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Normal", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("snapshot_name1"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Comment", step.Scenario.GetVar("snapshot_comment1"), "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(30) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 2 * time.Second,
-	Title:         "获取主机信息",
+	StartupDelay:  time.Duration(60) * time.Second,
+	MaxRetries:    60,
+	RetryInterval: 6 * time.Second,
+	Title:         "获取快照列表",
 	FastFail:      false,
 }
 
-var testStep521DescribeUHostInstance11 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*uhost.UHostClient)
-
-		req := client.NewDescribeUHostInstanceRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone": step.Scenario.GetVar("Zone"),
-			"UHostIds": []interface{}{
-				step.Scenario.GetVar("uhost_id"),
-			},
-			"Region": step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeUHostInstance(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("UHostSet.0.State", "Running", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    120,
-	RetryInterval: 5 * time.Second,
-	Title:         "获取主机信息（验证状态）",
-	FastFail:      true,
-}
-
-var testStep521DescribeUHostLite12 = &driver.Step{
+var testStep527UpdateUDiskSnapshotInfo09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -530,12 +400,13 @@ var testStep521DescribeUHostLite12 = &driver.Step{
 		client := c.(*ucloud.Client)
 
 		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeUHostLite")
+		_ = req.SetAction("UpdateUDiskSnapshotInfo")
 		err = req.SetPayload(map[string]interface{}{
-			"Zone":   step.Scenario.GetVar("Zone"),
-			"Region": step.Scenario.GetVar("Region"),
-			"Offset": 0,
-			"Limit":  60,
+			"Zone":         step.Scenario.GetVar("Zone"),
+			"SnapshotName": step.Scenario.GetVar("snapshot_name2"),
+			"SnapshotId":   step.Scenario.GetVar("snapshot_id"),
+			"Region":       step.Scenario.GetVar("Region"),
+			"Comment":      step.Scenario.GetVar("snapshot_comment2"),
 		})
 		if err != nil {
 			return nil, err
@@ -550,55 +421,388 @@ var testStep521DescribeUHostLite12 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("TotalCount", 0, "ne"),
+			validation.Builtins.NewValidator("Action", "UpdateUDiskSnapshotInfoResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "更新云硬盘快照信息",
+	FastFail:      false,
+}
+
+var testStep527DescribeUDiskSnapshot10 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewDescribeUDiskSnapshotRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":       step.Scenario.GetVar("Zone"),
+			"SnapshotId": step.Scenario.GetVar("snapshot_id"),
+			"Region":     step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUDiskSnapshot(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskSnapshotResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Normal", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("snapshot_name2"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Comment", step.Scenario.GetVar("snapshot_comment2"), "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取快照列表",
+	FastFail:      false,
+}
+
+var testStep527CloneUDiskSnapshot11 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewCloneUDiskSnapshotRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":         step.Scenario.GetVar("Zone"),
+			"UDataArkMode": "Yes",
+			"SourceId":     step.Scenario.GetVar("snapshot_id"),
+			"Size":         step.Scenario.GetVar("Size"),
+			"Region":       step.Scenario.GetVar("Region"),
+			"Quantity":     0,
+			"Name":         step.Scenario.GetVar("udiskName_ark_snapclone"),
+			"ChargeType":   "Month",
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CloneUDiskSnapshot(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("udisk_id1_from_snap", step.Must(utils.GetValue(resp, "UDiskId.0")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CloneUDiskSnapshotResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "克隆快照",
+	FastFail:      false,
+}
+
+var testStep527DescribeUDisk12 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewDescribeUDiskRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UDiskId": step.Scenario.GetVar("udisk_id1_from_snap"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUDisk(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("udiskName_ark_snapclone"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Size", step.Scenario.GetVar("Size"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.UDataArkMode", "Yes", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(120) * time.Second,
+	MaxRetries:    90,
+	RetryInterval: 3 * time.Second,
+	Title:         "获取云硬盘列表",
+	FastFail:      false,
+}
+
+var testStep527CloneUDiskSnapshot13 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewCloneUDiskSnapshotRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":         step.Scenario.GetVar("Zone"),
+			"UDataArkMode": "No",
+			"SourceId":     step.Scenario.GetVar("snapshot_id"),
+			"Size":         step.Scenario.GetVar("Size"),
+			"Region":       step.Scenario.GetVar("Region"),
+			"Quantity":     0,
+			"Name":         step.Scenario.GetVar("udiskName_noark_snapclone"),
+			"ChargeType":   "Month",
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CloneUDiskSnapshot(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("udisk_id2_from_snap", step.Must(utils.GetValue(resp, "UDiskId.0")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CloneUDiskSnapshotResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(5) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 5 * time.Second,
+	Title:         "克隆快照",
+	FastFail:      false,
+}
+
+var testStep527DescribeUDisk14 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewDescribeUDiskRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UDiskId": step.Scenario.GetVar("udisk_id2_from_snap"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUDisk(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("udiskName_noark_snapclone"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Size", step.Scenario.GetVar("Size"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.UDataArkMode", "No", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(120) * time.Second,
+	MaxRetries:    60,
+	RetryInterval: 3 * time.Second,
+	Title:         "获取云硬盘列表",
+	FastFail:      false,
+}
+
+var testStep527RestoreUDisk15 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewRestoreUDiskRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":       step.Scenario.GetVar("Zone"),
+			"UDiskId":    step.Scenario.GetVar("udisk_id"),
+			"SnapshotId": step.Scenario.GetVar("snapshot_id"),
+			"Region":     step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.RestoreUDisk(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "RestoreUDiskResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(60) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "从备份恢复数据至UDisk",
+	FastFail:      false,
+}
+
+var testStep527DescribeUDisk16 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewDescribeUDiskRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":    step.Scenario.GetVar("Zone"),
+			"UDiskId": step.Scenario.GetVar("udisk_id"),
+			"Region":  step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUDisk(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Name", step.Scenario.GetVar("Name"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Size", step.Scenario.GetVar("Size"), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.UDataArkMode", "No", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(30) * time.Second,
+	MaxRetries:    90,
+	RetryInterval: 3 * time.Second,
+	Title:         "获取云硬盘列表",
+	FastFail:      false,
+}
+
+var testStep527DeleteUDiskSnapshot17 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewDeleteUDiskSnapshotRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":       step.Scenario.GetVar("Zone"),
+			"SnapshotId": step.Scenario.GetVar("snapshot_id"),
+			"Region":     step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteUDiskSnapshot(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteUDiskSnapshotResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 2 * time.Second,
+	Title:         "删除快照",
+	FastFail:      false,
+}
+
+var testStep527DescribeUDiskSnapshot18 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UDisk")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*udisk.UDiskClient)
+
+		req := client.NewDescribeUDiskSnapshotRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":       step.Scenario.GetVar("Zone"),
+			"SnapshotId": step.Scenario.GetVar("snapshot_id"),
+			"Region":     step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUDiskSnapshot(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUDiskSnapshotResponse", "str_eq"),
+			validation.Builtins.NewValidator("TotalCount", 0, "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(1) * time.Second,
 	MaxRetries:    3,
-	RetryInterval: 5 * time.Second,
-	Title:         "内部调用，列出UHost实例",
-	FastFail:      false,
-}
-
-var testStep521AttachUDisk13 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewAttachUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UHostId": step.Scenario.GetVar("uhost_id"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
-			"Region":  step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.AttachUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(110) * time.Second,
-	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "挂载云硬盘",
+	Title:         "获取快照列表",
 	FastFail:      false,
 }
 
-var testStep521DescribeUDisk14 = &driver.Step{
+var testStep527DescribeUDisk19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -608,169 +812,8 @@ var testStep521DescribeUDisk14 = &driver.Step{
 
 		req := client.NewDescribeUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
-			"Region":  step.Scenario.GetVar("Region"),
-			"Offset":  0,
-			"Limit":   100,
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("DataSet.0.Status", "InUse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(20) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取云硬盘列表",
-	FastFail:      false,
-}
-
-var testStep521DescribeVDiskTmList15 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeVDiskTmList")
-		err = req.SetPayload(map[string]interface{}{
-			"Zone":         step.Scenario.GetVar("Zone"),
-			"VDiskId":      step.Scenario.GetVar("udisk_fz_id"),
-			"SnapshotType": "all",
-			"Region":       step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeVDiskTmListResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "查询磁盘备份链",
-	FastFail:      false,
-}
-
-var testStep521CheckUDiskAllowance16 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CheckUDiskAllowance")
-		err = req.SetPayload(map[string]interface{}{
 			"Zone":   step.Scenario.GetVar("Zone"),
-			"Size":   step.Scenario.GetVar("Size"),
 			"Region": step.Scenario.GetVar("Region"),
-			"Count":  1,
-		})
-		if err != nil {
-			return nil, err
-		}
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "CheckUDiskAllowanceResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "检查UDisk资源余量",
-	FastFail:      false,
-}
-
-var testStep521CloneUDiskUDataArk17 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewCloneUDiskUDataArkRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":         step.Scenario.GetVar("Zone"),
-			"UDiskId":      step.Scenario.GetVar("udisk_fz_id"),
-			"UDataArkMode": "Yes",
-			"SnapshotTime": step.Scenario.GetVar("miaojifangzhou"),
-			"Region":       step.Scenario.GetVar("Region"),
-			"Name":         "miaojifangzhou",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.CloneUDiskUDataArk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		step.Scenario.SetVar("miaojifz_id", step.Must(utils.GetValue(resp, "UDiskId.0")))
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "CloneUDiskUDataArkResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(300) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "从数据方舟的备份创建UDisk",
-	FastFail:      false,
-}
-
-var testStep521DescribeUDisk18 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewDescribeUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("miaojifz_id"),
-			"Region":  step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
@@ -787,17 +830,16 @@ var testStep521DescribeUDisk18 = &driver.Step{
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
-			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(180) * time.Second,
-	MaxRetries:    60,
-	RetryInterval: 10 * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 3 * time.Second,
 	Title:         "获取云硬盘列表",
 	FastFail:      false,
 }
 
-var testStep521DeleteUDisk19 = &driver.Step{
+var testStep527DeleteUDisk20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -808,7 +850,7 @@ var testStep521DeleteUDisk19 = &driver.Step{
 		req := client.NewDeleteUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("miaojifz_id"),
+			"UDiskId": step.Scenario.GetVar("udisk_id"),
 			"Region":  step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
@@ -828,173 +870,14 @@ var testStep521DeleteUDisk19 = &driver.Step{
 			validation.Builtins.NewValidator("Action", "DeleteUDiskResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(60) * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除云硬盘",
 	FastFail:      false,
 }
 
-var testStep521DetachUDisk20 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewDetachUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UHostId": step.Scenario.GetVar("uhost_id"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
-			"Region":  step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DetachUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("UDiskId", step.Scenario.GetVar("udisk_fz_id"), "str_eq"),
-			validation.Builtins.NewValidator("UHostId", step.Scenario.GetVar("uhost_id"), "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "卸载云硬盘",
-	FastFail:      false,
-}
-
-var testStep521DescribeUDisk21 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewDescribeUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
-			"Region":  step.Scenario.GetVar("Region"),
-			"Offset":  0,
-			"Limit":   100,
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(120) * time.Second,
-	MaxRetries:    120,
-	RetryInterval: 3 * time.Second,
-	Title:         "获取云硬盘列表",
-	FastFail:      false,
-}
-
-var testStep521RestoreUDisk22 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewRestoreUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":         step.Scenario.GetVar("Zone"),
-			"UDiskId":      step.Scenario.GetVar("udisk_fz_id"),
-			"SnapshotTime": step.Scenario.GetVar("miaojifangzhou"),
-			"Region":       step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.RestoreUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "RestoreUDiskResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "从备份恢复数据至UDisk",
-	FastFail:      false,
-}
-
-var testStep521DescribeUDisk23 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewDescribeUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
-			"Region":  step.Scenario.GetVar("Region"),
-			"Offset":  0,
-			"Limit":   100,
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(160) * time.Second,
-	MaxRetries:    40,
-	RetryInterval: 10 * time.Second,
-	Title:         "获取云硬盘列表",
-	FastFail:      false,
-}
-
-var testStep521DeleteUDisk24 = &driver.Step{
+var testStep527DeleteUDisk21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -1005,7 +888,7 @@ var testStep521DeleteUDisk24 = &driver.Step{
 		req := client.NewDeleteUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":    step.Scenario.GetVar("Zone"),
-			"UDiskId": step.Scenario.GetVar("udisk_fz_id"),
+			"UDiskId": step.Scenario.GetVar("udisk_id1_from_snap"),
 			"Region":  step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
@@ -1022,34 +905,35 @@ var testStep521DeleteUDisk24 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteUDiskResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    30,
-	RetryInterval: 5 * time.Second,
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
 	Title:         "删除云硬盘",
 	FastFail:      false,
 }
 
-var testStep521PoweroffUHostInstance25 = &driver.Step{
+var testStep527DeleteUDisk22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
+		c, err := step.LoadFixture("UDisk")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*uhost.UHostClient)
+		client := c.(*udisk.UDiskClient)
 
-		req := client.NewPoweroffUHostInstanceRequest()
+		req := client.NewDeleteUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":    step.Scenario.GetVar("Zone"),
-			"UHostId": step.Scenario.GetVar("uhost_id"),
+			"UDiskId": step.Scenario.GetVar("udisk_id2_from_snap"),
 			"Region":  step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.PoweroffUHostInstance(req)
+		resp, err := client.DeleteUDisk(req)
 		if err != nil {
 			return resp, err
 		}
@@ -1059,36 +943,34 @@ var testStep521PoweroffUHostInstance25 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteUDiskResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "模拟主机掉电",
+	StartupDelay:  time.Duration(3) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除云硬盘",
 	FastFail:      false,
 }
 
-var testStep521DescribeUHostInstance26 = &driver.Step{
+var testStep527DescribeRecycleUDisk23 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
+		c, err := step.LoadFixture("UDisk")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*uhost.UHostClient)
+		client := c.(*udisk.UDiskClient)
 
-		req := client.NewDescribeUHostInstanceRequest()
+		req := client.NewDescribeRecycleUDiskRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone": step.Scenario.GetVar("Zone"),
-			"UHostIds": []interface{}{
-				step.Scenario.GetVar("uhost_id"),
-			},
+			"Zone":   step.Scenario.GetVar("Zone"),
 			"Region": step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.DescribeUHostInstance(req)
+		resp, err := client.DescribeRecycleUDisk(req)
 		if err != nil {
 			return resp, err
 		}
@@ -1098,49 +980,12 @@ var testStep521DescribeUHostInstance26 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("UHostSet.0.State", "Stopped", "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeRecycleUDiskResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(20) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
-	Title:         "获取主机信息",
-	FastFail:      false,
-}
-
-var testStep521TerminateUHostInstance27 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*uhost.UHostClient)
-
-		req := client.NewTerminateUHostInstanceRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":    step.Scenario.GetVar("Zone"),
-			"UHostId": step.Scenario.GetVar("uhost_id"),
-			"Region":  step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.TerminateUHostInstance(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(3) * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "删除云主机",
-	FastFail:      false,
+	Title:         "拉取回收站中云硬盘列表",
+	FastFail:      true,
 }
