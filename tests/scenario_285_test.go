@@ -32,7 +32,7 @@ func TestScenario285(t *testing.T) {
 				"Zone":             "tw-tp-01",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "BandwidthPackage自动化回归-带宽包-基础-02",
 		Steps: []*driver.Step{
 			testStep285DescribeImage01,

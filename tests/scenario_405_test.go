@@ -26,7 +26,7 @@ func TestScenario405(t *testing.T) {
 				"Zone":     "tw-tp-01",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "eip自动化回归-基本操作-01-国际线路",
 		Steps: []*driver.Step{
 			testStep405DescribeImage01,

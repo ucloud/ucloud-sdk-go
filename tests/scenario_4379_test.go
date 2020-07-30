@@ -28,7 +28,7 @@ func TestScenario4379(t *testing.T) {
 				"Zone":           "cn-bj2-02",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "外网-ULB7自动化回归-内容转发-03",
 		Steps: []*driver.Step{
 			testStep4379DescribeImage01,

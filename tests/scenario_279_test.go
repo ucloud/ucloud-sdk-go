@@ -26,7 +26,7 @@ func TestScenario279(t *testing.T) {
 				"Zone":     "cn-bj2-02",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "eip自动化回归-基本操作-01-BGP线路",
 		Steps: []*driver.Step{
 			testStep279DescribeImage01,
