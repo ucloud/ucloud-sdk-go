@@ -1,3 +1,10 @@
+## 0.16.6 (2020-07-30)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UHost` (#175)
+- Update all APIs of `UDisk` (#174)
+
 ## 0.16.5 (2020-07-24)
 
 ENHANCEMENTS:
