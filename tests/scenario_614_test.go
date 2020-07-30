@@ -29,7 +29,7 @@ func TestScenario614(t *testing.T) {
 				"Zone":           "cn-bj2-02",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "新版NAT网关-natgw自动化回归-白名单-03-BGP线路",
 		Steps: []*driver.Step{
 			testStep614DescribeImage01,
