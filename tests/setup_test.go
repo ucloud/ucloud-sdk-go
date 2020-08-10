@@ -55,6 +55,7 @@ import (
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
+	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
 )
@@ -149,6 +150,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UBill", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ubill.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UCDN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ucdn.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udb.NewClient(&cfg, &credential), nil
