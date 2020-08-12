@@ -24,7 +24,7 @@ func TestScenario4382(t *testing.T) {
 				"Zone":   "cn-bj2-02",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "内网-ulb4自动化回归-枚举参数验证-06",
 		Steps: []*driver.Step{
 			testStep4382CreateULB01,

@@ -129,6 +129,9 @@ type PolicyBackendSet struct {
 
 	// 后端资源的实例名称
 	ResourceName string
+
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube
+	ResourceType string
 }
 
 /*
@@ -172,6 +175,9 @@ type ULBBackendSet struct {
 	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
 	Enabled int
 
+	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
+	IsBackup int
+
 	// 后端提供服务的端口
 	Port int
 
@@ -204,6 +210,33 @@ type ULBBackendSet struct {
 
 	//
 	Weight int
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*
@@ -241,6 +274,9 @@ type ULBVServerSet struct {
 	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查域名
 	Domain string
 
+	// 是否开启http2.0，取值范围[0-1]；0代表关闭，1代表开启，默认为0
+	EnableHTTP2 int
+
 	// VServer服务端口
 	FrontendPort int
 
@@ -250,7 +286,7 @@ type ULBVServerSet struct {
 	// VServer负载均衡的模式，枚举值：Roundrobin -> 轮询;Source -> 源地址；ConsistentHash -> 一致性哈希；SourcePort -> 源地址（计算端口）；ConsistentHashPort -> 一致性哈希（计算端口）。
 	Method string
 
-	// 健康检查类型，枚举值：Port -> 端口检查；Path -> 路径检查；
+	// 健康检查类型，枚举值：Port -> 端口检查；Path -> 路径检查；Ping -> Ping探测， 请求代理型默认值为Port，其中TCP协议仅支持Port，其他协议支持Port和Path; 报文转发型TCP协议仅支持Port，UDP协议支持Ping和Port
 	MonitorType string
 
 	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查路径
@@ -298,11 +334,26 @@ type ULBSet struct {
 	// ULB的创建时间，格式为Unix Timestamp
 	CreateTime int
 
+	// ULB是否开启日志功能。0，关闭；1，开启
+	EnableLog int
+
 	// ULB的到期时间，格式为Unix Timestamp
 	ExpireTime int
 
+	// 防火墙信息，具体结构见下方 FirewallSet
+	FirewallSet FirewallSet
+
 	// ULB的详细信息列表，具体结构见下方 ULBIPSet
 	IPSet []ULBIPSet
+
+	// ULB ip类型，枚举值：IPv6 / IPv4 （内部测试，暂未对外开放）
+	IPVersion string
+
+	// ULB 监听器类型，枚举值：RequestProxy，请求代理； PacketsTransmit ，报文转发；Comprehensive，兼容型；Pending，未定型
+	ListenType string
+
+	// 日志功能相关信息，仅当EnableLog为true时会返回，具体结构见下方 LoggerSet
+	LogSet LoggerSet
 
 	// 负载均衡的资源名称
 	Name string

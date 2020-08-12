@@ -26,7 +26,7 @@ func TestScenario4378(t *testing.T) {
 				"Zone":   "cn-bj2-05",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "内网-外网-ulb7自动化回归-ulb4自动化回归--ssl证书-02",
 		Steps: []*driver.Step{
 			testStep4378CreateVPC01,
@@ -655,9 +655,7 @@ var testStep4378DeleteSubnet16 = &driver.Step{
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
+		return []driver.TestValidator{}
 	},
 	StartupDelay:  time.Duration(5) * time.Second,
 	MaxRetries:    3,
@@ -691,9 +689,7 @@ var testStep4378DeleteVPC17 = &driver.Step{
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-		}
+		return []driver.TestValidator{}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
 	MaxRetries:    3,
