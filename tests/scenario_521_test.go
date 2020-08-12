@@ -718,14 +718,15 @@ var testStep521CheckUDiskAllowance16 = &driver.Step{
 
 var testStep521CloneUDiskUDataArk17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
+		c, err := step.LoadFixture("")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*udisk.UDiskClient)
+		client := c.(*ucloud.Client)
 
-		req := client.NewCloneUDiskUDataArkRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
+		req := client.NewGenericRequest()
+		_ = req.SetAction("CloneUDiskUDataArk")
+		err = req.SetPayload(map[string]interface{}{
 			"Zone":         step.Scenario.GetVar("Zone"),
 			"UDiskId":      step.Scenario.GetVar("udisk_fz_id"),
 			"UDataArkMode": "Yes",
@@ -736,8 +737,7 @@ var testStep521CloneUDiskUDataArk17 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-
-		resp, err := client.CloneUDiskUDataArk(req)
+		resp, err := client.GenericInvoke(req)
 		if err != nil {
 			return resp, err
 		}

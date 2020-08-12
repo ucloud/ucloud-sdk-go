@@ -211,6 +211,12 @@ type CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -232,15 +238,6 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 /*
@@ -268,6 +265,15 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
