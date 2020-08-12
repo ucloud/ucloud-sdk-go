@@ -26,7 +26,7 @@ func TestScenario3484(t *testing.T) {
 				"Region": "th-bkk",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "IPSecVPN自动化回归-国际机房-不支持UpdateVPNGateway",
 		Steps: []*driver.Step{
 			testStep3484CreateVPC01,

@@ -465,19 +465,19 @@ var testStep5065ListUK8SClusterNodeV210 = &driver.Step{
 			return resp, err
 		}
 
-		step.Scenario.SetVar("Mac", step.Must(utils.GetValue(resp, "NodeList.UHostList.0.IPSet.0.Mac")))
-		step.Scenario.SetVar("uhostid", step.Must(utils.GetValue(resp, "NodeList.UHostList.0.InstanceId")))
+		step.Scenario.SetVar("Mac", step.Must(utils.GetValue(resp, "NodeSet.3.IPSet.0.Mac")))
+		step.Scenario.SetVar("uhostid", step.Must(utils.GetValue(resp, "NodeSet.3.InstanceId")))
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("Action", "ListUK8SClusterNodeV2Response", "str_eq"),
-			validation.Builtins.NewValidator("MasterList.0.State", "Running", "str_eq"),
-			validation.Builtins.NewValidator("MasterList.1.State", "Running", "str_eq"),
-			validation.Builtins.NewValidator("MasterList.2.State", "Running", "str_eq"),
-			validation.Builtins.NewValidator("NodeList.UHostList.0.Status", "Ready", "str_eq"),
-			validation.Builtins.NewValidator("NodeList.UHostList.1.Status", "Ready", "str_eq"),
+			validation.Builtins.NewValidator("NodeSet.0.NodeStatus", "Ready", "str_eq"),
+			validation.Builtins.NewValidator("NodeSet.1.NodeStatus", "Ready", "str_eq"),
+			validation.Builtins.NewValidator("NodeSet.2.NodeStatus", "Ready", "str_eq"),
+			validation.Builtins.NewValidator("NodeSet.3.NodeStatus", "Ready", "str_eq"),
+			validation.Builtins.NewValidator("NodeSet.4.NodeStatus", "Ready", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(20) * time.Second,
@@ -680,7 +680,7 @@ var testStep5065DeleteSubnet15 = &driver.Step{
 			validation.Builtins.NewValidator("Action", "DeleteSubnetResponse", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
+	StartupDelay:  time.Duration(300) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除子网",
