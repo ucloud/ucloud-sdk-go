@@ -60,7 +60,6 @@ func TestScenario527(t *testing.T) {
 			testStep527DeleteUDisk20,
 			testStep527DeleteUDisk21,
 			testStep527DeleteUDisk22,
-			testStep527DescribeRecycleUDisk23,
 		},
 	})
 }
@@ -118,10 +117,11 @@ var testStep527CheckUDiskAllowance02 = &driver.Step{
 		req := client.NewGenericRequest()
 		_ = req.SetAction("CheckUDiskAllowance")
 		err = req.SetPayload(map[string]interface{}{
-			"Zone":   step.Scenario.GetVar("Zone"),
-			"Size":   step.Scenario.GetVar("Size"),
-			"Region": step.Scenario.GetVar("Region"),
-			"Count":  3,
+			"Zone":     step.Scenario.GetVar("Zone"),
+			"Size":     step.Scenario.GetVar("Size"),
+			"Region":   step.Scenario.GetVar("Region"),
+			"DiskType": step.Scenario.GetVar("DiskType"),
+			"Count":    3,
 		})
 		if err != nil {
 			return nil, err
@@ -143,7 +143,7 @@ var testStep527CheckUDiskAllowance02 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "检查UDisk资源余量",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep527CreateUDisk03 = &driver.Step{
@@ -951,41 +951,4 @@ var testStep527DeleteUDisk22 = &driver.Step{
 	RetryInterval: 1 * time.Second,
 	Title:         "删除云硬盘",
 	FastFail:      false,
-}
-
-var testStep527DescribeRecycleUDisk23 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UDisk")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*udisk.UDiskClient)
-
-		req := client.NewDescribeRecycleUDiskRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone":   step.Scenario.GetVar("Zone"),
-			"Region": step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeRecycleUDisk(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "DescribeRecycleUDiskResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "拉取回收站中云硬盘列表",
-	FastFail:      true,
 }

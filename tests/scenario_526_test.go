@@ -116,10 +116,10 @@ var testStep526CheckUDiskAllowance02 = &driver.Step{
 		req := client.NewGenericRequest()
 		_ = req.SetAction("CheckUDiskAllowance")
 		err = req.SetPayload(map[string]interface{}{
-			"Zone":   step.Scenario.GetVar("Zone"),
-			"Size":   step.Scenario.GetVar("Size"),
-			"Region": step.Scenario.GetVar("Region"),
-			"Count":  1,
+			"Zone":     step.Scenario.GetVar("Zone"),
+			"Size":     10,
+			"Region":   step.Scenario.GetVar("Region"),
+			"DiskType": step.Scenario.GetVar("DiskType"),
 		})
 		if err != nil {
 			return nil, err
@@ -134,13 +134,14 @@ var testStep526CheckUDiskAllowance02 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CheckUDiskAllowanceResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "检查UDisk资源余量",
-	FastFail:      true,
+	FastFail:      false,
 }
 
 var testStep526CreateUDisk03 = &driver.Step{
