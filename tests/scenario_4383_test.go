@@ -48,7 +48,7 @@ func TestScenario4383(t *testing.T) {
 				"Zone":               "cn-bj2-02",
 			}
 		},
-		Owners: []string{"li.wei@ucloud.cn"},
+		Owners: []string{"arno.gao@ucloud.cn"},
 		Title:  "外网-ulb7自动化回归-支持防火墙-08",
 		Steps: []*driver.Step{
 			testStep4383DescribeFirewall01,
