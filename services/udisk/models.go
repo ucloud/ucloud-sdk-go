@@ -82,6 +82,9 @@ type UDiskDataSet struct {
 	// 实例名称
 	Name string
 
+	// RDMA集群id，仅RSSD返回该值；其他类型云盘返回""。当云盘的此值与快杰云主机的RdmaClusterId相同时，RSSD可以挂载到这台云主机。
+	RdmaClusterId string
+
 	// 容量单位GB
 	Size int
 
@@ -204,4 +207,7 @@ type UDiskSnapshotSet struct {
 
 	// 快照版本
 	Version string
+
+	// 可用区
+	Zone string
 }
