@@ -244,6 +244,9 @@ type UHostInstanceSet struct {
 	// 操作系统类别。返回"Linux"或者"Windows"
 	OsType string
 
+	// RDMA集群id，仅快杰云主机返回该值；其他类型云主机返回""。当云主机的此值与RSSD云盘的RdmaClusterId相同时，RSSD可以挂载到这台云主机。
+	RdmaClusterId string
+
 	// 备注
 	Remark string
 
