@@ -9,6 +9,83 @@ import (
 
 // UCDN API Schema
 
+// BatchDescribeNewUcdnDomainRequest is request schema for BatchDescribeNewUcdnDomain action
+type BatchDescribeNewUcdnDomainRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
+
+	// 渠道ucdn、ufile、uvideo
+	ChannelType *string `required:"false"`
+
+	// 域名id，创建域名时生成的资源id，默认获取账号下的所有域名信息，n为自然数
+	DomainId []string `required:"false"`
+
+	// 返回数据长度，如果制定了Offset，则默认20，否则默认全部，非负整数
+	Limit *int `required:"false"`
+
+	// 数据偏移量，默认0，非负整数
+	Offset *int `required:"false"`
+}
+
+// BatchDescribeNewUcdnDomainResponse is response schema for BatchDescribeNewUcdnDomain action
+type BatchDescribeNewUcdnDomainResponse struct {
+	response.CommonBase
+
+	// 标识欠费的数组，数组含有下列元素值， 1=国内流量有欠费 2=国外流量有欠费  3=国内带宽有欠费 4=国外带宽有欠费
+	Arrearage []string
+
+	// 当前计费方式，10-流量付费 20-带宽日峰值 30-月95计费，31-月日均峰值， 32-月第四峰值 33-日均峰值之和 34- 日95再取平均 40-未选择计费方式
+	ChargeType int
+
+	// 域名信息列表，参见DomainInfo
+	DomainSet []DomainInfo
+
+	// 表示最后一次切换的计费方式，10=流量付费 20=带宽日峰值  30=按月后付费  40=未选择计费方式
+	LastChargeType int
+
+	// 最大域名数量，默认20
+	MaxDomainNum int
+
+	// 满足条件的域名个数
+	TotalCount int
+
+	// vip标示，yes-是  no-否
+	Vip string
+}
+
+// NewBatchDescribeNewUcdnDomainRequest will create request of BatchDescribeNewUcdnDomain action.
+func (c *UCDNClient) NewBatchDescribeNewUcdnDomainRequest() *BatchDescribeNewUcdnDomainRequest {
+	req := &BatchDescribeNewUcdnDomainRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BatchDescribeNewUcdnDomain
+
+批量获取加速域名配置
+*/
+func (c *UCDNClient) BatchDescribeNewUcdnDomain(req *BatchDescribeNewUcdnDomainRequest) (*BatchDescribeNewUcdnDomainResponse, error) {
+	var err error
+	var res BatchDescribeNewUcdnDomainResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BatchDescribeNewUcdnDomain", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // BatchRefreshNewUcdnDomainCacheRequest is request schema for BatchRefreshNewUcdnDomainCache action
 type BatchRefreshNewUcdnDomainCacheRequest struct {
 	request.CommonBase

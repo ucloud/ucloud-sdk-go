@@ -30,6 +30,96 @@ type CacheConf struct {
 }
 
 /*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
+}
+
+/*
+DomainInfo - 域名配置
+*/
+type DomainInfo struct {
+
+	// 访问控制
+	AccessConf AccessConf
+
+	// 查询带宽区域 cn代表国内 abroad代表海外 不填默认为全部区域
+	AreaCode string
+
+	// 缓存配置规则列表
+	CacheConf []CacheConf
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 加速类型http,http|https
+	CdnProtocol string
+
+	// 加速域名的业务类型，web代表网站，stream代表视频，download代表下载。
+	CdnType string
+
+	// 证书名称
+	CertName string
+
+	// cdn域名。创建加速域名生成的cdn域名，用于设置CNAME记录
+	Cname string
+
+	// 域名创建的时间。格式：时间戳
+	CreateTime int
+
+	// 域名，用户创建加速的域名
+	Domain string
+
+	// 域名id，创建域名时生成的id
+	DomainId string
+
+	// 国外https状态 enableing-开启中  fail-开启失败 enable-启用 disable-未启用
+	HttpsStatusAbroad string
+
+	// 国内https状态 enableing-开启中 fail-开启失败 enable-启用 disable-未启用
+	HttpsStatusCn string
+
+	// ReferType为白名单时，NullRefer为false代表不允许NULL refer访问，为true代表允许Null refer访问
+	NullRefer bool
+
+	// 回源Http请求头部Host，默认是加速域名
+	OriginHost string
+
+	// 源站ip即cdn服务器回源访问的ip地址。支持多个源站ip，多个源站ip，可表述为如：[1.1.1.1,2.2.2.2]
+	OriginIp []string
+
+	// 回源端口
+	OriginPort int
+
+	// 源站协议http，http|https   默认http
+	OriginProtocol string
+
+	// Refer列表，支持正则表达式
+	ReferList []string
+
+	// refer配置开关，true打开，false关闭
+	ReferStatus bool
+
+	// 0白名单，1黑名单
+	ReferType int
+
+	// 创建的加速域名的当前的状态。check代表审核中，checkSuccess代表审核通过，checkFail代表审核失败，enable代表加速中，disable代表停止加速，delete代表删除加速 enableing代表正在开启加速，disableing代表正在停止加速中，deleteing代表删除中
+	Status string
+
+	// 业务组，默认为Default
+	Tag string
+
+	// 测试url，用于域名创建加速时的测试
+	TestUrl string
+
+	// 开始分配Cname时间。格式：时间戳
+	ValidTime int
+}
+
+/*
 UrlProgressInfo - UrlProgressInfo
 */
 type UrlProgressInfo struct {
@@ -315,21 +405,6 @@ type RequestInfo struct {
 }
 
 /*
-ReferConf - Refer配置
-*/
-type ReferConf struct {
-
-	// ReferType为白名单时，(删除)NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
-	NullRefer int
-
-	// Refer列表，支持正则表达式
-	ReferList []string
-
-	// 0白名单，1黑名单
-	ReferType int
-}
-
-/*
 CacheKeyInfo - 忽略参数缓存配置
 */
 type CacheKeyInfo struct {
@@ -345,48 +420,18 @@ type CacheKeyInfo struct {
 }
 
 /*
-AccessAllConfig - 访问控制配置
+ReferConf - Refer配置
 */
-type AccessAllConfig struct {
+type ReferConf struct {
 
-	// ip黑名单列表 ["1.1.1.1","2.2.2.2"]
-	IpBlackList []string
+	// ReferType为白名单时，(删除)NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
+	NullRefer int
 
-	// Refer配置,参考ReferConf结构
-	ReferConf []ReferConf
-}
+	// Refer列表，支持正则表达式
+	ReferList []string
 
-/*
-AdvancedConf - 域名高级配置
-*/
-type AdvancedConf struct {
-
-	// http转https回源 true是，false否
-	Http2Https bool
-
-	// 客户端响应http头列表
-	HttpClientHeader []string
-
-	// 源站http头列表
-	HttpOriginHeader []string
-}
-
-/*
-CacheAllConfig - 缓存相关的配置
-*/
-type CacheAllConfig struct {
-
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
-
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
-
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
+	// 0白名单，1黑名单
+	ReferType int
 }
 
 /*
@@ -426,12 +471,60 @@ type OriginConf struct {
 }
 
 /*
+CacheAllConfig - 缓存相关的配置
+*/
+type CacheAllConfig struct {
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
+}
+
+/*
+AdvancedConf - 域名高级配置
+*/
+type AdvancedConf struct {
+
+	// http转https回源 true是，false否
+	Http2Https bool
+
+	// 客户端响应http头列表
+	HttpClientHeader []string
+
+	// 源站http头列表
+	HttpOriginHeader []string
+}
+
+/*
+AccessAllConfig - 访问控制配置
+*/
+type AccessAllConfig struct {
+
+	// ip黑名单列表 ["1.1.1.1","2.2.2.2"]
+	IpBlackList []string
+
+	// Refer配置,参考ReferConf结构
+	ReferConf []ReferConf
+}
+
+/*
 DomainConfigInfo - 更新域名配置
 */
 type DomainConfigInfo struct {
 
 	// 访问控制配置
-	AccessControlConf AccessAllConfig
+	AccessAllConfig AccessAllConfig
+
+	// 访问控制配置
+	AccessControlConf AccessAllConfig `deprecated:"true"`
 
 	// 高级配置
 	AdvancedConf AdvancedConf
