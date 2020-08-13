@@ -433,9 +433,6 @@ type DomainConfigInfo struct {
 	// 访问控制配置
 	AccessAllConfig AccessAllConfig
 
-	// 访问控制配置
-	AccessControlConf AccessAllConfig `deprecated:"true"`
-
 	// 高级配置
 	AdvancedConf AdvancedConf
 
