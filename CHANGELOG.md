@@ -1,3 +1,16 @@
+## 0.17.0 (2020-08-13)
+
+FEATURES:
+
+- Add `UCDN` apis to be consistent with [official document](https://docs.ucloud.cn/api/ucdn-api/README) (#177)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UDisk` (#181)
+- Update all APIs of `VPC` (#180)
+- Update all APIs of `UHost` (#179)
+- Update all APIs of `ULB` (#178)
+
 ## 0.16.6 (2020-07-30)
 
 ENHANCEMENTS:
