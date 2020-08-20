@@ -455,6 +455,9 @@ type CreateUDiskRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
+	// RDMA集群id。DiskType为RSSDDataDisk可填，指定云盘创建到对应的RDMA集群。
+	RdmaClusterId *string `required:"false"`
+
 	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]。
 	Size *int `required:"true"`
 
