@@ -1,3 +1,10 @@
+## 0.17.2 (2020-09-03)
+
+ENHANCEMENTS:
+
+- Update all APIs of `ULB` (#187 )
+- Delete parameter `EnableHTTP2 ` from `ULB` apis: `CreateVServer` and `DescribeVServer`(#187 )
+
 ## 0.17.1 (2020-08-20)
 
 ENHANCEMENTS:
