@@ -135,36 +135,6 @@ type PolicyBackendSet struct {
 }
 
 /*
-ULBPolicySet - 内容转发详细列表
-*/
-type ULBPolicySet struct {
-
-	// 内容转发下rs的详细信息，参考PolicyBackendSet
-	BackendSet []PolicyBackendSet
-
-	// 内容转发匹配字段;默认内容转发类型下为空。
-	Match string
-
-	// 内容转发Id，默认内容转发类型下为空。
-	PolicyId string
-
-	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
-	PolicyPriority int
-
-	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
-	PolicyType string
-
-	// 默认内容转发类型下返回当前rs总数
-	TotalCount int
-
-	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
-	Type string
-
-	// 所属VServerId
-	VServerId string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -213,15 +183,33 @@ type ULBBackendSet struct {
 }
 
 /*
-FirewallSet - ulb防火墙信息
+ULBPolicySet - 内容转发详细列表
 */
-type FirewallSet struct {
+type ULBPolicySet struct {
 
-	// 防火墙ID
-	FirewallId string
+	// 内容转发下rs的详细信息，参考PolicyBackendSet
+	BackendSet []PolicyBackendSet
 
-	// 防火墙名称
-	FirewallName string
+	// 内容转发匹配字段;默认内容转发类型下为空。
+	Match string
+
+	// 内容转发Id，默认内容转发类型下为空。
+	PolicyId string
+
+	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
+	PolicyPriority int
+
+	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
+	PolicyType string
+
+	// 默认内容转发类型下返回当前rs总数
+	TotalCount int
+
+	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
+	Type string
+
+	// 所属VServerId
+	VServerId string
 }
 
 /*
@@ -240,27 +228,6 @@ type LoggerSet struct {
 }
 
 /*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
-}
-
-/*
 ULBVServerSet - DescribeULB
 */
 type ULBVServerSet struct {
@@ -273,9 +240,6 @@ type ULBVServerSet struct {
 
 	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查域名
 	Domain string
-
-	// 是否开启http2.0，取值范围[0-1]；0代表关闭，1代表开启，默认为0
-	EnableHTTP2 int
 
 	// VServer服务端口
 	FrontendPort int
@@ -315,6 +279,39 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
+}
+
+/*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -387,4 +384,67 @@ type ULBSet struct {
 
 	// 负载均衡实例中存在的VServer实例列表，具体结构见下方 ULBVServerSet
 	VServerSet []ULBVServerSet
+}
+
+/*
+ULBSimpleSet - ulb简明信息
+*/
+type ULBSimpleSet struct {
+
+	// 带宽
+	Bandwidth int
+
+	// 带宽类型，枚举值为： 0，非共享带宽； 1，共享带宽
+	BandwidthType int
+
+	// ULB 所属的业务组ID
+	BusinessId string
+
+	// ULB的创建时间，格式为Unix Timestamp
+	CreateTime int
+
+	// ULB是否开启日志功能。0，关闭；1，开启
+	EnableLog bool
+
+	// 防火墙信息，具体结构见下方 FirewallSet
+	FirewallSet FirewallSet
+
+	// ULB的详细信息列表，具体结构见下方 ULBIPSet
+	IPSet []ULBIPSet
+
+	// ULB提供服务的IP类型。枚举值，“IPv4”,"IPv6"。默认为“IPv4”
+	IPVersion string
+
+	// ULB 监听器类型，枚举值：RequestProxy，请求代理； PacketsTransmit ，报文转发；Comprehensive，兼容型；Pending，未定型
+	ListenType string
+
+	// 日志功能相关信息，仅当EnableLog为true时会返回，具体结构见下方 LoggerSet
+	LogSet LoggerSet
+
+	// 负载均衡的资源名称
+	Name string
+
+	// ULB的内网IP，当ULBType为OuterMode时，该值为空
+	PrivateIP string
+
+	// 负载均衡的备注
+	Remark string
+
+	// ULB 为 InnerMode 时，ULB 所属的子网ID，默认为空
+	SubnetId string
+
+	// 负载均衡的业务组名称
+	Tag string
+
+	// 负载均衡的资源ID
+	ULBId string
+
+	// ULB 的类型（InnerMode or OuterMode）
+	ULBType string
+
+	// ULB所在的VPC的ID
+	VPCId string
+
+	// ulb下vserver数量
+	VServerCount int
 }

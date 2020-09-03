@@ -492,9 +492,6 @@ type CreateVServerRequest struct {
 	// 根据MonitorType确认； 当MonitorType为Path时，此字段有意义，代表HTTP检查域名
 	Domain *string `required:"false"`
 
-	// 是否开启http2.0，取值范围[0-1]；0代表关闭，1代表开启，默认为0
-	EnableHTTP2 *int `required:"false"`
-
 	// VServer后端端口，取值范围[1-65535]；默认值为80
 	FrontendPort *int `required:"false"`
 
@@ -1013,6 +1010,77 @@ func (c *ULBClient) DescribeULB(req *DescribeULBRequest) (*DescribeULBResponse, 
 	return &res, nil
 }
 
+// DescribeULBSimpleRequest is request schema for DescribeULBSimple action
+type DescribeULBSimpleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// Region *string `required:"true"`
+
+	// ULB所属的业务组ID
+	BusinessId *string `required:"false"`
+
+	// 数据分页值，默认为10000
+	Limit *int `required:"false"`
+
+	// 数据偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// ULB所属的子网ID
+	SubnetId *string `required:"false"`
+
+	// 负载均衡实例的Id。 若指定则返回指定的负载均衡实例的信息； 若不指定则返回当前数据中心中所有的负载均衡实例的信息
+	ULBId *string `required:"false"`
+
+	// ULB所属的VPC
+	VPCId *string `required:"false"`
+}
+
+// DescribeULBSimpleResponse is response schema for DescribeULBSimple action
+type DescribeULBSimpleResponse struct {
+	response.CommonBase
+
+	// ULB列表，每项参数详见 ULBSimpleSet
+	DataSet []ULBSimpleSet
+
+	// 满足条件的ULB总数
+	TotalCount int
+}
+
+// NewDescribeULBSimpleRequest will create request of DescribeULBSimple action.
+func (c *ULBClient) NewDescribeULBSimpleRequest() *DescribeULBSimpleRequest {
+	req := &DescribeULBSimpleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeULBSimple
+
+获取ULB信息
+*/
+func (c *ULBClient) DescribeULBSimple(req *DescribeULBSimpleRequest) (*DescribeULBSimpleResponse, error) {
+	var err error
+	var res DescribeULBSimpleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeULBSimple", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeVServerRequest is request schema for DescribeVServer action
 type DescribeVServerRequest struct {
 	request.CommonBase
@@ -1441,9 +1509,6 @@ type UpdateVServerAttributeRequest struct {
 
 	// MonitorType 为 Path 时指定健康检查发送请求时HTTP HEADER 里的域名
 	Domain *string `required:"false"`
-
-	// 是否开启http2.0，取值范围[0-1]；0代表关闭，1代表开启，默认为0
-	EnableHTTP2 *int `required:"false"`
 
 	// VServer负载均衡模式，枚举值：Roundrobin -> 轮询;Source -> 源地址；ConsistentHash -> 一致性哈希；SourcePort -> 源地址（计算端口）；ConsistentHashPort -> 一致性哈希（计算端口）; WeightRoundrobin -> 加权轮询; Leastconn -> 最小连接数；Backup -> 主备模式。ConsistentHash，SourcePort，ConsistentHashPort 只在报文转发中使用；Leastconn只在请求代理中使用；Roundrobin、Source和WeightRoundrobin,Backup在请求代理和报文转发中使用。默认为："Roundrobin"
 	Method *string `required:"false"`

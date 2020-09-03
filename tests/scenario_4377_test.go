@@ -950,22 +950,22 @@ var testStep4377DeleteULB22 = &driver.Step{
 
 var testStep4377DescribeULBSimple23 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("ULB")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ulb.ULBClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DescribeULBSimple")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDescribeULBSimpleRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"ULBId":  step.Scenario.GetVar("ULBId"),
 			"Region": step.Scenario.GetVar("Region"),
 		})
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DescribeULBSimple(req)
 		if err != nil {
 			return resp, err
 		}
