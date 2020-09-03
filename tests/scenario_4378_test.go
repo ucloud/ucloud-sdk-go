@@ -23,7 +23,7 @@ func TestScenario4378(t *testing.T) {
 		Vars: func(scenario *driver.Scenario) map[string]interface{} {
 			return map[string]interface{}{
 				"Region": "cn-bj2",
-				"Zone":   "cn-bj2-05",
+				"Zone":   "cn-bj2-02",
 			}
 		},
 		Owners: []string{"arno.gao@ucloud.cn"},
