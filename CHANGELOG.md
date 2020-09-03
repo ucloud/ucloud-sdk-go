@@ -1,3 +1,9 @@
+## 0.17.3 (2020-09-03)
+
+BUG FIXES:
+
+- fix the type of `EnableLog` from `bool` to `int` about ULB response model `ULBSimpleSet ` (#190 )
+
 ## 0.17.2 (2020-09-03)
 
 ENHANCEMENTS:
