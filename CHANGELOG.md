@@ -1,3 +1,10 @@
+## 0.17.4 (2020-09-18)
+
+BUG FIXES:
+
+- fix the type of FirewallSet from object to array about ULB response model ULBSimpleSet (#192  )
+- fix the type of FirewallSet from object to array about ULB response model ULBSet (#192  )
+
 ## 0.17.3 (2020-09-03)
 
 BUG FIXES:
