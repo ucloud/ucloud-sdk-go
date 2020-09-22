@@ -16,7 +16,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
 )
 
-type clientFactory func() Client
+type clientFactory func() *Client
 type clientCaseGolden struct {
 	Action  string
 	RetCode int
@@ -51,7 +51,7 @@ func TestClient(t *testing.T) {
 		},
 		{
 			Name: "httpRequestHandler",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				client := newTestClient()
 				_ = client.AddHttpRequestHandler(func(c *Client, req *http.HttpRequest) (httpRequest *http.HttpRequest, e error) {
 					_ = req.SetQuery("Action", "Echo")
@@ -64,7 +64,7 @@ func TestClient(t *testing.T) {
 		},
 		{
 			Name: "requestHandler",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				client := newTestClient()
 				_ = client.AddRequestHandler(func(c *Client, req request.Common) (common request.Common, e error) {
 					_ = req.SetAction("Echo")
@@ -77,7 +77,7 @@ func TestClient(t *testing.T) {
 		},
 		{
 			Name: "httpResponseHandler",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				client := newTestClient()
 				_ = client.AddHttpResponseHandler(func(c *Client, req *http.HttpRequest, resp *http.HttpResponse, err error) (httpResponse *http.HttpResponse, e error) {
 					_ = resp.SetBody([]byte(`{"Action": "Mock", "RetCode": 42}`))
@@ -90,7 +90,7 @@ func TestClient(t *testing.T) {
 		},
 		{
 			Name: "responseHandler",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				client := newTestClient()
 				_ = client.AddResponseHandler(func(c *Client, req request.Common, resp response.Common, err error) (common response.Common, e error) {
 					rv := reflect.ValueOf(resp).Elem()
@@ -105,7 +105,7 @@ func TestClient(t *testing.T) {
 		},
 		{
 			Name: "invalidHTTPRequest",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				client := newTestClient()
 				_ = client.AddHttpRequestHandler(func(c *Client, req *http.HttpRequest) (httpRequest *http.HttpRequest, e error) {
 					return req, fmt.Errorf("http query is invalid")
@@ -117,7 +117,7 @@ func TestClient(t *testing.T) {
 		},
 		{
 			Name: "invalidRequest",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				client := newTestClient()
 				_ = client.AddRequestHandler(func(c *Client, req request.Common) (common request.Common, e error) {
 					return req, fmt.Errorf("request is invalid")
@@ -130,9 +130,9 @@ func TestClient(t *testing.T) {
 
 		{
 			Name: "NullCredential",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				cfg := NewConfig()
-				return Client{
+				return &Client{
 					config:     &cfg,
 					credential: nil,
 				}
@@ -143,9 +143,9 @@ func TestClient(t *testing.T) {
 
 		{
 			Name: "NullConfig",
-			InputVector: func() Client {
+			InputVector: func() *Client {
 				cre := auth.NewCredential()
-				return Client{
+				return &Client{
 					config:     nil,
 					credential: &cre,
 				}
@@ -153,13 +153,22 @@ func TestClient(t *testing.T) {
 			Mock:  nil,
 			Error: "NullConfigError",
 		},
+
+		{
+			Name: "NullClient",
+			InputVector: func() *Client {
+				return NewClient(nil, nil)
+			},
+			Mock:  nil,
+			Error: "NullCredentialError",
+		},
 	}
 
 	for _, test := range tests {
 		var err error
 		client := test.InputVector()
 
-		err = mockTestClient(&client, test.Mock)
+		err = mockTestClient(client, test.Mock)
 		assert.NoError(t, err)
 
 		// send mocked request, assert response value
@@ -269,7 +278,7 @@ func TestClient_http_mock(t *testing.T) {
 	}
 }
 
-func newTestClient() Client {
+func newTestClient() *Client {
 	cfg := NewConfig()
 	cfg.BaseUrl = "https://api.ucloud.cn"
 	cfg.Region = "cn-bj2"
@@ -280,7 +289,7 @@ func newTestClient() Client {
 	cfg.MaxRetries = 1
 
 	credential := auth.NewCredential()
-	return *NewClient(&cfg, &credential)
+	return NewClient(&cfg, &credential)
 }
 
 func mockTestClient(client *Client, data map[string]interface{}) error {
@@ -346,7 +355,7 @@ func TestGenericClient(t *testing.T) {
 		var err error
 		client := test.InputVector()
 
-		err = mockTestClient(&client, test.Mock)
+		err = mockTestClient(client, test.Mock)
 		assert.NoError(t, err)
 
 		// send mocked request, assert response value

@@ -50,10 +50,6 @@ type Client struct {
 
 // NewClient will create an client of ucloud sdk
 func NewClient(config *Config, credential *auth.Credential) *Client {
-	if config == nil || credential == nil {
-		return nil
-	}
-
 	client := Client{
 		credential: credential,
 		config:     config,
@@ -66,7 +62,9 @@ func NewClient(config *Config, credential *auth.Credential) *Client {
 	client.httpResponseHandlers = append(client.httpResponseHandlers, defaultHttpResponseHandlers...)
 
 	client.logger = log.New()
-	client.logger.SetLevel(config.LogLevel)
+	if config != nil {
+		client.logger.SetLevel(config.LogLevel)
+	}
 
 	return &client
 }

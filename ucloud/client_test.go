@@ -1,11 +1,12 @@
 package ucloud
 
 import (
-	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	stdhttp "net/http"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -78,7 +79,7 @@ func Test_errorHandler(t *testing.T) {
 		{
 			name: "unexpected error",
 			step: func() error {
-				_, err := errorHandler(&client, req, resp, errors.New("unexpected error"))
+				_, err := errorHandler(client, req, resp, errors.New("unexpected error"))
 				if uErr, ok := err.(uerr.ClientError); !ok || uErr.Name() != uerr.ErrSendRequest {
 					return errors.New("unexpected error should be convert to unknown client error")
 				}
@@ -88,7 +89,7 @@ func Test_errorHandler(t *testing.T) {
 		{
 			name: "http status error",
 			step: func() error {
-				_, err := errorHandler(&client, req, resp, uerr.NewServerStatusError(404, "404 NotFound"))
+				_, err := errorHandler(client, req, resp, uerr.NewServerStatusError(404, "404 NotFound"))
 				if uErr, ok := err.(uerr.ServerError); !ok || uErr.StatusCode() != 404 {
 					return errors.New("http status error should be convert to status server error")
 				}
@@ -104,7 +105,7 @@ func Test_errorHandler(t *testing.T) {
 					return err
 				}
 				_, err = httpClient.Do(httpReq)
-				_, err = errorHandler(&client, req, resp, err)
+				_, err = errorHandler(client, req, resp, err)
 				if uErr, ok := err.(uerr.ClientError); !ok || uErr.Name() != uerr.ErrNetwork {
 					return errors.New("timeout error should be convert to network client error")
 				}
@@ -115,7 +116,7 @@ func Test_errorHandler(t *testing.T) {
 			name: "business error",
 			step: func() error {
 				resp := &response.CommonBase{Message: "Missing Action", RetCode: 160}
-				_, err := errorHandler(&client, req, resp, nil)
+				_, err := errorHandler(client, req, resp, nil)
 				if uErr, ok := err.(uerr.ServerError); !ok || uErr.Code() != 160 {
 					return errors.New("ucloud error should be raised for non-zero retCode")
 				}
