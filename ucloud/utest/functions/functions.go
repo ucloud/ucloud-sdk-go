@@ -17,10 +17,7 @@ func GetTimestamp(strLen int) (int, error) {
 		return 0, errors.Errorf("timestamp length can only between 0 and 16")
 	}
 	intStr := strconv.FormatInt(time.Now().UnixNano(), 10)[:strLen]
-	ts, err := strconv.Atoi(intStr)
-	if err != nil {
-		return 0, err
-	}
+	ts, _ := strconv.Atoi(intStr)
 	return ts, nil
 }
 

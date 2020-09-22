@@ -13,20 +13,17 @@ func TestGetTimestamp(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    int
 		wantErr bool
 	}{
-		{"invalid_length", args{20}, 0, true},
+		{"invalid_length", args{20}, true},
+		{"valid_length", args{10}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetTimestamp(tt.args.input)
+			_, err := GetTimestamp(tt.args.input)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetTimestamp() error = %v, wantErr %v", err, tt.wantErr)
 				return
-			}
-			if got != tt.want {
-				t.Errorf("GetTimestamp() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -119,6 +116,18 @@ func TestSearchValue(t *testing.T) {
 			"",
 			true,
 		},
+
+		{
+			"err_marshal",
+			args{
+				"test",
+				"Name",
+				"bar",
+				"Data",
+			},
+			"",
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -187,7 +196,7 @@ func TestCalculate(t *testing.T) {
 
 		{"float_sum", args{"+", 1.1, 1}, 2.1, false},
 		{"float_sub", args{"-", 2.1, 1}, 1.1, false},
-		{"string_sub", args{"-", "2.1", 1}, 0, true},
+		{"string_sub", args{"-", "2.1", "1"}, 0, true},
 		{"float_multi", args{"*", 1, 3.0}, 3.0, false},
 		{"float_divide", args{"/", 3.0, 1.0}, 3.0, false},
 		{"float_invalid", args{"t", 3.0, 1.0}, 0, true},

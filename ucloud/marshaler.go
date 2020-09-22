@@ -18,9 +18,11 @@ import (
 
 // SetupRequest will init request by client configuration
 func (c *Client) SetupRequest(req request.Common) request.Common {
-	cfg := c.GetConfig()
-
 	req.SetRetryable(true)
+	cfg := c.GetConfig()
+	if cfg == nil {
+		return req
+	}
 
 	// set optional client level variables
 	if len(req.GetRegion()) == 0 && len(cfg.Region) > 0 {
@@ -53,12 +55,7 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 		return nil, errors.Errorf("convert request to map failed, %s", err)
 	}
 
-	// check credential information is available
 	credential := c.GetCredential()
-	if credential == nil {
-		return nil, errors.Errorf("invalid credential information, please set it before request.")
-	}
-
 	config := c.GetConfig()
 	httpReq := http.NewHttpRequest()
 	httpReq.SetURL(config.BaseUrl)
