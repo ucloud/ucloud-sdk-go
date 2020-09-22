@@ -41,7 +41,7 @@ func Test_checkFloats(t *testing.T) {
 			}
 			return nil
 		}}, true, false},
-		{"not_bool", args{"0.1", true, func(aVal, bVal float64) error {
+		{"not_bool", args{false, true, func(aVal, bVal float64) error {
 			if aVal != bVal {
 				return NewNotExpectedError()
 			}
@@ -108,6 +108,12 @@ func Test_checkStrings(t *testing.T) {
 			}
 			return nil
 		}}, true, true},
+		{"check_bool", args{"False", "false", func(aVal, bVal string) error {
+			if aVal != bVal {
+				return NewNotExpectedError()
+			}
+			return nil
+		}}, false, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -127,6 +127,32 @@ func TestClient(t *testing.T) {
 			Mock:  nil,
 			Error: "InvalidRequestError",
 		},
+
+		{
+			Name: "NullCredential",
+			InputVector: func() Client {
+				cfg := NewConfig()
+				return Client{
+					config:     &cfg,
+					credential: nil,
+				}
+			},
+			Mock:  nil,
+			Error: "NullCredentialError",
+		},
+
+		{
+			Name: "NullConfig",
+			InputVector: func() Client {
+				cre := auth.NewCredential()
+				return Client{
+					config:     nil,
+					credential: &cre,
+				}
+			},
+			Mock:  nil,
+			Error: "NullConfigError",
+		},
 	}
 
 	for _, test := range tests {
