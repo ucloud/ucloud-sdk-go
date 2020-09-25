@@ -1,3 +1,10 @@
+## 0.17.5 (2020-09-25)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UMem` (#195)
+- add client error about `NullCredentialError` and `NullConfigError`
+
 ## 0.17.4 (2020-09-18)
 
 BUG FIXES:
