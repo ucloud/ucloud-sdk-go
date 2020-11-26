@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
+	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
@@ -325,15 +326,14 @@ var testStep5065DescribeUK8SAvailableUHost07 = &driver.Step{
 
 var testStep5065CreateUK8SClusterV208 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UK8S")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*uk8s.UK8SClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("CreateUK8SClusterV2")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewCreateUK8SClusterV2Request()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"cn-bj2-04":   step.Scenario.GetVar("Zone"),
 			"VPCId":       step.Scenario.GetVar("VPCId_0"),
 			"SubnetId":    step.Scenario.GetVar("SubnetId_0"),
@@ -343,7 +343,7 @@ var testStep5065CreateUK8SClusterV208 = &driver.Step{
 			"ProjectId":   step.Scenario.GetVar("ProjectId"),
 			"Password":    "Z3VhbmxpeXVhbm1pbWEx",
 			"Nodes": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"BootDiskType":      "CLOUD_SSD",
 					"CPU":               4,
 					"Count":             2,
@@ -364,13 +364,13 @@ var testStep5065CreateUK8SClusterV208 = &driver.Step{
 			"MasterCPU":               4,
 			"MasterBootDiskType":      "CLOUD_SSD",
 			"Master": []map[string]interface{}{
-				{
+				map[string]interface{}{
 					"Zone": step.Scenario.GetVar("Zone"),
 				},
-				{
+				map[string]interface{}{
 					"Zone": step.Scenario.GetVar("Zone"),
 				},
-				{
+				map[string]interface{}{
 					"Zone": step.Scenario.GetVar("Zone"),
 				},
 			},
@@ -382,7 +382,8 @@ var testStep5065CreateUK8SClusterV208 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.CreateUK8SClusterV2(req)
 		if err != nil {
 			return resp, err
 		}
@@ -444,15 +445,14 @@ var testStep5065DescribeUK8SCluster09 = &driver.Step{
 
 var testStep5065ListUK8SClusterNodeV210 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UK8S")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*uk8s.UK8SClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("ListUK8SClusterNodeV2")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewListUK8SClusterNodeV2Request()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region":    step.Scenario.GetVar("Region"),
 			"ProjectId": step.Scenario.GetVar("ProjectId"),
 			"ClusterId": step.Scenario.GetVar("ClusterId"),
@@ -460,7 +460,8 @@ var testStep5065ListUK8SClusterNodeV210 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.ListUK8SClusterNodeV2(req)
 		if err != nil {
 			return resp, err
 		}
@@ -613,15 +614,14 @@ var testStep5065DeleteSecondaryIp13 = &driver.Step{
 
 var testStep5065DelUK8SCluster14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UK8S")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*uk8s.UK8SClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("DelUK8SCluster")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewDelUK8SClusterRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region":    step.Scenario.GetVar("Region"),
 			"ProjectId": step.Scenario.GetVar("ProjectId"),
 			"ClusterId": step.Scenario.GetVar("ClusterId"),
@@ -629,7 +629,8 @@ var testStep5065DelUK8SCluster14 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.DelUK8SCluster(req)
 		if err != nil {
 			return resp, err
 		}
@@ -727,22 +728,22 @@ var testStep5065DeleteVPC16 = &driver.Step{
 
 var testStep5065ListUK8SClusterV217 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("UK8S")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*uk8s.UK8SClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("ListUK8SClusterV2")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewListUK8SClusterV2Request()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region":    step.Scenario.GetVar("Region"),
 			"ClusterId": step.Scenario.GetVar("ClusterId"),
 		})
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.ListUK8SClusterV2(req)
 		if err != nil {
 			return resp, err
 		}
