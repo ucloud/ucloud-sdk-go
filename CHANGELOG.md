@@ -1,3 +1,10 @@
+## 0.18.0 (2020-11-26)
+
+FEATURES:
+
+- Add product `UK8S`
+- Add product `Cube`
+
 ## 0.17.5 (2020-09-25)
 
 ENHANCEMENTS:
