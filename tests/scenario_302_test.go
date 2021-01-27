@@ -392,7 +392,6 @@ var testStep302DescribeFirewallResource08 = &driver.Step{
 			validation.Builtins.NewValidator("ResourceSet.0.ResourceType", "uhost", "str_eq"),
 			validation.Builtins.NewValidator("ResourceSet.0.ResourceID", step.Scenario.GetVar("uhost_id1"), "str_eq"),
 			validation.Builtins.NewValidator("TotalCount", 1, "str_eq"),
-			validation.Builtins.NewValidator("ResourceSet.0.Tag", step.Scenario.GetVar("tag"), "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(3) * time.Second,

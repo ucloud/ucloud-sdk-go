@@ -490,8 +490,8 @@ var testStep3095DescribeUHostInstance10 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	MaxRetries:    5,
+	RetryInterval: 30 * time.Second,
 	Title:         "获取主机信息",
 	FastFail:      true,
 }
