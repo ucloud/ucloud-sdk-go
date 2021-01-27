@@ -1,3 +1,9 @@
+## 0.18.1 (2021-01-27)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UHost` (#204 )
+
 ## 0.18.0 (2020-11-26)
 
 FEATURES:
