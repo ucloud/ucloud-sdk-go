@@ -1,3 +1,9 @@
+## 0.19.0 (2021-02-03)
+
+FEATURES:
+
+- Add product `UEC`
+
 ## 0.18.1 (2021-01-27)
 
 ENHANCEMENTS:
