@@ -58,6 +58,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
+	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
 )
@@ -170,6 +171,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UDisk", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udisk.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UEC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uec.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UFile", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ufile.NewClient(&cfg, &credential), nil
