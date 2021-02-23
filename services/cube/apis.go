@@ -13,28 +13,34 @@ import (
 type CreateCubePodRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Postpay， \\ 后付费；默认为后付费
 	ChargeType *string `required:"false"`
 
-	// Cpu平台（V6、A2），默认V6
+	// 代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
+	CouponId *string `required:"false"`
+
+	// Cpu平台（V6：Intel、A2：AMD），默认V6。支持的地域（北京2B、北京2E、上海2A、广东、香港 、东京）目前北京2E仅有A2，其余地域仅有V6
 	CpuPlatform *string `required:"false"`
 
 	// pod所在组
 	Group *string `required:"false"`
 
+	// base64编码的kubeconfig。大小不超过16KB
+	KubeConfig *string `required:"false"`
+
 	// pod的名字
 	Name *string `required:"false"`
 
-	// base64编码的Pod的yaml
+	// base64编码的Pod的yaml。大小不超过16KB
 	Pod *string `required:"true"`
 
 	// 购买时长。默认:值 1。 月付时，此参数传0，代表购买至月末。
@@ -392,6 +398,65 @@ func (c *CubeClient) ModifyCubeExtendInfo(req *ModifyCubeExtendInfoRequest) (*Mo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ModifyCubeExtendInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyCubeTagRequest is request schema for ModifyCubeTag action
+type ModifyCubeTagRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// CubeId
+	CubeId *string `required:"true"`
+
+	// 业务组名称
+	Tag *string `required:"true"`
+}
+
+// ModifyCubeTagResponse is response schema for ModifyCubeTag action
+type ModifyCubeTagResponse struct {
+	response.CommonBase
+
+	// CubeId
+	CubeId string
+}
+
+// NewModifyCubeTagRequest will create request of ModifyCubeTag action.
+func (c *CubeClient) NewModifyCubeTagRequest() *ModifyCubeTagRequest {
+	req := &ModifyCubeTagRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyCubeTag
+
+修改业务组名字
+*/
+func (c *CubeClient) ModifyCubeTag(req *ModifyCubeTagRequest) (*ModifyCubeTagResponse, error) {
+	var err error
+	var res ModifyCubeTagResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyCubeTag", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
