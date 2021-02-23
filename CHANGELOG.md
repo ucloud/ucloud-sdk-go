@@ -1,3 +1,9 @@
+## 0.19.1 (2021-02-23)
+
+ENHANCEMENTS:
+
+- Update all APIs of `Cube` (#209)
+
 ## 0.19.0 (2021-02-03)
 
 FEATURES:
