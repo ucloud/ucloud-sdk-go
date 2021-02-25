@@ -31,7 +31,7 @@ func TestMap2String(t *testing.T) {
 	params := map[string]interface{}{
 		"12": 3,
 		"4":  "56",
-		"7": []int{8,9,10},
+		"7":  []int{8, 9, 10},
 		"11": map[string]interface{}{"12": 13, "14": 15},
 	}
 	signedStr := map2String(params)
@@ -45,4 +45,3 @@ func Test_reflectArr2String(t *testing.T) {
 	str := reflect2String(reflect.ValueOf(arr))
 	fmt.Println(str)
 }
-
