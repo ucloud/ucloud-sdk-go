@@ -3,6 +3,15 @@
 package ucdn
 
 /*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
+}
+
+/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -27,6 +36,87 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+DomainInfo - 域名配置
+*/
+type DomainInfo struct {
+
+	// 访问控制
+	AccessConf AccessConf
+
+	// 查询带宽区域 cn代表国内 abroad代表海外 不填默认为全部区域
+	AreaCode string
+
+	// 缓存配置规则列表
+	CacheConf []CacheConf
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 加速类型http,http|https
+	CdnProtocol string
+
+	// 加速域名的业务类型，web代表网站，stream代表视频，download代表下载。
+	CdnType string
+
+	// 证书名称
+	CertName string
+
+	// cdn域名。创建加速域名生成的cdn域名，用于设置CNAME记录
+	Cname string
+
+	// 域名创建的时间。格式：时间戳
+	CreateTime int
+
+	// 域名，用户创建加速的域名
+	Domain string
+
+	// 域名id，创建域名时生成的id
+	DomainId string
+
+	// 国外https状态 enableing-开启中  fail-开启失败 enable-启用 disable-未启用
+	HttpsStatusAbroad string
+
+	// 国内https状态 enableing-开启中 fail-开启失败 enable-启用 disable-未启用
+	HttpsStatusCn string
+
+	// ReferType为白名单时，NullRefer为false代表不允许NULL refer访问，为true代表允许Null refer访问
+	NullRefer bool
+
+	// 回源Http请求头部Host，默认是加速域名
+	OriginHost string
+
+	// 源站ip即cdn服务器回源访问的ip地址。支持多个源站ip，多个源站ip，可表述为如：[1.1.1.1,2.2.2.2]
+	OriginIp []string
+
+	// 回源端口
+	OriginPort int
+
+	// 源站协议http，http|https   默认http
+	OriginProtocol string
+
+	// Refer列表，支持正则表达式
+	ReferList []string
+
+	// refer配置开关，true打开，false关闭
+	ReferStatus bool
+
+	// 0白名单，1黑名单
+	ReferType int
+
+	// 创建的加速域名的当前的状态。check代表审核中，checkSuccess代表审核通过，checkFail代表审核失败，enable代表加速中，disable代表停止加速，delete代表删除加速 enableing代表正在开启加速，disableing代表正在停止加速中，deleteing代表删除中
+	Status string
+
+	// 业务组，默认为Default
+	Tag string
+
+	// 测试url，用于域名创建加速时的测试
+	TestUrl string
+
+	// 开始分配Cname时间。格式：时间戳
+	ValidTime int
 }
 
 /*
@@ -297,6 +387,9 @@ type HttpCodeV2Detail struct {
 
 	// 时间
 	Time int
+
+	// 当前分组的总状态码数
+	Total int
 }
 
 /*
@@ -315,6 +408,21 @@ type RequestInfo struct {
 }
 
 /*
+BandwidthTrafficInfo - BandwidthTrafficInfo
+*/
+type BandwidthTrafficInfo struct {
+
+	// 返回值返回指定时间区间内CDN的带宽峰值，单位Mbps（如果请求参数Type为0，则Value是五分钟粒度的带宽值，如果Type为1，则Value是1小时的带宽峰值，如果Type为2，则Value是一天内的带宽峰值）
+	CdnBandwidth float64
+
+	// 带宽获取的时间点。格式：时间戳
+	Time int
+
+	// 对应时间粒度的流量，单位字节
+	Traffic float64
+}
+
+/*
 CacheKeyInfo - 忽略参数缓存配置
 */
 type CacheKeyInfo struct {
@@ -330,17 +438,17 @@ type CacheKeyInfo struct {
 }
 
 /*
-ReferConf - Refer配置
+ReferConf - refer配置
 */
 type ReferConf struct {
 
-	// ReferType为白名单时，(删除)NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
+	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
 	NullRefer int
 
-	// Refer列表，支持正则表达式
+	// Refer防盗链规则列表，支持正则表达式
 	ReferList []string
 
-	// 0白名单，1黑名单
+	// Refer防盗链配置  0白名单，1黑名单
 	ReferType int
 }
 
@@ -414,15 +522,15 @@ type AdvancedConf struct {
 }
 
 /*
-AccessAllConfig - 访问控制配置
+AccessControlConf - 访问控制配置参数
 */
-type AccessAllConfig struct {
+type AccessControlConf struct {
 
-	// ip黑名单列表 ["1.1.1.1","2.2.2.2"]
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
 	IpBlackList []string
 
-	// Refer配置,参考ReferConf结构
-	ReferConf []ReferConf
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*
@@ -430,16 +538,16 @@ DomainConfigInfo - 更新域名配置
 */
 type DomainConfigInfo struct {
 
-	// 访问控制配置
-	AccessAllConfig AccessAllConfig
+	// 访问控制配置 参考AccessControlConf
+	AccessControlConf AccessControlConf
 
-	// 高级配置
+	// 高级配置 参考AdvancedConf
 	AdvancedConf AdvancedConf
 
 	// 查询带宽区域 cn代表国内 abroad代表海外 all表示全部区域
 	AreaCode string
 
-	// 缓存配置
+	// 缓存配置 参考CacheAllConfig
 	CacheConf CacheAllConfig
 
 	// 加速域名的业务类型，web代表网站，stream代表视频 ，download 代表下载
@@ -469,7 +577,7 @@ type DomainConfigInfo struct {
 	// 国内https状态 enableing-开启中 fail-开启失败 enable-启用 disable-未启用
 	HttpsStatusCn string
 
-	// 源站配置
+	// 源站配置 参考OriginConf
 	OriginConf OriginConf
 
 	// 创建的加速域名的当前的状态。check代表审核中，checkSuccess代表审核通过，checkFail代表审核失败，enable代表加速中，disable代表停止加速，delete代表删除加速enableing代表正在开启加速，disableing代表正在停止加速中，deleteing代表删除中
@@ -480,6 +588,33 @@ type DomainConfigInfo struct {
 
 	// 测试url。用于域名创建加速时的测试
 	TestUrl string
+}
+
+/*
+HttpCodeInfoV2 - HttpCodeInfoV2
+*/
+type HttpCodeInfoV2 struct {
+
+	// 1xx信息，参考HttpCodeV2Detail结构
+	Http1XX HttpCodeV2Detail
+
+	// 2xx信息，参考HttpCodeV2Detail结构
+	Http2XX HttpCodeV2Detail
+
+	// 3xx信息，参考HttpCodeV2Detail结构
+	Http3XX HttpCodeV2Detail
+
+	// 4xx信息，参考HttpCodeV2Detail结构
+	Http4XX HttpCodeV2Detail
+
+	// 5xx信息，参考HttpCodeV2Detail结构
+	Http5XX HttpCodeV2Detail
+
+	// 6xx信息，参考HttpCodeV2Detail结构
+	Http6XX HttpCodeV2Detail
+
+	// 带宽获取的时间点。格式：时间戳
+	Time int
 }
 
 /*
@@ -510,6 +645,18 @@ type LogSetList struct {
 }
 
 /*
+RequestInfoV2 - RequestInfoV2
+*/
+type RequestInfoV2 struct {
+
+	// 返回值返回指定时间区间内的cdn收到的请求次数之和
+	CdnRequest float64
+
+	// 带宽获取的时间点。格式：时间戳
+	Time int
+}
+
+/*
 UcdnDomainTrafficSet - GetUcdnDomainTraffic
 */
 type UcdnDomainTrafficSet struct {
@@ -531,6 +678,57 @@ type BandwidthInfoDetail struct {
 
 	// 宽获取的时间点。格式：时间戳
 	Time int
+}
+
+/*
+ProIspBandwidthList - 省份带宽流量实例表
+*/
+type ProIspBandwidthList struct {
+
+	// 返回值返回指定时间区间内CDN的带宽峰值，单位Mbps
+	CdnBandwidth float64
+
+	// 带宽获取的时间点。格式：时间戳
+	Time int
+
+	// 对应时间粒度的流量，单位字节
+	Traffic float64
+}
+
+/*
+ProIspBandwidthSet - 按省份的带宽流量实例表
+*/
+type ProIspBandwidthSet struct {
+
+	// 省份带宽流量实例表
+	BandwidthTrafficList []ProIspBandwidthList
+
+	// 省份代码
+	Province string
+}
+
+/*
+ProIspRequestListV2 - 省份请求数实例表
+*/
+type ProIspRequestListV2 struct {
+
+	// 返回值返回指定时间区间内的请求数
+	CdnRequest float64
+
+	// 带宽获取的时间点。格式：时间戳
+	Time int
+}
+
+/*
+ProIspRequestNumSetV2 - 按省份的请求数实例表
+*/
+type ProIspRequestNumSetV2 struct {
+
+	// 省份代码
+	Province string
+
+	// 省份请求数实例表 ProIspRequestListV2
+	RequestList []ProIspRequestListV2
 }
 
 /*
