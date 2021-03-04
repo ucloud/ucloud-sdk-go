@@ -1,3 +1,9 @@
+## 0.19.2 (2021-03-04)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UCDN` (#212)
+
 ## 0.19.1 (2021-02-23)
 
 ENHANCEMENTS:
