@@ -12,7 +12,8 @@ type ULBClient struct {
 
 // NewClient will return a instance of ULBClient
 func NewClient(config *ucloud.Config, credential *auth.Credential) *ULBClient {
-	client := ucloud.NewClient(config, credential)
+	meta := ucloud.ClientMeta{Product: "ULB"}
+	client := ucloud.NewClientWithMeta(config, credential, meta)
 	return &ULBClient{
 		client,
 	}

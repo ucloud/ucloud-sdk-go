@@ -19,6 +19,10 @@ English | [简体中文](README_cn.md)
 
 ## Installation
 
+### Requirements
+
+- Go 1.10+
+
 ### Use `go get`
 
 ```bash

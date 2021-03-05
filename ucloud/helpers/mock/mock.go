@@ -80,6 +80,5 @@ func (c *HttpClient) Send(req *http.HttpRequest) (*http.HttpResponse, error) {
 			return resp, err
 		}
 	}
-
 	return resp, nil
 }

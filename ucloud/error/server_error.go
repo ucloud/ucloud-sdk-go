@@ -72,7 +72,7 @@ func NewResponseBodyError(err error, body string) ServerError {
 
 // NewEmptyResponseBodyError will create a new response body error
 func NewEmptyResponseBodyError() ServerError {
-	message := fmt.Sprintf("response body got empty")
+	message := "response body got empty"
 	return ServerError{
 		name:       ErrEmptyResponseBodyError,
 		err:        fmt.Errorf("%s", message),
