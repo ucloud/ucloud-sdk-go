@@ -45,11 +45,11 @@ func (client DefaultClient) GetMetadata(path string) (string, error) {
 }
 
 func (client DefaultClient) GetUserData() (string, error) {
-	return client.SendRequest(fmt.Sprintf("/user-data"))
+	return client.SendRequest("/user-data")
 }
 
 func (client DefaultClient) GetVendorData() (string, error) {
-	return client.SendRequest(fmt.Sprintf("/vendor-data"))
+	return client.SendRequest("/vendor-data")
 }
 
 func (client DefaultClient) SendRequest(path string) (string, error) {

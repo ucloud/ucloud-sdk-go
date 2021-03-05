@@ -37,34 +37,25 @@ func TestScenario4140(t *testing.T) {
 			testStep4140DescribeUcdnDomain04,
 			testStep4140GetUcdnDomainConfig05,
 			testStep4140GetNewUcdnDomainHttpCodeV206,
-			testStep4140GetUcdnDomainHttpCodeV207,
-			testStep4140GetNewUcdnDomainHitRate08,
-			testStep4140GetNewUcdnDomainHttpCode09,
-			testStep4140PrefetchNewUcdnDomainCache10,
-			testStep4140DescribeNewUcdnPrefetchCacheTask11,
-			testStep4140DescribeNewUcdnRefreshCacheTask12,
-			testStep4140RefreshNewUcdnDomainCache13,
-			testStep4140RefreshNewUcdnDomainCache14,
-			testStep4140GetNewUcdnDomainBandwidth15,
-			testStep4140GetUcdnDomainBandwidthV216,
-			testStep4140GetUcdnProIspBandwidthV217,
-			testStep4140GetUcdnDomain95BandwidthV218,
-			testStep4140GetUcdnPassBandwidth19,
-			testStep4140GetUcdnPassBandwidthV220,
-			testStep4140GetUcdnDomainRequestNumV221,
-			testStep4140GetUcdnDomainRequestNumV322,
-			testStep4140GetUcdnProIspRequestNumV223,
-			testStep4140GetUcdnDomainOriginRequestNum24,
-			testStep4140GetUcdnDomainLog25,
-			testStep4140GetUcdnTraffic26,
-			testStep4140GetUcdnTrafficV227,
-			testStep4140GetUcdnDomainTraffic28,
-			testStep4140GetUcdnDomainPrefetchEnable29,
-			testStep4140SwitchUcdnChargeType30,
-			testStep4140StopUcdnTestDomain31,
-			testStep4140DescribeUcdnDomain32,
-			testStep4140UpdateUcdnDomainStatus33,
-			testStep4140DeleteBucket34,
+			testStep4140GetNewUcdnDomainHitRate07,
+			testStep4140GetNewUcdnDomainHttpCode08,
+			testStep4140PrefetchNewUcdnDomainCache09,
+			testStep4140DescribeNewUcdnPrefetchCacheTask10,
+			testStep4140DescribeNewUcdnRefreshCacheTask11,
+			testStep4140RefreshNewUcdnDomainCache12,
+			testStep4140BatchRefreshNewUcdnDomainCache13,
+			testStep4140GetNewUcdnDomainBandwidth14,
+			testStep4140GetUcdnPassBandwidth15,
+			testStep4140GetUcdnDomainRequestNumV216,
+			testStep4140GetNewUcdnDomainRequestNum17,
+			testStep4140GetUcdnDomainLog18,
+			testStep4140GetUcdnTraffic19,
+			testStep4140GetUcdnDomainTraffic20,
+			testStep4140GetUcdnDomainPrefetchEnable21,
+			testStep4140SwitchUcdnChargeType22,
+			testStep4140StopUcdnTestDomain23,
+			testStep4140DescribeUcdnDomain24,
+			testStep4140DeleteBucket25,
 		},
 	})
 }
@@ -301,43 +292,7 @@ var testStep4140GetNewUcdnDomainHttpCodeV206 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnDomainHttpCodeV207 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnDomainHttpCodeV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Type": "time_granule_type",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnDomainHttpCodeV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnDomainHttpCodeV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取域名状态码信息【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetNewUcdnDomainHitRate08 = &driver.Step{
+var testStep4140GetNewUcdnDomainHitRate07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -375,7 +330,7 @@ var testStep4140GetNewUcdnDomainHitRate08 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetNewUcdnDomainHttpCode09 = &driver.Step{
+var testStep4140GetNewUcdnDomainHttpCode08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -413,7 +368,7 @@ var testStep4140GetNewUcdnDomainHttpCode09 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140PrefetchNewUcdnDomainCache10 = &driver.Step{
+var testStep4140PrefetchNewUcdnDomainCache09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -452,7 +407,7 @@ var testStep4140PrefetchNewUcdnDomainCache10 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140DescribeNewUcdnPrefetchCacheTask11 = &driver.Step{
+var testStep4140DescribeNewUcdnPrefetchCacheTask10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -490,7 +445,7 @@ var testStep4140DescribeNewUcdnPrefetchCacheTask11 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140DescribeNewUcdnRefreshCacheTask12 = &driver.Step{
+var testStep4140DescribeNewUcdnRefreshCacheTask11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -528,7 +483,7 @@ var testStep4140DescribeNewUcdnRefreshCacheTask12 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140RefreshNewUcdnDomainCache13 = &driver.Step{
+var testStep4140RefreshNewUcdnDomainCache12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -567,7 +522,7 @@ var testStep4140RefreshNewUcdnDomainCache13 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140RefreshNewUcdnDomainCache14 = &driver.Step{
+var testStep4140BatchRefreshNewUcdnDomainCache13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -575,18 +530,16 @@ var testStep4140RefreshNewUcdnDomainCache14 = &driver.Step{
 		}
 		client := c.(*ucdn.UCDNClient)
 
-		req := client.NewRefreshNewUcdnDomainCacheRequest()
+		req := client.NewBatchRefreshNewUcdnDomainCacheRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
-			"UrlList": []interface{}{
-				step.Must(functions.Concat("http://", step.Scenario.GetVar("domain"), "/test.txt")),
-			},
-			"Type": "file",
+			"UrlList": step.Must(functions.Concat("http://", step.Scenario.GetVar("domain"), "/test.txt")),
+			"Type":    "file",
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		resp, err := client.RefreshNewUcdnDomainCache(req)
+		resp, err := client.BatchRefreshNewUcdnDomainCache(req)
 		if err != nil {
 			return resp, err
 		}
@@ -596,17 +549,17 @@ var testStep4140RefreshNewUcdnDomainCache14 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "RefreshNewUcdnDomainCacheResponse", "str_eq"),
+			validation.Builtins.NewValidator("Action", "BatchRefreshNewUcdnDomainCacheResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "刷新缓存",
+	Title:         "批量刷新缓存",
 	FastFail:      false,
 }
 
-var testStep4140GetNewUcdnDomainBandwidth15 = &driver.Step{
+var testStep4140GetNewUcdnDomainBandwidth14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -642,118 +595,7 @@ var testStep4140GetNewUcdnDomainBandwidth15 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnDomainBandwidthV216 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnDomainBandwidthV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Type": step.Scenario.GetVar("time_granule_type"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnDomainBandwidthV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnDomainBandwidthV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取域名带宽数据【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnProIspBandwidthV217 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnProIspBandwidthV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Type":      step.Scenario.GetVar("time_granule_type"),
-			"EndTime":   step.Must(functions.GetTimestamp(10)),
-			"BeginTime": step.Must(functions.Calculate("-", step.Must(functions.GetTimestamp(10)), 1000)),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnProIspBandwidthV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnProIspBandwidthV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "按省份运营商获取域名带宽数据【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnDomain95BandwidthV218 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnDomain95BandwidthV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"EndTime":   step.Must(functions.GetTimestamp(10)),
-			"BeginTime": step.Must(functions.Calculate("-", step.Must(functions.GetTimestamp(10)), 1000)),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnDomain95BandwidthV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnDomain95BandwidthV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取域名九五峰值带宽数据【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnPassBandwidth19 = &driver.Step{
+var testStep4140GetUcdnPassBandwidth15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -789,43 +631,7 @@ var testStep4140GetUcdnPassBandwidth19 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnPassBandwidthV220 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnPassBandwidthV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Type": step.Scenario.GetVar("time_granule_type"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnPassBandwidthV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnPassBandwidthV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取回源带宽数据（按时间分类）【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnDomainRequestNumV221 = &driver.Step{
+var testStep4140GetUcdnDomainRequestNumV216 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -866,7 +672,7 @@ var testStep4140GetUcdnDomainRequestNumV221 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnDomainRequestNumV322 = &driver.Step{
+var testStep4140GetNewUcdnDomainRequestNum17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -874,7 +680,7 @@ var testStep4140GetUcdnDomainRequestNumV322 = &driver.Step{
 		}
 		client := c.(*ucdn.UCDNClient)
 
-		req := client.NewGetUcdnDomainRequestNumV3Request()
+		req := client.NewGetNewUcdnDomainRequestNumRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Type":    step.Scenario.GetVar("time_granule_type"),
 			"EndTime": step.Must(functions.GetTimestamp(10)),
@@ -887,7 +693,7 @@ var testStep4140GetUcdnDomainRequestNumV322 = &driver.Step{
 			return nil, err
 		}
 
-		resp, err := client.GetUcdnDomainRequestNumV3(req)
+		resp, err := client.GetNewUcdnDomainRequestNum(req)
 		if err != nil {
 			return resp, err
 		}
@@ -897,92 +703,17 @@ var testStep4140GetUcdnDomainRequestNumV322 = &driver.Step{
 	Validators: func(step *driver.Step) []driver.TestValidator {
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnDomainRequestNumV3Response", "str_eq"),
+			validation.Builtins.NewValidator("Action", "GetNewUcdnDomainRequestNumResponse", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
-	Title:         "获取域名请求数【新】",
+	Title:         "获取域名请求数",
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnProIspRequestNumV223 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnProIspRequestNumV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"EndTime":   step.Must(functions.GetTimestamp(10)),
-			"BeginTime": step.Must(functions.Calculate("-", step.Must(functions.GetTimestamp(10)), 1000)),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnProIspRequestNumV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnProIspRequestNumV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "按省份运营商获取域名请求数【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnDomainOriginRequestNum24 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnDomainOriginRequestNumRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Type":      step.Scenario.GetVar("time_granule_type"),
-			"EndTime":   step.Must(functions.GetTimestamp(10)),
-			"BeginTime": step.Must(functions.Calculate("-", step.Must(functions.GetTimestamp(10)), 1000)),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnDomainOriginRequestNum(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnDomainOriginRequestNumResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取域名回源请求数【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnDomainLog25 = &driver.Step{
+var testStep4140GetUcdnDomainLog18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -1021,7 +752,7 @@ var testStep4140GetUcdnDomainLog25 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnTraffic26 = &driver.Step{
+var testStep4140GetUcdnTraffic19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -1055,41 +786,7 @@ var testStep4140GetUcdnTraffic26 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnTrafficV227 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UCDN")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucdn.UCDNClient)
-
-		req := client.NewGetUcdnTrafficV2Request()
-		err = utils.SetRequest(req, map[string]interface{}{})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.GetUcdnTrafficV2(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "GetUcdnTrafficV2Response", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "获取账户总流量信息【新】",
-	FastFail:      false,
-}
-
-var testStep4140GetUcdnDomainTraffic28 = &driver.Step{
+var testStep4140GetUcdnDomainTraffic20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -1125,7 +822,7 @@ var testStep4140GetUcdnDomainTraffic28 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140GetUcdnDomainPrefetchEnable29 = &driver.Step{
+var testStep4140GetUcdnDomainPrefetchEnable21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -1162,7 +859,7 @@ var testStep4140GetUcdnDomainPrefetchEnable29 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140SwitchUcdnChargeType30 = &driver.Step{
+var testStep4140SwitchUcdnChargeType22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UCDN")
 		if err != nil {
@@ -1198,7 +895,7 @@ var testStep4140SwitchUcdnChargeType30 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140StopUcdnTestDomain31 = &driver.Step{
+var testStep4140StopUcdnTestDomain23 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -1235,7 +932,7 @@ var testStep4140StopUcdnTestDomain31 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140DescribeUcdnDomain32 = &driver.Step{
+var testStep4140DescribeUcdnDomain24 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -1277,44 +974,7 @@ var testStep4140DescribeUcdnDomain32 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep4140UpdateUcdnDomainStatus33 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*ucloud.Client)
-
-		req := client.NewGenericRequest()
-		_ = req.SetAction("UpdateUcdnDomainStatus")
-		err = req.SetPayload(map[string]interface{}{
-			"Status":   "delete",
-			"DomainId": step.Scenario.GetVar("domainId"),
-		})
-		if err != nil {
-			return nil, err
-		}
-		resp, err := client.GenericInvoke(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
-			validation.Builtins.NewValidator("Action", "UpdateUcdnDomainStatusResponse", "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
-	Title:         "更新加速域名状态",
-	FastFail:      false,
-}
-
-var testStep4140DeleteBucket34 = &driver.Step{
+var testStep4140DeleteBucket25 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UFile")
 		if err != nil {

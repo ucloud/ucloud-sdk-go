@@ -148,8 +148,6 @@ func (step *Step) run() {
 		step.status = "passed"
 		return
 	}
-
-	return
 }
 
 func (step *Step) Report() StepReport {

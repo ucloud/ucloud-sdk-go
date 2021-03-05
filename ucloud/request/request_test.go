@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/config"
 )
 
 func TestRequestAccessor(t *testing.T) {
@@ -181,7 +183,8 @@ func TestToQueryMap(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    map[string]string
+		form    map[string]string
+		json    map[string]interface{}
 		wantErr bool
 	}{
 		{
@@ -207,6 +210,12 @@ func TestToQueryMap(t *testing.T) {
 				"Ips.0":   "127.0.0.1",
 				"Ips.1":   "192.168.1.1",
 			},
+			map[string]interface{}{
+				"Id":      1,
+				"Name":    "lilei",
+				"IsValid": true,
+				"Ips":     []interface{}{"127.0.0.1", "192.168.1.1"},
+			},
 			false,
 		},
 		{
@@ -214,14 +223,13 @@ func TestToQueryMap(t *testing.T) {
 			args{
 				req: &struct {
 					CommonBase
-					Id      int
-					Name    string
-					IsValid bool
+					Id      *int
+					Name    *string
+					IsValid *bool
 					Ips     []string
 				}{
-					Id:      1,
-					Name:    "",
-					IsValid: true,
+					Id:      Int(1),
+					IsValid: Bool(true),
 					Ips:     []string{"127.0.0.1", "192.168.1.1"},
 				},
 			},
@@ -230,6 +238,11 @@ func TestToQueryMap(t *testing.T) {
 				"IsValid": "true",
 				"Ips.0":   "127.0.0.1",
 				"Ips.1":   "192.168.1.1",
+			},
+			map[string]interface{}{
+				"Id":      1,
+				"IsValid": true,
+				"Ips":     []interface{}{"127.0.0.1", "192.168.1.1"},
 			},
 			false,
 		},
@@ -244,7 +257,14 @@ func TestToQueryMap(t *testing.T) {
 					Composite{Region: "cn-bj2"},
 				},
 			},
-			map[string]string{"Composite.Region": "cn-bj2"},
+			map[string]string{
+				"Composite.Region": "cn-bj2",
+			},
+			map[string]interface{}{
+				"Composite": map[string]interface{}{
+					"Region": "cn-bj2",
+				},
+			},
 			false,
 		},
 		{
@@ -265,6 +285,12 @@ func TestToQueryMap(t *testing.T) {
 				"Arr.0.Region": "cn-bj2",
 				"Arr.1.Region": "cn-sh1",
 			},
+			map[string]interface{}{
+				"Arr": []interface{}{
+					map[string]interface{}{"Region": "cn-bj2"},
+					map[string]interface{}{"Region": "cn-sh1"},
+				},
+			},
 			false,
 		},
 		{
@@ -281,6 +307,11 @@ func TestToQueryMap(t *testing.T) {
 			map[string]string{
 				"Ptr.Region": "cn-bj2",
 			},
+			map[string]interface{}{
+				"Ptr": map[string]interface{}{
+					"Region": "cn-bj2",
+				},
+			},
 			false,
 		},
 		{
@@ -295,28 +326,41 @@ func TestToQueryMap(t *testing.T) {
 			map[string]string{
 				"Region": "cn-bj2",
 			},
+			map[string]interface{}{
+				"Region": "cn-bj2",
+			},
 			false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToQueryMap(tt.args.req)
+			jsonEncoded, err := EncodeJSON(tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("requestToMap() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("EncodeJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("requestToMap() = %v, want %v", got, tt.want)
+			if !assert.Equal(t, tt.json, jsonEncoded) {
+				t.Errorf("EncodeJSON() = %v, json %v", jsonEncoded, tt.json)
+			}
+
+			formEncoded, err := EncodeForm(tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EncodeForm() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !assert.Equal(t, tt.form, formEncoded) {
+				t.Errorf("EncodeForm() = %v, form %v", formEncoded, tt.form)
 			}
 		})
 	}
 }
 
 func TestToQueryMapForGeneric(t *testing.T) {
+	var typedNil *string
 	tests := []struct {
 		name    string
 		payload map[string]interface{}
-		want    map[string]string
+		form    map[string]string
 		wantErr bool
 	}{
 		{
@@ -337,6 +381,22 @@ func TestToQueryMapForGeneric(t *testing.T) {
 			false,
 		},
 
+		{
+			"Partial",
+			map[string]interface{}{
+				"Id":      Int(1),
+				"Name":    typedNil,
+				"IsValid": Bool(true),
+				"Ips":     []string{"127.0.0.1", "192.168.1.1"},
+			},
+			map[string]string{
+				"Id":      "1",
+				"IsValid": "true",
+				"Ips.0":   "127.0.0.1",
+				"Ips.1":   "192.168.1.1",
+			},
+			false,
+		},
 		{
 			"Ok_nest_map",
 			map[string]interface{}{
@@ -361,7 +421,6 @@ func TestToQueryMapForGeneric(t *testing.T) {
 			},
 			false,
 		},
-
 		{
 			"Ok_ptr_map",
 			map[string]interface{}{
@@ -385,14 +444,132 @@ func TestToQueryMapForGeneric(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			req := &BaseGenericRequest{}
 			assert.NoError(t, req.SetPayload(tt.payload))
-			got, err := ToQueryMap(req)
+
+			jsonEncoded, err := EncodeJSON(req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("requestToMap() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("EncodeJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("requestToMap() = %v, want %v", got, tt.want)
+			if !assert.Equal(t, tt.payload, jsonEncoded) {
+				t.Errorf("EncodeJSON() = %v, json %v", jsonEncoded, tt.payload)
+			}
+
+			formEncoded, err := EncodeForm(req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EncodeForm() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !assert.Equal(t, tt.form, formEncoded) {
+				t.Errorf("EncodeForm() = %v, form %v", formEncoded, tt.form)
 			}
 		})
+	}
+}
+
+func TestEncoderError(t *testing.T) {
+	var err error
+	tests := []struct {
+		name        string
+		req         map[string]interface{}
+		wantFormErr bool
+		wantJSONErr bool
+	}{
+		{
+			"Invalid_type",
+			map[string]interface{}{
+				"foo": auth.NewCredential(),
+			},
+			true,
+			false,
+		},
+	}
+	for _, tt := range tests {
+		req := &BaseGenericRequest{}
+		assert.NoError(t, req.SetPayload(tt.req))
+
+		_, err = EncodeJSON(req)
+		if (err != nil) != tt.wantJSONErr {
+			t.Errorf("EncodeJSON() error = %v, wantErr %v", err, tt.wantJSONErr)
+			return
+		}
+
+		_, err = EncodeForm(req)
+		if (err != nil) != tt.wantFormErr {
+			t.Errorf("EncodeForm() error = %v, wantErr %v", err, tt.wantFormErr)
+			return
+		}
+	}
+}
+
+func TestEncoder(t *testing.T) {
+	cfg := config.NewConfig()
+	cred := auth.NewCredential()
+	cred.PublicKey = "foo"
+	cred.PrivateKey = "bar"
+	cred.SecurityToken = "42"
+
+	tests := []struct {
+		req     Common
+		form    string
+		json    string
+		wantErr bool
+	}{
+		{
+			&struct {
+				CommonBase
+				Name string
+			}{
+				CommonBase: CommonBase{
+					Action:    String("foo"),
+					ProjectId: String("bar"),
+					Region:    String("cn-bj2"),
+					Zone:      String("cn-bj2-02"),
+				},
+				Name: "foo",
+			},
+			"Action=foo&Name=foo&ProjectId=bar&PublicKey=foo&Region=cn-bj2&SecurityToken=42&Signature=170de002e3ca3acdc3a790badc4d14b09d183e4b&Zone=cn-bj2-02",
+			`{"Action":"foo","Name":"foo","ProjectId":"bar","PublicKey":"foo","Region":"cn-bj2","SecurityToken":"42","Signature":"170de002e3ca3acdc3a790badc4d14b09d183e4b","Zone":"cn-bj2-02"}`,
+			false,
+		},
+		{
+			nil,
+			"",
+			"",
+			true,
+		},
+		{
+			&BaseGenericRequest{payload: map[string]interface{}{"Name": "foo"}},
+			"Name=foo&PublicKey=foo&SecurityToken=42&Signature=012679c87951918e8e04de783a4a8ff981a61d5f",
+			`{"Name":"foo","PublicKey":"foo","SecurityToken":"42","Signature":"012679c87951918e8e04de783a4a8ff981a61d5f"}`,
+			false,
+		},
+		{
+			&BaseGenericRequest{payload: nil},
+			"PublicKey=foo&SecurityToken=42&Signature=9d6d7cb14e8aeda887369ff22371788ae06c5ea4",
+			`{"PublicKey":"foo","SecurityToken":"42","Signature":"9d6d7cb14e8aeda887369ff22371788ae06c5ea4"}`,
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		formEncoder := NewFormEncoder(&cfg, &cred)
+		httpReq, err := formEncoder.Encode(tt.req)
+		if (err != nil) != tt.wantErr {
+			t.Errorf("EncodeForm() error = %v, wantErr %v", err, tt.wantErr)
+			return
+		}
+		if httpReq != nil {
+			assert.Equal(t, tt.form, string(httpReq.GetRequestBody()))
+		}
+
+		jsonEncoder := NewJSONEncoder(&cfg, &cred)
+		httpReq, err = jsonEncoder.Encode(tt.req)
+		if (err != nil) != tt.wantErr {
+			t.Errorf("EncodeJSON() error = %v, wantErr %v", err, tt.wantErr)
+			return
+		}
+		if httpReq != nil {
+			assert.Equal(t, tt.json, string(httpReq.GetRequestBody()))
+		}
 	}
 }

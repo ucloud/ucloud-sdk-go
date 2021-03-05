@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 	"testing"
 	"time"
 )
@@ -62,7 +63,11 @@ func TestFuncWaiter_Cancel(t *testing.T) {
 		Interval:    time.Second * 1,
 	}
 
-	go waiter.WaitForCompletion()
+	go func() {
+		if err := waiter.WaitForCompletion(); err != nil {
+			log.Error(err)
+		}
+	}()
 	time.Sleep(time.Millisecond * 500)
 
 	if i > 2 {

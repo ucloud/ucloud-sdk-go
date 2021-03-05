@@ -18,5 +18,5 @@ type UHostIPSet struct {
 	IP string
 
 	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
-	bandwidth int
+	Bandwidth int
 }

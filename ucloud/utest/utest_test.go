@@ -124,8 +124,6 @@ func TestDriver(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
 			var spec = &driver.Specification{}
 
 			scenario := &driver.Scenario{
@@ -260,8 +258,4 @@ func newMockedClient(mockData map[string]interface{}, mockError error) (*ucloud.
 		return nil, err
 	}
 	return client, nil
-}
-
-func newStepInvoker() {
-	return
 }

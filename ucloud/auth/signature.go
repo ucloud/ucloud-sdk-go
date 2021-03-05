@@ -19,13 +19,8 @@ func extractKeys(m map[string]interface{}) []string {
 	return keys
 }
 
-// VerifySign verify signature
-func VerifySign(params map[string]interface{}, privateKey, signature string) bool {
-	return Sign(params, privateKey) == signature
-}
-
-// Sign generate signature
-func Sign(params map[string]interface{}, privateKey string) string {
+// sign generate signature
+func sign(params map[string]interface{}, privateKey string) string {
 	str := map2String(params) + privateKey
 	hashed := sha1.Sum([]byte(str))
 	return hex.EncodeToString(hashed[:])
@@ -132,7 +127,6 @@ func simple2String(v interface{}) string {
 	case *float64:
 		return strconv.FormatFloat(*v, 'f', -1, 64)
 	}
-
 	return ""
 }
 
