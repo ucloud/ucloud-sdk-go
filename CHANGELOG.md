@@ -1,3 +1,13 @@
+## 0.20.0 (2021-03-05)
+
+FEATURES:
+
+- Add request encoder to support **json-only** API (#214)
+
+ENHANCEMENTS:
+
+- Add `UpdateBackendBatch` to private package (#214)
+
 ## 0.19.2 (2021-03-04)
 
 ENHANCEMENTS:
