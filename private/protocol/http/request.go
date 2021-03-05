@@ -186,10 +186,23 @@ func (h *HttpRequest) GetRequestBody() []byte {
 }
 
 func (h *HttpRequest) String() string {
-	if qs, err := h.BuildQueryString(); err == nil {
-		return fmt.Sprintf("%s?%s", h.GetURL(), qs)
+	s := h.GetURL()
+
+	// resolve query
+	qs, err := h.BuildQueryString()
+	if err != nil {
+		return s
 	}
-	return h.GetURL()
+	if len(qs) > 0 {
+		s = fmt.Sprintf("%s?%s", s, qs)
+	}
+
+	// resolve body
+	bs := h.GetRequestBody()
+	if len(bs) > 0 {
+		s = fmt.Sprintf("%s %s", s, string(bs))
+	}
+	return s
 }
 
 func (h *HttpRequest) buildHTTPRequest() (*http.Request, error) {
