@@ -68,27 +68,27 @@ func TestSetReqValue(t *testing.T) {
 	}
 	testObj := Test{}
 
-	SetReqValue(&testObj, "Name", "name")
+	_ = SetReqValue(&testObj, "Name", "name")
 	if *testObj.Name != "name" {
 		t.Errorf("SetReqValue() = %#v, want %v", ucloud.StringValue(testObj.Name), "name")
 	}
 
-	SetReqValue(&testObj, "CPU", "1")
+	_ = SetReqValue(&testObj, "CPU", "1")
 	if *testObj.CPU != 1 {
 		t.Errorf("SetReqValue() = %#v, want %v", ucloud.IntValue(testObj.CPU), 1)
 	}
 
-	SetReqValue(&testObj, "IPs", "192.168.0.1")
+	_ = SetReqValue(&testObj, "IPs", "192.168.0.1")
 	if testObj.IPs[0] != "192.168.0.1" {
 		t.Errorf("SetReqValue() = %#v, want %v", testObj.IPs[0], "192.168.0.1")
 	}
 
-	SetReqValue(&testObj, "IPs", "192.168.0.1")
+	_ = SetReqValue(&testObj, "IPs", "192.168.0.1")
 	if testObj.IPs[0] != "192.168.0.1" {
 		t.Errorf("SetReqValue() = %#v, want %v", testObj.IPs[0], "192.168.0.1")
 	}
 
-	SetReqValue(&testObj, "IPs", "192.168.0.1", "192.168.0.2")
+	_ = SetReqValue(&testObj, "IPs", "192.168.0.1", "192.168.0.2")
 	if testObj.IPs[0] != "192.168.0.1" || testObj.IPs[1] != "192.168.0.2" {
 		t.Errorf("SetReqValue() = %#v, want %v", testObj.IPs, []string{"192.168.0.1", "192.168.0.2"})
 	}

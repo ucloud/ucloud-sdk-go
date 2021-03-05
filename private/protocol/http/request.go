@@ -192,13 +192,6 @@ func (h *HttpRequest) String() string {
 	return h.GetURL()
 }
 
-func (h *HttpRequest) getContentType() string {
-	if v, ok := h.headers["Content-Type"]; ok {
-		return v
-	}
-	return MimeFormURLEncoded
-}
-
 func (h *HttpRequest) buildHTTPRequest() (*http.Request, error) {
 	qs, err := h.BuildQueryString()
 	if err != nil {

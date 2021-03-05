@@ -259,7 +259,3 @@ func newMockedClient(mockData map[string]interface{}, mockError error) (*ucloud.
 	}
 	return client, nil
 }
-
-func newStepInvoker() {
-	return
-}

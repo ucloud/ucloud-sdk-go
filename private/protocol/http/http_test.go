@@ -85,6 +85,8 @@ func TestHTTPRequestBuilder(t *testing.T) {
 	assert.NoError(t, err)
 
 	httpReq, err := req.buildHTTPRequest()
+	assert.NoError(t, err)
+
 	body, err := ioutil.ReadAll(httpReq.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, body, []byte(qs))
@@ -99,6 +101,8 @@ func TestHTTPRequestBuilder(t *testing.T) {
 	assert.NoError(t, err)
 
 	httpReq, err = req.buildHTTPRequest()
+	assert.NoError(t, err)
+
 	body, err = ioutil.ReadAll(httpReq.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, body, []byte("content=1"))
@@ -113,6 +117,8 @@ func TestHTTPRequestBuilder(t *testing.T) {
 	assert.NoError(t, err)
 
 	httpReq, err = req.buildHTTPRequest()
+	assert.NoError(t, err)
+
 	body, err = ioutil.ReadAll(httpReq.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, body, []byte(`{"content": 1}`))
