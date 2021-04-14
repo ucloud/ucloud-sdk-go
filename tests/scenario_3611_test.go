@@ -40,7 +40,7 @@ func TestScenario3611(t *testing.T) {
 			}
 		},
 		Owners: []string{"maggie.an@ucloud.cn"},
-		Title:  "主机功能之镜像跨可用区-N-LOCAL_NORMAL-LOCAL_NORMAL-2",
+		Title:  "主机功能之镜像跨可用区-Auto-N机型-LOCAL_NORMAL-LOCAL_NORMAL-2",
 		Steps: []*driver.Step{
 			testStep3611DescribeImage01,
 			testStep3611CreateUHostInstance02,
@@ -492,7 +492,7 @@ var testStep3611GetProjectList10 = &driver.Step{
 			return resp, err
 		}
 
-		step.Scenario.SetVar("TargetProjectID", step.Must(utils.GetValue(resp, "ProjectSet.1.ProjectId")))
+		step.Scenario.SetVar("TargetProjectID", step.Must(utils.GetValue(resp, "ProjectSet.2.ProjectId")))
 		return resp, nil
 	},
 	Validators: func(step *driver.Step) []driver.TestValidator {

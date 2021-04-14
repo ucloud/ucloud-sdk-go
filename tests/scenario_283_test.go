@@ -45,7 +45,7 @@ func TestScenario283(t *testing.T) {
 				"Zone":               "cn-bj2-04",
 			}
 		},
-		Owners: []string{"chenoa.chen@ucloud.cn"},
+		Owners: []string{"maggie.an@ucloud.cn"},
 		Title:  "UDisk-普通盘非方舟_01",
 		Steps: []*driver.Step{
 			testStep283DescribeImage01,
@@ -277,7 +277,7 @@ var testStep283DescribeUDisk05 = &driver.Step{
 	MaxRetries:    20,
 	RetryInterval: 3 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283RenameUDisk06 = &driver.Step{
@@ -349,13 +349,14 @@ var testStep283DescribeUDisk07 = &driver.Step{
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("DataSet.0.Name", step.Must(functions.Concat("re_", step.Scenario.GetVar("UDiskName"))), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283DescribeUDiskUpgradePrice08 = &driver.Step{
@@ -433,7 +434,7 @@ var testStep283ResizeUDisk09 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "调整云硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283DescribeUDisk10 = &driver.Step{
@@ -466,13 +467,14 @@ var testStep283DescribeUDisk10 = &driver.Step{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("Action", "DescribeUDiskResponse", "str_eq"),
 			validation.Builtins.NewValidator("DataSet.0.Size", step.Must(functions.Calculate("+", step.Scenario.GetVar("Size"), 1)), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 1 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283DescribeImage11 = &driver.Step{
@@ -728,7 +730,7 @@ var testStep283AttachUDisk16 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "挂载云硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283DescribeUDisk17 = &driver.Step{
@@ -765,10 +767,10 @@ var testStep283DescribeUDisk17 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    200,
-	RetryInterval: 3 * time.Second,
+	MaxRetries:    20,
+	RetryInterval: 6 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283CreateAttachUDisk18 = &driver.Step{
@@ -929,7 +931,7 @@ var testStep283DescribeUDisk21 = &driver.Step{
 	MaxRetries:    60,
 	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep283DeleteUDisk22 = &driver.Step{
