@@ -116,7 +116,7 @@ var testStep3608DescribeImage02 = &driver.Step{
 			"Region":    step.Scenario.GetVar("Region"),
 			"OsType":    "Linux",
 			"ImageType": "Base",
-			"ImageId":   step.Must(functions.SearchValue(step.Scenario.GetVar("ImageSet"), "OsName", "CentOS 7.1 64位", "ImageId")),
+			"ImageId":   step.Must(functions.SearchValue(step.Scenario.GetVar("ImageSet"), "OsName", "CentOS 7.2 64位", "ImageId")),
 		})
 		if err != nil {
 			return nil, err

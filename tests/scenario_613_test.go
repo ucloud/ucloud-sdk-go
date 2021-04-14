@@ -28,7 +28,7 @@ func TestScenario613(t *testing.T) {
 				"Zone":     "cn-bj2-02",
 			}
 		},
-		Owners: []string{"arno.gao@ucloud.cn"},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
 		Title:  "新版NAT网关-natgw自动化回归-端口转发-02-BGP线路",
 		Steps: []*driver.Step{
 			testStep613DescribeImage01,

@@ -41,7 +41,7 @@ func TestScenario3094(t *testing.T) {
 			}
 		},
 		Owners: []string{"maggie.an@ucloud.cn"},
-		Title:  "Intel/Haswell-主机功能-Auto-N-LOCAL_NORMAL-LOCAL_NORMAL-2",
+		Title:  "Intel/Haswell-主机功能-Auto-N机型-LOCAL_NORMAL-LOCAL_NORMAL-2",
 		Steps: []*driver.Step{
 			testStep3094DescribeImage01,
 			testStep3094CreateUHostInstance02,
