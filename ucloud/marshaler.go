@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"runtime"
+	"strconv"
 	"strings"
 
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
@@ -73,6 +74,7 @@ func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error)
 		runtime.Version(), version.Version, product, c.GetConfig().UserAgent,
 	)
 	_ = httpReq.SetHeader(http.HeaderNameUserAgent, strings.TrimSpace(ua))
+	_ = httpReq.SetHeader(http.HeaderUTimestampMs, strconv.FormatInt(req.GetRequestTime().UnixNano()/1000000, 10))
 	return httpReq, nil
 }
 
