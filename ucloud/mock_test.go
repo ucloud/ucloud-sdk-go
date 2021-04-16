@@ -127,7 +127,6 @@ func TestClient(t *testing.T) {
 			Mock:  nil,
 			Error: "InvalidRequestError",
 		},
-
 		{
 			Name: "NullCredential",
 			InputVector: func() *Client {
@@ -165,38 +164,38 @@ func TestClient(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		var err error
-		client := test.InputVector()
+		t.Run(test.Name, func(t *testing.T) {
+			var err error
+			client := test.InputVector()
 
-		err = mockTestClient(client, test.Mock)
-		assert.NoError(t, err)
+			err = mockTestClient(client, test.Mock)
+			assert.NoError(t, err)
 
-		// send mocked request, assert response value
-		req := request.CommonBase{}
-		resp := response.CommonBase{}
-		err = client.InvokeAction("Test", client.SetupRequest(&req), &resp)
-		if test.Error == "" {
-			if test.Golden.Action != "" {
-				assert.Equal(t, resp.Action, test.Golden.Action)
-			}
-
-			assert.Equal(t, resp.RetCode, test.Golden.RetCode)
-		} else {
-			if !assert.Error(t, err) {
-				t.FailNow()
-			}
-			if !assert.Contains(t, err.Error(), test.Error) {
-				t.FailNow()
-			}
-
-			if test.Golden != nil {
-				retCodeErr, ok := err.(uerr.ServerError)
-				if !assert.Equal(t, ok, true) {
+			// send mocked request, assert response value
+			req := request.CommonBase{}
+			resp := response.CommonBase{}
+			err = client.InvokeAction("Test", client.SetupRequest(&req), &resp)
+			if test.Error == "" {
+				if test.Golden.Action != "" {
+					assert.Equal(t, resp.Action, test.Golden.Action)
+				}
+				assert.Equal(t, resp.RetCode, test.Golden.RetCode)
+			} else {
+				if !assert.Error(t, err) {
 					t.FailNow()
 				}
-				assert.Equal(t, retCodeErr.Code(), test.Golden.RetCode)
+				if !assert.Contains(t, err.Error(), test.Error) {
+					t.FailNow()
+				}
+				if test.Golden != nil {
+					retCodeErr, ok := err.(uerr.ServerError)
+					if !assert.Equal(t, ok, true) {
+						t.FailNow()
+					}
+					assert.Equal(t, retCodeErr.Code(), test.Golden.RetCode)
+				}
 			}
-		}
+		})
 	}
 }
 
@@ -352,34 +351,36 @@ func TestGenericClient(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		var err error
-		client := test.InputVector()
+		t.Run(test.Name, func(t *testing.T) {
+			var err error
+			client := test.InputVector()
 
-		err = mockTestClient(client, test.Mock)
-		assert.NoError(t, err)
+			err = mockTestClient(client, test.Mock)
+			assert.NoError(t, err)
 
-		// send mocked request, assert response value
-		req := client.NewGenericRequest()
-		resp, err := client.GenericInvoke(req)
-		if test.Error == "" {
-			if test.Golden.Action != "" {
-				assert.Equal(t, resp.GetAction(), test.Golden.Action)
-			}
+			// send mocked request, assert response value
+			req := client.NewGenericRequest()
+			resp, err := client.GenericInvoke(req)
+			if test.Error == "" {
+				if test.Golden.Action != "" {
+					assert.Equal(t, resp.GetAction(), test.Golden.Action)
+				}
 
-			assert.Equal(t, resp.GetRetCode(), test.Golden.RetCode)
-			assert.Equal(t, test.Mock, resp.GetPayload())
-		} else {
-			if !assert.Error(t, err) {
-				t.FailNow()
+				assert.Equal(t, resp.GetRetCode(), test.Golden.RetCode)
+				assert.Equal(t, test.Mock, resp.GetPayload())
+			} else {
+				if !assert.Error(t, err) {
+					t.FailNow()
+				}
+				if !assert.Contains(t, err.Error(), test.Error) {
+					t.FailNow()
+				}
+				retCodeErr, ok := err.(uerr.ServerError)
+				if !assert.Equal(t, ok, true) {
+					t.FailNow()
+				}
+				assert.Equal(t, retCodeErr.Code(), test.Golden.RetCode)
 			}
-			if !assert.Contains(t, err.Error(), test.Error) {
-				t.FailNow()
-			}
-			retCodeErr, ok := err.(uerr.ServerError)
-			if !assert.Equal(t, ok, true) {
-				t.FailNow()
-			}
-			assert.Equal(t, retCodeErr.Code(), test.Golden.RetCode)
-		}
+		})
 	}
 }

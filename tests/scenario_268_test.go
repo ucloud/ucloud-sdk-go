@@ -8,6 +8,7 @@ import (
 
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
+	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/functions"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
@@ -31,23 +32,27 @@ func TestScenario268(t *testing.T) {
 				"Zone":             "cn-bj2-02",
 			}
 		},
-		Owners: []string{"arno.gao@ucloud.cn"},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
 		Title:  "BandwidthPackage自动化回归-带宽包-基础-01",
 		Steps: []*driver.Step{
 			testStep268DescribeImage01,
-			testStep268AllocateEIP02,
-			testStep268CreateUHostInstance03,
-			testStep268BindEIP04,
-			testStep268CreateBandwidthPackage05,
-			testStep268DescribeBandwidthPackage06,
-			testStep268DeleteBandwidthPackage07,
-			testStep268CreateBandwidthPackage08,
-			testStep268DescribeBandwidthPackage09,
-			testStep268DeleteBandwidthPackage10,
-			testStep268UnBindEIP11,
-			testStep268ReleaseEIP12,
-			testStep268PoweroffUHostInstance13,
-			testStep268TerminateUHostInstance14,
+			testStep268CreateVPC02,
+			testStep268CreateSubnet03,
+			testStep268AllocateEIP04,
+			testStep268CreateUHostInstance05,
+			testStep268BindEIP06,
+			testStep268CreateBandwidthPackage07,
+			testStep268DescribeBandwidthPackage08,
+			testStep268DeleteBandwidthPackage09,
+			testStep268CreateBandwidthPackage10,
+			testStep268DescribeBandwidthPackage11,
+			testStep268DeleteBandwidthPackage12,
+			testStep268UnBindEIP13,
+			testStep268ReleaseEIP14,
+			testStep268PoweroffUHostInstance15,
+			testStep268TerminateUHostInstance16,
+			testStep268DeleteSubnet17,
+			testStep268DeleteVPC18,
 		},
 	})
 }
@@ -92,7 +97,88 @@ var testStep268DescribeImage01 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268AllocateEIP02 = &driver.Step{
+var testStep268CreateVPC02 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewCreateVPCRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Region": step.Scenario.GetVar("Region"),
+			"Network": []interface{}{
+				"172.16.0.0/16",
+			},
+			"Name": "test",
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CreateVPC(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("VPCId", step.Must(utils.GetValue(resp, "VPCId")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateVPCResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建VPC",
+	FastFail:      false,
+}
+
+var testStep268CreateSubnet03 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewCreateSubnetRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":   step.Scenario.GetVar("VPCId"),
+			"Subnet":  "172.16.11.0",
+			"Region":  step.Scenario.GetVar("Region"),
+			"Netmask": 24,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.CreateSubnet(req)
+		if err != nil {
+			return resp, err
+		}
+
+		step.Scenario.SetVar("SubnetId", step.Must(utils.GetValue(resp, "SubnetId")))
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "CreateSubnetResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "创建子网",
+	FastFail:      false,
+}
+
+var testStep268AllocateEIP04 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -133,7 +219,7 @@ var testStep268AllocateEIP02 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268CreateUHostInstance03 = &driver.Step{
+var testStep268CreateUHostInstance05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -144,7 +230,9 @@ var testStep268CreateUHostInstance03 = &driver.Step{
 		req := client.NewCreateUHostInstanceRequest()
 		err = utils.SetRequest(req, map[string]interface{}{
 			"Zone":        step.Scenario.GetVar("Zone"),
+			"VPCId":       step.Scenario.GetVar("VPCId"),
 			"Tag":         "Default",
+			"SubnetId":    step.Scenario.GetVar("SubnetId"),
 			"Region":      step.Scenario.GetVar("Region"),
 			"Password":    "VXFhNzg5VGVzdCFAIyQ7LA==",
 			"Name":        "packet-s1-bgp",
@@ -186,7 +274,7 @@ var testStep268CreateUHostInstance03 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268BindEIP04 = &driver.Step{
+var testStep268BindEIP06 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -224,7 +312,7 @@ var testStep268BindEIP04 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268CreateBandwidthPackage05 = &driver.Step{
+var testStep268CreateBandwidthPackage07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -264,7 +352,7 @@ var testStep268CreateBandwidthPackage05 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268DescribeBandwidthPackage06 = &driver.Step{
+var testStep268DescribeBandwidthPackage08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -304,7 +392,7 @@ var testStep268DescribeBandwidthPackage06 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268DeleteBandwidthPackage07 = &driver.Step{
+var testStep268DeleteBandwidthPackage09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -340,7 +428,7 @@ var testStep268DeleteBandwidthPackage07 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268CreateBandwidthPackage08 = &driver.Step{
+var testStep268CreateBandwidthPackage10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -379,7 +467,7 @@ var testStep268CreateBandwidthPackage08 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268DescribeBandwidthPackage09 = &driver.Step{
+var testStep268DescribeBandwidthPackage11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -419,7 +507,7 @@ var testStep268DescribeBandwidthPackage09 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268DeleteBandwidthPackage10 = &driver.Step{
+var testStep268DeleteBandwidthPackage12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -455,7 +543,7 @@ var testStep268DeleteBandwidthPackage10 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268UnBindEIP11 = &driver.Step{
+var testStep268UnBindEIP13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -493,7 +581,7 @@ var testStep268UnBindEIP11 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268ReleaseEIP12 = &driver.Step{
+var testStep268ReleaseEIP14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UNet")
 		if err != nil {
@@ -529,7 +617,7 @@ var testStep268ReleaseEIP12 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268PoweroffUHostInstance13 = &driver.Step{
+var testStep268PoweroffUHostInstance15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -564,7 +652,7 @@ var testStep268PoweroffUHostInstance13 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep268TerminateUHostInstance14 = &driver.Step{
+var testStep268TerminateUHostInstance16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -596,5 +684,79 @@ var testStep268TerminateUHostInstance14 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "删除云主机",
+	FastFail:      false,
+}
+
+var testStep268DeleteSubnet17 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteSubnetRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"SubnetId": step.Scenario.GetVar("SubnetId"),
+			"Region":   step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteSubnet(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteSubnetResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(60) * time.Second,
+	MaxRetries:    4,
+	RetryInterval: 300 * time.Second,
+	Title:         "删除子网",
+	FastFail:      false,
+}
+
+var testStep268DeleteVPC18 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("VPC")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*vpc.VPCClient)
+
+		req := client.NewDeleteVPCRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"VPCId":  step.Scenario.GetVar("VPCId"),
+			"Region": step.Scenario.GetVar("Region"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DeleteVPC(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DeleteVPCResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "删除VPC",
 	FastFail:      false,
 }

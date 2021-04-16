@@ -33,7 +33,7 @@ func TestScenario521(t *testing.T) {
 				"Zone":           "cn-bj2-02",
 			}
 		},
-		Owners: []string{"chenoa.chen@ucloud.cn"},
+		Owners: []string{"maggie.an@ucloud.cn"},
 		Title:  "UDisk-普通方舟盘_01",
 		Steps: []*driver.Step{
 			testStep521DescribeImage01,
@@ -46,22 +46,21 @@ func TestScenario521(t *testing.T) {
 			testStep521DescribeImage08,
 			testStep521CreateUHostInstance09,
 			testStep521DescribeUHostInstance10,
-			testStep521DescribeUHostInstance11,
-			testStep521DescribeUHostLite12,
-			testStep521AttachUDisk13,
-			testStep521DescribeUDisk14,
-			testStep521DescribeVDiskTmList15,
-			testStep521CloneUDiskUDataArk16,
-			testStep521DescribeUDisk17,
-			testStep521DeleteUDisk18,
-			testStep521DetachUDisk19,
-			testStep521DescribeUDisk20,
-			testStep521RestoreUDisk21,
-			testStep521DescribeUDisk22,
-			testStep521DeleteUDisk23,
-			testStep521PoweroffUHostInstance24,
-			testStep521DescribeUHostInstance25,
-			testStep521TerminateUHostInstance26,
+			testStep521DescribeUHostLite11,
+			testStep521AttachUDisk12,
+			testStep521DescribeUDisk13,
+			testStep521DescribeVDiskTmList14,
+			testStep521CloneUDiskUDataArk15,
+			testStep521DescribeUDisk16,
+			testStep521DeleteUDisk17,
+			testStep521DetachUDisk18,
+			testStep521DescribeUDisk19,
+			testStep521RestoreUDisk20,
+			testStep521DescribeUDisk21,
+			testStep521DeleteUDisk22,
+			testStep521PoweroffUHostInstance23,
+			testStep521DescribeUHostInstance24,
+			testStep521TerminateUHostInstance25,
 		},
 	})
 }
@@ -263,10 +262,10 @@ var testStep521DescribeUDisk05 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep521RenameUDisk06 = &driver.Step{
@@ -338,13 +337,14 @@ var testStep521DescribeUDisk07 = &driver.Step{
 		return []driver.TestValidator{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("DataSet.0.Name", step.Must(functions.Concat("auto_", step.Scenario.GetVar("Name"))), "str_eq"),
+			validation.Builtins.NewValidator("DataSet.0.Status", "Available", "str_eq"),
 		}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep521DescribeImage08 = &driver.Step{
@@ -472,56 +472,17 @@ var testStep521DescribeUHostInstance10 = &driver.Step{
 			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("Action", "DescribeUHostInstanceResponse", "str_eq"),
 			validation.Builtins.NewValidator("UHostSet.0.UHostId", step.Scenario.GetVar("uhost_id"), "str_eq"),
-		}
-	},
-	StartupDelay:  time.Duration(30) * time.Second,
-	MaxRetries:    3,
-	RetryInterval: 2 * time.Second,
-	Title:         "获取主机信息",
-	FastFail:      false,
-}
-
-var testStep521DescribeUHostInstance11 = &driver.Step{
-	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("UHost")
-		if err != nil {
-			return nil, err
-		}
-		client := c.(*uhost.UHostClient)
-
-		req := client.NewDescribeUHostInstanceRequest()
-		err = utils.SetRequest(req, map[string]interface{}{
-			"Zone": step.Scenario.GetVar("Zone"),
-			"UHostIds": []interface{}{
-				step.Scenario.GetVar("uhost_id"),
-			},
-			"Region": step.Scenario.GetVar("Region"),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		resp, err := client.DescribeUHostInstance(req)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, nil
-	},
-	Validators: func(step *driver.Step) []driver.TestValidator {
-		return []driver.TestValidator{
-			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
 			validation.Builtins.NewValidator("UHostSet.0.State", "Running", "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(0) * time.Second,
-	MaxRetries:    120,
-	RetryInterval: 5 * time.Second,
-	Title:         "获取主机信息（验证状态）",
+	StartupDelay:  time.Duration(30) * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 30 * time.Second,
+	Title:         "获取主机信息",
 	FastFail:      true,
 }
 
-var testStep521DescribeUHostLite12 = &driver.Step{
+var testStep521DescribeUHostLite11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -560,7 +521,7 @@ var testStep521DescribeUHostLite12 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521AttachUDisk13 = &driver.Step{
+var testStep521AttachUDisk12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -595,10 +556,10 @@ var testStep521AttachUDisk13 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "挂载云硬盘",
-	FastFail:      false,
+	FastFail:      true,
 }
 
-var testStep521DescribeUDisk14 = &driver.Step{
+var testStep521DescribeUDisk13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -632,13 +593,13 @@ var testStep521DescribeUDisk14 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(20) * time.Second,
-	MaxRetries:    0,
-	RetryInterval: 0 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
-var testStep521DescribeVDiskTmList15 = &driver.Step{
+var testStep521DescribeVDiskTmList14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("")
 		if err != nil {
@@ -677,7 +638,7 @@ var testStep521DescribeVDiskTmList15 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521CloneUDiskUDataArk16 = &driver.Step{
+var testStep521CloneUDiskUDataArk15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -716,10 +677,10 @@ var testStep521CloneUDiskUDataArk16 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "从数据方舟的备份创建UDisk",
-	FastFail:      false,
+	FastFail:      true,
 }
 
-var testStep521DescribeUDisk17 = &driver.Step{
+var testStep521DescribeUDisk16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -753,12 +714,12 @@ var testStep521DescribeUDisk17 = &driver.Step{
 	},
 	StartupDelay:  time.Duration(180) * time.Second,
 	MaxRetries:    60,
-	RetryInterval: 10 * time.Second,
+	RetryInterval: 20 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
-var testStep521DeleteUDisk18 = &driver.Step{
+var testStep521DeleteUDisk17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -796,7 +757,7 @@ var testStep521DeleteUDisk18 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521DetachUDisk19 = &driver.Step{
+var testStep521DetachUDisk18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -836,7 +797,7 @@ var testStep521DetachUDisk19 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521DescribeUDisk20 = &driver.Step{
+var testStep521DescribeUDisk19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -873,10 +834,10 @@ var testStep521DescribeUDisk20 = &driver.Step{
 	MaxRetries:    120,
 	RetryInterval: 3 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
-var testStep521RestoreUDisk21 = &driver.Step{
+var testStep521RestoreUDisk20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -915,7 +876,7 @@ var testStep521RestoreUDisk21 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521DescribeUDisk22 = &driver.Step{
+var testStep521DescribeUDisk21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -955,7 +916,7 @@ var testStep521DescribeUDisk22 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521DeleteUDisk23 = &driver.Step{
+var testStep521DeleteUDisk22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UDisk")
 		if err != nil {
@@ -992,7 +953,7 @@ var testStep521DeleteUDisk23 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521PoweroffUHostInstance24 = &driver.Step{
+var testStep521PoweroffUHostInstance23 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1029,7 +990,7 @@ var testStep521PoweroffUHostInstance24 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521DescribeUHostInstance25 = &driver.Step{
+var testStep521DescribeUHostInstance24 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1069,7 +1030,7 @@ var testStep521DescribeUHostInstance25 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep521TerminateUHostInstance26 = &driver.Step{
+var testStep521TerminateUHostInstance25 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {

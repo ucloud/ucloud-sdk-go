@@ -30,7 +30,7 @@ func SetReqValue(addr interface{}, field string, values ...interface{}) error {
 	}
 
 	rv := reflect.ValueOf(addr)
-	if rv.IsValid() == false {
+	if !rv.IsValid() {
 		return errors.Errorf("struct is invalid")
 	}
 

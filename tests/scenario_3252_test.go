@@ -40,47 +40,49 @@ func TestScenario3252(t *testing.T) {
 			}
 		},
 		Owners: []string{"maggie.an@ucloud.cn"},
-		Title:  "Auto-N-LOCAL_NORMAL-LOCAL_NORMAL-硬件隔离组",
+		Title:  "传入硬件隔离组id-Auto-N-LOCAL_NORMAL-LOCAL_NORMAL-硬件隔离组",
 		Steps: []*driver.Step{
 			testStep3252DescribeImage01,
 			testStep3252CreateIsolationGroup02,
 			testStep3252DescribeIsolationGroup03,
-			testStep3252CreateUHostInstance04,
+			testStep3252DescribeUHostInstance04,
 			testStep3252CreateUHostInstance05,
-			testStep3252CreateUHostInstance06,
+			testStep3252DescribeUHostInstance06,
 			testStep3252CreateUHostInstance07,
 			testStep3252CreateUHostInstance08,
 			testStep3252CreateUHostInstance09,
 			testStep3252CreateUHostInstance10,
 			testStep3252CreateUHostInstance11,
-			testStep3252DescribeUHostInstance12,
-			testStep3252LeaveIsolationGroup13,
+			testStep3252CreateUHostInstance12,
+			testStep3252CreateUHostInstance13,
 			testStep3252DescribeUHostInstance14,
-			testStep3252DescribeUHostInstance15,
-			testStep3252DescribeIsolationGroup16,
-			testStep3252CreateUHostInstance17,
+			testStep3252LeaveIsolationGroup15,
+			testStep3252DescribeUHostInstance16,
+			testStep3252DescribeUHostInstance17,
 			testStep3252DescribeIsolationGroup18,
-			testStep3252DescribeUHostInstance19,
-			testStep3252DeleteIsolationGroup20,
+			testStep3252CreateUHostInstance19,
+			testStep3252DescribeIsolationGroup20,
 			testStep3252DescribeUHostInstance21,
-			testStep3252DescribeUHostInstance22,
-			testStep3252StopUHostInstance23,
-			testStep3252StopUHostInstance24,
+			testStep3252DeleteIsolationGroup22,
+			testStep3252DescribeUHostInstance23,
+			testStep3252DescribeUHostInstance24,
 			testStep3252StopUHostInstance25,
 			testStep3252StopUHostInstance26,
 			testStep3252StopUHostInstance27,
 			testStep3252StopUHostInstance28,
 			testStep3252StopUHostInstance29,
 			testStep3252StopUHostInstance30,
-			testStep3252DescribeUHostInstance31,
-			testStep3252TerminateUHostInstance32,
-			testStep3252TerminateUHostInstance33,
+			testStep3252StopUHostInstance31,
+			testStep3252StopUHostInstance32,
+			testStep3252DescribeUHostInstance33,
 			testStep3252TerminateUHostInstance34,
 			testStep3252TerminateUHostInstance35,
 			testStep3252TerminateUHostInstance36,
 			testStep3252TerminateUHostInstance37,
 			testStep3252TerminateUHostInstance38,
 			testStep3252TerminateUHostInstance39,
+			testStep3252TerminateUHostInstance40,
+			testStep3252TerminateUHostInstance41,
 		},
 	})
 }
@@ -202,7 +204,45 @@ var testStep3252DescribeIsolationGroup03 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance04 = &driver.Step{
+var testStep3252DescribeUHostInstance04 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewDescribeUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":           step.Scenario.GetVar("Zone"),
+			"Region":         step.Scenario.GetVar("Region"),
+			"IsolationGroup": step.Scenario.GetVar("GroupId"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUHostInstanceResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(10) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 30 * time.Second,
+	Title:         "获取主机信息",
+	FastFail:      true,
+}
+
+var testStep3252CreateUHostInstance05 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -265,10 +305,48 @@ var testStep3252CreateUHostInstance04 = &driver.Step{
 	MaxRetries:    3,
 	RetryInterval: 1 * time.Second,
 	Title:         "创建云主机",
-	FastFail:      true,
+	FastFail:      false,
 }
 
-var testStep3252CreateUHostInstance05 = &driver.Step{
+var testStep3252DescribeUHostInstance06 = &driver.Step{
+	Invoker: func(step *driver.Step) (interface{}, error) {
+		c, err := step.LoadFixture("UHost")
+		if err != nil {
+			return nil, err
+		}
+		client := c.(*uhost.UHostClient)
+
+		req := client.NewDescribeUHostInstanceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
+			"Zone":           step.Scenario.GetVar("Zone"),
+			"Region":         step.Scenario.GetVar("Region"),
+			"IsolationGroup": step.Scenario.GetVar("GroupId"),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := client.DescribeUHostInstance(req)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, nil
+	},
+	Validators: func(step *driver.Step) []driver.TestValidator {
+		return []driver.TestValidator{
+			validation.Builtins.NewValidator("RetCode", 0, "str_eq"),
+			validation.Builtins.NewValidator("Action", "DescribeUHostInstanceResponse", "str_eq"),
+		}
+	},
+	StartupDelay:  time.Duration(0) * time.Second,
+	MaxRetries:    3,
+	RetryInterval: 1 * time.Second,
+	Title:         "获取主机信息",
+	FastFail:      false,
+}
+
+var testStep3252CreateUHostInstance07 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -334,7 +412,7 @@ var testStep3252CreateUHostInstance05 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance06 = &driver.Step{
+var testStep3252CreateUHostInstance08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -400,7 +478,7 @@ var testStep3252CreateUHostInstance06 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance07 = &driver.Step{
+var testStep3252CreateUHostInstance09 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -466,7 +544,7 @@ var testStep3252CreateUHostInstance07 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance08 = &driver.Step{
+var testStep3252CreateUHostInstance10 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -532,7 +610,7 @@ var testStep3252CreateUHostInstance08 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance09 = &driver.Step{
+var testStep3252CreateUHostInstance11 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -598,7 +676,7 @@ var testStep3252CreateUHostInstance09 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance10 = &driver.Step{
+var testStep3252CreateUHostInstance12 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -664,7 +742,7 @@ var testStep3252CreateUHostInstance10 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance11 = &driver.Step{
+var testStep3252CreateUHostInstance13 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -728,7 +806,7 @@ var testStep3252CreateUHostInstance11 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeUHostInstance12 = &driver.Step{
+var testStep3252DescribeUHostInstance14 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -798,7 +876,7 @@ var testStep3252DescribeUHostInstance12 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252LeaveIsolationGroup13 = &driver.Step{
+var testStep3252LeaveIsolationGroup15 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -838,7 +916,7 @@ var testStep3252LeaveIsolationGroup13 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeUHostInstance14 = &driver.Step{
+var testStep3252DescribeUHostInstance16 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -884,14 +962,14 @@ var testStep3252DescribeUHostInstance14 = &driver.Step{
 			validation.Builtins.NewValidator("UHostSet.0.MachineType", step.Scenario.GetVar("MachineType"), "str_eq"),
 		}
 	},
-	StartupDelay:  time.Duration(30) * time.Second,
+	StartupDelay:  time.Duration(0) * time.Second,
 	MaxRetries:    3,
-	RetryInterval: 30 * time.Second,
+	RetryInterval: 1 * time.Second,
 	Title:         "获取主机信息",
-	FastFail:      true,
+	FastFail:      false,
 }
 
-var testStep3252DescribeUHostInstance15 = &driver.Step{
+var testStep3252DescribeUHostInstance17 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -953,7 +1031,7 @@ var testStep3252DescribeUHostInstance15 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeIsolationGroup16 = &driver.Step{
+var testStep3252DescribeIsolationGroup18 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -993,7 +1071,7 @@ var testStep3252DescribeIsolationGroup16 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252CreateUHostInstance17 = &driver.Step{
+var testStep3252CreateUHostInstance19 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1059,7 +1137,7 @@ var testStep3252CreateUHostInstance17 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeIsolationGroup18 = &driver.Step{
+var testStep3252DescribeIsolationGroup20 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1099,7 +1177,7 @@ var testStep3252DescribeIsolationGroup18 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeUHostInstance19 = &driver.Step{
+var testStep3252DescribeUHostInstance21 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1150,7 +1228,7 @@ var testStep3252DescribeUHostInstance19 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DeleteIsolationGroup20 = &driver.Step{
+var testStep3252DeleteIsolationGroup22 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1188,7 +1266,7 @@ var testStep3252DeleteIsolationGroup20 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeUHostInstance21 = &driver.Step{
+var testStep3252DescribeUHostInstance23 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1253,7 +1331,7 @@ var testStep3252DescribeUHostInstance21 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeUHostInstance22 = &driver.Step{
+var testStep3252DescribeUHostInstance24 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1318,7 +1396,7 @@ var testStep3252DescribeUHostInstance22 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance23 = &driver.Step{
+var testStep3252StopUHostInstance25 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1356,7 +1434,7 @@ var testStep3252StopUHostInstance23 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance24 = &driver.Step{
+var testStep3252StopUHostInstance26 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1394,7 +1472,7 @@ var testStep3252StopUHostInstance24 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance25 = &driver.Step{
+var testStep3252StopUHostInstance27 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1432,7 +1510,7 @@ var testStep3252StopUHostInstance25 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance26 = &driver.Step{
+var testStep3252StopUHostInstance28 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1470,7 +1548,7 @@ var testStep3252StopUHostInstance26 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance27 = &driver.Step{
+var testStep3252StopUHostInstance29 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1508,7 +1586,7 @@ var testStep3252StopUHostInstance27 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance28 = &driver.Step{
+var testStep3252StopUHostInstance30 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1546,7 +1624,7 @@ var testStep3252StopUHostInstance28 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance29 = &driver.Step{
+var testStep3252StopUHostInstance31 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1584,7 +1662,7 @@ var testStep3252StopUHostInstance29 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252StopUHostInstance30 = &driver.Step{
+var testStep3252StopUHostInstance32 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1622,7 +1700,7 @@ var testStep3252StopUHostInstance30 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252DescribeUHostInstance31 = &driver.Step{
+var testStep3252DescribeUHostInstance33 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1677,7 +1755,7 @@ var testStep3252DescribeUHostInstance31 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252TerminateUHostInstance32 = &driver.Step{
+var testStep3252TerminateUHostInstance34 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1716,7 +1794,7 @@ var testStep3252TerminateUHostInstance32 = &driver.Step{
 	FastFail:      true,
 }
 
-var testStep3252TerminateUHostInstance33 = &driver.Step{
+var testStep3252TerminateUHostInstance35 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1755,7 +1833,7 @@ var testStep3252TerminateUHostInstance33 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep3252TerminateUHostInstance34 = &driver.Step{
+var testStep3252TerminateUHostInstance36 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1794,7 +1872,7 @@ var testStep3252TerminateUHostInstance34 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep3252TerminateUHostInstance35 = &driver.Step{
+var testStep3252TerminateUHostInstance37 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1833,7 +1911,7 @@ var testStep3252TerminateUHostInstance35 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep3252TerminateUHostInstance36 = &driver.Step{
+var testStep3252TerminateUHostInstance38 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1872,7 +1950,7 @@ var testStep3252TerminateUHostInstance36 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep3252TerminateUHostInstance37 = &driver.Step{
+var testStep3252TerminateUHostInstance39 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1911,7 +1989,7 @@ var testStep3252TerminateUHostInstance37 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep3252TerminateUHostInstance38 = &driver.Step{
+var testStep3252TerminateUHostInstance40 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {
@@ -1950,7 +2028,7 @@ var testStep3252TerminateUHostInstance38 = &driver.Step{
 	FastFail:      false,
 }
 
-var testStep3252TerminateUHostInstance39 = &driver.Step{
+var testStep3252TerminateUHostInstance41 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
 		c, err := step.LoadFixture("UHost")
 		if err != nil {

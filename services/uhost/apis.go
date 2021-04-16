@@ -241,15 +241,39 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+CreateUHostInstanceParamVirtualGpuGPUVirtualGpu is request schema for complex param
+*/
+type CreateUHostInstanceParamVirtualGpuGPUVirtualGpu struct {
+}
+
+/*
 CreateUHostInstanceParamVolumes is request schema for complex param
 */
 type CreateUHostInstanceParamVolumes struct {
 
-	// 存储文件卷代金券id。不适用于系统盘/本地盘。请通过DescribeCoupon接口查询，或登录用户中心查看
-	CouponId *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
 
-	// 存储文件卷，当前只用于数据卷，且限于 Windows，默认为 fase。
-	IsBoot *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamVirtualGpu is request schema for complex param
+*/
+type CreateUHostInstanceParamVirtualGpu struct {
 }
 
 /*
@@ -277,15 +301,6 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -328,7 +343,7 @@ type CreateUHostInstanceRequest struct {
 	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
 	GPU *int `required:"false"`
 
-	// GPU类型，枚举值["K80", "P40", "V100", "T4", "2080Ti","1080Ti"]，MachineType为G时必填
+	// GPU类型，枚举值["K80", "P40", "V100", "T4", "T4S","2080Ti","2080Ti-4C","1080Ti"]，MachineType为G时必填
 	GpuType *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
@@ -336,6 +351,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 热升级特性。True为开启，False为未开启，默认False。
 	HotplugFeature *bool `required:"false"`
+
+	// HPC特性，主要涉及绑核操作。True为开启，False为未开启，默认False。
+	HpcEnhanced *bool `required:"false"`
 
 	// 镜像ID。 请通过 [DescribeImage](describe_image.html)获取
 	ImageId *string `required:"true"`
@@ -421,8 +439,8 @@ type CreateUHostInstanceRequest struct {
 	// VPC ID。默认为当前地域的默认VPC。
 	VPCId *string `required:"false"`
 
-	//
-	Volumes []CreateUHostInstanceParamVolumes `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Volumes []CreateUHostInstanceParamVolumes `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceResponse is response schema for CreateUHostInstance action
@@ -675,7 +693,7 @@ type DescribeUHostInstanceRequest struct {
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
+	// Zone *string `required:"false"`
 
 	// 硬件隔离组id。通过硬件隔离组筛选主机。
 	IsolationGroup *string `required:"false"`
@@ -870,21 +888,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 存储文件卷，当前只用于数据卷，且限于 Windows，默认为 fase。
-	IsBoot *string `required:"false"`
-
-	// 存储文件卷大小，单位GB，必须是10GB的整数倍，至少 100GB。
-	Size *int `required:"false"`
-
-	// 存储文件卷类型，当前仅支持[CLOUD_FSX]。请参考[[api:uhost-api:volume_type|卷类型]]。
-	Type *string `required:"false"`
-}
-
-/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -900,6 +903,21 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
@@ -966,8 +984,8 @@ type GetUHostInstancePriceRequest struct {
 	// 【待废弃】云主机机型（V1版本概念）。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
 
-	//
-	Volumes []GetUHostInstancePriceParamVolumes `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Volumes []GetUHostInstancePriceParamVolumes `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceResponse is response schema for GetUHostInstancePrice action

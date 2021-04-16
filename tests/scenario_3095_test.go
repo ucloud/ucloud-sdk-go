@@ -44,7 +44,7 @@ func TestScenario3095(t *testing.T) {
 			}
 		},
 		Owners: []string{"maggie.an@ucloud.cn"},
-		Title:  "主机功能-状态和价格-Auto-N-LOCAL_NORMAL-LOCAL_NORMAL",
+		Title:  "主机功能-状态和价格-Auto-N机型-LOCAL_NORMAL-LOCAL_NORMAL",
 		Steps: []*driver.Step{
 			testStep3095DescribeImage01,
 			testStep3095DescribeUHostTags02,

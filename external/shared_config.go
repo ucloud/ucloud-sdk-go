@@ -143,8 +143,8 @@ func loadSharedConfigFile(cfgFile, credFile, profile string) (*config, error) {
 		SharedConfigFile:     cfgFile,
 		SharedCredentialFile: credFile,
 	}
-	c.merge(getSharedConfig(cfgs, profile))
-	c.merge(getSharedCredential(creds, c.Profile))
+	_ = c.merge(getSharedConfig(cfgs, profile))
+	_ = c.merge(getSharedCredential(creds, c.Profile))
 
 	return c, nil
 }

@@ -1,3 +1,27 @@
+## 0.20.2 (2021-04-14)
+
+## 0.20.1 (2021-03-11)
+
+ENHANCEMENTS:
+
+- Update all APIs of `PathX` (#217 )
+
+## 0.20.0 (2021-03-05)
+
+FEATURES:
+
+- Add request encoder to support **json-only** API (#214)
+
+ENHANCEMENTS:
+
+- Add `UpdateBackendBatch` to private package (#214)
+
+## 0.19.2 (2021-03-04)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UCDN` (#212)
+
 ## 0.19.1 (2021-02-23)
 
 ENHANCEMENTS:

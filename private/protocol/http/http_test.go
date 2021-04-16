@@ -13,7 +13,7 @@ func TestHTTPRequestAccessor(t *testing.T) {
 	req := NewHttpRequest()
 
 	// header getter/setter
-	k, v := "Content-Type", string(mimeJSON)
+	k, v := "Content-Type", MimeJSON
 	err = req.SetHeader(k, v)
 	assert.NoError(t, err)
 	assert.Equal(t, req.GetHeaderMap()[k], v)
@@ -78,13 +78,15 @@ func TestHTTPRequestBuilder(t *testing.T) {
 
 	// http request builder - url query with form url mime type
 	// query should in body
-	err = req.SetHeader("Content-Type", string(mimeFormURLEncoded))
+	err = req.SetHeader("Content-Type", string(MimeFormURLEncoded))
 	assert.NoError(t, err)
 
 	err = req.SetRequestBody(nil)
 	assert.NoError(t, err)
 
 	httpReq, err := req.buildHTTPRequest()
+	assert.NoError(t, err)
+
 	body, err := ioutil.ReadAll(httpReq.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, body, []byte(qs))
@@ -92,13 +94,15 @@ func TestHTTPRequestBuilder(t *testing.T) {
 
 	// http request builder - url query, body with form url mime type
 	// query should in url, and use user's body
-	err = req.SetHeader("Content-Type", string(mimeFormURLEncoded))
+	err = req.SetHeader("Content-Type", string(MimeFormURLEncoded))
 	assert.NoError(t, err)
 
 	err = req.SetRequestBody([]byte("content=1"))
 	assert.NoError(t, err)
 
 	httpReq, err = req.buildHTTPRequest()
+	assert.NoError(t, err)
+
 	body, err = ioutil.ReadAll(httpReq.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, body, []byte("content=1"))
@@ -106,13 +110,15 @@ func TestHTTPRequestBuilder(t *testing.T) {
 
 	// http request builder - url query, body with json mime type
 	// query should in url, and use user's body
-	err = req.SetHeader("Content-Type", string(mimeJSON))
+	err = req.SetHeader("Content-Type", string(MimeJSON))
 	assert.NoError(t, err)
 
 	err = req.SetRequestBody([]byte(`{"content": 1}`))
 	assert.NoError(t, err)
 
 	httpReq, err = req.buildHTTPRequest()
+	assert.NoError(t, err)
+
 	body, err = ioutil.ReadAll(httpReq.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, body, []byte(`{"content": 1}`))
@@ -160,13 +166,4 @@ func TestHTTPStatusError(t *testing.T) {
 	assert.Equal(t, ok, true)
 	assert.Equal(t, statusErr.StatusCode, 503)
 	assert.Equal(t, statusErr.Message, "503 SERVICE UNAVAILABLE")
-}
-
-func TestHTTPMock(t *testing.T) {
-	// TODO
-	type mockResponse struct {
-	}
-
-	type mockClient struct {
-	}
 }

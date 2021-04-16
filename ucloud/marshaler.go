@@ -9,8 +9,6 @@ import (
 
 	uerr "github.com/ucloud/ucloud-sdk-go/ucloud/error"
 
-	"github.com/pkg/errors"
-
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/request"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/response"
@@ -27,15 +25,15 @@ func (c *Client) SetupRequest(req request.Common) request.Common {
 
 	// set optional client level variables
 	if len(req.GetRegion()) == 0 && len(cfg.Region) > 0 {
-		req.SetRegion(cfg.Region)
+		_ = req.SetRegion(cfg.Region)
 	}
 
 	if len(req.GetZone()) == 0 && len(cfg.Zone) > 0 {
-		req.SetZone(cfg.Zone)
+		_ = req.SetZone(cfg.Zone)
 	}
 
 	if len(req.GetProjectId()) == 0 && len(cfg.ProjectId) > 0 {
-		req.SetProjectId(cfg.ProjectId)
+		_ = req.SetProjectId(cfg.ProjectId)
 	}
 
 	if req.GetTimeout() == 0 && cfg.Timeout != 0 {
@@ -46,31 +44,37 @@ func (c *Client) SetupRequest(req request.Common) request.Common {
 		req.WithRetry(cfg.MaxRetries)
 	}
 
+	if req.GetEncoder() == nil {
+		req.SetEncoder(request.NewFormEncoder(cfg, c.GetCredential()))
+	}
 	return req
 }
 
 func (c *Client) buildHTTPRequest(req request.Common) (*http.HttpRequest, error) {
-	// convert request struct to query map
-	query, err := request.ToQueryMap(req)
-	if err != nil {
-		return nil, errors.Errorf("convert request to map failed, %s", err)
+	encoder := req.GetEncoder()
+	if encoder == nil {
+		encoder = request.NewFormEncoder(c.GetConfig(), c.GetCredential())
 	}
 
-	credential := c.GetCredential()
-	config := c.GetConfig()
-	httpReq := http.NewHttpRequest()
-	httpReq.SetURL(config.BaseUrl)
-	httpReq.SetMethod("POST")
+	httpReq, err := encoder.Encode(req)
+	if err != nil {
+		return nil, err
+	}
 
-	// set timeout with client configuration
-	httpReq.SetTimeout(config.Timeout)
+	product := c.GetMeta().Product
+	if _, ok := req.(request.GenericRequest); ok {
+		product = "@generic"
+	}
+	if product == "" {
+		product = "@none"
+	}
 
-	// keep query string is ordered and append credential signature as the last query param
-	httpReq.SetQueryString(credential.BuildCredentialedQuery(query))
-
-	ua := fmt.Sprintf("GO/%s GO-SDK/%s %s", runtime.Version(), version.Version, config.UserAgent)
-	httpReq.SetHeader("User-Agent", strings.TrimSpace(ua))
-	httpReq.SetHeader("u-timestamp-ms", strconv.FormatInt(req.GetRequestTime().UnixNano()/1000000, 10))
+	ua := fmt.Sprintf(
+		"GO/%s GO-SDK/%s Product/%s %s",
+		runtime.Version(), version.Version, product, c.GetConfig().UserAgent,
+	)
+	_ = httpReq.SetHeader(http.HeaderNameUserAgent, strings.TrimSpace(ua))
+	_ = httpReq.SetHeader(http.HeaderNameUTimestampMs, strconv.FormatInt(req.GetRequestTime().UnixNano()/1000000, 10))
 	return httpReq, nil
 }
 
@@ -93,6 +97,5 @@ func (c *Client) unmarshalHTTPResponse(body []byte, resp response.Common) error 
 	if err := json.Unmarshal(body, &resp); err != nil {
 		return uerr.NewResponseBodyError(err, string(body))
 	}
-
 	return nil
 }

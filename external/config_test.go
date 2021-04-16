@@ -1,8 +1,6 @@
 package external
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +46,8 @@ func TestLoadEnvConfig(t *testing.T) {
 	setTestEnv()
 
 	c := &config{}
-	c.loadEnv()
+	err := c.loadEnv()
+	assert.NoError(t, err)
 
 	checkTestEnvConfig(t, c)
 }
@@ -58,7 +57,8 @@ func TestLoadSharedFile(t *testing.T) {
 		SharedConfigFile:     TestValueEnvUCloudSharedConfigFile,
 		SharedCredentialFile: TestValueEnvUCloudSharedCredentialFile,
 	}
-	c.loadFileIfExist()
+	err := c.loadFileIfExist()
+	assert.NoError(t, err)
 
 	checkTestConfig(t, c)
 }
@@ -95,31 +95,4 @@ func setTestEnv() {
 	_ = os.Setenv(UCloudSharedCredentialFileEnvVar, TestValueEnvUCloudSharedCredentialFile)
 	durationStr := strings.TrimSuffix(TestValueEnvUCloudTimeout.String(), "s")
 	_ = os.Setenv(UCloudTimeoutSecondEnvVar, durationStr)
-}
-
-func writeTestTempConfigFile(vL []sharedConfig) (string, error) {
-	return writeTestTempFile(vL)
-}
-
-func writeTestTempCredentialFile(vL []sharedCredential) (string, error) {
-	return writeTestTempFile(vL)
-}
-
-func writeTestTempFile(v interface{}) (string, error) {
-	bs, err := json.Marshal(v)
-	if err != nil {
-		return "", err
-	}
-
-	f, err := ioutil.TempFile("", "ucloud-sdk-go-conf")
-	if err != nil {
-		return "", err
-	}
-
-	_, err = f.Write(bs)
-	if err != nil {
-		return "", err
-	}
-
-	return f.Name(), nil
 }

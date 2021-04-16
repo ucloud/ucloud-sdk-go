@@ -23,27 +23,26 @@ func newTestClient() *ucloud.Client {
 func newMockedHttpClient() *HttpClient {
 	c := NewHttpClient()
 
-	c.MockHTTP(func(req *proto.HttpRequest, resp *proto.HttpResponse) error {
+	_ = c.MockHTTP(func(req *proto.HttpRequest, resp *proto.HttpResponse) error {
 		if action := req.GetQuery("Action"); len(action) != 0 && action == "TestMockHTTP" {
-			resp.SetBody([]byte(`{"Action": "TestMockHTTPResponse"}`))
+			_ = resp.SetBody([]byte(`{"Action": "TestMockHTTPResponse"}`))
 		}
 		return nil
 	})
 
-	c.MockData(func(reqData Request, respData Response) error {
+	_ = c.MockData(func(reqData Request, respData Response) error {
 		if action, ok := reqData["Action"]; ok && action == "TestMockData" {
 			respData["Action"] = "TestMockDataResponse"
 		}
 		return nil
 	})
 
-	c.MockData(func(reqData Request, respData Response) error {
+	_ = c.MockData(func(reqData Request, respData Response) error {
 		if action, ok := reqData["Action"]; ok && action == "TestMockError" {
 			return http.ErrServerClosed
 		}
 		return nil
 	})
-
 	return c
 }
 
@@ -71,7 +70,7 @@ func TestHttpClient_Send(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			req := proto.NewHttpRequest()
-			req.SetQuery("Action", tt.args.Action)
+			_ = req.SetQuery("Action", tt.args.Action)
 			got, err := tt.client.Send(req)
 
 			if tt.wantErr {
@@ -90,7 +89,7 @@ func TestHttpClient_Send(t *testing.T) {
 func TestMockClient(t *testing.T) {
 	client := newTestClient()
 	httpClient := newMockedHttpClient()
-	client.SetHttpClient(httpClient)
+	_ = client.SetHttpClient(httpClient)
 
 	type args struct {
 		Action string
