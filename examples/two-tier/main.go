@@ -85,6 +85,7 @@ func describeRandomImageId() (string, error) {
 	req := uhostClient.NewDescribeImageRequest()
 	req.ImageType = ucloud.String("Base")
 	req.OsType = ucloud.String("Linux")
+	req.Zone = ucloud.String(zone)
 
 	resp, err := uhostClient.DescribeImage(req)
 	if err != nil {
