@@ -62,6 +62,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
+	"github.com/ucloud/ucloud-sdk-go/services/urocketmq"
 )
 
 func TestMain(m *testing.M) {
@@ -202,6 +203,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphost.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("URocketMQ", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return urocketmq.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil
