@@ -126,6 +126,18 @@ type UHostIPSet struct {
 }
 
 /*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
+
+/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -208,6 +220,9 @@ type UHostInstanceSet struct {
 	// true: 开启热升级； false，未开启热升级
 	HotplugFeature bool
 
+	// true: 开启 hpc 系列功能；false: 未开启
+	HpcFeature bool
+
 	// 详细信息见 UHostIPSet
 	IPSet []UHostIPSet
 
@@ -222,6 +237,9 @@ type UHostInstanceSet struct {
 
 	// 隔离组id，不在隔离组则返回""
 	IsolationGroup string
+
+	// 密钥信息见 UHostKeyPair
+	KeyPair UHostKeyPair
 
 	// 主机的生命周期类型。目前仅支持Normal：普通；
 	LifeCycle string
@@ -256,7 +274,7 @@ type UHostInstanceSet struct {
 	// 仅抢占式实例返回，LowSpeed为低速模式，PowerOff为关机模式
 	RestrictMode string
 
-	// 实例状态，枚举值：\\ >初始化: Initializing; \\ >启动中: Starting; \\> 运行中: Running; \\> 关机中: Stopping; \\ >关机: Stopped \\ >安装失败: Install Fail; \\ >重启中: Rebooting
+	// 实例状态，枚举值：\\ >初始化: Initializing; \\ >启动中: Starting; \\> 运行中: Running; \\> 关机中: Stopping; \\ >关机: Stopped \\ >安装失败: Install Fail; \\ >重启中: Rebooting; \\ > 未知(空字符串，获取状态超时或出错)：""
 	State string
 
 	// 【建议不再使用】主机磁盘类型。 枚举值为：\\ > LocalDisk，本地磁盘; \\ > UDisk 云盘。\\只要有一块磁盘为本地盘，即返回LocalDisk。

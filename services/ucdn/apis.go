@@ -774,6 +774,71 @@ func (c *UCDNClient) GetUcdnDomainConfig(req *GetUcdnDomainConfigRequest) (*GetU
 	return &res, nil
 }
 
+// GetUcdnDomainHitRateRequest is request schema for GetUcdnDomainHitRate action
+type GetUcdnDomainHitRateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
+	Areacode *string `required:"false"`
+
+	// 查询的起始时间，格式为Unix Timestamp。如果有EndTime，BeginTime必须赋值。如没有赋值，则返回缺少参 数错误，如果没有EndTime，BeginTime也可以不赋值，EndTime默认当前时间，BeginTime 默认前一天的当前时间。
+	BeginTime *int `required:"false"`
+
+	// 域名id，创建域名时生成的id。默认全部域名
+	DomainId []string `required:"false"`
+
+	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
+	EndTime *int `required:"false"`
+
+	// 命中类型：0=整体命中  1=边缘命中  默认是0
+	HitType *int `required:"false"`
+
+	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照一分钟的粒度）默认5分钟
+	Type *int `required:"true"`
+}
+
+// GetUcdnDomainHitRateResponse is response schema for GetUcdnDomainHitRate action
+type GetUcdnDomainHitRateResponse struct {
+	response.CommonBase
+
+	// 请求数实例表。
+	HitRateList []HitRateInfoV2
+}
+
+// NewGetUcdnDomainHitRateRequest will create request of GetUcdnDomainHitRate action.
+func (c *UCDNClient) NewGetUcdnDomainHitRateRequest() *GetUcdnDomainHitRateRequest {
+	req := &GetUcdnDomainHitRateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainHitRate
+
+获取域名命中率
+*/
+func (c *UCDNClient) GetUcdnDomainHitRate(req *GetUcdnDomainHitRateRequest) (*GetUcdnDomainHitRateResponse, error) {
+	var err error
+	var res GetUcdnDomainHitRateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainHitRate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUcdnDomainHttpCodeV2Request is request schema for GetUcdnDomainHttpCodeV2 action
 type GetUcdnDomainHttpCodeV2Request struct {
 	request.CommonBase
@@ -832,6 +897,62 @@ func (c *UCDNClient) GetUcdnDomainHttpCodeV2(req *GetUcdnDomainHttpCodeV2Request
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUcdnDomainHttpCodeV2", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUcdnDomainInfoListRequest is request schema for GetUcdnDomainInfoList action
+type GetUcdnDomainInfoListRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 返回第几页，不填默认是第1页
+	PageIndex *int `required:"false"`
+
+	// 分页的大小，不填默认每页20个
+	PageSize *int `required:"false"`
+}
+
+// GetUcdnDomainInfoListResponse is response schema for GetUcdnDomainInfoList action
+type GetUcdnDomainInfoListResponse struct {
+	response.CommonBase
+
+	// 域名基本信息
+	DomainInfoList []DomainBaseInfo
+
+	// 账户下域名总个数
+	TotalCount int
+}
+
+// NewGetUcdnDomainInfoListRequest will create request of GetUcdnDomainInfoList action.
+func (c *UCDNClient) NewGetUcdnDomainInfoListRequest() *GetUcdnDomainInfoListRequest {
+	req := &GetUcdnDomainInfoListRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainInfoList
+
+获取域名基本信息
+*/
+func (c *UCDNClient) GetUcdnDomainInfoList(req *GetUcdnDomainInfoListRequest) (*GetUcdnDomainInfoListResponse, error) {
+	var err error
+	var res GetUcdnDomainInfoListResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainInfoList", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
