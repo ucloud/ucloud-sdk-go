@@ -73,6 +73,15 @@ type UDiskDataSet struct {
 	// 过期时间
 	ExpiredTime int
 
+	// 挂载的Host的IP
+	HostIP string
+
+	// 挂载的Host的Id
+	HostId string
+
+	// 挂载的Host的Name
+	HostName string
+
 	// 是否是系统盘，是："True", 否："False"
 	IsBoot string
 
@@ -109,13 +118,13 @@ type UDiskDataSet struct {
 	// UDisk实例Id
 	UDiskId string
 
-	// 挂载的UHost的IP
+	// 挂载的UHost的IP。【即将废弃，建议使用HostIP】
 	UHostIP string
 
-	// 挂载的UHost的Id
+	// 挂载的UHost的Id。【即将废弃，建议使用HostId】
 	UHostId string
 
-	// 挂载的UHost的Name
+	// 挂载的UHost的Name。【即将废弃，建议使用HostName】
 	UHostName string
 
 	// 是否是加密盘，是:"Yes", 否:"No"
