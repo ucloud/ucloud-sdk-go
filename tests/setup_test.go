@@ -55,15 +55,12 @@ import (
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
-	"github.com/ucloud/ucloud-sdk-go/services/isms"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
-	"github.com/ucloud/ucloud-sdk-go/services/ugn"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
-	"github.com/ucloud/ucloud-sdk-go/services/urocketmq"
 )
 
 func TestMain(m *testing.M) {
@@ -148,9 +145,6 @@ func testSetup() {
 	spec.AddFixture("IPSecVPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ipsecvpn.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("ISMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return isms.NewClient(&cfg, &credential), nil
-	}))
 	spec.AddFixture("PathX", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return pathx.NewClient(&cfg, &credential), nil
 	}))
@@ -184,9 +178,6 @@ func testSetup() {
 	spec.AddFixture("UFile", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ufile.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UGN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ugn.NewClient(&cfg, &credential), nil
-	}))
 	spec.AddFixture("UHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uhost.NewClient(&cfg, &credential), nil
 	}))
@@ -207,9 +198,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphost.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("URocketMQ", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return urocketmq.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil
