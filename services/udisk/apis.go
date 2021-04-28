@@ -22,14 +22,17 @@ type AttachUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
 	// Zone *string `required:"false"`
 
+	// Host实例ID
+	HostId *string `required:"false"`
+
 	// 是否允许多点挂载（Yes: 允许多点挂载， No: 不允许多点挂载， 不填默认Yes ）
 	MultiAttach *string `required:"false"`
 
 	// 需要挂载的UDisk实例ID.
 	UDiskId *string `required:"true"`
 
-	// UHost实例ID
-	UHostId *string `required:"true"`
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"false"`
 }
 
 // AttachUDiskResponse is response schema for AttachUDisk action
@@ -39,10 +42,13 @@ type AttachUDiskResponse struct {
 	// 挂载的设备名称
 	DeviceName string
 
+	// 挂载的Host实例ID
+	HostId string
+
 	// 挂载的UDisk实例ID
 	UDiskId string
 
-	// 挂载的UHost实例ID
+	// 挂载的UHost实例ID。【即将废弃，建议使用HostId】
 	UHostId string
 }
 
@@ -81,13 +87,13 @@ func (c *UDiskClient) AttachUDisk(req *AttachUDiskRequest) (*AttachUDiskResponse
 type CloneUDiskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// Year , Month, Dynamic，Postpay，Trial 默认: Month
@@ -105,7 +111,10 @@ type CloneUDiskRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
+	RdmaClusterId *string `required:"false"`
+
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
 	// 克隆父Disk的Id
@@ -114,7 +123,7 @@ type CloneUDiskRequest struct {
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 }
 
@@ -161,13 +170,13 @@ func (c *UDiskClient) CloneUDisk(req *CloneUDiskRequest) (*CloneUDiskResponse, e
 type CloneUDiskSnapshotRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// Year , Month, Dynamic，Postpay 默认: Dynamic
@@ -185,10 +194,13 @@ type CloneUDiskSnapshotRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
+	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
+	RdmaClusterId *string `required:"false"`
+
 	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘快照有效，对云盘快照无效)
 	Size *int `required:"false"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
 	// 克隆父Snapshot的Id
@@ -197,7 +209,7 @@ type CloneUDiskSnapshotRequest struct {
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 }
 
@@ -244,13 +256,13 @@ func (c *UDiskClient) CloneUDiskSnapshot(req *CloneUDiskSnapshotRequest) (*Clone
 type CloneUDiskUDataArkRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// Year , Month, Dynamic，Postpay 默认: Dynamic
@@ -268,10 +280,13 @@ type CloneUDiskUDataArkRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
+	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
+	RdmaClusterId *string `required:"false"`
+
 	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘备份有效，对云盘备份无效)
 	Size *int `required:"false"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
 	// 指定从方舟克隆的备份时间点
@@ -280,7 +295,7 @@ type CloneUDiskUDataArkRequest struct {
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 
 	// 需要克隆的源盘id
@@ -330,13 +345,13 @@ func (c *UDiskClient) CloneUDiskUDataArk(req *CloneUDiskUDataArkRequest) (*Clone
 type CreateAttachUDiskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// Year , Month, Dynamic, Postpay, Trial 。 Size小于等于2000时，默认为Dynamic；Size大于2000时，默认为Month。
@@ -348,8 +363,11 @@ type CreateAttachUDiskRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
+
+	// Host实例ID。当创建云盘类型为RSSDDataDisk时，根据传入的HostId，创建与虚机在同一PodId下的云盘。
+	HostId *string `required:"false"`
 
 	// 是否允许多点挂载（Yes: 允许多点挂载， No: 不允许多点挂载， 不填默认Yes ）
 	MultiAttach *string `required:"false"`
@@ -360,20 +378,20 @@ type CreateAttachUDiskRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"true"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 
-	// 当创建云盘类型为RSSDDataDisk时，根据传入的UHostId，创建与虚机在同一PodId下的云盘
-	UHostId *string `required:"true"`
+	// UHost实例ID。当创建云盘类型为RSSDDataDisk时，根据传入的UHostId，创建与虚机在同一PodId下的云盘。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"false"`
 
 	// 是否加密。Yes：加密，No：不加密，默认值（No）
 	UKmsMode *string `required:"false"`
@@ -386,10 +404,13 @@ type CreateAttachUDiskResponse struct {
 	// 挂载设备名称
 	DeviceName string
 
+	// 挂载的Host实例ID
+	HostId string
+
 	// 挂载的UDisk实例ID
 	UDiskId string
 
-	// 挂载的UHost实例ID
+	// 挂载的UHost实例ID。【即将废弃，建议使用HostId】
 	UHostId string
 }
 
@@ -428,16 +449,16 @@ func (c *UDiskClient) CreateAttachUDisk(req *CreateAttachUDiskRequest) (*CreateA
 type CreateUDiskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// Year , Month, Dynamic, Postpay, Trial 。 Size小于等于2000时，默认为Dynamic；Size大于2000时，默认为Month。
+	// Year , Month, Dynamic, Postpay, Trial 。默认为Dynamic。
 	ChargeType *string `required:"false"`
 
 	// 加密需要的cmk id，UKmsMode为Yes时，必填
@@ -446,7 +467,7 @@ type CreateUDiskRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// 实例名称
@@ -458,16 +479,16 @@ type CreateUDiskRequest struct {
 	// RDMA集群id。DiskType为RSSDDataDisk可填，指定云盘创建到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"true"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
 	// 业务组 默认：Default
 	Tag *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 
 	// 是否加密。Yes：加密，No：不加密，默认值（No）
@@ -768,6 +789,12 @@ type DescribeUDiskRequest struct {
 	// ProtocolVersion字段为1时，需结合IsBoot确定具体磁盘类型:普通数据盘：DiskType:"CLOUD_NORMAL",IsBoot:"False"；普通系统盘：DiskType:"CLOUD_NORMAL",IsBoot:"True"；SSD数据盘：DiskType:"CLOUD_SSD",IsBoot:"False"；SSD系统盘：DiskType:"CLOUD_SSD",IsBoot:"True"；RSSD数据盘：DiskType:"CLOUD_RSSD",IsBoot:"False"；为空拉取所有。ProtocolVersion字段为0或没有该字段时，可设为以下几个值:普通数据盘：DataDisk；普通系统盘：SystemDisk；SSD数据盘：SSDDataDisk；SSD系统盘：SSDSystemDisk；RSSD数据盘：RSSDDataDisk；为空拉取所有。
 	DiskType *string `required:"false"`
 
+	// 根据传入的HostIdForAttachment，筛选出虚机在同一PodId下的云盘
+	HostIdForAttachment *string `required:"false"`
+
+	// 宿主产品类型，可筛选挂载在该类型宿主上的云盘。可选值：uhost, uphost。为空拉取所有。（当HostIdForAttachment字段不为空时，该字段可以不填，若HostIdForAttachment与该字段宿主类型冲突，则以HostIdForAttachment字段为准。）
+	HostProduct *string `required:"false"`
+
 	// 是否忽略计费信息。Yes：忽略，No：不忽略，默认值（No）。（如不关心账单信息，建议选填“Yes”，可降低请求延时）
 	IgnoreUBillInfo *string `required:"false"`
 
@@ -786,7 +813,7 @@ type DescribeUDiskRequest struct {
 	// UDisk Id(留空返回全部)
 	UDiskId *string `required:"false"`
 
-	// 根据传入的UHostIdForAttachment，筛选出虚机在同一PodId下的云盘
+	// 根据传入的UHostIdForAttachment，筛选出虚机在同一PodId下的云盘【本字段即将废弃，建议使用HostIdForAttachment】
 	UHostIdForAttachment *string `required:"false"`
 }
 
@@ -836,19 +863,19 @@ func (c *UDiskClient) DescribeUDisk(req *DescribeUDiskRequest) (*DescribeUDiskRe
 type DescribeUDiskPriceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// Year , Month, Dynamic，Postpay，Trial 默认: Month
 	ChargeType *string `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDDataDisk（RSSD数据盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk(RSSD数据盘)，EfficiencyDataDisk（高效数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDSystemDisk(RSSD系统盘)，EfficiencySystemDisk（高效系统盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// 是否将快照服务(数据方舟)，云硬盘放入一张订单, 是："Yes",否："No"，默认是"No"
@@ -860,13 +887,13 @@ type DescribeUDiskPriceRequest struct {
 	// 购买UDisk的时长，默认值为1
 	Quantity *int `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘：范围[1~4000]；RSSD数据盘：范围[1~32000]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘：范围[1~4000]；RSSD数据盘：范围[1~32000]；RSSD系统盘：范围[1~4000]；高效数据盘：范围[1~32000]；高效系统盘：范围[1~500]。
 	Size *int `required:"true"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 }
 
@@ -981,31 +1008,31 @@ func (c *UDiskClient) DescribeUDiskSnapshot(req *DescribeUDiskSnapshotRequest) (
 type DescribeUDiskUpgradePriceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDDataDisk（RSSD数据盘），默认值（DataDisk）
+	// 【已废弃】UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk(RSSD数据盘)，EfficiencyDataDisk（高效数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDSystemDisk(RSSD系统盘)，EfficiencySystemDisk（高效系统盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
-	// 云主机机型（V2.0），枚举值["N", "C", "G", "O", "OM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
+	// 【已废弃】云主机机型（V2.0），枚举值["N", "C", "G", "O", "OM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘：范围[1~4000]；RSSD数据盘：范围[1~32000]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘：范围[1~4000]；RSSD数据盘：范围[1~32000]；RSSD系统盘：范围[1~4000]；高效数据盘：范围[1~32000]；高效系统盘：范围[1~500]。
 	Size *int `required:"true"`
 
-	// 是否开启快照服务。Yes：开启，No：不开启，默认值：No
+	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
 
 	// 升级目标UDisk ID
 	SourceId *string `required:"true"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 }
 
@@ -1064,21 +1091,27 @@ type DetachUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
 	// Zone *string `required:"false"`
 
+	// Host实例ID
+	HostId *string `required:"false"`
+
 	// 需要卸载的UDisk实例ID
 	UDiskId *string `required:"true"`
 
-	// UHost实例ID
-	UHostId *string `required:"true"`
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"false"`
 }
 
 // DetachUDiskResponse is response schema for DetachUDisk action
 type DetachUDiskResponse struct {
 	response.CommonBase
 
+	// 卸载的Host实例ID
+	HostId string
+
 	// 卸载的UDisk实例ID
 	UDiskId string
 
-	// 卸载的UHost实例ID
+	// 卸载的UHost实例ID。【即将废弃，建议使用HostId】
 	UHostId string
 }
 
@@ -1353,19 +1386,19 @@ func (c *UDiskClient) RestoreUDisk(req *RestoreUDiskRequest) (*RestoreUDiskRespo
 type SetUDiskUDataArkModeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
-	// 【即将废弃，开启快照服务时，免费开启数据方舟】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
+	// 【开启数据方舟入口已关闭】是否开启数据方舟。Yes：开启，No：不开启，默认值：No
 	UDataArkMode *string `required:"false"`
 
 	// 需要设置数据方舟的UDisk的Id

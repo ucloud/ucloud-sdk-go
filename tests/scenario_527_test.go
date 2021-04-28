@@ -32,10 +32,10 @@ func TestScenario527(t *testing.T) {
 				"udiskName_ark_snapclone":   "udisk_ark_snapclone",
 				"udiskName_noark_snapclone": "udisk_noark_snapclone",
 				"Region":                    "cn-bj2",
-				"Zone":                      "cn-bj2-02",
+				"Zone":                      "cn-bj2-03",
 			}
 		},
-		Owners: []string{"chenoa.chen@ucloud.cn"},
+		Owners: []string{"maggie.an@ucloud.cn"},
 		Title:  "UDisk-普通方舟盘_04",
 		Steps: []*driver.Step{
 			testStep527DescribeUDiskPrice01,
@@ -226,10 +226,10 @@ var testStep527DescribeUDisk04 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(10) * time.Second,
-	MaxRetries:    60,
-	RetryInterval: 3 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep527SetUDiskUDataArkMode05 = &driver.Step{
@@ -304,10 +304,10 @@ var testStep527DescribeUDisk06 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(3) * time.Second,
-	MaxRetries:    10,
-	RetryInterval: 2 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 10 * time.Second,
 	Title:         "获取云硬盘列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep527CreateUDiskSnapshot07 = &driver.Step{
@@ -385,10 +385,10 @@ var testStep527DescribeUDiskSnapshot08 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(60) * time.Second,
-	MaxRetries:    60,
-	RetryInterval: 6 * time.Second,
+	MaxRetries:    30,
+	RetryInterval: 60 * time.Second,
 	Title:         "获取快照列表",
-	FastFail:      false,
+	FastFail:      true,
 }
 
 var testStep527UpdateUDiskSnapshotInfo09 = &driver.Step{
@@ -638,8 +638,8 @@ var testStep527DescribeUDisk14 = &driver.Step{
 		}
 	},
 	StartupDelay:  time.Duration(120) * time.Second,
-	MaxRetries:    60,
-	RetryInterval: 3 * time.Second,
+	MaxRetries:    20,
+	RetryInterval: 60 * time.Second,
 	Title:         "获取云硬盘列表",
 	FastFail:      false,
 }
