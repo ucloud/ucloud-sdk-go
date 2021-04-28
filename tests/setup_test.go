@@ -57,6 +57,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
+	"github.com/ucloud/ucloud-sdk-go/services/uddb"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
@@ -162,6 +163,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uddb.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UDPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udpn.NewClient(&cfg, &credential), nil
