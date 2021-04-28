@@ -3,15 +3,6 @@
 package ucdn
 
 /*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
-}
-
-/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -36,6 +27,15 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
 }
 
 /*
@@ -453,6 +453,21 @@ type ReferConf struct {
 }
 
 /*
+AdvancedConf - 域名高级配置
+*/
+type AdvancedConf struct {
+
+	// http转https回源 true是，false否
+	Http2Https bool
+
+	// 客户端响应http头列表
+	HttpClientHeader []string
+
+	// 源站http头列表
+	HttpOriginHeader []string
+}
+
+/*
 OriginConf - 回源配置
 */
 type OriginConf struct {
@@ -504,21 +519,6 @@ type CacheAllConfig struct {
 
 	// 状态码缓存配置列表，参见CacheConf
 	HttpCodeCacheList []CacheConf
-}
-
-/*
-AdvancedConf - 域名高级配置
-*/
-type AdvancedConf struct {
-
-	// http转https回源 true是，false否
-	Http2Https bool
-
-	// 客户端响应http头列表
-	HttpClientHeader []string
-
-	// 源站http头列表
-	HttpOriginHeader []string
 }
 
 /*
@@ -591,6 +591,21 @@ type DomainConfigInfo struct {
 }
 
 /*
+HitRateInfoV2 - HitRateInfoV2
+*/
+type HitRateInfoV2 struct {
+
+	// 总流量命中率，单位%
+	FlowHitRate float64
+
+	// 请求数命中率，单位%
+	RequestHitRate float64
+
+	// 带宽获取的时间点。格式：时间戳
+	Time int
+}
+
+/*
 HttpCodeInfoV2 - HttpCodeInfoV2
 */
 type HttpCodeInfoV2 struct {
@@ -615,6 +630,18 @@ type HttpCodeInfoV2 struct {
 
 	// 带宽获取的时间点。格式：时间戳
 	Time int
+}
+
+/*
+DomainBaseInfo - 域名基本信息
+*/
+type DomainBaseInfo struct {
+
+	// 域名
+	Domain string
+
+	// 域名的资源id
+	DomainId string
 }
 
 /*
