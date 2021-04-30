@@ -140,18 +140,6 @@ func (c *UECClient) CreateUEcFirewall(req *CreateUEcFirewallRequest) (*CreateUEc
 }
 
 /*
-CreateUEcHolderParamStorage is request schema for complex param
-*/
-type CreateUEcHolderParamStorage struct {
-
-	// 存储卷挂载路径
-	Path *string `required:"false"`
-
-	// 存储卷资源id
-	ResourceId *string `required:"false"`
-}
-
-/*
 CreateUEcHolderParamImage is request schema for complex param
 */
 type CreateUEcHolderParamImage struct {
@@ -161,6 +149,18 @@ type CreateUEcHolderParamImage struct {
 
 	// 镜像仓库地址
 	StoreAddress *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamStorage is request schema for complex param
+*/
+type CreateUEcHolderParamStorage struct {
+
+	// 存储卷挂载路径
+	Path *string `required:"false"`
+
+	// 存储卷资源id
+	ResourceId *string `required:"false"`
 }
 
 /*
@@ -378,7 +378,7 @@ type CreateUEcVHostRequest struct {
 	// 镜像ID
 	ImageId *string `required:"true"`
 
-	// 是否关联外网IP，（yes-是，no-否，默认yes）
+	// （已废弃）是否需要外网ip（yes-是，no-否）
 	IsNeedOuterIp *string `required:"false"`
 
 	// 运营商（1-电信，2-联通，4移动）
@@ -1795,6 +1795,56 @@ func (c *UECClient) LoginUEcDocker(req *LoginUEcDockerRequest) (*LoginUEcDockerR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("LoginUEcDocker", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyUEcBandwidthRequest is request schema for ModifyUEcBandwidth action
+type ModifyUEcBandwidthRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 节点带宽限制，单位Mbs
+	NetLimit *string `required:"true"`
+
+	// 节点Id
+	NodeId *string `required:"true"`
+}
+
+// ModifyUEcBandwidthResponse is response schema for ModifyUEcBandwidth action
+type ModifyUEcBandwidthResponse struct {
+	response.CommonBase
+}
+
+// NewModifyUEcBandwidthRequest will create request of ModifyUEcBandwidth action.
+func (c *UECClient) NewModifyUEcBandwidthRequest() *ModifyUEcBandwidthRequest {
+	req := &ModifyUEcBandwidthRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUEcBandwidth
+
+修改节点带宽限制
+*/
+func (c *UECClient) ModifyUEcBandwidth(req *ModifyUEcBandwidthRequest) (*ModifyUEcBandwidthResponse, error) {
+	var err error
+	var res ModifyUEcBandwidthResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUEcBandwidth", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
