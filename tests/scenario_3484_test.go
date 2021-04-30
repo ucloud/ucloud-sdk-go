@@ -9,7 +9,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/ipsecvpn"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
-	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/driver"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/utils"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/utest/validation"
@@ -26,7 +25,7 @@ func TestScenario3484(t *testing.T) {
 				"Region": "th-bkk",
 			}
 		},
-		Owners: []string{"arno.gao@ucloud.cn"},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
 		Title:  "IPSecVPN自动化回归-国际机房-不支持UpdateVPNGateway",
 		Steps: []*driver.Step{
 			testStep3484CreateVPC01,
@@ -135,22 +134,22 @@ var testStep3484CreateSubnet02 = &driver.Step{
 
 var testStep3484GetVPNGatewayPrice03 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("GetVPNGatewayPrice")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewGetVPNGatewayPriceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"Region": step.Scenario.GetVar("Region"),
 			"Grade":  "Standard",
 		})
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.GetVPNGatewayPrice(req)
 		if err != nil {
 			return resp, err
 		}
@@ -321,15 +320,14 @@ var testStep3484DescribeVPNGateway07 = &driver.Step{
 
 var testStep3484GetVPNGatewayUpgradePrice08 = &driver.Step{
 	Invoker: func(step *driver.Step) (interface{}, error) {
-		c, err := step.LoadFixture("")
+		c, err := step.LoadFixture("IPSecVPN")
 		if err != nil {
 			return nil, err
 		}
-		client := c.(*ucloud.Client)
+		client := c.(*ipsecvpn.IPSecVPNClient)
 
-		req := client.NewGenericRequest()
-		_ = req.SetAction("GetVPNGatewayUpgradePrice")
-		err = req.SetPayload(map[string]interface{}{
+		req := client.NewGetVPNGatewayUpgradePriceRequest()
+		err = utils.SetRequest(req, map[string]interface{}{
 			"VPNGatewayId": step.Scenario.GetVar("vpngw_id"),
 			"Region":       step.Scenario.GetVar("Region"),
 			"Grade":        "Enhanced",
@@ -337,7 +335,8 @@ var testStep3484GetVPNGatewayUpgradePrice08 = &driver.Step{
 		if err != nil {
 			return nil, err
 		}
-		resp, err := client.GenericInvoke(req)
+
+		resp, err := client.GetVPNGatewayUpgradePrice(req)
 		if err != nil {
 			return resp, err
 		}
