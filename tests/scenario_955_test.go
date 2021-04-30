@@ -27,7 +27,7 @@ func TestScenario955(t *testing.T) {
 				"Zone":   "tw-tp-01",
 			}
 		},
-		Owners: []string{"arno.gao@ucloud.cn"},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
 		Title:  "IPSecVPN自动化回归-国际机房",
 		Steps: []*driver.Step{
 			testStep955CreateVPC01,

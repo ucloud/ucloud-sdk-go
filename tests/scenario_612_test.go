@@ -27,7 +27,7 @@ func TestScenario612(t *testing.T) {
 				"Zone":   "cn-bj2-02",
 			}
 		},
-		Owners: []string{"arno.gao@ucloud.cn"},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
 		Title:  "新版NAT网关-natgw自动化回归-基本操作-01-BGP线路",
 		Steps: []*driver.Step{
 			testStep612CreateVPC01,

@@ -27,7 +27,7 @@ func TestScenario621(t *testing.T) {
 				"Zone":   "tw-tp-01",
 			}
 		},
-		Owners: []string{"arno.gao@ucloud.cn"},
+		Owners: []string{"chenoa.chen@ucloud.cn"},
 		Title:  "新版NAT网关-natgw自动化回归-基本操作-01-国际线路",
 		Steps: []*driver.Step{
 			testStep621CreateVPC01,
