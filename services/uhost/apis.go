@@ -217,6 +217,12 @@ type CreateUHostInstanceParamVirtualGpuGPUVirtualGpu struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -238,18 +244,6 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-}
-
-/*
-CreateUHostInstanceParamVirtualGpu is request schema for complex param
-*/
-type CreateUHostInstanceParamVirtualGpu struct {
 }
 
 /*
@@ -280,15 +274,9 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamVirtualGpu is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+type CreateUHostInstanceParamVirtualGpu struct {
 }
 
 /*
@@ -301,6 +289,18 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
