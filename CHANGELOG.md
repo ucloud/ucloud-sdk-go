@@ -1,3 +1,15 @@
+## 0.21.2 (2021-04-30)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UDPN` (#244)
+- Update all APIs of `UEC` (#241)
+- Update all APIs of `UBill` (#240)
+- Update all APIs of `VPC2.0` (#239)
+- Update all APIs of `USMS` (#238)
+- Update all APIs of `IPSecVPN` (#237)
+- Update all APIs of `UNet` (#236)
+
 ## 0.21.1 (2021-04-28)
 
 ENHANCEMENTS:
