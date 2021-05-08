@@ -3,6 +3,24 @@
 package umem
 
 /*
+UDRedisSlowlogSet - DescribeUDRedisSlowlog
+*/
+type UDRedisSlowlogSet struct {
+
+	// 分片id
+	BlockId string
+
+	// 查询命令
+	Command string
+
+	// 查询消耗的时间
+	SpendTime int
+
+	// 查询发生的时间
+	StartTime int
+}
+
+/*
 UMemBackupSet - DescribeUMemBackup
 */
 type UMemBackupSet struct {
@@ -65,7 +83,7 @@ type UMemPriceSet struct {
 	ChargeType string
 
 	// 产品列表价
-	ListPrice int
+	ListPrice int `deprecated:"true"`
 
 	// 原价
 	OriginalPrice int
@@ -358,7 +376,7 @@ type URedisGroupSet struct {
 	// 状态标记 Creating // 初始化中 CreateFail // 创建失败 Deleting // 删除中 DeleteFail // 删除失败 Running // 运行 Resizing // 容量调整中 ResizeFail // 容量调整失败 Configing // 配置中 ConfigFail // 配置失败
 	State string
 
-	// 子网
+	// subnetid
 	SubnetId string
 
 	// 业务组名称
@@ -370,7 +388,7 @@ type URedisGroupSet struct {
 	// 使用量单位MB
 	UsedSize int
 
-	// VPCId
+	// vpcid
 	VPCId string
 
 	// Redis版本信息
