@@ -94,7 +94,7 @@ type ULBSSLSet struct {
 	// SSL证书的创建时间
 	CreateTime int
 
-	//
+	// SSL证书的HASH值
 	HashValue string
 
 	// SSL证书的内容
@@ -130,8 +130,17 @@ type PolicyBackendSet struct {
 	// 后端资源的实例名称
 	ResourceName string
 
-	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube；UNI -> 虚拟网卡
 	ResourceType string
+
+	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源ID
+	SubResourceId string
+
+	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源名称
+	SubResourceName string
+
+	// "UNI"或者为空
+	SubResourceType string
 }
 
 /*
@@ -235,7 +244,7 @@ type ULBVServerSet struct {
 	// VServer负载均衡的模式，枚举值：Roundrobin -> 轮询;Source -> 源地址；ConsistentHash -> 一致性哈希；SourcePort -> 源地址（计算端口）；ConsistentHashPort -> 一致性哈希（计算端口）。
 	Method string
 
-	// 健康检查类型，枚举值：Port -> 端口检查；Path -> 路径检查；Ping -> Ping探测， 请求代理型默认值为Port，其中TCP协议仅支持Port，其他协议支持Port和Path; 报文转发型TCP协议仅支持Port，UDP协议支持Ping和Port
+	// 健康检查类型，枚举值：Port -> 端口检查；Path -> 路径检查；Ping -> Ping探测， Customize -> UDP检查请求代理型默认值为Port，其中TCP协议仅支持Port，其他协议支持Port和Path; 报文转发型TCP协议仅支持Port，UDP协议支持Ping、Port和Customize
 	MonitorType string
 
 	// 根据MonitorType确认； 当MonitorType为Port时，此字段无意义。当MonitorType为Path时，代表HTTP检查路径
@@ -253,7 +262,13 @@ type ULBVServerSet struct {
 	// VServer实例的协议。 枚举值为：HTTP，TCP，UDP，HTTPS。
 	Protocol string
 
-	// VServer绑定的SSL证书信息，具体结构见下方 ULBSSLSet
+	// 根据MonitorType确认； 当MonitorType为Customize时，此字段有意义，代表UDP检查发出的请求报文
+	RequestMsg string
+
+	// 根据MonitorType确认； 当MonitorType为Customize时，此字段有意义，代表UDP检查请求应收到的响应报文
+	ResponseMsg string
+
+	// VServer绑定的SSL证书信息，具体结构见下方 ULBSSLSet。
 	SSLSet []ULBSSLSet
 
 	// VServer的运行状态。枚举值： 0 -> rs全部运行正常;1 -> rs全部运行异常；2 -> rs部分运行异常。
@@ -264,21 +279,6 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
 }
 
 /*
@@ -300,6 +300,21 @@ type ULBIPSet struct {
 
 	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
 	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*
@@ -335,7 +350,7 @@ type ULBSet struct {
 	EnableLog int
 
 	// ULB的到期时间，格式为Unix Timestamp
-	ExpireTime int
+	ExpireTime int `deprecated:"true"`
 
 	// 防火墙信息，具体结构见下方 FirewallSet
 	FirewallSet []FirewallSet
@@ -362,7 +377,7 @@ type ULBSet struct {
 	Remark string
 
 	// ULB的详细信息列表（废弃）
-	Resource []string
+	Resource []string `deprecated:"true"`
 
 	// ULB 为 InnerMode 时，ULB 所属的子网ID，默认为空
 	SubnetId string
