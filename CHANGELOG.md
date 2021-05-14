@@ -1,3 +1,11 @@
+## 0.21.4 (2021-05-14)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UAccount` (#254)
+- Update all APIs of `Cube` (#253)
+- Update all APIs of `UK8S` (#252)
+
 ## 0.21.3 (2021-05-08)
 
 ENHANCEMENTS:
