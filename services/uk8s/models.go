@@ -100,6 +100,9 @@ type NodeInfoV2 struct {
 	// NodeId，Node在UK8S处的唯一标示，如uk8s-reewqe5-sdasadsda
 	NodeId string
 
+	// 加节点时判断是否没有资源，如果返回NORESOURCE则代表没有资源了
+	NodeLogInfo string
+
 	// node角色，枚举值为master、node
 	NodeRole string
 
