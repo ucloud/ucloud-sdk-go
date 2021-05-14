@@ -67,3 +67,27 @@ type CubeExtendInfo struct {
 	// 业务组名称
 	Tag string
 }
+
+/*
+ValueSet -
+*/
+type ValueSet struct {
+
+	//
+	Timestamp int
+
+	//
+	Value float64
+}
+
+/*
+MetricDataSet - 监控数据集合
+*/
+type MetricDataSet struct {
+
+	//
+	MetricName string
+
+	//
+	Values []ValueSet
+}

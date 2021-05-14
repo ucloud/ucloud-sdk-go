@@ -9,12 +9,95 @@ import (
 
 // Cube API Schema
 
+// CreateCubeDeploymentRequest is request schema for CreateCubeDeployment action
+type CreateCubeDeploymentRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Postpay， \\ 后付费；默认为后付费
+	ChargeType *string `required:"false"`
+
+	// Cpu平台（V6：Intel、A2：AMD），默认V6。支持的地域（北京2B、北京2E、上海2A、广东、香港 、东京）目前北京2E仅有A2，其余地域仅有V6
+	CpuPlatform *string `required:"false"`
+
+	// base64编码的Deployment的yaml。大小不超过16KB
+	Deployment *string `required:"true"`
+
+	// base64编码的kubeconfig。大小不超过16KB
+	KubeConfig *string `required:"false"`
+
+	// Deployment名称
+	Name *string `required:"false"`
+
+	// 购买时长。默认:值 1。 月付时，此参数传0，代表购买至月末。
+	Quantity *int `required:"false"`
+
+	// 子网Id
+	SubnetId *string `required:"true"`
+
+	// 业务组。默认：Default（Default即为未分组）
+	Tag *string `required:"false"`
+
+	// VPCId
+	VPCId *string `required:"true"`
+}
+
+// CreateCubeDeploymentResponse is response schema for CreateCubeDeployment action
+type CreateCubeDeploymentResponse struct {
+	response.CommonBase
+
+	// 经过base64编码的Deployment的yaml
+	Deployment string
+
+	// 控制器ID
+	DeploymentId string
+}
+
+// NewCreateCubeDeploymentRequest will create request of CreateCubeDeployment action.
+func (c *CubeClient) NewCreateCubeDeploymentRequest() *CreateCubeDeploymentRequest {
+	req := &CreateCubeDeploymentRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateCubeDeployment
+
+创建Cube的Deployment
+*/
+func (c *CubeClient) CreateCubeDeployment(req *CreateCubeDeploymentRequest) (*CreateCubeDeploymentResponse, error) {
+	var err error
+	var res CreateCubeDeploymentResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCubeDeployment", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateCubePodRequest is request schema for CreateCubePod action
 type CreateCubePodRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
+	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
@@ -28,7 +111,7 @@ type CreateCubePodRequest struct {
 	// 代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
 	CouponId *string `required:"false"`
 
-	// Cpu平台（V6：Intel、A2：AMD），默认V6。支持的地域（北京2B、北京2E、上海2A、广东、香港 、东京）目前北京2E仅有A2，其余地域仅有V6
+	// Cpu平台（V6：Intel、A2：AMD、Auto），默认Auto。支持的地域（北京2B、北京2E、上海2A、广东、香港 、东京）目前北京2E仅有A2，其余地域仅有V6
 	CpuPlatform *string `required:"false"`
 
 	// pod所在组
@@ -104,6 +187,59 @@ func (c *CubeClient) CreateCubePod(req *CreateCubePodRequest) (*CreateCubePodRes
 	return &res, nil
 }
 
+// DeleteCubeDeploymentRequest is request schema for DeleteCubeDeployment action
+type DeleteCubeDeploymentRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 控制器Id
+	DeploymentId *string `required:"true"`
+}
+
+// DeleteCubeDeploymentResponse is response schema for DeleteCubeDeployment action
+type DeleteCubeDeploymentResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteCubeDeploymentRequest will create request of DeleteCubeDeployment action.
+func (c *CubeClient) NewDeleteCubeDeploymentRequest() *DeleteCubeDeploymentRequest {
+	req := &DeleteCubeDeploymentRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCubeDeployment
+
+删除Cube的Deployment
+*/
+func (c *CubeClient) DeleteCubeDeployment(req *DeleteCubeDeploymentRequest) (*DeleteCubeDeploymentResponse, error) {
+	var err error
+	var res DeleteCubeDeploymentResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCubeDeployment", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteCubePodRequest is request schema for DeleteCubePod action
 type DeleteCubePodRequest struct {
 	request.CommonBase
@@ -156,6 +292,62 @@ func (c *CubeClient) DeleteCubePod(req *DeleteCubePodRequest) (*DeleteCubePodRes
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteCubePod", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCubeDeploymentRequest is request schema for GetCubeDeployment action
+type GetCubeDeploymentRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// Deployment的Id
+	DeploymentId *string `required:"true"`
+}
+
+// GetCubeDeploymentResponse is response schema for GetCubeDeployment action
+type GetCubeDeploymentResponse struct {
+	response.CommonBase
+
+	// 经过base64编码的Deployment的yaml
+	Deployment string
+}
+
+// NewGetCubeDeploymentRequest will create request of GetCubeDeployment action.
+func (c *CubeClient) NewGetCubeDeploymentRequest() *GetCubeDeploymentRequest {
+	req := &GetCubeDeploymentRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCubeDeployment
+
+获取Deployment的详细信息
+*/
+func (c *CubeClient) GetCubeDeployment(req *GetCubeDeploymentRequest) (*GetCubeDeploymentResponse, error) {
+	var err error
+	var res GetCubeDeploymentResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCubeDeployment", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -219,6 +411,77 @@ func (c *CubeClient) GetCubeExtendInfo(req *GetCubeExtendInfoRequest) (*GetCubeE
 	return &res, nil
 }
 
+// GetCubeMetricsRequest is request schema for GetCubeMetrics action
+type GetCubeMetricsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 开始时间
+	BeginTime *int `required:"true"`
+
+	// Pod内容器名称
+	ContainerName *string `required:"true"`
+
+	// 结束时间，必须大于开始时间
+	EndTime *int `required:"true"`
+
+	// 监控指标名称
+	MetricName []string `required:"true"`
+
+	// Cube实例资源ID
+	ResourceId *string `required:"true"`
+}
+
+// GetCubeMetricsResponse is response schema for GetCubeMetrics action
+type GetCubeMetricsResponse struct {
+	response.CommonBase
+
+	// 时间序列集合
+	DataSets []MetricDataSet
+
+	// 错误信息
+	Message string
+}
+
+// NewGetCubeMetricsRequest will create request of GetCubeMetrics action.
+func (c *CubeClient) NewGetCubeMetricsRequest() *GetCubeMetricsRequest {
+	req := &GetCubeMetricsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCubeMetrics
+
+获取Cube实例（Pod，PodX，Deploy等）监控数据时间序列
+*/
+func (c *CubeClient) GetCubeMetrics(req *GetCubeMetricsRequest) (*GetCubeMetricsResponse, error) {
+	var err error
+	var res GetCubeMetricsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCubeMetrics", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetCubePodRequest is request schema for GetCubePod action
 type GetCubePodRequest struct {
 	request.CommonBase
@@ -271,6 +534,83 @@ func (c *CubeClient) GetCubePod(req *GetCubePodRequest) (*GetCubePodResponse, er
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetCubePod", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCubePriceRequest is request schema for GetCubePrice action
+type GetCubePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按秒后付费，默认为月付
+	ChargeType *string `required:"true"`
+
+	// 购买数量
+	Count *string `required:"true"`
+
+	// CPU 配置，单位为毫核，例如如 1 核则须输入 1000
+	Cpu *string `required:"true"`
+
+	// 内存配置，单位为 Mi，例如 1Gi 须输入 1024
+	Mem *string `required:"true"`
+
+	// 购买时长。默认:值 1。按小时购买（Dynamic/Postpay）时无需此参数。 月付时，此参数传0，代表购买至月末。
+	Quantity *int `required:"true"`
+}
+
+// GetCubePriceResponse is response schema for GetCubePrice action
+type GetCubePriceResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 列表价格，单位为分
+	OriginalPrice int
+
+	// 折扣后价格，单位为分
+	Price int
+
+	// 返回码
+	RetCode int
+}
+
+// NewGetCubePriceRequest will create request of GetCubePrice action.
+func (c *CubeClient) NewGetCubePriceRequest() *GetCubePriceRequest {
+	req := &GetCubePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCubePrice
+
+获取cube的价格
+*/
+func (c *CubeClient) GetCubePrice(req *GetCubePriceRequest) (*GetCubePriceResponse, error) {
+	var err error
+	var res GetCubePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCubePrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -516,6 +856,68 @@ func (c *CubeClient) RenewCubePod(req *RenewCubePodRequest) (*RenewCubePodRespon
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("RenewCubePod", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCubeDeploymentRequest is request schema for UpdateCubeDeployment action
+type UpdateCubeDeploymentRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// base64编码的Deployment的yaml。大小不超过16KB
+	Deployment *string `required:"true"`
+
+	// Deployment的Id
+	DeploymentId *string `required:"true"`
+
+	// Deployment的name
+	Name *string `required:"false"`
+}
+
+// UpdateCubeDeploymentResponse is response schema for UpdateCubeDeployment action
+type UpdateCubeDeploymentResponse struct {
+	response.CommonBase
+
+	// 经过base64编码的Deployment的yaml
+	Deployment string
+}
+
+// NewUpdateCubeDeploymentRequest will create request of UpdateCubeDeployment action.
+func (c *CubeClient) NewUpdateCubeDeploymentRequest() *UpdateCubeDeploymentRequest {
+	req := &UpdateCubeDeploymentRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCubeDeployment
+
+更新Deployment
+*/
+func (c *CubeClient) UpdateCubeDeployment(req *UpdateCubeDeploymentRequest) (*UpdateCubeDeploymentResponse, error) {
+	var err error
+	var res UpdateCubeDeploymentResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCubeDeployment", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
