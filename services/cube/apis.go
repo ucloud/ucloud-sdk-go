@@ -143,9 +143,6 @@ type CreateCubePodRequest struct {
 type CreateCubePodResponse struct {
 	response.CommonBase
 
-	// 操作名称
-	Action string
-
 	// cube的资源Id
 	CubeId string
 
@@ -573,9 +570,6 @@ type GetCubePriceRequest struct {
 // GetCubePriceResponse is response schema for GetCubePrice action
 type GetCubePriceResponse struct {
 	response.CommonBase
-
-	// 操作名称
-	Action string
 
 	// 列表价格，单位为分
 	OriginalPrice int
