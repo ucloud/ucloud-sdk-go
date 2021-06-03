@@ -1,3 +1,10 @@
+## 0.21.5 (2021-06-03)
+
+BUG FIXES:
+
+- delete duplicated field `Action` of the object `CreateCubePodResponse` about api `CreateCubePod`.[#256]
+- delete duplicated field `Action` of the object `GetCubePriceResponse` about api `CreateCubePod`.[#256]
+
 ## 0.21.4 (2021-05-14)
 
 ENHANCEMENTS:
