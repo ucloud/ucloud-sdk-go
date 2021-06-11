@@ -1,3 +1,9 @@
+## 0.21.6 (2021-06-11)
+
+ENHANCEMENTS:
+
+- Update all APIs of `VPC2.0` (#258)
+
 ## 0.21.5 (2021-06-03)
 
 BUG FIXES:
