@@ -155,7 +155,7 @@ type TaskInfo struct {
 	TaskId string
 
 	// file/dir  刷新任务会返回Type，预取任务没有
-	Type string
+	Type string `deprecated:"true"`
 
 	// 任务url的信息列表，参考UrlProgressInfo
 	UrlLists []UrlProgressInfo
@@ -178,7 +178,7 @@ HitRateInfo - HitRateInfo
 */
 type HitRateInfo struct {
 
-	// 流量命中率，单位%
+	// 总流量命中率，单位%
 	FlowHitRate float64
 
 	// 请求数命中率，单位%
@@ -423,21 +423,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-CacheKeyInfo - 忽略参数缓存配置
-*/
-type CacheKeyInfo struct {
-
-	// 是否忽略
-	Ignore bool
-
-	// 路径模式，支持正则
-	PathPattern string
-
-	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
-	QueryString string
-}
-
-/*
 ReferConf - refer配置
 */
 type ReferConf struct {
@@ -453,18 +438,48 @@ type ReferConf struct {
 }
 
 /*
-AdvancedConf - 域名高级配置
+CacheKeyInfo - 忽略参数缓存配置
 */
-type AdvancedConf struct {
+type CacheKeyInfo struct {
 
-	// http转https回源 true是，false否
-	Http2Https bool
+	// 是否忽略
+	Ignore bool
 
-	// 客户端响应http头列表
-	HttpClientHeader []string
+	// 路径模式，支持正则
+	PathPattern string
 
-	// 源站http头列表
-	HttpOriginHeader []string
+	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
+	QueryString string
+}
+
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
+
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
+
+	// refer配置
+	ReferConf ReferConf
+}
+
+/*
+CacheAllConfig - 缓存相关的配置
+*/
+type CacheAllConfig struct {
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*
@@ -504,33 +519,18 @@ type OriginConf struct {
 }
 
 /*
-CacheAllConfig - 缓存相关的配置
+AdvancedConf - 域名高级配置
 */
-type CacheAllConfig struct {
+type AdvancedConf struct {
 
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
+	// http转https回源 true是，false否
+	Http2Https bool
 
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
+	// 客户端响应http头列表
+	HttpClientHeader []string
 
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
-}
-
-/*
-AccessControlConf - 访问控制配置参数
-*/
-type AccessControlConf struct {
-
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
-
-	// refer配置
-	ReferConf ReferConf
+	// 源站http头列表
+	HttpOriginHeader []string
 }
 
 /*
