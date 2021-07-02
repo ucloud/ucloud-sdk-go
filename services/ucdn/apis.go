@@ -211,7 +211,7 @@ func (c *UCDNClient) DescribeNewUcdnPrefetchCacheTask(req *DescribeNewUcdnPrefet
 type DescribeNewUcdnRefreshCacheTaskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询的起始时间，格式为Unix Timestamp。如果有EndTime，BeginTime必须赋值
@@ -344,7 +344,7 @@ func (c *UCDNClient) GetNewUcdnDomainBandwidth(req *GetNewUcdnDomainBandwidthReq
 type GetNewUcdnDomainHitRateRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
@@ -406,7 +406,7 @@ func (c *UCDNClient) GetNewUcdnDomainHitRate(req *GetNewUcdnDomainHitRateRequest
 type GetNewUcdnDomainHttpCodeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
@@ -468,7 +468,7 @@ func (c *UCDNClient) GetNewUcdnDomainHttpCode(req *GetNewUcdnDomainHttpCodeReque
 type GetNewUcdnDomainHttpCodeV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
@@ -592,7 +592,7 @@ func (c *UCDNClient) GetNewUcdnDomainRequestNum(req *GetNewUcdnDomainRequestNumR
 type GetUcdnDomain95BandwidthV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外 不填默认为全部区域
@@ -654,7 +654,7 @@ func (c *UCDNClient) GetUcdnDomain95BandwidthV2(req *GetUcdnDomain95BandwidthV2R
 type GetUcdnDomainBandwidthV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外 不填默认为全部区域
@@ -669,11 +669,14 @@ type GetUcdnDomainBandwidthV2Request struct {
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
 
+	// 原始带宽，不为0则获取原始带宽，默认为0
+	Primeval *int `required:"false"`
+
 	// 协议，http、https  不传则查所有协议的带宽
 	Protocol *string `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照1分钟粒度）
-	Type *int `required:"true"`
+	Type *int `required:"false"`
 }
 
 // GetUcdnDomainBandwidthV2Response is response schema for GetUcdnDomainBandwidthV2 action
@@ -843,7 +846,7 @@ func (c *UCDNClient) GetUcdnDomainHitRate(req *GetUcdnDomainHitRateRequest) (*Ge
 type GetUcdnDomainHttpCodeV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
@@ -964,7 +967,7 @@ func (c *UCDNClient) GetUcdnDomainInfoList(req *GetUcdnDomainInfoListRequest) (*
 type GetUcdnDomainLogRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询的起始时间，格式为Unix Timestamp。如果有EndTime，BeginTime必须赋值。
@@ -1012,6 +1015,130 @@ func (c *UCDNClient) GetUcdnDomainLog(req *GetUcdnDomainLogRequest) (*GetUcdnDom
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUcdnDomainLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUcdnDomainOriginHttpCodeRequest is request schema for GetUcdnDomainOriginHttpCode action
+type GetUcdnDomainOriginHttpCodeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
+	Areacode *string `required:"false"`
+
+	// 查询的起始时间，格式为Unix Timestamp。如果有EndTime，BeginTime必须赋值。如没有赋值，则返回缺少参 数错误，如果没有EndTime，BeginTime也可以不赋值，EndTime默认当前时间，BeginTime 默认前一天的当前时间。
+	BeginTime *int `required:"false"`
+
+	// 域名id，创建域名时生成的id。默认全部域名
+	DomainId []string `required:"false"`
+
+	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
+	EndTime *int `required:"false"`
+
+	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照1分钟粒度）
+	Type *int `required:"true"`
+}
+
+// GetUcdnDomainOriginHttpCodeResponse is response schema for GetUcdnDomainOriginHttpCode action
+type GetUcdnDomainOriginHttpCodeResponse struct {
+	response.CommonBase
+
+	// 状态码实例表。详细见HttpCodeInfo
+	HttpCodeDetail []HttpCodeInfo
+}
+
+// NewGetUcdnDomainOriginHttpCodeRequest will create request of GetUcdnDomainOriginHttpCode action.
+func (c *UCDNClient) NewGetUcdnDomainOriginHttpCodeRequest() *GetUcdnDomainOriginHttpCodeRequest {
+	req := &GetUcdnDomainOriginHttpCodeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainOriginHttpCode
+
+获取域名源站状态码监控
+*/
+func (c *UCDNClient) GetUcdnDomainOriginHttpCode(req *GetUcdnDomainOriginHttpCodeRequest) (*GetUcdnDomainOriginHttpCodeResponse, error) {
+	var err error
+	var res GetUcdnDomainOriginHttpCodeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainOriginHttpCode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUcdnDomainOriginHttpCodeDetailRequest is request schema for GetUcdnDomainOriginHttpCodeDetail action
+type GetUcdnDomainOriginHttpCodeDetailRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
+	Areacode *string `required:"false"`
+
+	// 查询的起始时间，格式为Unix Timestamp。
+	BeginTime *int `required:"true"`
+
+	// 域名id，创建域名时生成的id。默认全部域名
+	DomainId []string `required:"false"`
+
+	// 查询的结束时间，格式为Unix Timestamp。
+	EndTime *int `required:"true"`
+
+	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天粒度，3表示按照一分钟粒度）
+	Type *int `required:"true"`
+}
+
+// GetUcdnDomainOriginHttpCodeDetailResponse is response schema for GetUcdnDomainOriginHttpCodeDetail action
+type GetUcdnDomainOriginHttpCodeDetailResponse struct {
+	response.CommonBase
+
+	// 状态码详情
+	HttpCodeV2Detail []HttpCodeV2Detail
+}
+
+// NewGetUcdnDomainOriginHttpCodeDetailRequest will create request of GetUcdnDomainOriginHttpCodeDetail action.
+func (c *UCDNClient) NewGetUcdnDomainOriginHttpCodeDetailRequest() *GetUcdnDomainOriginHttpCodeDetailRequest {
+	req := &GetUcdnDomainOriginHttpCodeDetailRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainOriginHttpCodeDetail
+
+获取域名源站详细状态码监控
+*/
+func (c *UCDNClient) GetUcdnDomainOriginHttpCodeDetail(req *GetUcdnDomainOriginHttpCodeDetailRequest) (*GetUcdnDomainOriginHttpCodeDetailResponse, error) {
+	var err error
+	var res GetUcdnDomainOriginHttpCodeDetailResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainOriginHttpCodeDetail", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1085,7 +1212,7 @@ func (c *UCDNClient) GetUcdnDomainOriginRequestNum(req *GetUcdnDomainOriginReque
 type GetUcdnDomainPrefetchEnableRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 域名ID，创建加速域名时生成。
@@ -1135,7 +1262,7 @@ func (c *UCDNClient) GetUcdnDomainPrefetchEnable(req *GetUcdnDomainPrefetchEnabl
 type GetUcdnDomainRequestNumV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询区域 cn代表国内 abroad代表海外，只支持国内
@@ -1197,7 +1324,7 @@ func (c *UCDNClient) GetUcdnDomainRequestNumV2(req *GetUcdnDomainRequestNumV2Req
 type GetUcdnDomainRequestNumV3Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询区域 cn代表国内 abroad代表海外，只支持国内
@@ -1262,7 +1389,7 @@ func (c *UCDNClient) GetUcdnDomainRequestNumV3(req *GetUcdnDomainRequestNumV3Req
 type GetUcdnDomainTrafficRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 指定按项目查询，还是按整个账户查询  取值 top 表示按整个账户查询，取值org表示按项目查询
@@ -1324,7 +1451,7 @@ func (c *UCDNClient) GetUcdnDomainTraffic(req *GetUcdnDomainTrafficRequest) (*Ge
 type GetUcdnPassBandwidthRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
@@ -1386,7 +1513,7 @@ func (c *UCDNClient) GetUcdnPassBandwidth(req *GetUcdnPassBandwidthRequest) (*Ge
 type GetUcdnPassBandwidthV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询带宽区域 cn代表国内 abroad代表海外，只支持国内
@@ -1448,7 +1575,7 @@ func (c *UCDNClient) GetUcdnPassBandwidthV2(req *GetUcdnPassBandwidthV2Request) 
 type GetUcdnProIspBandwidthV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 查询的起始日期，格式为Unix Timestamp
@@ -1460,10 +1587,10 @@ type GetUcdnProIspBandwidthV2Request struct {
 	// 查询的结束日期，格式为Unix Timestamp
 	EndTime *int `required:"true"`
 
-	// 运营商代码，一次只能查询一个运营商，不传递默认取所有运营商
+	// 运营商代码（运营商拼音），一次只能查询一个运营商，不传递默认取所有运营商
 	Isp *string `required:"false"`
 
-	// 省份代码，可以传多个，不传则查询所有省份
+	// 省份代码（省份拼音），可以传多个，不传则查询所有省份
 	Province []string `required:"false"`
 
 	// 时间粒度0 (按5分钟粒度)1 (按小时粒度)2(按天粒度)3(按分钟粒度）
@@ -1724,13 +1851,13 @@ func (c *UCDNClient) PrefetchNewUcdnDomainCache(req *PrefetchNewUcdnDomainCacheR
 type RefreshNewUcdnDomainCacheRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 刷新类型，file代表文件刷新，dir 代表路径刷新
 	Type *string `required:"true"`
 
-	// 刷新多个URL列表时，一次最多提交30个。必须以”http://域名/”开始。目录要以”/”结尾， 如刷新目录a下所有文件，格式为：http://abc.ucloud.cn/a/；如刷新文件目录a下面img.png文件， 格式为http://abc.ucloud.cn/a/img.png。请正确提交需要刷新的域名
+	// 需要刷新的URL，n 从自然数0开始，刷新多个URL列表时，一次最多提交30个。必须以”http://域名/”开始。目录要以”/”结尾， 如刷新目录a下所有文件，格式为：http://abc.ucloud.cn/a/；如刷新文件目录a下面img.png文件， 格式为http://abc.ucloud.cn/a/img.png。请正确提交需要刷新的域名
 	UrlList []string `required:"true"`
 }
 
