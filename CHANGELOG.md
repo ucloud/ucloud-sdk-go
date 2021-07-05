@@ -1,3 +1,9 @@
+## 0.21.8 (2021-07-05)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UPHost` (#263)
+
 ## 0.21.7 (2021-07-02)
 
 ENHANCEMENTS:
