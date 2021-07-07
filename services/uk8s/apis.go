@@ -191,20 +191,20 @@ func (c *UK8SClient) AddUK8SPHostNode(req *AddUK8SPHostNodeRequest) (*AddUK8SPHo
 type AddUK8SUHostNodeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。默认为SSD云盘
 	BootDiskType *string `required:"false"`
 
 	// 虚拟CPU核数。可选参数：2-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
-	CPU *int `required:"true"`
+	CPU *string `required:"true"`
 
 	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\ 默认为月付
 	ChargeType *string `required:"true"`
@@ -212,8 +212,8 @@ type AddUK8SUHostNodeRequest struct {
 	// UK8S集群ID。 可从UK8S控制台获取。
 	ClusterId *string `required:"true"`
 
-	// 最大创建Node节点数量，取值范围是[1,10]。
-	Count *int `required:"true"`
+	// 创建Node节点数量，取值范围是[1,50]。
+	Count *string `required:"true"`
 
 	// 数据磁盘大小，单位GB。默认0。范围 ：[20, 1000]
 	DataDiskSize *string `required:"false"`
@@ -249,7 +249,7 @@ type AddUK8SUHostNodeRequest struct {
 	MaxPods *int `required:"false"`
 
 	// 内存大小。单位：MB。范围 ：[4096, 262144]，取值为1024的倍数（可选范围参考控制台）。默认值：8192
-	Mem *int `required:"true"`
+	Mem *string `required:"true"`
 
 	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"；"Intel/CascadelakeR"; “Amd/Epyc2”,"Amd/Auto"],默认值是"Intel/Auto"
 	MinmalCpuPlatform *string `required:"false"`
@@ -271,8 +271,8 @@ type AddUK8SUHostNodeRequest struct {
 type AddUK8SUHostNodeResponse struct {
 	response.CommonBase
 
-	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息。
-	Message string
+	// 【该字段已废弃，请谨慎使用】
+	Message string `deprecated:"true"`
 
 	// Node实例Id集合
 	NodeIds []string
@@ -307,6 +307,15 @@ func (c *UK8SClient) AddUK8SUHostNode(req *AddUK8SUHostNodeRequest) (*AddUK8SUHo
 	}
 
 	return &res, nil
+}
+
+/*
+CreateUK8SClusterV2ParamMaster is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMaster struct {
+
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](../summary/regionlist.html)
+	Zone *string `required:"true"`
 }
 
 /*
@@ -363,15 +372,6 @@ type CreateUK8SClusterV2ParamNodes struct {
 	MinmalCpuPlatform *string `required:"false"`
 
 	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
-}
-
-/*
-CreateUK8SClusterV2ParamMaster is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMaster struct {
-
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](../summary/regionlist.html)
 	Zone *string `required:"true"`
 }
 
@@ -666,6 +666,152 @@ func (c *UK8SClient) DescribeUK8SImage(req *DescribeUK8SImageRequest) (*Describe
 	return &res, nil
 }
 
+// DescribeUK8SNodeRequest is request schema for DescribeUK8SNode action
+type DescribeUK8SNodeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// UK8S 集群 Id
+	ClusterId *string `required:"true"`
+
+	// K8S 节点IP或者节点ID
+	Name *string `required:"true"`
+}
+
+// DescribeUK8SNodeResponse is response schema for DescribeUK8SNode action
+type DescribeUK8SNodeResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 已分配到当前节点的 Pod 数量
+	AllocatedPodCount int
+
+	// 字符串数组，每一项是类似 "node.alpha.kubernetes.io/ttl=0" 的注解
+	Annotations []string
+
+	// 节点 CPU 总量
+	CPUCapacity string
+
+	// 节点上已分配 Pod 的 CPU 限制值
+	CPULimits string
+
+	// 节点上已分配 Pod 的 CPU 限制值占 CPU 总量的比例
+	CPULimitsFraction string
+
+	// 节点上已分配 Pod 的 CPU 请求量
+	CPURequests string
+
+	// 节点上已分配 Pod 的 CPU 请求量占 CPU 总量的比例
+	CPURequestsFraction string
+
+	// 节点状态数组
+	Conditions []K8SNodeCondition
+
+	// 节点上镜像名称数组
+	ContainerImages []string
+
+	// 容器运行时版本，如："docker://18.9.9"
+	ContainerRuntimeVersion string
+
+	// 时间戳，单位是 秒
+	CreationTimestamp int
+
+	// 主机名
+	Hostname string
+
+	// 内部 IP 地址
+	InternalIP string
+
+	// 内核版本，如："4.19.0-6.el7.ucloud.x86_64"
+	KernelVersion string
+
+	// kubeproxy 版本
+	KubeProxyVersion string
+
+	// kubelet 版本
+	KubeletVersion string
+
+	// 字符串数组，每一项是类似 "kubernetes.io/arch=amd64" 的标签
+	Labels []string
+
+	// 节点内存总量
+	MemoryCapacity string
+
+	// 节点上已分配 Pod 的内存限制量
+	MemoryLimits string
+
+	// 节点上已分配 Pod 的内存限制量占内存总量的比例，如返回值为 "18"，则意味着限制量占总量的 18%
+	MemoryLimitsFraction string
+
+	// 节点上已分配 Pod 的内存请求量
+	MemoryRequests string
+
+	// 节点上已分配 Pod 的内存请求量占内存总量的比例，如返回值为 "4.5"，则意味着请求量占总量的 4.5%
+	MemoryRequestsFraction string
+
+	// 操作出错时的提示信息
+	Message string
+
+	// 节点名称
+	Name string
+
+	// 操作系统类型，如："CentOS Linux 7 (Core)"
+	OSImage string
+
+	// 节点允许的可分配 Pod 最大数量
+	PodCapacity int
+
+	// 字符串，如："UCloud://cn-sh2-02//uk8s-vsc0vgob-n-mpzxc"
+	ProviderID string
+
+	// 返回码
+	RetCode int
+
+	// 字符串数组，每一项是类似 "node-role.kubernetes.io/master:NoSchedule" 的污点
+	Taints []string
+
+	// 是否禁止调度
+	Unschedulable bool
+}
+
+// NewDescribeUK8SNodeRequest will create request of DescribeUK8SNode action.
+func (c *UK8SClient) NewDescribeUK8SNodeRequest() *DescribeUK8SNodeRequest {
+	req := &DescribeUK8SNodeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUK8SNode
+
+用于获取 UK8S 节点详情
+*/
+func (c *UK8SClient) DescribeUK8SNode(req *DescribeUK8SNodeRequest) (*DescribeUK8SNodeResponse, error) {
+	var err error
+	var res DescribeUK8SNodeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUK8SNode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListUK8SClusterNodeV2Request is request schema for ListUK8SClusterNodeV2 action
 type ListUK8SClusterNodeV2Request struct {
 	request.CommonBase
@@ -726,10 +872,10 @@ func (c *UK8SClient) ListUK8SClusterNodeV2(req *ListUK8SClusterNodeV2Request) (*
 type ListUK8SClusterV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// UK8S集群ID

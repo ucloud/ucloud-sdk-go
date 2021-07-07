@@ -21,6 +21,30 @@ type ImageInfo struct {
 }
 
 /*
+K8SNodeCondition - Kubernetes Node Condition
+*/
+type K8SNodeCondition struct {
+
+	// 最后一次上报状态的时间
+	LastProbeTime string
+
+	// 最后一次状态转变时间
+	LastTransitionTime string
+
+	// 状态变化的描述信息
+	Message string
+
+	// 状态变化的原因
+	Reason string
+
+	// 状态，False、True
+	Status string
+
+	// Condition 类型，如 MemoryPressure、DiskPressure、PIDPressure、Ready
+	Type string
+}
+
+/*
 KubeProxy - KubeProxy信息
 */
 type KubeProxy struct {
@@ -106,7 +130,7 @@ type NodeInfoV2 struct {
 	// node角色，枚举值为master、node
 	NodeRole string
 
-	// Node的状态
+	// Node的状态：枚举值：初始化："Initializing"；启动中："Starting"；运行："Running"；停止中："Stopping"；停止："Stopped"；待删除："ToBeDeleted"；删除中："Deleting"；异常："Error"；安装失败："Install Fail"；
 	NodeStatus string
 
 	// Node节点的镜像名称。
@@ -133,6 +157,9 @@ type ClusterSet struct {
 	// 集群ID
 	ClusterId string
 
+	// 创建集群时判断如果为NORESOURCE则为没资源，否则为空
+	ClusterLogInfo string
+
 	// 资源名字
 	ClusterName string
 
@@ -157,7 +184,7 @@ type ClusterSet struct {
 	// 服务网段
 	ServiceCIDR string
 
-	// 状态
+	// 集群状态，枚举值：初始化："INITIALIZING"；启动中："STARTING"；创建失败："CREATEFAILED"；正常运行："RUNNING"；添加节点："ADDNODE"；删除节点："DELNODE"；删除中："DELETING"；删除失败："DELETEFAILED"；错误："ERROR"；升级插件："UPDATE_PLUGIN"；更新插件信息："UPDATE_PLUGIN_INFO"；异常："ABNORMAL"；升级集群中："UPGRADING"；容器运行时切换："CONVERTING"
 	Status string
 
 	// 所属子网
