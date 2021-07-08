@@ -204,7 +204,7 @@ type AddUK8SUHostNodeRequest struct {
 	BootDiskType *string `required:"false"`
 
 	// 虚拟CPU核数。可选参数：2-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
-	CPU *string `required:"true"`
+	CPU *int `required:"true"`
 
 	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\ 默认为月付
 	ChargeType *string `required:"true"`
@@ -213,10 +213,10 @@ type AddUK8SUHostNodeRequest struct {
 	ClusterId *string `required:"true"`
 
 	// 创建Node节点数量，取值范围是[1,50]。
-	Count *string `required:"true"`
+	Count *int `required:"true"`
 
 	// 数据磁盘大小，单位GB。默认0。范围 ：[20, 1000]
-	DataDiskSize *string `required:"false"`
+	DataDiskSize *int `required:"false"`
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。默认为SSD云盘
 	DataDiskType *string `required:"false"`
@@ -249,7 +249,7 @@ type AddUK8SUHostNodeRequest struct {
 	MaxPods *int `required:"false"`
 
 	// 内存大小。单位：MB。范围 ：[4096, 262144]，取值为1024的倍数（可选范围参考控制台）。默认值：8192
-	Mem *string `required:"true"`
+	Mem *int `required:"true"`
 
 	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"；"Intel/CascadelakeR"; “Amd/Epyc2”,"Amd/Auto"],默认值是"Intel/Auto"
 	MinmalCpuPlatform *string `required:"false"`
@@ -319,15 +319,6 @@ type CreateUK8SClusterV2ParamMaster struct {
 }
 
 /*
-CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamKubeProxy struct {
-
-	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
-	Mode *string `required:"false"`
-}
-
-/*
 CreateUK8SClusterV2ParamNodes is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodes struct {
@@ -373,6 +364,15 @@ type CreateUK8SClusterV2ParamNodes struct {
 
 	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](../summary/regionlist.html)
 	Zone *string `required:"true"`
+}
+
+/*
+CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamKubeProxy struct {
+
+	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
+	Mode *string `required:"false"`
 }
 
 // CreateUK8SClusterV2Request is request schema for CreateUK8SClusterV2 action
