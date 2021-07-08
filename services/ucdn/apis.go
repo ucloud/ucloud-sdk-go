@@ -1847,6 +1847,53 @@ func (c *UCDNClient) PrefetchNewUcdnDomainCache(req *PrefetchNewUcdnDomainCacheR
 	return &res, nil
 }
 
+// QueryIpLocationRequest is request schema for QueryIpLocation action
+type QueryIpLocationRequest struct {
+	request.CommonBase
+
+	// ip列表
+	Ip []string `required:"true"`
+}
+
+// QueryIpLocationResponse is response schema for QueryIpLocation action
+type QueryIpLocationResponse struct {
+	response.CommonBase
+
+	// IP信息列表
+	Data []IpLocationInfo
+}
+
+// NewQueryIpLocationRequest will create request of QueryIpLocation action.
+func (c *UCDNClient) NewQueryIpLocationRequest() *QueryIpLocationRequest {
+	req := &QueryIpLocationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryIpLocation
+
+查询IP信息
+*/
+func (c *UCDNClient) QueryIpLocation(req *QueryIpLocationRequest) (*QueryIpLocationResponse, error) {
+	var err error
+	var res QueryIpLocationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryIpLocation", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // RefreshNewUcdnDomainCacheRequest is request schema for RefreshNewUcdnDomainCache action
 type RefreshNewUcdnDomainCacheRequest struct {
 	request.CommonBase
