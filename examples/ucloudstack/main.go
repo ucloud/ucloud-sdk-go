@@ -1,5 +1,26 @@
 package main
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/ucloud/ucloud-sdk-go/services/ucloudstack"
+	"github.com/ucloud/ucloud-sdk-go/ucloud"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+)
+
+func loadUcloudStackConfig() (*ucloud.Config, *auth.Credential) {
+	cfg := ucloud.NewConfig()
+	cfg.BaseUrl = "http://console.dev.ucloudstack.com/api"
+
+	credential := auth.NewCredential()
+	credential.PublicKey = os.Getenv("UCLOUDSTACK_PUBLIC_KEY")
+	credential.PrivateKey = os.Getenv("UCLOUDSTACK_PRIVATE_KEY")
+
+
+	return &cfg, &credential
+}
+
 func main() {
 
 	// logic.CreateVM("my-first-vm")
