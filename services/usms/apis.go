@@ -31,6 +31,9 @@ type CreateUSMSSignatureRequest struct {
 	// 短信签名授权委托文件，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB；当您是代理并使用第三方的签名时（也即SigPurpose为1-他用），该项为必填项；
 	ProxyFile *string `required:"false"`
 
+	// 签名内容
+	SigContent *string `required:"true"`
+
 	// 签名用途，0-自用，1-他用；
 	SigPurpose *int `required:"true"`
 
@@ -249,13 +252,13 @@ func (c *USMSClient) DeleteUSMSTemplate(req *DeleteUSMSTemplateRequest) (*Delete
 type GetUSMSSendReceiptRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"false"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 发送短信时返回的SessionNo集合，SessionNoSet.0,SessionNoSet.1....格式
@@ -413,6 +416,74 @@ func (c *USMSClient) QueryUSMSTemplate(req *QueryUSMSTemplateRequest) (*QueryUSM
 	return &res, nil
 }
 
+// SendBatchUSMSMessageRequest is request schema for SendBatchUSMSMessage action
+type SendBatchUSMSMessageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 批量发送内容，该参数是json数组的base64编码结果。发送内容json数组中，每个“模板+签名”组合作为一个子项，每个子项内支持多个号码，示例：发送内容json数组（base64编码前）：[{"TemplateId": "UTA20212831C85C", "SigContent": "UCloud", "Target": [{"TemplateParams": ["123456"], "Phone": "18500000123", "ExtendCode": "123", "UserId": "456"} ] } ]   。json数组中各参数的定义："TemplateId":模板ID，"SigContent"短信签名内容，"Target"具体到号码粒度的发送内容。"Target"中的具体字段有："TemplateParams"实际发送的模板参数（若使用的是无参数模板，该参数不能传值），"Phone"手机号码, "ExtendCode"短信扩展码, "UserId"自定义业务标识ID。其中必传参数为"TemplateId", "SigContent", "Target"（"Target"中必传参数为"Phone"）。实际调用本接口时TaskContent传值（发送内容base64编码后）为：W3siVGVtcGxhdGVJZCI6ICJVVEEyMDIxMjgzMUM4NUMiLCAiU2lnQ29udGVudCI6ICJVQ2xvdWQiLCAiVGFyZ2V0IjogW3siVGVtcGxhdGVQYXJhbXMiOiBbIjEyMzQ1NiJdLCAiUGhvbmUiOiAiMTg1MDAwMDAxMjMiLCAiRXh0ZW5kQ29kZSI6ICIxMjMiLCAiVXNlcklkIjogIjQ1NiJ9IF0gfSBdIA==
+	TaskContent *string `required:"true"`
+}
+
+// SendBatchUSMSMessageResponse is response schema for SendBatchUSMSMessage action
+type SendBatchUSMSMessageResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 未发送成功的详情，返回码非0时该字段有效，可根据该字段数据重发
+	FailContent []BatchInfo
+
+	// 发生错误时表示错误描述
+	Message string
+
+	// 本次请求Uuid
+	ReqUuid string
+
+	// 返回码。0表示成功，非0表示失败。
+	RetCode int
+
+	// 本次提交发送任务的唯一ID，可根据该值查询本次发送的短信列表。注：成功提交短信数大于0时，才返回该字段
+	SessionNo string
+
+	// 成功提交短信（未拆分）条数
+	SuccessCount int
+}
+
+// NewSendBatchUSMSMessageRequest will create request of SendBatchUSMSMessage action.
+func (c *USMSClient) NewSendBatchUSMSMessageRequest() *SendBatchUSMSMessageRequest {
+	req := &SendBatchUSMSMessageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: SendBatchUSMSMessage
+
+调用SendBatchUSMSMessage接口批量发送短信
+*/
+func (c *USMSClient) SendBatchUSMSMessage(req *SendBatchUSMSMessageRequest) (*SendBatchUSMSMessageResponse, error) {
+	var err error
+	var res SendBatchUSMSMessageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SendBatchUSMSMessage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // SendUSMSMessageRequest is request schema for SendUSMSMessage action
 type SendUSMSMessageRequest struct {
 	request.CommonBase
@@ -435,7 +506,7 @@ type SendUSMSMessageRequest struct {
 	// 模板可变参数，以数组的方式填写，举例，TempalteParams.0，TempalteParams.1，... 若模板中无可变参数，则该项可不填写；若模板中有可变参数，则该项为必填项，参数个数需与变量个数保持一致，否则无法发送；
 	TemplateParams []string `required:"false"`
 
-	// 自定义的业务标识ID，字符串（ 长度不能超过32 位）
+	// 自定义的业务标识ID，字符串（ 长度不能超过32 位），不支持 单引号、表情包符号等特殊字符
 	UserId *string `required:"false"`
 }
 

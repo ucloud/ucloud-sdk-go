@@ -13,14 +13,20 @@ type ReceiptPerPhone struct {
 	// 手机号码
 	Phone string
 
+	// 状态报告编码
+	ReceiptCode string
+
 	// 回执结果描述
 	ReceiptDesc string
 
-	// 回执结果
+	// 回执结果，枚举值：\\ > 发送成功: 代表成功 \\ > Success: 代表成功 \\ > 发送失败: 代表失败 \\ > Fail: 代表失败 \\ > 状态未知: 代表未知 \\ > Unknow: 代表未知
 	ReceiptResult string
 
 	// 回执返回时间
 	ReceiptTime int
+
+	// 自定义的业务标识ID，字符串
+	UserId string
 }
 
 /*
@@ -84,4 +90,43 @@ type OutTemplate struct {
 
 	// 退订信息；一般填写方式“回T退订”，当purpose为3（也即会员推广类）时，为必填项
 	UnsubscribeInfo string
+}
+
+/*
+FailPhoneDetail - 批量任务中，未能成功发送的号码及其原因
+*/
+type FailPhoneDetail struct {
+
+	// 扩展号码
+	ExtendCode string
+
+	// 发送失败原因。注：若模板/签名校验失败，该字段为空
+	FailureDetails string
+
+	// 手机号
+	Phone string
+
+	// 模板参数
+	TemplateParams []string
+
+	// 用户自定义ID
+	UserId string
+}
+
+/*
+BatchInfo - 批量发送任务中未能成功发送的信息详情，“模板+签名”粒度
+*/
+type BatchInfo struct {
+
+	// 未能成功发送的详情。注：模板/签名检验失败时，该字段有效
+	FailureDetails string
+
+	// 签名
+	SigContent string
+
+	// 具体号码信息
+	Target []FailPhoneDetail
+
+	// 模板ID
+	TemplateId string
 }
