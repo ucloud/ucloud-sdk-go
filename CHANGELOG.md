@@ -1,3 +1,10 @@
+## 0.21.10 (2021-07-22)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UHost` (#272)
+- Update all APIs of `USMS` (#271)
+
 ## 0.21.9 (2021-07-08)
 
 ENHANCEMENTS:
