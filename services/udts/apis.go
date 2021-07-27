@@ -9,6 +9,460 @@ import (
 
 // UDTS API Schema
 
+/*
+CheckUDTSTaskParamSourceMySQLNodeQueryData is request schema for complex param
+*/
+type CheckUDTSTaskParamSourceMySQLNodeQueryData struct {
+
+	// 数据集成时需要迁移的 DB 名
+	DBName *string `required:"false"`
+
+	// 数据集成时迁移后的 DB 名
+	NewDBName *string `required:"false"`
+}
+
+/*
+CheckUDTSTaskParamSourceMySQLNodeSyncData is request schema for complex param
+*/
+type CheckUDTSTaskParamSourceMySQLNodeSyncData struct {
+
+	// 增量时需要指定的 binlog gtid，可以通过 show master status 获取，或者全量+增量任务会自动设置
+	BinlogGTID *string `required:"false"`
+
+	// 增量时需要指定的 binlog name，可以通过 show master status 获取，或者全量+增量任务会自动设置
+	BinlogName *string `required:"false"`
+
+	// 增量时需要指定的 binlog pos，可以通过 show master status 获取，或者全量+增量任务会自动设置
+	BinlogPos *int `required:"false"`
+
+	// 增量时需要指定的 serverID，不能和现有的 slave 重复，预检查时会检查该值
+	ServerID *int `required:"false"`
+}
+
+/*
+CheckUDTSTaskParamTargetMySQLNode is request schema for complex param
+*/
+type CheckUDTSTaskParamTargetMySQLNode struct {
+
+	// 目标数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 目标数据库地址， 比如 10.9.37.212
+	Host *string `required:"false"`
+
+	// 目标数据库密码
+	Password *string `required:"false"`
+
+	// 目标数据库端口，比如 3306
+	Port *int `required:"false"`
+
+	// 目标数据库子网 ID ,比如 subnet-zl44fktq
+	SubnetId *string `required:"false"`
+
+	// 目标数据库用户名，比如 root
+	User *string `required:"false"`
+
+	// 目标数据库 VPC,比如 uvnet-1wz5rqte
+	VPCId *string `required:"false"`
+}
+
+/*
+CheckUDTSTaskParamSourceMySQLNode is request schema for complex param
+*/
+type CheckUDTSTaskParamSourceMySQLNode struct {
+
+	// 数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 需要迁移的 DB 名称
+	Database *string `required:"false"`
+
+	// 源数据库地址， 比如 10.9.37.200
+	Host *string `required:"false"`
+
+	// 源 MySQL 密码
+	Password *string `required:"false"`
+
+	// 源 MySQL 端口，如 3306
+	Port *int `required:"false"`
+
+	//
+	QueryData []CheckUDTSTaskParamSourceMySQLNodeQueryData `required:"false"`
+
+	// 子网 ID
+	SubnetId *string `required:"false"`
+
+	//
+	SyncData *CheckUDTSTaskParamSourceMySQLNodeSyncData `required:"false"`
+
+	// 需要迁移的 table 名
+	Table *string `required:"false"`
+
+	// 源 MySQL 用户名，如 root
+	User *string `required:"false"`
+
+	// VPC
+	VPCId *string `required:"false"`
+}
+
+/*
+CheckUDTSTaskParamTarget is request schema for complex param
+*/
+type CheckUDTSTaskParamTarget struct {
+
+	// 目标数据库类型，比如 mysql
+	DataType *string `required:"false"`
+
+	//
+	MySQLNode *CheckUDTSTaskParamTargetMySQLNode `required:"false"`
+
+	// 目标 db 网络类型，目前进支持 user
+	NWType *string `required:"false"`
+}
+
+/*
+CheckUDTSTaskParamSource is request schema for complex param
+*/
+type CheckUDTSTaskParamSource struct {
+
+	// 数据库类型
+	DataType *string `required:"false"`
+
+	// // 任务类型，值可以是 full, incremental, full+incremental, bidirectional
+	Mode *string `required:"false"`
+
+	//
+	MySQLNode *CheckUDTSTaskParamSourceMySQLNode `required:"false"`
+
+	// 源网络类型，可以是 public,user,dedicated_line
+	NWType *string `required:"false"`
+}
+
+// CheckUDTSTaskRequest is request schema for CheckUDTSTask action
+type CheckUDTSTaskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 重试次数，最大为 5。 默认为0
+	MaxRetryCount *string `required:"true"`
+
+	// task 名称，长度不能超过 128
+	Name *string `required:"true"`
+
+	// 废弃
+	Query *string `required:"false"`
+
+	//
+	Source []CheckUDTSTaskParamSource `required:"false"`
+
+	//
+	Target *CheckUDTSTaskParamTarget `required:"false"`
+
+	// 任务类型，值为 transfer 或 integration， transfer 时任务为 数据迁移，integration 时任务为 数据集成。
+	Type *string `required:"true"`
+}
+
+// CheckUDTSTaskResponse is response schema for CheckUDTSTask action
+type CheckUDTSTaskResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 检查结果
+	Data CheckUDTSTaskResult
+
+	// 返回消息
+	Message string
+
+	// 返回码
+	RetCode string
+}
+
+// NewCheckUDTSTaskRequest will create request of CheckUDTSTask action.
+func (c *UDTSClient) NewCheckUDTSTaskRequest() *CheckUDTSTaskRequest {
+	req := &CheckUDTSTaskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CheckUDTSTask
+
+对UDTS 任务提供预检查功能
+*/
+func (c *UDTSClient) CheckUDTSTask(req *CheckUDTSTaskRequest) (*CheckUDTSTaskResponse, error) {
+	var err error
+	var res CheckUDTSTaskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CheckUDTSTask", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateUDTSTaskParamSourceMySQLNodeQueryDataTableMaps is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNodeQueryDataTableMaps struct {
+
+	// 数据集成时迁移后的 Table 名
+	NewTableName *string `required:"false"`
+
+	// 数据集成时需要迁移的 Table 名
+	TableName *string `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamSourceMySQLNodeQueryDataTableData is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNodeQueryDataTableData struct {
+
+	// 暂时未使用该字段
+	ExcludeTables *bool `required:"false"`
+
+	// 暂时未使用该字段
+	TableNames *string `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamSourceMySQLNodeSyncData is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNodeSyncData struct {
+
+	// 增量时需要指定的 binlog gtid，可以通过 show master status 获取，或者全量+增量任务会自动设置
+	BinlogGTID *string `required:"false"`
+
+	// 增量时需要指定的 binlog name，可以通过 show master status 获取，或者全量+增量任务会自动设置
+	BinlogName *string `required:"false"`
+
+	// 增量时需要指定的 binlog pos，可以通过 show master status 获取，或者全量+增量任务会自动设置
+	BinlogPos *int `required:"false"`
+
+	// 增量时需要指定的 serverID，不能和现有的 slave 重复，预检查时会检查该值
+	ServerID *int `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamSourceMySQLNodeQueryData is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNodeQueryData struct {
+
+	// 数据集成时需要迁移的 DB 名
+	DBName *string `required:"false"`
+
+	// 数据集成时迁移后的 DB 名
+	NewDBName *string `required:"false"`
+
+	//
+	TableData *CreateUDTSTaskParamSourceMySQLNodeQueryDataTableData `required:"false"`
+
+	//
+	TableMaps []CreateUDTSTaskParamSourceMySQLNodeQueryDataTableMaps `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamTargetMySQLNode is request schema for complex param
+*/
+type CreateUDTSTaskParamTargetMySQLNode struct {
+
+	// 目标数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 目标数据库地址， 比如 10.9.37.212
+	Host *string `required:"false"`
+
+	// 是否在全量过程中，临时禁用目标 MySQL 产生 binlog，在目标磁盘空间不足，或者需要获取更快的迁移速度时可以使用，该参数会破坏目标 MySQL 的高可用
+	NoBinlog *bool `required:"false"`
+
+	// 目标数据库密码
+	Password *string `required:"false"`
+
+	// 目标数据库端口，比如 3306
+	Port *int `required:"false"`
+
+	// 目标数据库子网 ID ,比如 subnet-zl44fktq
+	SubnetId *string `required:"false"`
+
+	// 目标数据库用户名，比如 root
+	User *string `required:"false"`
+
+	// 目标数据库 VPC,比如 uvnet-1wz5rqte
+	VPCId *string `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamSourceMySQLNode is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNode struct {
+
+	// 数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 需要迁移的 DB 名称
+	Database *string `required:"false"`
+
+	// 重复数据处理规则，数据集成时该参数才有效，值为 ignore或者replace
+	DupAction *string `required:"false"`
+
+	// 源数据库地址
+	Host *string `required:"false"`
+
+	// 是否保留原有数据，只有数据集成时该参数才有效
+	KeepExistData *bool `required:"false"`
+
+	// 源数据库密码
+	Password *string `required:"false"`
+
+	// 源数据库端口
+	Port *int `required:"false"`
+
+	//
+	QueryData []CreateUDTSTaskParamSourceMySQLNodeQueryData `required:"false"`
+
+	// 源数据库子网 ID，当网络类型为 user 时需要填写
+	SubnetId *string `required:"false"`
+
+	//
+	SyncData *CreateUDTSTaskParamSourceMySQLNodeSyncData `required:"false"`
+
+	// 需要迁移的 table 名
+	Table *string `required:"false"`
+
+	// 源数据库用户名
+	User *string `required:"false"`
+
+	// 源数据库 VPC ID，当网络类型为 user 时需要填写
+	VPCId *string `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamTarget is request schema for complex param
+*/
+type CreateUDTSTaskParamTarget struct {
+
+	// 目标端限速，单位为 MB/s
+	BandwidthLimit *string `required:"false"`
+
+	// 目标数据库类型，比如 mysql
+	DataType *string `required:"true"`
+
+	//
+	Mode *string `required:"true"`
+
+	//
+	MySQLNode *CreateUDTSTaskParamTargetMySQLNode `required:"false"`
+
+	// 目标 db 网络类型，目前仅支持 user
+	NWType *string `required:"true"`
+}
+
+/*
+CreateUDTSTaskParamSource is request schema for complex param
+*/
+type CreateUDTSTaskParamSource struct {
+
+	// 源端限速值，单位为  MB/s
+	BandwidthLimit *int `required:"false"`
+
+	// 数据库类型，比如 mysql
+	DataType *string `required:"true"`
+
+	// 任务类型，值可以是 full, incremental, full+incremental, bidirectional
+	Mode *string `required:"true"`
+
+	//
+	MySQLNode *CreateUDTSTaskParamSourceMySQLNode `required:"false"`
+
+	// 源网络类型，可以是 public,user,dedicated_line
+	NWType *string `required:"true"`
+}
+
+// CreateUDTSTaskRequest is request schema for CreateUDTSTask action
+type CreateUDTSTaskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 暂时未使用该字段
+	IsUnidirection *string `required:"false"`
+
+	// 重试次数，最大为 5。 默认为0
+	MaxRetryCount *string `required:"false"`
+
+	// task 名称，长度不能超过 128
+	Name *string `required:"true"`
+
+	// 暂时未使用该字段
+	Query *string `required:"false"`
+
+	// 备注信息，长度不能大于 255
+	Remark *string `required:"false"`
+
+	//
+	Source []CreateUDTSTaskParamSource `required:"false"`
+
+	//
+	Target *CreateUDTSTaskParamTarget `required:"false"`
+
+	// 任务类型，transfer(数据传输) 或 integration(数据集成)
+	Type *string `required:"true"`
+}
+
+// CreateUDTSTaskResponse is response schema for CreateUDTSTask action
+type CreateUDTSTaskResponse struct {
+	response.CommonBase
+
+	//
+	Data string
+
+	// 返回消息
+	Message string
+}
+
+// NewCreateUDTSTaskRequest will create request of CreateUDTSTask action.
+func (c *UDTSClient) NewCreateUDTSTaskRequest() *CreateUDTSTaskRequest {
+	req := &CreateUDTSTaskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUDTSTask
+
+创建UDTS任务
+*/
+func (c *UDTSClient) CreateUDTSTask(req *CreateUDTSTaskRequest) (*CreateUDTSTaskResponse, error) {
+	var err error
+	var res CreateUDTSTaskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUDTSTask", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUDTSTaskConfigureRequest is request schema for GetUDTSTaskConfigure action
 type GetUDTSTaskConfigureRequest struct {
 	request.CommonBase
@@ -59,15 +513,71 @@ func (c *UDTSClient) GetUDTSTaskConfigure(req *GetUDTSTaskConfigureRequest) (*Ge
 	return &res, nil
 }
 
+// GetUDTSTaskHistoryRequest is request schema for GetUDTSTaskHistory action
+type GetUDTSTaskHistoryRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 任务短 id
+	TaskId *string `required:"true"`
+
+	// 任务类型
+	Type *string `required:"false"`
+}
+
+// GetUDTSTaskHistoryResponse is response schema for GetUDTSTaskHistory action
+type GetUDTSTaskHistoryResponse struct {
+	response.CommonBase
+
+	// 历史状态数据
+	Data []TaskHistoryItem
+}
+
+// NewGetUDTSTaskHistoryRequest will create request of GetUDTSTaskHistory action.
+func (c *UDTSClient) NewGetUDTSTaskHistoryRequest() *GetUDTSTaskHistoryRequest {
+	req := &GetUDTSTaskHistoryRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUDTSTaskHistory
+
+获取任务历史状态
+*/
+func (c *UDTSClient) GetUDTSTaskHistory(req *GetUDTSTaskHistoryRequest) (*GetUDTSTaskHistoryResponse, error) {
+	var err error
+	var res GetUDTSTaskHistoryResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUDTSTaskHistory", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUDTSTaskStatusRequest is request schema for GetUDTSTaskStatus action
 type GetUDTSTaskStatusRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 任务ID
 	TaskId *string `required:"true"`
+
+	// 任务类型，值为 transfer 或 integration， transfer 时任务为 数据迁移，integration 时任务为 数据集成。
+	Type *string `required:"false"`
 }
 
 // GetUDTSTaskStatusResponse is response schema for GetUDTSTaskStatus action
@@ -124,6 +634,9 @@ type ListUDTSTaskRequest struct {
 
 	// 偏移量，默认为 0
 	Offset *string `required:"false"`
+
+	// 任务类型
+	Type *string `required:"false"`
 }
 
 // ListUDTSTaskResponse is response schema for ListUDTSTask action
@@ -177,6 +690,9 @@ type StartUDTSTaskRequest struct {
 
 	// 任务ID
 	TaskId *string `required:"true"`
+
+	// 任务类型
+	Type *string `required:"false"`
 }
 
 // StartUDTSTaskResponse is response schema for StartUDTSTask action
@@ -227,6 +743,9 @@ type StopUDTSTaskRequest struct {
 
 	// 任务 ID
 	TaskId *string `required:"true"`
+
+	// 任务类型
+	Type *string `required:"false"`
 }
 
 // StopUDTSTaskResponse is response schema for StopUDTSTask action
