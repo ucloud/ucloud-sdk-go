@@ -779,7 +779,7 @@ type DescribeUMemRequest struct {
 	Offset *int `required:"false"`
 
 	// 协议类型: memcache, redis
-	Protocol *string `required:"false"`
+	Protocol *string `required:"true"`
 
 	// 资源ID
 	ResourceId *string `required:"false"`
