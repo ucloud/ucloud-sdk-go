@@ -66,10 +66,10 @@ func (c *PathXClient) BindPathXSSL(req *BindPathXSSLRequest) (*BindPathXSSLRespo
 type CreateGlobalSSHInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// 填写支持SSH访问IP的地区名称，如“洛杉矶”，“新加坡”，“香港”，“东京”，“华盛顿”，“法兰克福”。Area和AreaCode两者必填一个
+	// 填写支持SSH访问IP的地区名称，如“洛杉矶”，“新加坡”，“香港”，“东京”，“华盛顿”，“法兰克福”，“首尔”。Area和AreaCode两者必填一个
 	Area *string `required:"true"`
 
 	// AreaCode, 区域航空港国际通用代码。Area和AreaCode两者必填一个
@@ -78,7 +78,7 @@ type CreateGlobalSSHInstanceRequest struct {
 	// Ultimate版本带宽包大小,枚举值：[0,20,40]。单位MB
 	BandwidthPackage *int `required:"false"`
 
-	// 支付方式，如按月、按年、按时
+	// 支付方式，如按月：Month、 按年：Year、按时：Dynamic
 	ChargeType *string `required:"false"`
 
 	// 使用代金券可冲抵部分费用
@@ -87,13 +87,13 @@ type CreateGlobalSSHInstanceRequest struct {
 	// InstanceType等于Basic时可以在["cn-bj2","cn-sh2","cn-gd"]中选择1个作为转发机房，Free版本固定为cn-bj2,其他付费版默认配置三个转发机房
 	ForwardRegion *string `required:"false"`
 
-	// 枚举值：["Enterprise","Basic","Free"], 分别代表企业版，基础版，免费版
+	// 枚举值：["Ultimate","Enterprise","Basic","Primary"], 分别代表旗舰版，企业版，基础版，入门版
 	InstanceType *string `required:"false"`
 
 	// 源站服务器监听的SSH端口，可取范围[1-65535]，不能使用80，443,  65123端口。如果InstanceType=Free，取值范围缩小为[22,3389],linux系统选择22，windows系统自动选3389。
 	Port *int `required:"true"`
 
-	// 购买数量
+	// 购买数量按月购买至月底请传0
 	Quantity *int `required:"false"`
 
 	// 备注信息
@@ -113,8 +113,8 @@ type CreateGlobalSSHInstanceResponse struct {
 	// 实例ID，资源唯一标识
 	InstanceId string
 
-	// 提示信息
-	Message string
+	// 【该字段已废弃，请谨慎使用】
+	Message string `deprecated:"true"`
 }
 
 // NewCreateGlobalSSHInstanceRequest will create request of CreateGlobalSSHInstance action.
@@ -217,7 +217,7 @@ func (c *PathXClient) CreatePathXSSL(req *CreatePathXSSLRequest) (*CreatePathXSS
 type CreateUGAForwarderRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
 	// HTTP接入HTTP回源转发，接入端口。禁用65123端口
@@ -238,13 +238,13 @@ type CreateUGAForwarderRequest struct {
 	// HTTPS接入HTTPS回源转发，源站监听端口
 	HTTPSHTTPSRS []int `required:"false"`
 
-	// TCP接入端口
+	// TCP接入端口，禁用65123端口
 	TCP []int `required:"false"`
 
 	// TCP回源端口
 	TCPRS []int `required:"false"`
 
-	// UDP接入端口
+	// UDP接入端口，禁用65123端口
 	UDP []int `required:"false"`
 
 	// UDP回源端口
@@ -252,14 +252,32 @@ type CreateUGAForwarderRequest struct {
 
 	// 加速配置实例ID
 	UGAId *string `required:"true"`
+
+	// WebSocketS接入WebSocket回源转发，接入端口。禁用65123。
+	WSSWS []int `required:"false"`
+
+	// WebSocketS接入WebSocket回源转发，源站监听端口。
+	WSSWSRS []int `required:"false"`
+
+	// WebSocketS接入WebSocketS回源转发，接入端口。禁用65123。
+	WSSWSS []int `required:"false"`
+
+	// WebSocketS接入WebSocketS回源转发，源站监听端口。
+	WSSWSSRS []int `required:"false"`
+
+	// WebSocket接入WebSocket回源转发，接入端口。禁用65123。
+	WSWS []int `required:"false"`
+
+	// WebSocket接入WebSocket回源转发，源站监听端口
+	WSWSRS []int `required:"false"`
 }
 
 // CreateUGAForwarderResponse is response schema for CreateUGAForwarder action
 type CreateUGAForwarderResponse struct {
 	response.CommonBase
 
-	// 返回信息 说明
-	Message string
+	// 【该字段已废弃，请谨慎使用】
+	Message string `deprecated:"true"`
 }
 
 // NewCreateUGAForwarderRequest will create request of CreateUGAForwarder action.
@@ -433,7 +451,10 @@ func (c *PathXClient) CreateUPath(req *CreateUPathRequest) (*CreateUPathResponse
 type DeleteGlobalSSHInstanceRequest struct {
 	request.CommonBase
 
-	//
+	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 实例Id,资源的唯一标识
 	InstanceId *string `required:"true"`
 }
 
@@ -441,7 +462,7 @@ type DeleteGlobalSSHInstanceRequest struct {
 type DeleteGlobalSSHInstanceResponse struct {
 	response.CommonBase
 
-	//
+	// 提示信息
 	Message string
 }
 
@@ -453,14 +474,14 @@ func (c *PathXClient) NewDeleteGlobalSSHInstanceRequest() *DeleteGlobalSSHInstan
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
+	req.SetRetryable(true)
 	return req
 }
 
 /*
 API: DeleteGlobalSSHInstance
 
-
+删除GlobalSSH实例
 */
 func (c *PathXClient) DeleteGlobalSSHInstance(req *DeleteGlobalSSHInstanceRequest) (*DeleteGlobalSSHInstanceResponse, error) {
 	var err error
@@ -527,7 +548,7 @@ func (c *PathXClient) DeletePathXSSL(req *DeletePathXSSLRequest) (*DeletePathXSS
 type DeleteUGAForwarderRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
 	// HTTP接入HTTP回源，接入端口。禁用65123端口
@@ -547,14 +568,23 @@ type DeleteUGAForwarderRequest struct {
 
 	// 加速配置实例ID
 	UGAId *string `required:"true"`
+
+	// WebSocketS接入WebSocket回源， 接入端口。禁用65123端口。
+	WSSWS []int `required:"false"`
+
+	// WebSocketS接入WebSocketS回源， 接入端口。禁用65123端口
+	WSSWSS []int `required:"false"`
+
+	// WebSocket接入WebSocket回源， 接入端口。禁用65123端口
+	WSWS []int `required:"false"`
 }
 
 // DeleteUGAForwarderResponse is response schema for DeleteUGAForwarder action
 type DeleteUGAForwarderResponse struct {
 	response.CommonBase
 
-	// 返回信息 说明
-	Message string
+	// 【该字段已废弃，请谨慎使用】
+	Message string `deprecated:"true"`
 }
 
 // NewDeleteUGAForwarderRequest will create request of DeleteUGAForwarder action.
@@ -1235,10 +1265,13 @@ func (c *PathXClient) GetPathXMetric(req *GetPathXMetricRequest) (*GetPathXMetri
 type ModifyGlobalSSHPortRequest struct {
 	request.CommonBase
 
-	//
+	// [公共参数] 项目ID，如org-xxxx。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 实例ID,资源唯一标识。当前仅收费版GlobalSSH实例可以修改端口。
 	InstanceId *string `required:"true"`
 
-	//
+	// 源站服务器监听的SSH端口号。收费版本端口范围[1,65535]且不能为80，443，65123端口。免费版不支持修改端口。
 	Port *int `required:"true"`
 }
 
@@ -1246,7 +1279,7 @@ type ModifyGlobalSSHPortRequest struct {
 type ModifyGlobalSSHPortResponse struct {
 	response.CommonBase
 
-	//
+	// 提示信息
 	Message string
 }
 
@@ -1258,14 +1291,14 @@ func (c *PathXClient) NewModifyGlobalSSHPortRequest() *ModifyGlobalSSHPortReques
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
+	req.SetRetryable(true)
 	return req
 }
 
 /*
 API: ModifyGlobalSSHPort
 
-
+修改GlobalSSH端口
 */
 func (c *PathXClient) ModifyGlobalSSHPort(req *ModifyGlobalSSHPortRequest) (*ModifyGlobalSSHPortResponse, error) {
 	var err error
@@ -1660,6 +1693,56 @@ func (c *PathXClient) UnBindPathXSSL(req *UnBindPathXSSLRequest) (*UnBindPathXSS
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UnBindPathXSSL", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdatePathXWhitelistRequest is request schema for UpdatePathXWhitelist action
+type UpdatePathXWhitelistRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// GlobalSSH实例ID，资源唯一标识
+	InstanceId *string `required:"true"`
+
+	// 白名单规则,例如 "Whitelist.0": "192.168.1.1/24|tcp|22"，"Whitelist.1": "192.168.1.2|tcp|8080:8090"，第一个参数为ip或ip段，第二个参数代表协议（tcp/udp），第三个参数代表端口号或端口范围（使用 ':' 隔开）；可以添加多条规则（递增Whitelist.n字段内的n值）；此接口需要列出全部规则，例如不填则为清空白名单规则，如若需要增量添加，使用InsertPathXWhitelist接口,globalssh 没有端口范围：端口设置成加速端口，协议设置成tcp:ip|tcp|加速端口
+	Whitelist []string `required:"false"`
+}
+
+// UpdatePathXWhitelistResponse is response schema for UpdatePathXWhitelist action
+type UpdatePathXWhitelistResponse struct {
+	response.CommonBase
+}
+
+// NewUpdatePathXWhitelistRequest will create request of UpdatePathXWhitelist action.
+func (c *PathXClient) NewUpdatePathXWhitelistRequest() *UpdatePathXWhitelistRequest {
+	req := &UpdatePathXWhitelistRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdatePathXWhitelist
+
+更新入口白名单,仅限GlobalSSH 实例使用。其他uga-实例不生效
+*/
+func (c *PathXClient) UpdatePathXWhitelist(req *UpdatePathXWhitelistRequest) (*UpdatePathXWhitelistResponse, error) {
+	var err error
+	var res UpdatePathXWhitelistResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdatePathXWhitelist", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
