@@ -159,6 +159,45 @@ type PathXSSLSet struct {
 }
 
 /*
+UGAATask - 用户在UGAA实例下配置的多端口任务
+*/
+type UGAATask struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+}
+
+/*
+UGAL4Forwarder - UGA实例 4层转发器信息
+*/
+type UGAL4Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+}
+
+/*
+OutPublicIpInfo - 线路出口IP信息
+*/
+type OutPublicIpInfo struct {
+
+	// 线路出口机房代号
+	Area string
+
+	// 线路出口EIP
+	IP string
+}
+
+/*
 UGAL7Forwarder - UGA实例 7层转发器信息
 */
 type UGAL7Forwarder struct {
@@ -207,45 +246,6 @@ type UPathSet struct {
 
 	// UPath名字
 	UPathName string
-}
-
-/*
-UGAATask - 用户在UGAA实例下配置的多端口任务
-*/
-type UGAATask struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-}
-
-/*
-OutPublicIpInfo - 线路出口IP信息
-*/
-type OutPublicIpInfo struct {
-
-	// 线路出口机房代号
-	Area string
-
-	// 线路出口EIP
-	IP string
-}
-
-/*
-UGAL4Forwarder - UGA实例 4层转发器信息
-*/
-type UGAL4Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
 }
 
 /*
