@@ -143,14 +143,17 @@ type CreateCubePodRequest struct {
 type CreateCubePodResponse struct {
 	response.CommonBase
 
+	// 【该字段已废弃，请谨慎使用】
+	Action string `deprecated:"true"`
+
 	// cube的资源Id
 	CubeId string
 
 	// base64编码的yaml
 	Pod string
 
-	// 返回码
-	RetCode int
+	// 【该字段已废弃，请谨慎使用】
+	RetCode int `deprecated:"true"`
 }
 
 // NewCreateCubePodRequest will create request of CreateCubePod action.
@@ -345,6 +348,71 @@ func (c *CubeClient) GetCubeDeployment(req *GetCubeDeploymentRequest) (*GetCubeD
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetCubeDeployment", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCubeExecTokenRequest is request schema for GetCubeExecToken action
+type GetCubeExecTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 容器名称
+	ContainerName *string `required:"true"`
+
+	// CubeId 和 Uid 中必须填写任意一个。CubeId 是所有 Cube 资源的唯一 ID，如非在 UK8S 通过 Virtual Kubelet 插件创建的 Cube， 则必填 CubeId
+	CubeId *string `required:"false"`
+
+	// CubeId 和 Uid 中必须填写任意一个。Uid 是在 UK8S 中通过 Virtual Kubelet 插件创建出的 Cube 的唯一标识
+	Uid *string `required:"false"`
+}
+
+// GetCubeExecTokenResponse is response schema for GetCubeExecToken action
+type GetCubeExecTokenResponse struct {
+	response.CommonBase
+
+	// terminal的登录连接地址，限单点登录，有效时间5min
+	TerminalUrl string
+
+	// 有效时间5min
+	Token string
+}
+
+// NewGetCubeExecTokenRequest will create request of GetCubeExecToken action.
+func (c *CubeClient) NewGetCubeExecTokenRequest() *GetCubeExecTokenRequest {
+	req := &GetCubeExecTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCubeExecToken
+
+获取登录容器的token
+*/
+func (c *CubeClient) GetCubeExecToken(req *GetCubeExecTokenRequest) (*GetCubeExecTokenResponse, error) {
+	var err error
+	var res GetCubeExecTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCubeExecToken", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -576,9 +644,6 @@ type GetCubePriceResponse struct {
 
 	// 折扣后价格，单位为分
 	Price int
-
-	// 返回码
-	RetCode int
 }
 
 // NewGetCubePriceRequest will create request of GetCubePrice action.
@@ -612,18 +677,83 @@ func (c *CubeClient) GetCubePrice(req *GetCubePriceRequest) (*GetCubePriceRespon
 	return &res, nil
 }
 
+// ListCubeDeploymentRequest is request schema for ListCubeDeployment action
+type ListCubeDeploymentRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 默认20
+	Limit *int `required:"true"`
+
+	// 默认0
+	Offset *int `required:"true"`
+}
+
+// ListCubeDeploymentResponse is response schema for ListCubeDeployment action
+type ListCubeDeploymentResponse struct {
+	response.CommonBase
+
+	// DeploymentInfo
+	Deployments []string
+
+	//
+	TotalCount int
+}
+
+// NewListCubeDeploymentRequest will create request of ListCubeDeployment action.
+func (c *CubeClient) NewListCubeDeploymentRequest() *ListCubeDeploymentRequest {
+	req := &ListCubeDeploymentRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListCubeDeployment
+
+获取Cube的Deployment列表
+*/
+func (c *CubeClient) ListCubeDeployment(req *ListCubeDeploymentRequest) (*ListCubeDeploymentResponse, error) {
+	var err error
+	var res ListCubeDeploymentResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListCubeDeployment", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListCubePodRequest is request schema for ListCubePod action
 type ListCubePodRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
+
+	// Deployment的Id
+	DeploymentId *string `required:"false"`
 
 	// 组名称
 	Group *string `required:"false"`
