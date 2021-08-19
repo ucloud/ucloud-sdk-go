@@ -10,6 +10,7 @@ type Metadata struct {
 	PublicSSHKeys    []string        `json:"public-ssh-keys"`
 	Region           string          `json:"region"`
 	UHost            MDUHost         `json:"uhost"`
+	UPHost           MDUPHost        `json:"uphost"`
 }
 
 type MDMatch struct {
@@ -52,6 +53,7 @@ type MDIPs struct {
 }
 
 type MDNetworkInterfaces struct {
+	Id       string  `json:"id"`
 	IPs      []MDIPs `json:"ips"`
 	Mac      string  `json:"mac"`
 	SubnetId string  `json:"subnet-id"`
@@ -77,4 +79,28 @@ type MDUHost struct {
 	Tag               string                `json:"tag"`
 	UHostId           string                `json:"uhost-id"`
 	Zone              string                `json:"zone"`
+}
+
+type MDUPHost struct {
+	CPU               int64                 `json:"cpu"`
+	Disks             []MDUPHostDisk        `json:"disks"`
+	Memory            int64                 `json:"memory"`
+	Name              string                `json:"name"`
+	NetworkInterfaces []MDNetworkInterfaces `json:"network-interfaces"`
+	OSName            string                `json:"os-name"`
+	PHostId           string                `json:"phost-id"`
+	PHostType         string                `json:"phost-type"`
+	ProjectId         string                `json:"project-id"`
+	Region            string                `json:"region"`
+	Remark            string                `json:"remark"`
+	Tag               string                `json:"tag"`
+	Zone              string                `json:"zone"`
+}
+
+type MDUPHostDisk struct {
+	Iocap int64  `json:"iocap"`
+	Name  string `json:"name"`
+	RAID  string `json:"raid"`
+	Space int64  `json:"space"`
+	Type  string `json:"type"`
 }
