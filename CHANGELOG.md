@@ -1,3 +1,9 @@
+## 0.21.14 (2021-08-19)
+
+ENHANCEMENTS:
+
+- Add `UPHost` support for the metadata server
+
 ## 0.21.13 (2021-08-17)
 
 ENHANCEMENTS:
