@@ -1,3 +1,9 @@
+## 0.21.15 (2021-08-30)
+
+ENHANCEMENTS:
+
+- Update all APIs of `USMS` (#284)
+
 ## 0.21.14 (2021-08-19)
 
 ENHANCEMENTS:
