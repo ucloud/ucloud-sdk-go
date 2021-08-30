@@ -104,6 +104,9 @@ type CreateUSMSTemplateRequest struct {
 
 	// 短信模板名称，不超过32个字符，每个中文、符号、英文、数字等都计为1个字。
 	TemplateName *string `required:"true"`
+
+	// 当Purpose为3时，也即会员推广类短信模板，该项必填。枚举值：TD退订、回T退订、回N退订、回TD退订、退订回T、退订回D、退订回TD、退订回复T、退订回复D、退订回复N、退订回复TD、拒收回T
+	UnsubscribeInfo *string `required:"false"`
 }
 
 // CreateUSMSTemplateResponse is response schema for CreateUSMSTemplate action
@@ -261,7 +264,7 @@ type GetUSMSSendReceiptRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
-	// 发送短信时返回的SessionNo集合，SessionNoSet.0,SessionNoSet.1....格式
+	// 发送短信时返回的SessionNo集合，SessionNoSet.0,SessionNoSet.1....格式，单次调用集合数需控制在100个以内
 	SessionNoSet []string `required:"true"`
 }
 
