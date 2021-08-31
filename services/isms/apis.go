@@ -9,6 +9,260 @@ import (
 
 // ISMS API Schema
 
+// CreateISMSSignatureRequest is request schema for CreateISMSSignature action
+type CreateISMSSignatureRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID，不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 签名的资质证明文件类型，需与签名类型保持一致，说明如下：0-三证合一/企业营业执照/组织机构代码证书/社会信用代码证书；1-应用商店后台开发者管理截图；2-备案服务商的备案成功截图(含域名，网站名称，备案号)；3-公众号或小程序的管理界面截图；4-商标注册证书；5-组织机构代码证书、社会信用代码证书；
+	CertificateType *int `required:"true"`
+
+	// 短信签名申请原因
+	Description *string `required:"true"`
+
+	// 短信签名的资质证明文件，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB
+	File *string `required:"true"`
+
+	// 短信签名授权委托文件，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB；当您是代理并使用第三方的签名时（也即SigPurpose为1-他用），该项为必填项；
+	ProxyFile *string `required:"false"`
+
+	// 短信签名内容；长度为2-12个字符, 可包含中文、数字和符号；无需填写【】或[]，系统会自动添加
+	SigContent *string `required:"true"`
+
+	// 签名用途，0-自用，1-他用；
+	SigPurpose *int `required:"true"`
+
+	// 签名类型，说明如下：0-公司或企业的全称或简称；1-App应用的全称或简称；2-工信部备案网站的全称或简称；3-公众号或小程序的全称或简称；4-商标名的全称或简称；5-政府/机关事业单位/其他单位的全称或简称；
+	SigType *int `required:"true"`
+}
+
+// CreateISMSSignatureResponse is response schema for CreateISMSSignature action
+type CreateISMSSignatureResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+
+	// 短信签名ID
+	SigId string
+}
+
+// NewCreateISMSSignatureRequest will create request of CreateISMSSignature action.
+func (c *ISMSClient) NewCreateISMSSignatureRequest() *CreateISMSSignatureRequest {
+	req := &CreateISMSSignatureRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateISMSSignature
+
+调用接口CreateISMSSignature申请视频短信签名
+*/
+func (c *ISMSClient) CreateISMSSignature(req *CreateISMSSignatureRequest) (*CreateISMSSignatureResponse, error) {
+	var err error
+	var res CreateISMSSignatureResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateISMSSignature", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateISMSTemplateRequest is request schema for CreateISMSTemplate action
+type CreateISMSTemplateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 视频短信模板内容。json数组的字符串格式。如：[{name:"0.txt",type:"txt",content:"北京是一座美丽的城市，我爱北京！",index:0},{name:"1.jpg",type:"jpg",content:"jpg文件字节的base64编码字符串",index:1},{name:”2.mp4”,type:"mp4",content:"mp4文件字节的base64编码字符串",index:2}]。name: 文件名，name中不能出现中文，必须要带上和type相同的后缀；type:文件类型，不能为空，文本为txt，图片为jpg、gif或png，音频为mp3，视频为mp4；content：文件内容，由文本、图片、音频、视频组成，文本使用txt文件，图片使用 jpg、gif、png 格式，音频使用 mp3 格式，视频使用mp4（视频只允许一个），文本、图片、音频、视频文件合计大小不可超过2M；index: 在视频短信中的位置。从0开始。
+	Content *string `required:"true"`
+
+	// 视频短信签名
+	MsgSignature *string `required:"true"`
+
+	// 视频短信标题
+	MsgTitle *string `required:"true"`
+
+	// 需要报备的运营商。json数组的字符串格式。true-需要报备，false-不需要报备。如：{"telecom":true, "mobile":false, "unicom":true }
+	NetworkOperator *string `required:"false"`
+
+	// 模板用途类型：1-验证码类短信模板；2-系统通知类短信模板；3-会员推广类短信模板；
+	Purpose *int `required:"false"`
+
+	// 备注
+	Remark *string `required:"true"`
+
+	// 视频短信模板名称
+	TemplateName *string `required:"true"`
+
+	// 退订信息，如：“回T退订”
+	UnsubscribeInfo *string `required:"true"`
+}
+
+// CreateISMSTemplateResponse is response schema for CreateISMSTemplate action
+type CreateISMSTemplateResponse struct {
+	response.CommonBase
+
+	// API接口调用出错时表示错误信息
+	Message string
+
+	// 本次接口调用请求Id，用于问题排查。
+	ReqUuid string
+
+	// 申请的模板Id。
+	TemplateId string
+}
+
+// NewCreateISMSTemplateRequest will create request of CreateISMSTemplate action.
+func (c *ISMSClient) NewCreateISMSTemplateRequest() *CreateISMSTemplateRequest {
+	req := &CreateISMSTemplateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateISMSTemplate
+
+申请视频短信模板
+*/
+func (c *ISMSClient) CreateISMSTemplate(req *CreateISMSTemplateRequest) (*CreateISMSTemplateResponse, error) {
+	var err error
+	var res CreateISMSTemplateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateISMSTemplate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteISMSSignatureRequest is request schema for DeleteISMSSignature action
+type DeleteISMSSignatureRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID，不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 签名ID，支持以数组的方式，举例，以SigIds.0、SigIds.1...SigIds.N方式传入
+	SigIds []string `required:"true"`
+}
+
+// DeleteISMSSignatureResponse is response schema for DeleteISMSSignature action
+type DeleteISMSSignatureResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+}
+
+// NewDeleteISMSSignatureRequest will create request of DeleteISMSSignature action.
+func (c *ISMSClient) NewDeleteISMSSignatureRequest() *DeleteISMSSignatureRequest {
+	req := &DeleteISMSSignatureRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteISMSSignature
+
+调用接口DeleteISMSSignature删除视频短信签名
+*/
+func (c *ISMSClient) DeleteISMSSignature(req *DeleteISMSSignatureRequest) (*DeleteISMSSignatureResponse, error) {
+	var err error
+	var res DeleteISMSSignatureResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteISMSSignature", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteISMSTemplateRequest is request schema for DeleteISMSTemplate action
+type DeleteISMSTemplateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 模板ID，支持以数组的方式，举例，以TemplateIds.0、TemplateIds.1...TemplateIds.N方式传入
+	TemplateIds []string `required:"true"`
+}
+
+// DeleteISMSTemplateResponse is response schema for DeleteISMSTemplate action
+type DeleteISMSTemplateResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+}
+
+// NewDeleteISMSTemplateRequest will create request of DeleteISMSTemplate action.
+func (c *ISMSClient) NewDeleteISMSTemplateRequest() *DeleteISMSTemplateRequest {
+	req := &DeleteISMSTemplateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteISMSTemplate
+
+调用接口DeleteISMSTemplate删除视频短信模板
+*/
+func (c *ISMSClient) DeleteISMSTemplate(req *DeleteISMSTemplateRequest) (*DeleteISMSTemplateResponse, error) {
+	var err error
+	var res DeleteISMSTemplateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteISMSTemplate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetISMSSendReceiptRequest is request schema for GetISMSSendReceipt action
 type GetISMSSendReceiptRequest struct {
 	request.CommonBase
@@ -64,6 +318,124 @@ func (c *ISMSClient) GetISMSSendReceipt(req *GetISMSSendReceiptRequest) (*GetISM
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetISMSSendReceipt", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// QueryISMSSignatureRequest is request schema for QueryISMSSignature action
+type QueryISMSSignatureRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 签名内容；签名ID和签名至少需填写1项；
+	SigContent *string `required:"false"`
+
+	// 已申请的短信签名ID（短信签名申请时的工单ID）；签名ID和签名至少需填写1项；
+	SigId *string `required:"true"`
+}
+
+// QueryISMSSignatureResponse is response schema for QueryISMSSignature action
+type QueryISMSSignatureResponse struct {
+	response.CommonBase
+
+	// 签名信息，各字段说明详见OutSignature
+	Data OutSignature
+
+	// 发生错误时，表示具体错误描述
+	Message string
+}
+
+// NewQueryISMSSignatureRequest will create request of QueryISMSSignature action.
+func (c *ISMSClient) NewQueryISMSSignatureRequest() *QueryISMSSignatureRequest {
+	req := &QueryISMSSignatureRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryISMSSignature
+
+调用接口QueryISMSSignature查询视频短信签名申请状态
+*/
+func (c *ISMSClient) QueryISMSSignature(req *QueryISMSSignatureRequest) (*QueryISMSSignatureResponse, error) {
+	var err error
+	var res QueryISMSSignatureResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryISMSSignature", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// QueryISMSTemplateRequest is request schema for QueryISMSTemplate action
+type QueryISMSTemplateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 模板Id
+	TemplateId *string `required:"true"`
+}
+
+// QueryISMSTemplateResponse is response schema for QueryISMSTemplate action
+type QueryISMSTemplateResponse struct {
+	response.CommonBase
+
+	// 模板状态信息
+	Data OutTemplate
+
+	// 错误信息
+	Message string
+
+	// 本次请求uuid
+	ReqUuid string
+}
+
+// NewQueryISMSTemplateRequest will create request of QueryISMSTemplate action.
+func (c *ISMSClient) NewQueryISMSTemplateRequest() *QueryISMSTemplateRequest {
+	req := &QueryISMSTemplateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryISMSTemplate
+
+查询模板状态信息
+*/
+func (c *ISMSClient) QueryISMSTemplate(req *QueryISMSTemplateRequest) (*QueryISMSTemplateResponse, error) {
+	var err error
+	var res QueryISMSTemplateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryISMSTemplate", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -129,6 +501,80 @@ func (c *ISMSClient) SendISMSMessage(req *SendISMSMessageRequest) (*SendISMSMess
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("SendISMSMessage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateISMSSignatureRequest is request schema for UpdateISMSSignature action
+type UpdateISMSSignatureRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID，不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 签名的资质证明文件类型，需与签名类型保持一致，说明如下：0-三证合一/企业营业执照/组织机构代码证书/社会信用代码证书；1-应用商店后台开发者管理截图；2-备案服务商的备案成功截图(含域名，网站名称，备案号)；3-公众号或小程序的管理界面截图；4-商标注册证书；5-组织机构代码证书、社会信用代码证书；
+	CertificateType *int `required:"false"`
+
+	// 短信签名的资质证明文件URL，若未更改审核材料，则该处使用已上传审核材料的URL链接，否则使用File参数
+	Document *string `required:"false"`
+
+	// 短信签名的资质证明文件内容，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB。内容格式如下: [file type];[code type],[base64]  如：image/jpeg;base64,5YaF5a65
+	File *string `required:"false"`
+
+	// 短信签名授权委托文件URL，若未更改授权委托文件，则该处填写已上传的授权委托文件的URL链接，否则使用ProxyFile参数
+	ProxyDoc *string `required:"false"`
+
+	// 短信签名授权委托文件内容，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB；当您是代理并使用第三方的签名时（也即SigPurpose为1-他用），该项为必填项；格式和File类似。
+	ProxyFile *string `required:"false"`
+
+	// 新的短信签名内容；长度为2-12个字符, 可包含中文、数字和符号；无需填写【】或[]，系统会自动添加
+	SigContent *string `required:"true"`
+
+	// 签名ID，支持以数组的方式，举例，以SigIds.0、SigIds.1...SigIds.N方式传入
+	SigId *string `required:"true"`
+
+	// 签名用途，0-自用，1-他用；
+	SigPurpose *int `required:"true"`
+
+	// 签名类型，说明如下：0-公司或企业的全称或简称；1-App应用的全称或简称；2-工信部备案网站的全称或简称；3-公众号或小程序的全称或简称；4-商标名的全称或简称；5-政府/机关事业单位/其他单位的全称或简称；
+	SigType *int `required:"true"`
+}
+
+// UpdateISMSSignatureResponse is response schema for UpdateISMSSignature action
+type UpdateISMSSignatureResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+}
+
+// NewUpdateISMSSignatureRequest will create request of UpdateISMSSignature action.
+func (c *ISMSClient) NewUpdateISMSSignatureRequest() *UpdateISMSSignatureRequest {
+	req := &UpdateISMSSignatureRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateISMSSignature
+
+调用接口UpdateISMSSignature修改未通过审核的视频短信签名，并重新提交审核
+*/
+func (c *ISMSClient) UpdateISMSSignature(req *UpdateISMSSignatureRequest) (*UpdateISMSSignatureResponse, error) {
+	var err error
+	var res UpdateISMSSignatureResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateISMSSignature", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
