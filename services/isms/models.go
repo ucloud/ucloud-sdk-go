@@ -37,3 +37,48 @@ type ReceiptPerTask struct {
 	// 发送短信时返回的TaskId
 	TaskId string
 }
+
+/*
+OutSignature - 短信签名
+*/
+type OutSignature struct {
+
+	// 短信签名未通过审核原因
+	ErrDesc string
+
+	// 短信签名内容
+	SigContent string
+
+	// 短信签名ID
+	SigId string
+
+	// 签名状态，0-待审核 1-审核中 2-审核通过 3-审核未通过 4-被禁用
+	Status int
+}
+
+/*
+OutTemplate - 模板状态
+*/
+type OutTemplate struct {
+
+	// 创建时间，时间戳格式1629357838
+	CreateTime int
+
+	// 截止有效时间，时间戳格式1629357838
+	ExpireTime int
+
+	// 视频短信类型（3-会员营销）
+	Purpose int
+
+	// 备注信息
+	Remark string
+
+	// 状态描述。json格式，给出运营商维度的审核状态信息，示例：{"telecom_status":2,"telecom_desc":"审核通过","unicom_status":2,"unicom_desc":"审核通过","mobile_status":2,"mobile_desc":"审核通过"}
+	StatusDesc string
+
+	// 模板ID
+	TemplateId string
+
+	// 模板名称
+	TemplateName string
+}
