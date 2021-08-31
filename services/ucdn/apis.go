@@ -9,6 +9,62 @@ import (
 
 // UCDN API Schema
 
+// AddCertificateRequest is request schema for AddCertificate action
+type AddCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// Ca证书，默认为空
+	CaCert *string `required:"false"`
+
+	// 证书名称
+	CertName *string `required:"true"`
+
+	// 用户私钥
+	PrivateKey *string `required:"true"`
+
+	// 用户证书
+	UserCert *string `required:"true"`
+}
+
+// AddCertificateResponse is response schema for AddCertificate action
+type AddCertificateResponse struct {
+	response.CommonBase
+}
+
+// NewAddCertificateRequest will create request of AddCertificate action.
+func (c *UCDNClient) NewAddCertificateRequest() *AddCertificateRequest {
+	req := &AddCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddCertificate
+
+添加证书
+*/
+func (c *UCDNClient) AddCertificate(req *AddCertificateRequest) (*AddCertificateResponse, error) {
+	var err error
+	var res AddCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddCertificate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // BatchDescribeNewUcdnDomainRequest is request schema for BatchDescribeNewUcdnDomain action
 type BatchDescribeNewUcdnDomainRequest struct {
 	request.CommonBase
@@ -132,6 +188,53 @@ func (c *UCDNClient) BatchRefreshNewUcdnDomainCache(req *BatchRefreshNewUcdnDoma
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("BatchRefreshNewUcdnDomainCache", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCertificateRequest is request schema for DeleteCertificate action
+type DeleteCertificateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 证书名称
+	CertName *string `required:"true"`
+}
+
+// DeleteCertificateResponse is response schema for DeleteCertificate action
+type DeleteCertificateResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteCertificateRequest will create request of DeleteCertificate action.
+func (c *UCDNClient) NewDeleteCertificateRequest() *DeleteCertificateRequest {
+	req := &DeleteCertificateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCertificate
+
+删除证书
+*/
+func (c *UCDNClient) DeleteCertificate(req *DeleteCertificateRequest) (*DeleteCertificateResponse, error) {
+	var err error
+	var res DeleteCertificateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCertificate", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -268,6 +371,62 @@ func (c *UCDNClient) DescribeNewUcdnRefreshCacheTask(req *DescribeNewUcdnRefresh
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeNewUcdnRefreshCacheTask", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCertificateV2Request is request schema for GetCertificateV2 action
+type GetCertificateV2Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 长度，默认为全部，非负整数
+	Limit *int `required:"false"`
+
+	// 偏移，默认为0，非负整数
+	Offset *int `required:"false"`
+}
+
+// GetCertificateV2Response is response schema for GetCertificateV2 action
+type GetCertificateV2Response struct {
+	response.CommonBase
+
+	// 证书信息列表
+	CertList []CertList
+
+	// 证书数量
+	TotalCount int
+}
+
+// NewGetCertificateV2Request will create request of GetCertificateV2 action.
+func (c *UCDNClient) NewGetCertificateV2Request() *GetCertificateV2Request {
+	req := &GetCertificateV2Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCertificateV2
+
+获取证书列表(新)
+*/
+func (c *UCDNClient) GetCertificateV2(req *GetCertificateV2Request) (*GetCertificateV2Response, error) {
+	var err error
+	var res GetCertificateV2Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCertificateV2", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

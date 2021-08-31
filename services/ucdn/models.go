@@ -162,6 +162,39 @@ type TaskInfo struct {
 }
 
 /*
+CertList - 证书信息
+*/
+type CertList struct {
+
+	// 证书开始时间
+	BeginTime int
+
+	// ca证内容
+	CaCert string
+
+	// 证书名
+	CertName string
+
+	// 通用名
+	CommonName string
+
+	// dns名称
+	DnsName string
+
+	// 已配置域名个数
+	DomainCount int
+
+	// 已配置的域名列表
+	Domains []string
+
+	// 证书获取时间
+	EndTime int
+
+	// 证书内容
+	UserCert string
+}
+
+/*
 BandwidthInfo - BandwidthInfo
 */
 type BandwidthInfo struct {
@@ -423,21 +456,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-CacheKeyInfo - 忽略参数缓存配置
-*/
-type CacheKeyInfo struct {
-
-	// 是否忽略
-	Ignore bool
-
-	// 路径模式，支持正则
-	PathPattern string
-
-	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
-	QueryString string
-}
-
-/*
 ReferConf - refer配置
 */
 type ReferConf struct {
@@ -453,6 +471,21 @@ type ReferConf struct {
 }
 
 /*
+CacheKeyInfo - 忽略参数缓存配置
+*/
+type CacheKeyInfo struct {
+
+	// 是否忽略
+	Ignore bool
+
+	// 路径模式，支持正则
+	PathPattern string
+
+	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
+	QueryString string
+}
+
+/*
 AdvancedConf - 域名高级配置
 */
 type AdvancedConf struct {
@@ -465,24 +498,6 @@ type AdvancedConf struct {
 
 	// 源站http头列表
 	HttpOriginHeader []string
-}
-
-/*
-CacheAllConfig - 缓存相关的配置
-*/
-type CacheAllConfig struct {
-
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
-
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
-
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
 }
 
 /*
@@ -531,6 +546,24 @@ type OriginConf struct {
 
 	// 源站协议http，http|https   默认http
 	OriginProtocol string
+}
+
+/*
+CacheAllConfig - 缓存相关的配置
+*/
+type CacheAllConfig struct {
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*
