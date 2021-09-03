@@ -677,6 +677,68 @@ func (c *CubeClient) GetCubePrice(req *GetCubePriceRequest) (*GetCubePriceRespon
 	return &res, nil
 }
 
+// GetCubeTokenRequest is request schema for GetCubeToken action
+type GetCubeTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 容器名称
+	ContainerName *string `required:"true"`
+
+	// CubeId 和 Uid 中必须填写任意一个。CubeId 是所有 Cube 资源的唯一 ID，如非在 UK8S 通过 Virtual Kubelet 插件创建的 Cube， 则必填 CubeId
+	CubeId *string `required:"false"`
+
+	// CubeId 和 Uid 中必须填写任意一个。Uid 是在 UK8S 中通过 Virtual Kubelet 插件创建出的 Cube 的唯一标识
+	Uid *string `required:"false"`
+}
+
+// GetCubeTokenResponse is response schema for GetCubeToken action
+type GetCubeTokenResponse struct {
+	response.CommonBase
+
+	// 有效时间5min
+	Token string
+}
+
+// NewGetCubeTokenRequest will create request of GetCubeToken action.
+func (c *CubeClient) NewGetCubeTokenRequest() *GetCubeTokenRequest {
+	req := &GetCubeTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCubeToken
+
+获取Cube的token，可用于terminal登录、log获取
+*/
+func (c *CubeClient) GetCubeToken(req *GetCubeTokenRequest) (*GetCubeTokenResponse, error) {
+	var err error
+	var res GetCubeTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCubeToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListCubeDeploymentRequest is request schema for ListCubeDeployment action
 type ListCubeDeploymentRequest struct {
 	request.CommonBase
