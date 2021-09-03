@@ -1,3 +1,9 @@
+## 0.21.17 (2021-09-03)
+
+ENHANCEMENTS:
+
+- Update all APIs of `Cube` (#290)
+
 ## 0.21.16 (2021-08-31)
 
 ENHANCEMENTS:
