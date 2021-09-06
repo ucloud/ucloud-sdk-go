@@ -102,11 +102,11 @@ type CreateISMSTemplateRequest struct {
 	// 视频短信标题
 	MsgTitle *string `required:"true"`
 
-	// 需要报备的运营商。json数组的字符串格式。true-需要报备，false-不需要报备。如：{"telecom":true, "mobile":false, "unicom":true }
-	NetworkOperator *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	NetworkOperator *string `required:"false" deprecated:"true"`
 
-	// 模板用途类型：1-验证码类短信模板；2-系统通知类短信模板；3-会员推广类短信模板；
-	Purpose *int `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Purpose *int `required:"false" deprecated:"true"`
 
 	// 备注
 	Remark *string `required:"true"`

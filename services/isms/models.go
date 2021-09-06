@@ -73,7 +73,7 @@ type OutTemplate struct {
 	// 备注信息
 	Remark string
 
-	// 状态描述。json格式，给出运营商维度的审核状态信息，示例：{"telecom_status":2,"telecom_desc":"审核通过","unicom_status":2,"unicom_desc":"审核通过","mobile_status":2,"mobile_desc":"审核通过"}
+	// 状态描述。json格式，给出运营商维度的审核状态信息，示例：{"telecom_status":2,"telecom_desc":"审核通过","unicom_status":2,"unicom_desc":"审核通过","mobile_status":2,"mobile_desc":"审核通过"}。状态枚举值：0-创建模板时未向该运营商报备  1->审核中  2->审核通过   3->审核未通过   4->禁用   7->过期   11->待审核
 	StatusDesc string
 
 	// 模板ID
