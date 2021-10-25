@@ -46,3 +46,27 @@ type UFSVolumeInfo2 struct {
 	// 文件系统名称
 	VolumeName string
 }
+
+/*
+MountPointInfo - 挂载点信息
+*/
+type MountPointInfo struct {
+
+	// 文件系统创建时间（unix时间戳）
+	CreateTime int
+
+	// ${挂载点IP}:/
+	MountPointIp string
+
+	// 挂载点名称
+	MountPointName string
+
+	// Subnet ID + 网段的形式，方便前端展示
+	SubnetDescription string
+
+	// Subnet ID
+	SubnetId string
+
+	// Vpc ID
+	VpcId string
+}

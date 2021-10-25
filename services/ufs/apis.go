@@ -9,6 +9,65 @@ import (
 
 // UFS API Schema
 
+// AddUFSVolumeMountPointRequest is request schema for AddUFSVolumeMountPoint action
+type AddUFSVolumeMountPointRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 挂载点名称
+	MountPointName *string `required:"true"`
+
+	// Subnet ID
+	SubnetId *string `required:"true"`
+
+	// 文件系统ID
+	VolumeId *string `required:"true"`
+
+	// Vpc ID
+	VpcId *string `required:"true"`
+}
+
+// AddUFSVolumeMountPointResponse is response schema for AddUFSVolumeMountPoint action
+type AddUFSVolumeMountPointResponse struct {
+	response.CommonBase
+}
+
+// NewAddUFSVolumeMountPointRequest will create request of AddUFSVolumeMountPoint action.
+func (c *UFSClient) NewAddUFSVolumeMountPointRequest() *AddUFSVolumeMountPointRequest {
+	req := &AddUFSVolumeMountPointRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddUFSVolumeMountPoint
+
+添加文件系统挂载点
+*/
+func (c *UFSClient) AddUFSVolumeMountPoint(req *AddUFSVolumeMountPointRequest) (*AddUFSVolumeMountPointResponse, error) {
+	var err error
+	var res AddUFSVolumeMountPointResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddUFSVolumeMountPoint", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUFSVolumeRequest is request schema for CreateUFSVolume action
 type CreateUFSVolumeRequest struct {
 	request.CommonBase
@@ -154,6 +213,65 @@ func (c *UFSClient) DescribeUFSVolume2(req *DescribeUFSVolume2Request) (*Describ
 	return &res, nil
 }
 
+// DescribeUFSVolumeMountpointRequest is request schema for DescribeUFSVolumeMountpoint action
+type DescribeUFSVolumeMountpointRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 文件系统ID
+	VolumeId *string `required:"true"`
+}
+
+// DescribeUFSVolumeMountpointResponse is response schema for DescribeUFSVolumeMountpoint action
+type DescribeUFSVolumeMountpointResponse struct {
+	response.CommonBase
+
+	//
+	DataSet []MountPointInfo
+
+	// 文件系统能创建的最大挂载点数目
+	MaxMountPointNum int
+
+	// 目前的挂载点总数
+	TotalMountPointNum int
+}
+
+// NewDescribeUFSVolumeMountpointRequest will create request of DescribeUFSVolumeMountpoint action.
+func (c *UFSClient) NewDescribeUFSVolumeMountpointRequest() *DescribeUFSVolumeMountpointRequest {
+	req := &DescribeUFSVolumeMountpointRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFSVolumeMountpoint
+
+获取文件系统挂载点信息
+*/
+func (c *UFSClient) DescribeUFSVolumeMountpoint(req *DescribeUFSVolumeMountpointRequest) (*DescribeUFSVolumeMountpointResponse, error) {
+	var err error
+	var res DescribeUFSVolumeMountpointResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFSVolumeMountpoint", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ExtendUFSVolumeRequest is request schema for ExtendUFSVolume action
 type ExtendUFSVolumeRequest struct {
 	request.CommonBase
@@ -250,6 +368,118 @@ func (c *UFSClient) RemoveUFSVolume(req *RemoveUFSVolumeRequest) (*RemoveUFSVolu
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("RemoveUFSVolume", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// RemoveUFSVolumeMountPointRequest is request schema for RemoveUFSVolumeMountPoint action
+type RemoveUFSVolumeMountPointRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Subnet ID
+	SubnetId *string `required:"true"`
+
+	// 文件系统ID
+	VolumeId *string `required:"true"`
+
+	// Vpc ID
+	VpcId *string `required:"true"`
+}
+
+// RemoveUFSVolumeMountPointResponse is response schema for RemoveUFSVolumeMountPoint action
+type RemoveUFSVolumeMountPointResponse struct {
+	response.CommonBase
+}
+
+// NewRemoveUFSVolumeMountPointRequest will create request of RemoveUFSVolumeMountPoint action.
+func (c *UFSClient) NewRemoveUFSVolumeMountPointRequest() *RemoveUFSVolumeMountPointRequest {
+	req := &RemoveUFSVolumeMountPointRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RemoveUFSVolumeMountPoint
+
+删除文件系统挂载点
+*/
+func (c *UFSClient) RemoveUFSVolumeMountPoint(req *RemoveUFSVolumeMountPointRequest) (*RemoveUFSVolumeMountPointResponse, error) {
+	var err error
+	var res RemoveUFSVolumeMountPointResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RemoveUFSVolumeMountPoint", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUFSVolumeInfoRequest is request schema for UpdateUFSVolumeInfo action
+type UpdateUFSVolumeInfoRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 文件系统备注（文件系统名称／备注至少传入其中一个）
+	Remark *string `required:"false"`
+
+	// 文件系统ID
+	VolumeId *string `required:"true"`
+
+	// 文件系统名称（文件系统名称／备注至少传入其中一个）
+	VolumeName *string `required:"false"`
+}
+
+// UpdateUFSVolumeInfoResponse is response schema for UpdateUFSVolumeInfo action
+type UpdateUFSVolumeInfoResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateUFSVolumeInfoRequest will create request of UpdateUFSVolumeInfo action.
+func (c *UFSClient) NewUpdateUFSVolumeInfoRequest() *UpdateUFSVolumeInfoRequest {
+	req := &UpdateUFSVolumeInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUFSVolumeInfo
+
+更改文件系统相关信息（名称／备注）
+*/
+func (c *UFSClient) UpdateUFSVolumeInfo(req *UpdateUFSVolumeInfoRequest) (*UpdateUFSVolumeInfoResponse, error) {
+	var err error
+	var res UpdateUFSVolumeInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUFSVolumeInfo", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
