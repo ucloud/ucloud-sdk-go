@@ -1,3 +1,9 @@
+## 0.21.19 (2021-10-25)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UFS` (#294 )
+
 ## 0.21.18 (2021-09-06)
 
 ENHANCEMENTS:
