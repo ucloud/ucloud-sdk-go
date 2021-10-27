@@ -1,3 +1,9 @@
+## 0.21.20 (2021-10-27)
+
+ENHANCEMENTS:
+
+- Update all APIs of `PathX` (#296)
+
 ## 0.21.19 (2021-10-25)
 
 ENHANCEMENTS:
