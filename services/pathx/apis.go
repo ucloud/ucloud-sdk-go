@@ -1300,8 +1300,11 @@ type DescribeUGA3OptimizationRequest struct {
 type DescribeUGA3OptimizationResponse struct {
 	response.CommonBase
 
-	// 提示信息
-	Message string
+	// 加速详情
+	AccelerationInfos []AccelerationInfo
+
+	// 【该字段已废弃，请谨慎使用】
+	Message string `deprecated:"true"`
 }
 
 // NewDescribeUGA3OptimizationRequest will create request of DescribeUGA3Optimization action.
