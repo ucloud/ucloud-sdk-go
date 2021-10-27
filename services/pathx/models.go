@@ -216,18 +216,6 @@ type ForwardTask struct {
 }
 
 /*
-AccelerationAreaInfos - 加速大区信息
-*/
-type AccelerationAreaInfos struct {
-
-	// 加速区code
-	AccelerationArea string
-
-	// 加速节点信息
-	AccelerationNodes []SrcAreaInfo
-}
-
-/*
 OutPublicIpInfo - 线路回源IP信息
 */
 type OutPublicIpInfo struct {
@@ -237,6 +225,18 @@ type OutPublicIpInfo struct {
 
 	// 线路回源节点EIP
 	IP string
+}
+
+/*
+AccelerationAreaInfos - 加速大区信息
+*/
+type AccelerationAreaInfos struct {
+
+	// 加速区code
+	AccelerationArea string
+
+	// 加速节点信息
+	AccelerationNodes []SrcAreaInfo
 }
 
 /*
