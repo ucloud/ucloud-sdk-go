@@ -1,3 +1,9 @@
+## 0.21.22 (2021-11-04)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UDisk` (#301)
+
 ## 0.21.21 (2021-10-27)
 
 ENHANCEMENTS:
