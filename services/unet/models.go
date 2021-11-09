@@ -250,11 +250,20 @@ type ResourceSet struct {
 	// 绑定该防火墙的资源id
 	ResourceID string
 
-	// 绑定防火墙组的资源类型。"unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计.
+	// 绑定防火墙组的资源类型。"unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计，“uni”，虚拟网卡。
 	ResourceType string
 
 	// 状态
 	Status int
+
+	// 资源绑定的虚拟网卡的ID
+	SubResourceID string
+
+	// 资源绑定的虚拟网卡的名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡的类型，“uni”，虚拟网卡。
+	SubResourceType string
 
 	// 业务组
 	Tag string
@@ -342,4 +351,22 @@ type EIPPriceDetailSet struct {
 
 	// 资源有效期, 以Unix Timestamp表示
 	PurchaseValue int
+}
+
+/*
+ThroughputDailyBillingInfo - 流量计费EIP计费信息
+*/
+type ThroughputDailyBillingInfo struct {
+
+	// 是否已计费，“Yes”或者“No”
+	BillingState string
+
+	// 计费结束时间
+	EndTime int
+
+	// 计费流量，单位“GB”
+	QuantityOut int
+
+	// 计费开始时间
+	StartTime int
 }
