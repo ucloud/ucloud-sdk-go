@@ -22,7 +22,7 @@ type AllocateEIPRequest struct {
 	// 弹性IP的外网带宽, 单位为Mbps. 共享带宽模式必须指定0M带宽, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-10000]
 	Bandwidth *int `required:"true"`
 
-	// 付费方式, 枚举值为: Year, 按年付费; Month, 按月付费; Dynamic, 按需付费(需开启权限); Trial, 试用(需开启权限) 默认为按月付费
+	// 付费方式, 枚举值为: Year, 按年付费; Month, 按月付费; Dynamic, 按时付费，默认为按月付费。
 	ChargeType *string `required:"false"`
 
 	// 代金券ID, 默认不使用
@@ -707,7 +707,7 @@ type DescribeFirewallRequest struct {
 	// 绑定防火墙组的资源ID
 	ResourceId *string `required:"false"`
 
-	// 绑定防火墙组的资源类型，默认为全部资源类型。枚举值为："unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计.
+	// 绑定防火墙组的资源类型，默认为全部资源类型。枚举值为："unatgw"，NAT网关； "uhost"，云主机；“uni”，虚拟网卡； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计.
 	ResourceType *string `required:"false"`
 }
 
@@ -718,7 +718,7 @@ type DescribeFirewallResponse struct {
 	// 获取的防火墙组详细信息 参见 FirewallDataSet
 	DataSet []FirewallDataSet
 
-	//
+	// 防火墙资源数量
 	TotalCount int
 }
 
@@ -757,16 +757,16 @@ func (c *UNetClient) DescribeFirewall(req *DescribeFirewallRequest) (*DescribeFi
 type DescribeFirewallResourceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 防火墙ID
 	FWId *string `required:"true"`
 
-	// 返回数据长度，默认为20，最大10000000
+	// 返回数据长度，默认为20，最大1000
 	Limit *int `required:"false"`
 
 	// 列表起始位置偏移量，默认为0
@@ -926,6 +926,62 @@ func (c *UNetClient) DisassociateEIPWithShareBandwidth(req *DisassociateEIPWithS
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DisassociateEIPWithShareBandwidth", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DisassociateFirewallRequest is request schema for DisassociateFirewall action
+type DisassociateFirewallRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 防火墙ID
+	FWId *string `required:"true"`
+
+	// 需要解绑的资源ID
+	ResourceId *string `required:"true"`
+
+	// 资源类型：ULB 表示负载均衡
+	ResourceType *string `required:"true"`
+}
+
+// DisassociateFirewallResponse is response schema for DisassociateFirewall action
+type DisassociateFirewallResponse struct {
+	response.CommonBase
+}
+
+// NewDisassociateFirewallRequest will create request of DisassociateFirewall action.
+func (c *UNetClient) NewDisassociateFirewallRequest() *DisassociateFirewallRequest {
+	req := &DisassociateFirewallRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DisassociateFirewall
+
+解绑资源上的防火墙
+*/
+func (c *UNetClient) DisassociateFirewall(req *DisassociateFirewallRequest) (*DisassociateFirewallResponse, error) {
+	var err error
+	var res DisassociateFirewallResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DisassociateFirewall", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1107,14 +1163,79 @@ func (c *UNetClient) GetEIPUpgradePrice(req *GetEIPUpgradePriceRequest) (*GetEIP
 	return &res, nil
 }
 
+// GetThroughputDailyBillingInfoRequest is request schema for GetThroughputDailyBillingInfo action
+type GetThroughputDailyBillingInfoRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// EIP的资源ID
+	EIPId *string `required:"true"`
+
+	// 查询结束时间时间戳
+	EndTime *int `required:"true"`
+
+	// 查询开始时间时间戳
+	StartTime *int `required:"true"`
+}
+
+// GetThroughputDailyBillingInfoResponse is response schema for GetThroughputDailyBillingInfo action
+type GetThroughputDailyBillingInfoResponse struct {
+	response.CommonBase
+
+	// 资源ID
+	EIPId string
+
+	// EIP流量计费信息，详见模型ThroughputDailyBillingInfo
+	Stats []ThroughputDailyBillingInfo
+
+	// 计费总流量
+	TotalOut int
+}
+
+// NewGetThroughputDailyBillingInfoRequest will create request of GetThroughputDailyBillingInfo action.
+func (c *UNetClient) NewGetThroughputDailyBillingInfoRequest() *GetThroughputDailyBillingInfoRequest {
+	req := &GetThroughputDailyBillingInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetThroughputDailyBillingInfo
+
+获取流量计费EIP每日流量计费信息
+*/
+func (c *UNetClient) GetThroughputDailyBillingInfo(req *GetThroughputDailyBillingInfoRequest) (*GetThroughputDailyBillingInfoResponse, error) {
+	var err error
+	var res GetThroughputDailyBillingInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetThroughputDailyBillingInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GrantFirewallRequest is request schema for GrantFirewall action
 type GrantFirewallRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 防火墙资源ID
@@ -1123,7 +1244,7 @@ type GrantFirewallRequest struct {
 	// 所应用资源ID
 	ResourceId *string `required:"true"`
 
-	// 绑定防火墙组的资源类型，默认为全部资源类型。枚举值为："unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计.
+	// 绑定防火墙组的资源类型，默认为全部资源类型。枚举值为："unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计，”uni“，虚拟网卡，“cube”，Cube容器实例。
 	ResourceType *string `required:"true"`
 }
 
@@ -1379,10 +1500,10 @@ func (c *UNetClient) ReleaseShareBandwidth(req *ReleaseShareBandwidthRequest) (*
 type ResizeShareBandwidthRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 带宽值，单位为Mb，范围 [20-5000] (最大值受地域限制)
