@@ -211,6 +211,12 @@ type CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -235,27 +241,24 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+CreateUHostInstanceParamVolumes is request schema for complex param
 */
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 /*
-CreateUHostInstanceParamVirtualGpu is request schema for complex param
+CreateUHostInstanceParamFeatures is request schema for complex param
 */
-type CreateUHostInstanceParamVirtualGpu struct {
-}
+type CreateUHostInstanceParamFeatures struct {
 
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
 }
 
 /*
@@ -286,15 +289,15 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
+type CreateUHostInstanceParamNetworkInterface struct {
 
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
 
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -322,7 +325,7 @@ type CreateUHostInstanceRequest struct {
 	// 虚拟CPU核数。可选参数：1-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
 	CPU *int `required:"false"`
 
-	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\Preemptive计费为抢占式实例 \\ 默认为月付
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\Preemptive计费为抢占式实例(内测阶段) \\ 默认为月付
 	ChargeType *string `required:"false"`
 
 	// 主机代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
@@ -334,10 +337,13 @@ type CreateUHostInstanceRequest struct {
 	//
 	Disks []UHostDisk `required:"false"`
 
+	//
+	Features *CreateUHostInstanceParamFeatures `required:"false"`
+
 	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
 	GPU *int `required:"false"`
 
-	// GPU类型，枚举值["K80", "P40", "V100", "T4", "T4S","2080Ti","2080Ti-4C","1080Ti"]，MachineType为G时必填
+	// GPU类型，枚举值["K80", "P40", "V100", "T4", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S"]，MachineType为G时必填
 	GpuType *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
@@ -367,7 +373,7 @@ type CreateUHostInstanceRequest struct {
 	// 主机登陆模式。密码（默认选项）: Password，密钥：KeyPair。
 	LoginMode *string `required:"true"`
 
-	// 云主机机型（V2.0），在本字段和字段UHostType中，仅需要其中1个字段即可。枚举值["N", "C", "G", "O", "OS", "OPRO", "OMAX", "O.BM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
+	// 云主机机型（V2.0），在本字段和字段UHostType中，仅需要其中1个字段即可。枚举值["N", "C", "G", "O", "OS", "OM", "OPRO", "OMAX", "O.BM", "O.EPC"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`
 
 	// 本次最大创建主机数量，取值范围是[1,100]，默认值为1。
@@ -376,7 +382,7 @@ type CreateUHostInstanceRequest struct {
 	// 内存大小。单位：MB。范围 ：[1024, 262144]，取值为1024的倍数（可选范围参考控制台）。默认值：8192
 	Memory *int `required:"false"`
 
-	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"；"Intel/CascadelakeR"; “Amd/Epyc2”,"Amd/Auto"],默认值是"Intel/Auto"。
+	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake", "Intel/CascadelakeR", "Intel/IceLake", "Amd/Epyc2", "Amd/Auto"],默认值是"Intel/Auto"。
 	MinimalCpuPlatform *string `required:"false"`
 
 	// UHost实例名称。默认：UHost。请遵照[[api:uhost-api:specification|字段规范]]设定实例名称。
@@ -1062,21 +1068,9 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-getUHostInstancePriceParamDisks is request schema for complex param
+GetUHostInstancePriceParamVirtualGpu is request schema for complex param
 */
-type getUHostInstancePriceParamDisks struct {
-
-	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > DATAARK，数据方舟 \\ > SNAPSHOT，快照\\ 当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]]
-	BackupType *string `required:"false"`
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot *string `required:"true"`
-
-	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	Size *int `required:"true"`
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	Type *string `required:"true"`
+type GetUHostInstancePriceParamVirtualGpu struct {
 }
 
 /*
@@ -1095,9 +1089,21 @@ type GetUHostInstancePriceParamVolumes struct {
 }
 
 /*
-GetUHostInstancePriceParamVirtualGpu is request schema for complex param
+getUHostInstancePriceParamDisks is request schema for complex param
 */
-type GetUHostInstancePriceParamVirtualGpu struct {
+type getUHostInstancePriceParamDisks struct {
+
+	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > DATAARK，数据方舟 \\ > SNAPSHOT，快照\\ 当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]]
+	BackupType *string `required:"false"`
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot *string `required:"true"`
+
+	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Size *int `required:"true"`
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Type *string `required:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
