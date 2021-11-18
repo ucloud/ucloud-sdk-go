@@ -59,6 +59,62 @@ func (c *UECClient) BindUEcFirewall(req *BindUEcFirewallRequest) (*BindUEcFirewa
 	return &res, nil
 }
 
+// CreateUEcCustomImageRequest is request schema for CreateUEcCustomImage action
+type CreateUEcCustomImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 镜像描述
+	ImageDescription *string `required:"false"`
+
+	// 镜像名称
+	ImageName *string `required:"true"`
+
+	// 虚拟机实例ID
+	NodeId *string `required:"true"`
+}
+
+// CreateUEcCustomImageResponse is response schema for CreateUEcCustomImage action
+type CreateUEcCustomImageResponse struct {
+	response.CommonBase
+
+	// 镜像ID
+	ImageId string
+}
+
+// NewCreateUEcCustomImageRequest will create request of CreateUEcCustomImage action.
+func (c *UECClient) NewCreateUEcCustomImageRequest() *CreateUEcCustomImageRequest {
+	req := &CreateUEcCustomImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUEcCustomImage
+
+从指定虚拟机，生成自定义镜像。
+*/
+func (c *UECClient) CreateUEcCustomImage(req *CreateUEcCustomImageRequest) (*CreateUEcCustomImageResponse, error) {
+	var err error
+	var res CreateUEcCustomImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUEcCustomImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 /*
 CreateUEcFirewallParamRule is request schema for complex param
 */
@@ -140,30 +196,6 @@ func (c *UECClient) CreateUEcFirewall(req *CreateUEcFirewallRequest) (*CreateUEc
 }
 
 /*
-CreateUEcHolderParamImage is request schema for complex param
-*/
-type CreateUEcHolderParamImage struct {
-
-	// 镜像用户名和密码（如镜像名：密码）
-	Message *string `required:"false"`
-
-	// 镜像仓库地址
-	StoreAddress *string `required:"false"`
-}
-
-/*
-CreateUEcHolderParamStorage is request schema for complex param
-*/
-type CreateUEcHolderParamStorage struct {
-
-	// 存储卷挂载路径
-	Path *string `required:"false"`
-
-	// 存储卷资源id
-	ResourceId *string `required:"false"`
-}
-
-/*
 CreateUEcHolderParamPack is request schema for complex param
 */
 type CreateUEcHolderParamPack struct {
@@ -194,6 +226,30 @@ type CreateUEcHolderParamPack struct {
 
 	// 容器工作目录
 	WorkDir *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamStorage is request schema for complex param
+*/
+type CreateUEcHolderParamStorage struct {
+
+	// 存储卷挂载路径
+	Path *string `required:"false"`
+
+	// 存储卷资源id
+	ResourceId *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamImage is request schema for complex param
+*/
+type CreateUEcHolderParamImage struct {
+
+	// 镜像用户名和密码（如镜像名：密码）
+	Message *string `required:"false"`
+
+	// 镜像仓库地址
+	StoreAddress *string `required:"false"`
 }
 
 // CreateUEcHolderRequest is request schema for CreateUEcHolder action
@@ -236,7 +292,7 @@ type CreateUEcHolderRequest struct {
 	//
 	Pack []CreateUEcHolderParamPack `required:"false"`
 
-	// 机型（normal-标准型，hf-高性能型，默认normal）
+	// 机型（normal-经济型，hf-标准型，默认normal）
 	ProductType *string `required:"false"`
 
 	// 重启策略（0总是，1失败是，2永不，默认0）
@@ -372,13 +428,19 @@ type CreateUEcVHostRequest struct {
 	// 外网防护墙规则组，默认
 	FirewallId *string `required:"false"`
 
+	// Gpu卡核心数。仅Gpu机型支持此字段
+	Gpu *int `required:"false"`
+
+	// Gpu类型，枚举值["T4S"],ProductType为G时必填
+	GpuType *string `required:"false"`
+
 	// 机房id
 	IdcId *string `required:"true"`
 
 	// 镜像ID
 	ImageId *string `required:"true"`
 
-	// （已废弃）是否需要外网ip（yes-是，no-否）
+	// 是否需要外网ip（no-否）
 	IsNeedOuterIp *string `required:"false"`
 
 	// 运营商（1-电信，2-联通，4移动）
@@ -399,7 +461,7 @@ type CreateUEcVHostRequest struct {
 	// 密码
 	PassWord *string `required:"false"`
 
-	// 产品类型：normal（标准型），hf（高频型）
+	// 产品类型：normal（经济型），hf（标准型）,g(Gpu型)
 	ProductType *string `required:"false"`
 
 	// 子网ID
@@ -888,13 +950,16 @@ type DescribeUEcIDCRequest struct {
 	// 节点cpu核数
 	Cpu *int `required:"true"`
 
+	// Gpu卡核心数
+	Gpu *int `required:"false"`
+
 	// Idc机房id。默认全部机房
 	IdcId []string `required:"false"`
 
 	// 节点内存大小， 单位GB
 	Memory *int `required:"true"`
 
-	// 产品类型：normal（通用型），hf（高主频型）
+	// 产品类型：normal（经济型），hf（标准型）,g(GPU型)
 	ProductType *string `required:"false"`
 
 	// 0-其它, 1-一线城市单线,2-二线城市单线, 3-全国教育网, 4-全国三通
@@ -1611,6 +1676,12 @@ type GetUEcVHostPriceRequest struct {
 	// 数据盘大小，单位GB
 	DiskSize *int `required:"false"`
 
+	// Gpu卡核心数。仅Gpu机型支持此字段
+	Gpu *int `required:"false"`
+
+	// Gpu类型，枚举值["T4"],ProductType为g时必填
+	GpuType *string `required:"false"`
+
 	// 机房Id
 	IdcId *string `required:"true"`
 
@@ -1626,7 +1697,7 @@ type GetUEcVHostPriceRequest struct {
 	// 节点数量，默认1
 	NodeCount *int `required:"false"`
 
-	// 产品类型：normal（标准型），hf（高频型），默认normal
+	// 产品类型：normal（经济型），hf（标准型），g(Gpu型),默认normal
 	ProductType *string `required:"false"`
 
 	// 系统盘大小，单位GB

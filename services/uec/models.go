@@ -111,39 +111,15 @@ type CfgDictList struct {
 }
 
 /*
-DockerInfo - 容器信息
+IpList - 容器组外网ip列表
 */
-type DockerInfo struct {
+type IpList struct {
 
-	// 参数
-	Args string
+	// 外网ip
+	Ip string
 
-	// 容器配置字典（详情参考CfgDictList）
-	CfgDictList []CfgDictList
-
-	// 命令
-	Command string
-
-	// CPU核数（/核）精度0.1核
-	CpuCores float64
-
-	// 环境变量（详情参考EnvList）
-	EnvList []EnvList
-
-	// 镜像名称
-	ImageName string
-
-	// 内存大小（Gi）
-	MemSize float64
-
-	// 容器名称
-	Name string
-
-	// 容器状态，0：初始化；1：拉取镜像；2：拉取镜像失败；3：启动中；4：运行中；5：正在停止；6：已停止；7：已删除；8：镜像拉取成功；9：启动失败；99：异常
-	State int
-
-	// 工作目录
-	WorkDir string
+	// 运营商
+	Isp string
 }
 
 /*
@@ -180,15 +156,39 @@ type ImageList struct {
 }
 
 /*
-IpList - 容器组外网ip列表
+DockerInfo - 容器信息
 */
-type IpList struct {
+type DockerInfo struct {
 
-	// 外网ip
-	Ip string
+	// 参数
+	Args string
 
-	// 运营商
-	Isp string
+	// 容器配置字典（详情参考CfgDictList）
+	CfgDictList []CfgDictList
+
+	// 命令
+	Command string
+
+	// CPU核数（/核）精度0.1核
+	CpuCores float64
+
+	// 环境变量（详情参考EnvList）
+	EnvList []EnvList
+
+	// 镜像名称
+	ImageName string
+
+	// 内存大小（Gi）
+	MemSize float64
+
+	// 容器名称
+	Name string
+
+	// 容器状态，0：初始化；1：拉取镜像；2：拉取镜像失败；3：启动中；4：运行中；5：正在停止；6：已停止；7：已删除；8：镜像拉取成功；9：启动失败；99：异常
+	State int
+
+	// 工作目录
+	WorkDir string
 }
 
 /*
@@ -235,7 +235,7 @@ type HolderList struct {
 	// 机房名称
 	OcName string
 
-	// 机器类型（normal通用型，hf高性能型）
+	// 机器类型（normal经济型，hf标准型）
 	ProductType string
 
 	// 省份名称
@@ -367,6 +367,9 @@ type NodeInfo struct {
 	// 镜像名称
 	ImageName string
 
+	// 内网ip列表
+	InnerIps []string
+
 	// 节点内存大小，单位GB
 	MemSize int
 
@@ -385,7 +388,7 @@ type NodeInfo struct {
 	// 机房名称
 	OcName string
 
-	// 机器类型
+	// 机器类型(normal-经济型,hf-标准型,g-GPU型)
 	ProductType string
 
 	// 省份
@@ -556,6 +559,9 @@ type ImageInfo struct {
 	// 部署详情列表
 	DeployInfoList []DeployImageInfo
 
+	// 是否支持Gpu(1-支持,0-不支持)
+	Gpu int
+
 	// 镜像描述
 	ImageDesc string
 
@@ -574,6 +580,6 @@ type ImageInfo struct {
 	// 系统类型：unix, windows
 	OcType string
 
-	// 镜像状态：镜像状态 1可用，2不可用
+	// 镜像状态：镜像状态 1可用，2不可用，3制作中
 	State int
 }
