@@ -1,3 +1,9 @@
+## 0.21.25 (2021-11-25)
+
+ENHANCEMENTS:
+
+- Update all APIs of `TiDB` (#312)
+
 ## 0.21.24 (2021-11-18)
 
 ENHANCEMENTS:
