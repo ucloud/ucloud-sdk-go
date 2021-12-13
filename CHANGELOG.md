@@ -1,3 +1,9 @@
+## 0.21.26 (2021-12-13)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UBox` (#315)
+
 ## 0.21.25 (2021-11-25)
 
 ENHANCEMENTS:
