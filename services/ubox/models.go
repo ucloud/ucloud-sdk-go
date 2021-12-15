@@ -3,6 +3,27 @@
 package ubox
 
 /*
+PullRTMPAddress -
+*/
+type PullRTMPAddress struct {
+
+	//
+	Dash string
+
+	//
+	Flv string
+
+	//
+	Hls string
+
+	//
+	Rtmp string
+
+	//
+	Webrtc string
+}
+
+/*
 CameraStream - 摄像头推/拉流信息
 */
 type CameraStream struct {
@@ -10,11 +31,14 @@ type CameraStream struct {
 	// 摄像头ID
 	ID string
 
+	// 摄像头是否在线
+	IsOnline bool
+
 	// 摄像头名称
 	Name string
 
 	// 拉流地址, 是 map 格式, key 是流类型, value是地址
-	PullRTMPAddress []string
+	PullRTMPAddress PullRTMPAddress
 
 	// 小窗口视频拉流地址
 	SmallPullRTMPAddress string
