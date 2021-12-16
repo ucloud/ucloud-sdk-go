@@ -319,6 +319,15 @@ type CreateUK8SClusterV2ParamMaster struct {
 }
 
 /*
+CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamKubeProxy struct {
+
+	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
+	Mode *string `required:"false"`
+}
+
+/*
 CreateUK8SClusterV2ParamNodes is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodes struct {
@@ -364,15 +373,6 @@ type CreateUK8SClusterV2ParamNodes struct {
 
 	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](../summary/regionlist.html)
 	Zone *string `required:"true"`
-}
-
-/*
-CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamKubeProxy struct {
-
-	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
-	Mode *string `required:"false"`
 }
 
 // CreateUK8SClusterV2Request is request schema for CreateUK8SClusterV2 action
@@ -599,6 +599,116 @@ func (c *UK8SClient) DelUK8SClusterNodeV2(req *DelUK8SClusterNodeV2Request) (*De
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DelUK8SClusterNodeV2", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUK8SClusterRequest is request schema for DescribeUK8SCluster action
+type DescribeUK8SClusterRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目id
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 所属区域
+	// Region *string `required:"true"`
+
+	// k8s集群ID
+	ClusterId *string `required:"true"`
+}
+
+// DescribeUK8SClusterResponse is response schema for DescribeUK8SCluster action
+type DescribeUK8SClusterResponse struct {
+	response.CommonBase
+
+	// 集群apiserver地址
+	ApiServer string
+
+	// 集群CA根证书
+	CACert string
+
+	// 自定义或者默认的clusterdomain
+	ClusterDomain string
+
+	// 集群ID
+	ClusterId string
+
+	// 资源名字
+	ClusterName string
+
+	// 创建时间
+	CreateTime int
+
+	// 集群etcd服务证书
+	EtcdCert string
+
+	// 集群etcd服务密钥
+	EtcdKey string
+
+	// 集群外部apiserver地址
+	ExternalApiServer string
+
+	// kube-proxy配置
+	KubeProxy string
+
+	// Master 节点数量
+	MasterCount int
+
+	// Master节点配置信息，具体参考UhostInfo。托管版不返回该信息
+	MasterList []UhostInfo
+
+	// Node节点数量
+	NodeCount int
+
+	// Node节点配置信息,具体参考UhostInfo
+	NodeList []UhostInfo
+
+	// Pod网段
+	PodCIDR string
+
+	// 服务网段
+	ServiceCIDR string
+
+	// 状态
+	Status string
+
+	// 所属子网
+	SubnetId string
+
+	// 所属VPC
+	VPCId string
+
+	// K8S版本
+	Version string
+}
+
+// NewDescribeUK8SClusterRequest will create request of DescribeUK8SCluster action.
+func (c *UK8SClient) NewDescribeUK8SClusterRequest() *DescribeUK8SClusterRequest {
+	req := &DescribeUK8SClusterRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUK8SCluster
+
+获取集群信息
+*/
+func (c *UK8SClient) DescribeUK8SCluster(req *DescribeUK8SClusterRequest) (*DescribeUK8SClusterResponse, error) {
+	var err error
+	var res DescribeUK8SClusterResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUK8SCluster", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

@@ -3,6 +3,105 @@
 package uk8s
 
 /*
+IPSet - 节点的IP信息
+*/
+type IPSet struct {
+
+	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// IP资源ID (内网IP无对应的资源ID)
+	IPId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+}
+
+/*
+DiskSet - 节点磁盘信息
+*/
+type DiskSet struct {
+
+	// 备份方案，枚举类型：BASIC_SNAPSHOT,普通快照；DATAARK,方舟。无快照则不返回该字段。
+	BackupType string
+
+	// 磁盘长ID
+	DiskId string
+
+	// LOCAL_NOMAL| CLOUD_NORMAL| LOCAL_SSD| CLOUD_SSD|EXCLUSIVE_LOCAL_DISK
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// Yes: 加密 No: 非加密
+	Encrypted string
+
+	// 当前主机的IOPS值
+	IOPS int
+
+	// True| False
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
+UhostInfo - 机器信息
+*/
+type UhostInfo struct {
+
+	// Cpu数量
+	CPU int
+
+	// 创建时间
+	CreateTime int
+
+	// 节点磁盘信息
+	DiskSet []DiskSet
+
+	// 到期时间
+	ExpireTime int
+
+	// 节点IP信息
+	IPSet []IPSet
+
+	// 内存
+	Memory int
+
+	// 主机名称
+	Name string
+
+	// 主机ID
+	NodeId string
+
+	// 节点类型：uhost表示云主机;uphost表示物理云主机
+	NodeType string
+
+	// 镜像信息
+	OsName string
+
+	// 主机状态
+	State string
+
+	// 所在机房
+	Zone string
+}
+
+/*
 ImageInfo - UK8S 可用镜像信息
 */
 type ImageInfo struct {
@@ -45,15 +144,6 @@ type K8SNodeCondition struct {
 }
 
 /*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
-}
-
-/*
 UHostIPSet - 云主机IP信息
 */
 type UHostIPSet struct {
@@ -78,6 +168,15 @@ type UHostIPSet struct {
 
 	// IP地址对应的VPC ID
 	VPCId string
+}
+
+/*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
 }
 
 /*
