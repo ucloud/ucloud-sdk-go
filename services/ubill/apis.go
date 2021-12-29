@@ -146,17 +146,23 @@ func (c *UBillClient) GetBalance(req *GetBalanceRequest) (*GetBalanceResponse, e
 type GetBillDataFileUrlRequest struct {
 	request.CommonBase
 
-	// 账期（时间戳格式）
-	BillPeriod *int `required:"true"`
+	// 此字段不推荐使用，建议使用BillingCycle.   若BillingCycle 和 BillPeriod同时存在，BillingCycle 优先
+	BillPeriod *int `required:"false"`
 
 	// 账单类型，传 0 时获取账单总览报表，传 1 获取账单明细报表
 	BillType *int `required:"true"`
+
+	// 账期(字符串格式，YYYY-MM，例如2021-08).   若BillingCycle 和 BillPeriod同时存在，BillingCycle 优先
+	BillingCycle *string `required:"true"`
 
 	// 获取账单总览报表时，账单的支付状态，传 0 时获取待支付账单，传 1 时获取已支付账单。获取账单明细报表时该参数无效
 	PaidType *int `required:"false"`
 
 	// 如需求其他语言版本的账单则使用此参数。默认中文。如 RequireVersion = "EN"，则提供英文版本账单。
 	RequireVersion *string `required:"false"`
+
+	// 文件版本，若为"v1"表示获取带有子用户信息的账单，可以为空
+	Version *string `required:"false"`
 }
 
 // GetBillDataFileUrlResponse is response schema for GetBillDataFileUrl action
