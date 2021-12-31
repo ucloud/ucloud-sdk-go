@@ -1,3 +1,9 @@
+## 0.21.29 (2021-12-31)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UDB` (#325)
+
 ## 0.21.28 (2021-12-30)
 
 ENHANCEMENTS:
