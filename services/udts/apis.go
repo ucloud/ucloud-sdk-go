@@ -40,6 +40,45 @@ type CheckUDTSTaskParamSourceMySQLNodeSyncData struct {
 }
 
 /*
+CheckUDTSTaskParamSourceMySQLNode is request schema for complex param
+*/
+type CheckUDTSTaskParamSourceMySQLNode struct {
+
+	// 数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 需要迁移的 DB 名称
+	Database *string `required:"false"`
+
+	// 源数据库地址， 比如 10.9.37.200
+	Host *string `required:"false"`
+
+	// 源 MySQL 密码
+	Password *string `required:"false"`
+
+	// 源 MySQL 端口，如 3306
+	Port *int `required:"false"`
+
+	//
+	QueryData []CheckUDTSTaskParamSourceMySQLNodeQueryData `required:"false"`
+
+	// 子网 ID，可以从 https://console.ucloud.cn/vpc/subnet，比如 subnet-2sloxs
+	SubnetId *string `required:"false"`
+
+	//
+	SyncData *CheckUDTSTaskParamSourceMySQLNodeSyncData `required:"false"`
+
+	// 需要迁移的 table 名
+	Table *string `required:"false"`
+
+	// 源 MySQL 用户名，如 root
+	User *string `required:"false"`
+
+	// VPC ID, 可以从 https://console.ucloud.cn/vpc/vpc 获取，比如 uvnet-u0ecace
+	VPCId *string `required:"false"`
+}
+
+/*
 CheckUDTSTaskParamTargetMySQLNode is request schema for complex param
 */
 type CheckUDTSTaskParamTargetMySQLNode struct {
@@ -67,42 +106,24 @@ type CheckUDTSTaskParamTargetMySQLNode struct {
 }
 
 /*
-CheckUDTSTaskParamSourceMySQLNode is request schema for complex param
+CheckUDTSTaskParamSource is request schema for complex param
 */
-type CheckUDTSTaskParamSourceMySQLNode struct {
+type CheckUDTSTaskParamSource struct {
 
-	// 数据库地域，比如 cn-bj2
-	DataRegion *string `required:"false"`
+	// 数据库类型，比如 mysql
+	DataType *string `required:"false"`
 
-	// 需要迁移的 DB 名称
-	Database *string `required:"false"`
-
-	// 源数据库地址， 比如 10.9.37.200
-	Host *string `required:"false"`
-
-	// 源 MySQL 密码
-	Password *string `required:"false"`
-
-	// 源 MySQL 端口，如 3306
-	Port *int `required:"false"`
+	// 任务模式，值可以是 full, incremental, full+incremental, bidirectional
+	Mode *string `required:"false"`
 
 	//
-	QueryData []CheckUDTSTaskParamSourceMySQLNodeQueryData `required:"false"`
+	MySQLNode *CheckUDTSTaskParamSourceMySQLNode `required:"false"`
 
-	// 子网 ID
-	SubnetId *string `required:"false"`
+	// 源网络类型，可以是 public,user,dedicated_line
+	NWType *string `required:"false"`
 
-	//
-	SyncData *CheckUDTSTaskParamSourceMySQLNodeSyncData `required:"false"`
-
-	// 需要迁移的 table 名
-	Table *string `required:"false"`
-
-	// 源 MySQL 用户名，如 root
-	User *string `required:"false"`
-
-	// VPC
-	VPCId *string `required:"false"`
+	// 服务类型，值可以是 small、medium、large，分别对应 “基础版”、“轻量版” 和 “旗舰版”
+	ServiceType *string `required:"true"`
 }
 
 /*
@@ -120,24 +141,6 @@ type CheckUDTSTaskParamTarget struct {
 	NWType *string `required:"false"`
 }
 
-/*
-CheckUDTSTaskParamSource is request schema for complex param
-*/
-type CheckUDTSTaskParamSource struct {
-
-	// 数据库类型
-	DataType *string `required:"false"`
-
-	// // 任务类型，值可以是 full, incremental, full+incremental, bidirectional
-	Mode *string `required:"false"`
-
-	//
-	MySQLNode *CheckUDTSTaskParamSourceMySQLNode `required:"false"`
-
-	// 源网络类型，可以是 public,user,dedicated_line
-	NWType *string `required:"false"`
-}
-
 // CheckUDTSTaskRequest is request schema for CheckUDTSTask action
 type CheckUDTSTaskRequest struct {
 	request.CommonBase
@@ -148,7 +151,7 @@ type CheckUDTSTaskRequest struct {
 	// 重试次数，最大为 5。 默认为0
 	MaxRetryCount *string `required:"true"`
 
-	// task 名称，长度不能超过 128
+	// 任务名称，长度不能超过 128
 	Name *string `required:"true"`
 
 	// 废弃
@@ -255,6 +258,21 @@ type CreateUDTSTaskParamSourceMySQLNodeSyncData struct {
 }
 
 /*
+CreateUDTSTaskParamSourceMySQLNodeSSLSecurity is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNodeSSLSecurity struct {
+
+	// ca 证书，目前仅支持 pem 格式; 需要将文件内容 base64
+	SSLCA *string `required:"false"`
+
+	// 客户端证书; 需要将文件内容 base64
+	SSLCert *string `required:"false"`
+
+	// 客户端私钥， 需要将文件内容 base64
+	SSLKey *string `required:"false"`
+}
+
+/*
 CreateUDTSTaskParamSourceMySQLNodeQueryData is request schema for complex param
 */
 type CreateUDTSTaskParamSourceMySQLNodeQueryData struct {
@@ -270,6 +288,54 @@ type CreateUDTSTaskParamSourceMySQLNodeQueryData struct {
 
 	//
 	TableMaps []CreateUDTSTaskParamSourceMySQLNodeQueryDataTableMaps `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamSourceMySQLNode is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNode struct {
+
+	// 数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 需要迁移的 DB 名称
+	Database *string `required:"false"`
+
+	// 重复数据处理规则，数据集成时该参数才有效，值为 ignore或者replace
+	DupAction *string `required:"false"`
+
+	// 源数据库地址
+	Host *string `required:"false"`
+
+	// 是否保留原有数据，只有数据集成时该参数才有效
+	KeepExistData *bool `required:"false"`
+
+	// 源数据库密码
+	Password *string `required:"false"`
+
+	// 源数据库端口
+	Port *int `required:"false"`
+
+	//
+	QueryData []CreateUDTSTaskParamSourceMySQLNodeQueryData `required:"false"`
+
+	//
+	SSLSecurity *CreateUDTSTaskParamSourceMySQLNodeSSLSecurity `required:"false"`
+
+	// 源数据库子网 ID，当网络类型为 user 时需要填写，可以从 https://console.ucloud.cn/vpc/subnet，比如 subnet-2sloxs
+	SubnetId *string `required:"false"`
+
+	//
+	SyncData *CreateUDTSTaskParamSourceMySQLNodeSyncData `required:"false"`
+
+	// 需要迁移的 table 名
+	Table *string `required:"false"`
+
+	// 源数据库用户名
+	User *string `required:"false"`
+
+	// 源数据库 VPC ID，当网络类型为 user 时需要填写，可以从 https://console.ucloud.cn/vpc/vpc 获取，比如 uvnet-u0ecace
+	VPCId *string `required:"false"`
 }
 
 /*
@@ -303,48 +369,27 @@ type CreateUDTSTaskParamTargetMySQLNode struct {
 }
 
 /*
-CreateUDTSTaskParamSourceMySQLNode is request schema for complex param
+CreateUDTSTaskParamSource is request schema for complex param
 */
-type CreateUDTSTaskParamSourceMySQLNode struct {
+type CreateUDTSTaskParamSource struct {
 
-	// 数据库地域，比如 cn-bj2
-	DataRegion *string `required:"false"`
+	// 源端限速值，单位为  MB/s
+	BandwidthLimit *int `required:"false"`
 
-	// 需要迁移的 DB 名称
-	Database *string `required:"false"`
+	// 数据库类型，比如 mysql
+	DataType *string `required:"true"`
 
-	// 重复数据处理规则，数据集成时该参数才有效，值为 ignore或者replace
-	DupAction *string `required:"false"`
-
-	// 源数据库地址
-	Host *string `required:"false"`
-
-	// 是否保留原有数据，只有数据集成时该参数才有效
-	KeepExistData *bool `required:"false"`
-
-	// 源数据库密码
-	Password *string `required:"false"`
-
-	// 源数据库端口
-	Port *int `required:"false"`
+	// 任务模式，值可以是 full, incremental, full+incremental, bidirectional
+	Mode *string `required:"true"`
 
 	//
-	QueryData []CreateUDTSTaskParamSourceMySQLNodeQueryData `required:"false"`
+	MySQLNode *CreateUDTSTaskParamSourceMySQLNode `required:"false"`
 
-	// 源数据库子网 ID，当网络类型为 user 时需要填写
-	SubnetId *string `required:"false"`
+	// 源网络类型，可以是 public,user,dedicated_line
+	NWType *string `required:"true"`
 
-	//
-	SyncData *CreateUDTSTaskParamSourceMySQLNodeSyncData `required:"false"`
-
-	// 需要迁移的 table 名
-	Table *string `required:"false"`
-
-	// 源数据库用户名
-	User *string `required:"false"`
-
-	// 源数据库 VPC ID，当网络类型为 user 时需要填写
-	VPCId *string `required:"false"`
+	// 服务类型，值可以是small、medium、large，分别对应“基础版”、“轻量版”和“旗舰版”
+	ServiceType *string `required:"true"`
 }
 
 /*
@@ -368,27 +413,6 @@ type CreateUDTSTaskParamTarget struct {
 	NWType *string `required:"true"`
 }
 
-/*
-CreateUDTSTaskParamSource is request schema for complex param
-*/
-type CreateUDTSTaskParamSource struct {
-
-	// 源端限速值，单位为  MB/s
-	BandwidthLimit *int `required:"false"`
-
-	// 数据库类型，比如 mysql
-	DataType *string `required:"true"`
-
-	// 任务类型，值可以是 full, incremental, full+incremental, bidirectional
-	Mode *string `required:"true"`
-
-	//
-	MySQLNode *CreateUDTSTaskParamSourceMySQLNode `required:"false"`
-
-	// 源网络类型，可以是 public,user,dedicated_line
-	NWType *string `required:"true"`
-}
-
 // CreateUDTSTaskRequest is request schema for CreateUDTSTask action
 type CreateUDTSTaskRequest struct {
 	request.CommonBase
@@ -396,14 +420,23 @@ type CreateUDTSTaskRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
+	// 付费方式, 枚举值为: Year, 按年付费; Month, 按月付费；Dynamic, 按需付费(需开启权限)；默认为按月付费
+	ChargeType *string `required:"false"`
+
+	// 代金券ID, 默认不使用
+	CouponId *string `required:"false"`
+
 	// 暂时未使用该字段
 	IsUnidirection *string `required:"false"`
 
 	// 重试次数，最大为 5。 默认为0
 	MaxRetryCount *string `required:"false"`
 
-	// task 名称，长度不能超过 128
+	// 任务名称，长度不能超过 128
 	Name *string `required:"true"`
+
+	// 购买时长, 默认: 1
+	Quantity *int `required:"false"`
 
 	// 暂时未使用该字段
 	Query *string `required:"false"`
@@ -430,6 +463,9 @@ type CreateUDTSTaskResponse struct {
 
 	// 返回消息
 	Message string
+
+	// 任务ID，目前用于控制台操作日志
+	TaskId string
 }
 
 // NewCreateUDTSTaskRequest will create request of CreateUDTSTask action.
@@ -626,7 +662,7 @@ func (c *UDTSClient) GetUDTSTaskStatus(req *GetUDTSTaskStatusRequest) (*GetUDTST
 type ListUDTSTaskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 请求数量，默认为 20
