@@ -195,6 +195,56 @@ func (c *UCDNClient) BatchRefreshNewUcdnDomainCache(req *BatchRefreshNewUcdnDoma
 	return &res, nil
 }
 
+// ControlUcdnDomainCacheAccessRequest is request schema for ControlUcdnDomainCacheAccess action
+type ControlUcdnDomainCacheAccessRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// forbid=封禁   unforbid=解封  其他值非法
+	Type *string `required:"true"`
+
+	// 待封禁的Url，一次封禁多个Url时最多一次30条，只能对表示文件的Url进行操作
+	UrlList []string `required:"true"`
+}
+
+// ControlUcdnDomainCacheAccessResponse is response schema for ControlUcdnDomainCacheAccess action
+type ControlUcdnDomainCacheAccessResponse struct {
+	response.CommonBase
+}
+
+// NewControlUcdnDomainCacheAccessRequest will create request of ControlUcdnDomainCacheAccess action.
+func (c *UCDNClient) NewControlUcdnDomainCacheAccessRequest() *ControlUcdnDomainCacheAccessRequest {
+	req := &ControlUcdnDomainCacheAccessRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ControlUcdnDomainCacheAccess
+
+封禁解封缓存访问
+*/
+func (c *UCDNClient) ControlUcdnDomainCacheAccess(req *ControlUcdnDomainCacheAccessRequest) (*ControlUcdnDomainCacheAccessResponse, error) {
+	var err error
+	var res ControlUcdnDomainCacheAccessResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ControlUcdnDomainCacheAccess", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteCertificateRequest is request schema for DeleteCertificate action
 type DeleteCertificateRequest struct {
 	request.CommonBase
@@ -740,6 +790,133 @@ func (c *UCDNClient) GetNewUcdnDomainRequestNum(req *GetNewUcdnDomainRequestNumR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetNewUcdnDomainRequestNum", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetNewUcdnLogRefererStatisticsRequest is request schema for GetNewUcdnLogRefererStatistics action
+type GetNewUcdnLogRefererStatisticsRequest struct {
+	request.CommonBase
+
+	// 查询带宽区域 cn代表国内 abroad代表海外 ；目前只支持国内
+	Areacode *string `required:"false"`
+
+	// 查询带宽的起始时间，格式：时间戳
+	BeginTime *int `required:"false"`
+
+	// 域名id，创建域名时生成的id
+	DomainId *string `required:"false"`
+
+	// 查询统计日志的结束时间，格式：时间戳。最大时间间隔30天
+	EndTime *int `required:"false"`
+
+	// 返回的结果数量限制，默认1000
+	Limit *int `required:"false"`
+
+	// 0表示按流量降序排列，1表示按照下载次数降序排列，默认为0
+	OrderBy *int `required:"false"`
+}
+
+// GetNewUcdnLogRefererStatisticsResponse is response schema for GetNewUcdnLogRefererStatistics action
+type GetNewUcdnLogRefererStatisticsResponse struct {
+	response.CommonBase
+
+	// 按天统计实例
+	RefererStatistics []RefererStatistics
+}
+
+// NewGetNewUcdnLogRefererStatisticsRequest will create request of GetNewUcdnLogRefererStatistics action.
+func (c *UCDNClient) NewGetNewUcdnLogRefererStatisticsRequest() *GetNewUcdnLogRefererStatisticsRequest {
+	req := &GetNewUcdnLogRefererStatisticsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetNewUcdnLogRefererStatistics
+
+获取热点referer统计
+*/
+func (c *UCDNClient) GetNewUcdnLogRefererStatistics(req *GetNewUcdnLogRefererStatisticsRequest) (*GetNewUcdnLogRefererStatisticsResponse, error) {
+	var err error
+	var res GetNewUcdnLogRefererStatisticsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetNewUcdnLogRefererStatistics", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetNewUcdnLogUrlStatisticsRequest is request schema for GetNewUcdnLogUrlStatistics action
+type GetNewUcdnLogUrlStatisticsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询带宽区域 cn代表国内 abroad代表海外 只支持国内
+	Areacode *string `required:"false"`
+
+	// 查询带宽的起始时间，格式：时间戳。BeginTime和EndTime必须同时赋值
+	BeginTime *int `required:"false"`
+
+	// 域名Id
+	DomainId *string `required:"true"`
+
+	// 查询统计日志的结束时间，格式：时间戳,最多可拉取30天
+	EndTime *int `required:"false"`
+
+	// 返回的结果数量限制，默认1000
+	Limit *int `required:"false"`
+
+	// 0表示按流量降序排列，1表示按照下载次数降序排列，默认为0
+	OrderBy *int `required:"false"`
+}
+
+// GetNewUcdnLogUrlStatisticsResponse is response schema for GetNewUcdnLogUrlStatistics action
+type GetNewUcdnLogUrlStatisticsResponse struct {
+	response.CommonBase
+
+	// 按天统计实例。
+	UrlStatisticsList []UrlStatistics
+}
+
+// NewGetNewUcdnLogUrlStatisticsRequest will create request of GetNewUcdnLogUrlStatistics action.
+func (c *UCDNClient) NewGetNewUcdnLogUrlStatisticsRequest() *GetNewUcdnLogUrlStatisticsRequest {
+	req := &GetNewUcdnLogUrlStatisticsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetNewUcdnLogUrlStatistics
+
+获取日志url统计
+*/
+func (c *UCDNClient) GetNewUcdnLogUrlStatistics(req *GetNewUcdnLogUrlStatisticsRequest) (*GetNewUcdnLogUrlStatisticsResponse, error) {
+	var err error
+	var res GetNewUcdnLogUrlStatisticsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetNewUcdnLogUrlStatistics", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

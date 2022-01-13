@@ -441,6 +441,63 @@ type RequestInfo struct {
 }
 
 /*
+RefererList - RefererList
+*/
+type RefererList struct {
+
+	// 次数占比，单位%
+	Percent float64
+
+	// 客户端请求的referer
+	Referer string
+
+	// 次数
+	RequestTimes int
+}
+
+/*
+RefererStatistics - RefererStatistics
+*/
+type RefererStatistics struct {
+
+	// 日期
+	Date string
+
+	// Referer实例表
+	RefererList []RefererList
+}
+
+/*
+DownloadStatisticInfo - DownloadStatisticInfo
+*/
+type DownloadStatisticInfo struct {
+
+	// 下载次数
+	DownloadTimes int
+
+	// 流量占比，单位%
+	Percent float64
+
+	// 流量（单位为G）
+	Traffic float64
+
+	// 下载链接的url
+	Url string
+}
+
+/*
+UrlStatistics - UrlStatistics
+*/
+type UrlStatistics struct {
+
+	// 日期
+	Date string
+
+	//
+	UrlList []DownloadStatisticInfo
+}
+
+/*
 BandwidthTrafficInfo - BandwidthTrafficInfo
 */
 type BandwidthTrafficInfo struct {
@@ -453,21 +510,6 @@ type BandwidthTrafficInfo struct {
 
 	// 对应时间粒度的流量，单位字节
 	Traffic float64
-}
-
-/*
-ReferConf - refer配置
-*/
-type ReferConf struct {
-
-	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
-	NullRefer int
-
-	// Refer防盗链规则列表，支持正则表达式
-	ReferList []string
-
-	// Refer防盗链配置  0白名单，1黑名单
-	ReferType int
 }
 
 /*
@@ -486,6 +528,39 @@ type CacheKeyInfo struct {
 }
 
 /*
+ReferConf - refer配置
+*/
+type ReferConf struct {
+
+	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
+	NullRefer int
+
+	// Refer防盗链规则列表，支持正则表达式
+	ReferList []string
+
+	// Refer防盗链配置  0白名单，1黑名单
+	ReferType int
+}
+
+/*
+CacheAllConfig - 缓存相关的配置
+*/
+type CacheAllConfig struct {
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
+}
+
+/*
 AdvancedConf - 域名高级配置
 */
 type AdvancedConf struct {
@@ -498,18 +573,6 @@ type AdvancedConf struct {
 
 	// 源站http头列表
 	HttpOriginHeader []string
-}
-
-/*
-AccessControlConf - 访问控制配置参数
-*/
-type AccessControlConf struct {
-
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
-
-	// refer配置
-	ReferConf ReferConf
 }
 
 /*
@@ -549,21 +612,15 @@ type OriginConf struct {
 }
 
 /*
-CacheAllConfig - 缓存相关的配置
+AccessControlConf - 访问控制配置参数
 */
-type CacheAllConfig struct {
+type AccessControlConf struct {
 
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
 
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
-
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*
