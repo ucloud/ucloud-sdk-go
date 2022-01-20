@@ -292,3 +292,54 @@ type ClusterSet struct {
 	// 所属VPC
 	VPCId string
 }
+
+/*
+NodeGroupSet - 节点池配置
+*/
+type NodeGroupSet struct {
+
+	// 系统盘类型
+	BootDiskType string
+
+	// 虚拟CPU核数
+	CPU int
+
+	// 付费方式
+	ChargeType string
+
+	// 数据盘大小
+	DataDiskSize int
+
+	// 数据盘类型
+	DataDiskType string
+
+	// GPU卡核心数
+	GPU int
+
+	// GPU类型
+	GpuType string
+
+	// 镜像ID
+	ImageId string
+
+	// 机型
+	MachineType string
+
+	// 内存大小
+	Mem int
+
+	// cpu平台
+	MinimalCpuPlatform string
+
+	// 节点池ID
+	NodeGroupId string
+
+	// 节点池名字
+	NodeGroupName string
+
+	// 节点id列表
+	NodeList []string
+
+	// 业务组
+	Tag string
+}
