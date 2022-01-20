@@ -99,6 +99,78 @@ type UFileTokenSet struct {
 }
 
 /*
+UFileTotalReportItem - 总消费信息
+*/
+type UFileTotalReportItem struct {
+
+	// API请求次数（次）
+	ApiTimes float64
+
+	// 忙时流量；单位byte；海外无此字段
+	BusyFlow float64
+
+	// cdn回源流量;单位byte
+	CdnFlow float64
+
+	// 下载流量：单位byte；国内无此字段
+	Flow float64
+
+	// 闲时流量；单位byte；海外无此字段
+	IdleFlow float64
+}
+
+/*
+UFileDailyReportItem -
+*/
+type UFileDailyReportItem struct {
+
+	// 冷存激活量，即归档数据取回量；单位byte
+	AcRestore float64
+
+	// 冷存（归档）存储量；单位byte
+	AcStorage float64
+
+	// API请求次数（次）
+	ApiTimes float64
+
+	// 忙时流量；单位byte；海外无此字段
+	BusyFlow float64
+
+	// cdn回源流量;单位byte
+	CdnFlow float64
+
+	// 配额消费时间，unix时间戳（单位s），精确到日期
+	Date int
+
+	// 下载流量：单位byte；国内无此字段
+	Flow float64
+
+	// 低频数据取回量；单位byte
+	IaGetSize float64
+
+	// 低频存储量；单位byte
+	IaStorage float64
+
+	// 闲时流量；单位byte；海外无此字段
+	IdleFlow float64
+
+	// 标准存储量；单位byte
+	Storage float64
+}
+
+/*
+UFileReportItem -
+*/
+type UFileReportItem struct {
+
+	// 日消费情况
+	Daily []UFileDailyReportItem
+
+	// 总消费情况
+	Total []UFileTotalReportItem
+}
+
+/*
 UFileQuotaLeft - 配额剩余量
 */
 type UFileQuotaLeft struct {
