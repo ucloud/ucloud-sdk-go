@@ -206,3 +206,148 @@ func (c *UBillClient) GetBillDataFileUrl(req *GetBillDataFileUrlRequest) (*GetBi
 
 	return &res, nil
 }
+
+// ListUBillDetailRequest is request schema for ListUBillDetail action
+type ListUBillDetailRequest struct {
+	request.CommonBase
+
+	// 账期，YYYY-MM，比如2021-08，只支持2018-05之后的查询
+	BillingCycle *string `required:"true"`
+
+	// 计费方式 (筛选项, 默认全部)
+	ChargeType *string `required:"false"`
+
+	// 每页数量，默认值25，最大值：100。
+	Limit *int `required:"false"`
+
+	// 数据偏移量 (默认0)
+	Offset *int `required:"false"`
+
+	// 订单类型 (筛选项, 默认全部)
+	OrderType *string `required:"false"`
+
+	// 支付状态 (筛选项, 1:仅显示未支付订单; 2:仅显示已支付订单; 0:两者都显示)
+	PaidState *int `required:"false"`
+
+	// 项目名称 (筛选项, 默认全部)
+	ProjectName *string `required:"false"`
+
+	// 资源ID(筛选项, 默认全部)	支持多筛选，多筛选请在请求参数中添加多个字段例ResourceIds.0: uhost-bzgf1gh5，ResourceIds.1: uhost-gu1xpspa，
+	ResourceIds []string `required:"false"`
+
+	// 产品类型 (筛选项, 默认全部),支持多筛选，多筛选请在请求参数中添加多个字段例ResourceTypes.0: uhost，ResourceTypes.1: udisk，ResourceTypes.2: udb，
+	ResourceTypes []string `required:"false"`
+
+	// 是否显示0元订单 (0 不显示, 1 显示, 默认0)
+	ShowZero *int `required:"false"`
+
+	// 用户邮箱，可以根据用户邮箱来进行筛选
+	UserEmail *string `required:"false"`
+}
+
+// ListUBillDetailResponse is response schema for ListUBillDetail action
+type ListUBillDetailResponse struct {
+	response.CommonBase
+
+	// 账单明细数组
+	Items []BillDetailItem
+
+	// 账单明细总长度
+	TotalCount int
+}
+
+// NewListUBillDetailRequest will create request of ListUBillDetail action.
+func (c *UBillClient) NewListUBillDetailRequest() *ListUBillDetailRequest {
+	req := &ListUBillDetailRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUBillDetail
+
+获取某个账期内的所有消费。
+*/
+func (c *UBillClient) ListUBillDetail(req *ListUBillDetailRequest) (*ListUBillDetailResponse, error) {
+	var err error
+	var res ListUBillDetailResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUBillDetail", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUBillOverviewRequest is request schema for ListUBillOverview action
+type ListUBillOverviewRequest struct {
+	request.CommonBase
+
+	// 账期，YYYY-MM格式，例如2022-02，只支持2018-05之后的查询
+	BillingCycle *string `required:"true"`
+
+	// 账单维度, product 按产品聚合,project 按项目聚合，user 按子账号聚合
+	Dimension *string `required:"true"`
+
+	// 是否显示已入账账单, 1 已入账, 0 待入账 (默认0 )
+	HideUnpaid *int `required:"false"`
+}
+
+// ListUBillOverviewResponse is response schema for ListUBillOverview action
+type ListUBillOverviewResponse struct {
+	response.CommonBase
+
+	// 账单聚合数据
+	Items []BillOverviewItem
+
+	// 账单总览数据总数
+	TotalCount int
+
+	// 已入账订单总额（已入账时显示）
+	TotalPaidAmount string
+
+	// 现金账户扣款总额	（已入账时显示）
+	TotalPaidAmountReal string
+
+	// 待入账订单总额（待入账时显示）
+	TotalUnpaidAmount string
+}
+
+// NewListUBillOverviewRequest will create request of ListUBillOverview action.
+func (c *UBillClient) NewListUBillOverviewRequest() *ListUBillOverviewRequest {
+	req := &ListUBillOverviewRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUBillOverview
+
+账单总览。可按产品/项目/用户纬度获取某个账期内账单总览信息。
+*/
+func (c *UBillClient) ListUBillOverview(req *ListUBillOverviewRequest) (*ListUBillOverviewResponse, error) {
+	var err error
+	var res ListUBillOverviewResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUBillOverview", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
