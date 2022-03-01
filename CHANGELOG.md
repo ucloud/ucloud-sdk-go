@@ -1,3 +1,9 @@
+## 0.21.32 (2022-03-01)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UBill` (#335)
+
 ## 0.21.31 (2022-01-20)
 
 ENHANCEMENTS:
