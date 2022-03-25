@@ -1,3 +1,10 @@
+## 0.21.33 (2022-03-25)
+
+ENHANCEMENTS:
+
+- Update all APIs of `IAM` (#338)
+- Update all APIs of `UPHost` (#337)
+
 ## 0.21.32 (2022-03-01)
 
 ENHANCEMENTS:
