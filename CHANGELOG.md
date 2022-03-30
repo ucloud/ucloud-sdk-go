@@ -1,3 +1,10 @@
+## 0.21.34 (2022-03-30)
+
+ENHANCEMENTS:
+
+- Update all APIs of `UVMS` (#341)
+- Update all APIs of `UNet` (#340)
+
 ## 0.21.33 (2022-03-25)
 
 ENHANCEMENTS:
