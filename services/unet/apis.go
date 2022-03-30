@@ -96,7 +96,7 @@ type AllocateShareBandwidthRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 付费方式:Year 按年,Month 按月,Dynamic 按时;
@@ -864,6 +864,121 @@ func (c *UNetClient) DescribeShareBandwidth(req *DescribeShareBandwidthRequest) 
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeShareBandwidth", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeShareBandwidthPriceRequest is request schema for DescribeShareBandwidthPrice action
+type DescribeShareBandwidthPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 付费方式, 预付费:Year 按年,Month 按月,Dynamic 按需;
+	ChargeType *string `required:"true"`
+
+	// 香港地域支持：BGPPro和International。其他地域无需填写该字段
+	OperatorName *string `required:"false"`
+
+	// 购买数量
+	Quantity *int `required:"false"`
+
+	// 共享带宽值
+	ShareBandwidth *int `required:"true"`
+}
+
+// DescribeShareBandwidthPriceResponse is response schema for DescribeShareBandwidthPrice action
+type DescribeShareBandwidthPriceResponse struct {
+	response.CommonBase
+
+	// 共享带宽总价格
+	TotalPrice int
+}
+
+// NewDescribeShareBandwidthPriceRequest will create request of DescribeShareBandwidthPrice action.
+func (c *UNetClient) NewDescribeShareBandwidthPriceRequest() *DescribeShareBandwidthPriceRequest {
+	req := &DescribeShareBandwidthPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeShareBandwidthPrice
+
+获取共享带宽价格
+*/
+func (c *UNetClient) DescribeShareBandwidthPrice(req *DescribeShareBandwidthPriceRequest) (*DescribeShareBandwidthPriceResponse, error) {
+	var err error
+	var res DescribeShareBandwidthPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeShareBandwidthPrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeShareBandwidthUpdatePriceRequest is request schema for DescribeShareBandwidthUpdatePrice action
+type DescribeShareBandwidthUpdatePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 共享带宽值
+	ShareBandwidth *int `required:"true"`
+
+	// 共享带宽Id
+	ShareBandwidthId *string `required:"true"`
+}
+
+// DescribeShareBandwidthUpdatePriceResponse is response schema for DescribeShareBandwidthUpdatePrice action
+type DescribeShareBandwidthUpdatePriceResponse struct {
+	response.CommonBase
+
+	// 共享带宽升降级价格
+	Price float64
+}
+
+// NewDescribeShareBandwidthUpdatePriceRequest will create request of DescribeShareBandwidthUpdatePrice action.
+func (c *UNetClient) NewDescribeShareBandwidthUpdatePriceRequest() *DescribeShareBandwidthUpdatePriceRequest {
+	req := &DescribeShareBandwidthUpdatePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeShareBandwidthUpdatePrice
+
+获取共享带宽升级价格
+*/
+func (c *UNetClient) DescribeShareBandwidthUpdatePrice(req *DescribeShareBandwidthUpdatePriceRequest) (*DescribeShareBandwidthUpdatePriceResponse, error) {
+	var err error
+	var res DescribeShareBandwidthUpdatePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeShareBandwidthUpdatePrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
