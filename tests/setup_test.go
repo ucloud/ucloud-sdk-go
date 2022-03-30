@@ -55,7 +55,6 @@ import (
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
-	"github.com/ucloud/ucloud-sdk-go/services/iam"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
@@ -147,9 +146,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("Cube", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return cube.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("IAM", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return iam.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("IPSecVPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ipsecvpn.NewClient(&cfg, &credential), nil
