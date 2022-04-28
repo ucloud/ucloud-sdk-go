@@ -27,6 +27,39 @@ type KeyPair struct {
 }
 
 /*
+AvailableInstanceTypes - https://ushare.ucloudadmin.com/pages/viewpage.action?pageId=104662646
+*/
+type AvailableInstanceTypes struct {
+
+	// 支持的CPU平台，并且按照Intel、AMD和Ampere分类返回例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']AMD: ['Amd/Epyc2']Ampere: ['Ampere/Altra']
+	CpuPlatforms []string
+
+	// 磁盘信息。磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。其中云盘主要包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。MinimalSize为磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。MaximalSize为磁盘最大值。InstantResize表示系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。Features为磁盘可支持的服务：数据方舟|DATAARK，快照服务|SNAPSHOT，加密盘|Encrypted。
+	Disks []string
+
+	// 虚机可支持的特性。目前支持的特性网络增强|NetCapability、热升级|Hotplug。网络增强分为关闭|Normal、网络增强1.0|Super和网络增强2.0|Ultra。Name为可支持的特性名称，Modes为可以提供的模式类别等，RelatedToImageFeature为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。MinimalCpuPlatform表示这个特性必须是列出来的CPU平台及以上的CPU才支持。
+	Features []string
+
+	// GPU的显存指标，value为值，单位是GB。
+	GraphicsMemory string
+
+	// 区分是否是GPU机型：GPU机型|GPU，非GPU机型|Normal。
+	MachineClass string
+
+	// GPU、CPU和内存信息。Gpu为GPU可支持的规格，Cpu和Memory分别为CPU和内存可支持的规格。如果非GPU机型，GPU为0。MinimalCpuPlatform代表含义这个CPU和内存规格只能在列出来的CPU平台支持。
+	MachineSizes []string
+
+	// 机型名称：快杰O型|O 、快杰共享型|OM 、快杰内存型|OMEM 、 快杰PRO型|OPRO、通用N型|N、高主频C型|C和GPU G型|G等
+	Name string
+
+	// GPU的性能指标，value为值，单位是TFlops。
+	Performance string
+
+	// 机型状态：可售|Normal 、 公测|Beta、售罄|Soldout、隐藏|Hidden
+	Status string
+}
+
+/*
 UHostImageSet - DescribeImage
 */
 type UHostImageSet struct {
@@ -111,6 +144,18 @@ type IsolationGroup struct {
 }
 
 /*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
+
+/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -147,18 +192,6 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
 }
 
 /*
