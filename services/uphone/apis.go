@@ -404,7 +404,7 @@ type DescribeUPhoneRequest struct {
 	// 是否返回全部。如果有此参数，分页不生效。
 	IsAll *bool `required:"false"`
 
-	// 返回数据长度，默认为20，最大100
+	// 返回数据长度，默认为200，最大200
 	Limit *int `required:"false"`
 
 	// 列表起始位置偏移量，默认为0
@@ -2149,6 +2149,59 @@ func (c *UPhoneClient) SetUPhoneSplashScreen(req *SetUPhoneSplashScreenRequest) 
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("SetUPhoneSplashScreen", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// SetUPhoneTokenRequest is request schema for SetUPhoneToken action
+type SetUPhoneTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
+	CityId *string `required:"true"`
+
+	// RTC连接Token，为空表示清空Token
+	Token *string `required:"false"`
+
+	// 云手机ID
+	UPhoneId *string `required:"true"`
+}
+
+// SetUPhoneTokenResponse is response schema for SetUPhoneToken action
+type SetUPhoneTokenResponse struct {
+	response.CommonBase
+}
+
+// NewSetUPhoneTokenRequest will create request of SetUPhoneToken action.
+func (c *UPhoneClient) NewSetUPhoneTokenRequest() *SetUPhoneTokenRequest {
+	req := &SetUPhoneTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: SetUPhoneToken
+
+设置云手机RTC连接Token提高安全性
+*/
+func (c *UPhoneClient) SetUPhoneToken(req *SetUPhoneTokenRequest) (*SetUPhoneTokenResponse, error) {
+	var err error
+	var res SetUPhoneTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SetUPhoneToken", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
