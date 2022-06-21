@@ -750,13 +750,16 @@ type DescribeUK8SClusterResponse struct {
 	ExternalApiServer string
 
 	// kube-proxy配置
-	KubeProxy string
+	KubeProxy KubeProxy
 
 	// Master 节点数量
 	MasterCount int
 
 	// Master节点配置信息，具体参考UhostInfo。托管版不返回该信息
 	MasterList []UhostInfo
+
+	// Master配置预警：Normal正常；Warning 需要升级；Error    需要紧急升级；
+	MasterResourceStatus string
 
 	// Node节点数量
 	NodeCount int
@@ -1148,9 +1151,6 @@ type ListUK8SNodeGroupRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
-
 	// 集群ID
 	ClusterId *string `required:"true"`
 }
@@ -1203,9 +1203,6 @@ type RemoveUK8SNodeGroupRequest struct {
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
 
 	// 集群id
 	ClusterId *string `required:"true"`

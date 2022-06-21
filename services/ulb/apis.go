@@ -13,10 +13,10 @@ import (
 type AllocateBackendRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 后端实例状态开关，枚举值： 1：启用； 0：禁用 默认为启用
@@ -34,7 +34,7 @@ type AllocateBackendRequest struct {
 	// 所添加的后端资源的资源ID
 	ResourceId *string `required:"true"`
 
-	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UNI -> 虚拟网卡；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube；默认值为UHost。报文转发模式不支持UDocker、UHybrid、CUBE
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UNI -> 虚拟网卡；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube，USDP->智能大数据平台；默认值为UHost。报文转发模式不支持UDocker、UHybrid、CUBE
 	ResourceType *string `required:"true"`
 
 	// 所添加的后端服务器所在的子网，当ResourceType 为 UHybrid 时有效，且必填
@@ -49,7 +49,7 @@ type AllocateBackendRequest struct {
 	// VServer实例的ID
 	VServerId *string `required:"true"`
 
-	// 所添加的后端RS权重（在加权轮询算法下有效），取值范围[0-100]，默认为1
+	// 所添加的后端RS权重（在加权轮询算法下有效），取值范围[1-100]，默认为1
 	Weight *int `required:"false"`
 }
 
@@ -326,10 +326,10 @@ func (c *ULBClient) CreatePolicyGroup(req *CreatePolicyGroupRequest) (*CreatePol
 type CreateSSLRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// CA证书
@@ -341,7 +341,7 @@ type CreateSSLRequest struct {
 	// SSL证书的完整内容，包括用户证书、加密证书的私钥、CA证书
 	SSLContent *string `required:"false"`
 
-	// SSL证书的名字，默认值为空
+	// SSL证书的名字，默认值不为空
 	SSLName *string `required:"true"`
 
 	// 所添加的SSL证书类型，目前只支持Pem格式
@@ -394,10 +394,10 @@ func (c *ULBClient) CreateSSL(req *CreateSSLRequest) (*CreateSSLResponse, error)
 type CreateULBRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// ULB 所属的业务组ID，如果不传则使用默认的业务组
@@ -412,7 +412,7 @@ type CreateULBRequest struct {
 	// 创建的ULB是否为内网模式
 	InnerMode *string `required:"false"`
 
-	// ULB 监听器类型，枚举值：RequestProxy，请求代理； PacketsTransmit ，报文转发。默认为RequestProxy
+	// ULB 监听器类型，外网ULB默认RequestProxy，内网ULB默认PacketsTransmit。枚举值：RequestProxy，请求代理； PacketsTransmit ，报文转发。
 	ListenType *string `required:"false"`
 
 	// 创建的ULB是否为外网模式，默认即为外网模式
@@ -424,7 +424,7 @@ type CreateULBRequest struct {
 	// 备注
 	Remark *string `required:"false"`
 
-	// 内网ULB 所属的子网ID，如果不传则使用默认的子网
+	// ULB 所属的子网ID，如果不传则随机选择一个。
 	SubnetId *string `required:"false"`
 
 	// 业务组
@@ -1107,7 +1107,7 @@ type DescribeVServerRequest struct {
 	Offset *int `required:"false"`
 
 	// 负载均衡实例的Id
-	ULBId *string `required:"true"`
+	ULBId *string `required:"false"`
 
 	// VServer实例的Id；若指定则返回指定的VServer实例的信息； 若不指定则返回当前负载均衡实例下所有VServer的信息
 	VServerId *string `required:"false"`
@@ -1289,7 +1289,7 @@ type UpdateBackendAttributeRequest struct {
 	// 负载均衡资源ID
 	ULBId *string `required:"true"`
 
-	// 所添加的后端RS权重（在加权轮询算法下有效），取值范围[0-100]，默认为1
+	// 所添加的后端RS权重（在加权轮询算法下有效），取值范围[1-100]，默认为1
 	Weight *int `required:"false"`
 }
 
@@ -1440,6 +1440,59 @@ func (c *ULBClient) UpdatePolicyGroupAttribute(req *UpdatePolicyGroupAttributeRe
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdatePolicyGroupAttribute", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateSSLAttributeRequest is request schema for UpdateSSLAttribute action
+type UpdateSSLAttributeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// SSL的资源id
+	SSLId *string `required:"true"`
+
+	// SSL实例名称，不允许传空
+	SSLName *string `required:"true"`
+}
+
+// UpdateSSLAttributeResponse is response schema for UpdateSSLAttribute action
+type UpdateSSLAttributeResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateSSLAttributeRequest will create request of UpdateSSLAttribute action.
+func (c *ULBClient) NewUpdateSSLAttributeRequest() *UpdateSSLAttributeRequest {
+	req := &UpdateSSLAttributeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateSSLAttribute
+
+更新修改SSL的属性，如：修改SSLName
+*/
+func (c *ULBClient) UpdateSSLAttribute(req *UpdateSSLAttributeRequest) (*UpdateSSLAttributeResponse, error) {
+	var err error
+	var res UpdateSSLAttributeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateSSLAttribute", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

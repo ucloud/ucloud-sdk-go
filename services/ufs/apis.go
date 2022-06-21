@@ -72,10 +72,10 @@ func (c *UFSClient) AddUFSVolumeMountPoint(req *AddUFSVolumeMountPointRequest) (
 type CreateUFSVolumeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 计费模式，枚举值为： Year，按年付费； Month，按月付费； Dynamic，按需付费（需开启权限）； Trial，试用（需开启权限） 默认为Dynamic
@@ -84,7 +84,7 @@ type CreateUFSVolumeRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
-	// 文件系统协议，枚举值，NFSv3表示NFS V3协议，NFSv4表示NFS V4协议
+	// 文件系统协议，目前仅支持NFSv4
 	ProtocolType *string `required:"true"`
 
 	// 购买时长 默认: 1
@@ -93,10 +93,10 @@ type CreateUFSVolumeRequest struct {
 	// 备注
 	Remark *string `required:"false"`
 
-	// 文件系统大小，单位为GB，最大不超过20T，香港容量型必须为100的整数倍，Size最小为500GB，北京，上海，广州的容量型必须为1024的整数倍，Size最小为1024GB。性能型文件系统Size最小为100GB
+	// 文件系统大小，单位为GB，必须为100的整数倍，容量型Size最小为500GB，性能型文件系统Size最小为100GB
 	Size *int `required:"true"`
 
-	// 文件系统存储类型，枚举值，Basic表示容量型，Advanced表示性能型
+	// 文件系统存储类型，Basic表示容量型，Advanced表示性能型
 	StorageType *string `required:"true"`
 
 	// 文件系统所属业务组
@@ -265,6 +265,71 @@ func (c *UFSClient) DescribeUFSVolumeMountpoint(req *DescribeUFSVolumeMountpoint
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeUFSVolumeMountpoint", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUFSVolumePriceRequest is request schema for DescribeUFSVolumePrice action
+type DescribeUFSVolumePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Year， Month， Dynamic，Trial，默认: Dynamic
+	ChargeType *string `required:"false"`
+
+	// 购买UFS的时长， 默认为1
+	Quantity *int `required:"false"`
+
+	// 文件系统大小，单位为GB，新架构容量型最小容量为500GB，以100GB递增，最大不超过100TB。新架构性能型最小容量为100GB，以100GB递增，最大不超过20TB
+	Size *int `required:"true"`
+
+	// 文件存储类型，枚举值，Basic表示容量型产品，Advanced表示性能型产品
+	StorageType *string `required:"true"`
+
+	// 文件系统id，第一次创建文件系统时不需要传这个参数
+	VolumeId *string `required:"false"`
+}
+
+// DescribeUFSVolumePriceResponse is response schema for DescribeUFSVolumePrice action
+type DescribeUFSVolumePriceResponse struct {
+	response.CommonBase
+
+	// ufs 价格信息
+	DataSet []UFSPriceDataSet
+}
+
+// NewDescribeUFSVolumePriceRequest will create request of DescribeUFSVolumePrice action.
+func (c *UFSClient) NewDescribeUFSVolumePriceRequest() *DescribeUFSVolumePriceRequest {
+	req := &DescribeUFSVolumePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFSVolumePrice
+
+获取文件系统价格
+*/
+func (c *UFSClient) DescribeUFSVolumePrice(req *DescribeUFSVolumePriceRequest) (*DescribeUFSVolumePriceResponse, error) {
+	var err error
+	var res DescribeUFSVolumePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFSVolumePrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

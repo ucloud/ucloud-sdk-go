@@ -3,14 +3,14 @@
 package unet
 
 /*
-UnetEIPAddrSet - AllocateEIP
+UnetEIPAddrSet - DescribeEIP
 */
 type UnetEIPAddrSet struct {
 
 	// IP地址
 	IP string
 
-	// 运营商信息如: 国际: International, BGP: BGP
+	// 运营商信息如: 电信: Telecom, 联通: Unicom, 国际: International, Duplet: 双线IP（电信+联通), BGP: Bgp
 	OperatorName string
 }
 

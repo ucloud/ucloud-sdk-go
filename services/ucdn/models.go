@@ -762,6 +762,30 @@ type LogSetList struct {
 }
 
 /*
+LogInfo - 日志信息
+*/
+type LogInfo struct {
+
+	// Unix时间戳
+	LogTime int
+
+	// 日志url地址
+	LogUrl string
+}
+
+/*
+DomanLogList - 域名日志列表
+*/
+type DomanLogList struct {
+
+	// 域名
+	Domain string
+
+	// 日志信息列表
+	LogList []LogInfo
+}
+
+/*
 RequestInfoV2 - RequestInfoV2
 */
 type RequestInfoV2 struct {

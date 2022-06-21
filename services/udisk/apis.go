@@ -114,7 +114,7 @@ type CloneUDiskRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 【已废弃】RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
+	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -200,7 +200,7 @@ type CloneUDiskSnapshotRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 【已废弃】RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
+	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
 	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘快照有效，对云盘快照无效)
@@ -289,7 +289,7 @@ type CloneUDiskUDataArkRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 【已废弃】RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
+	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
 	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘备份有效，对云盘备份无效)

@@ -111,15 +111,18 @@ type CfgDictList struct {
 }
 
 /*
-IpList - 容器组外网ip列表
+ImageList - 容器组镜像密钥列表
 */
-type IpList struct {
+type ImageList struct {
 
-	// 外网ip
-	Ip string
+	// 镜像密钥
+	ImageKey string
 
-	// 运营商
-	Isp string
+	// 仓库地址
+	StoreAddr string
+
+	// 用户名称
+	UserName string
 }
 
 /*
@@ -141,18 +144,15 @@ type StorVolumeInfo struct {
 }
 
 /*
-ImageList - 容器组镜像密钥列表
+IpList - 容器组外网ip列表
 */
-type ImageList struct {
+type IpList struct {
 
-	// 镜像密钥
-	ImageKey string
+	// 外网ip
+	Ip string
 
-	// 仓库地址
-	StoreAddr string
-
-	// 用户名称
-	UserName string
+	// 运营商
+	Isp string
 }
 
 /*

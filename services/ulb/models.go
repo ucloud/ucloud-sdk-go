@@ -199,6 +199,9 @@ type ULBPolicySet struct {
 	// 内容转发下rs的详细信息，参考PolicyBackendSet
 	BackendSet []PolicyBackendSet
 
+	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode string
+
 	// 内容转发匹配字段;默认内容转发类型下为空。
 	Match string
 
@@ -219,6 +222,39 @@ type ULBPolicySet struct {
 
 	// 所属VServerId
 	VServerId string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
+}
+
+/*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
 }
 
 /*
@@ -274,32 +310,14 @@ type ULBVServerSet struct {
 	// VServer的运行状态。枚举值： 0 -> rs全部运行正常;1 -> rs全部运行异常；2 -> rs部分运行异常。
 	Status int
 
+	// 负载均衡实例的Id
+	ULBId string
+
 	// VServer实例的Id
 	VServerId string
 
 	// VServer实例的名字
 	VServerName string
-}
-
-/*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
 }
 
 /*
@@ -315,18 +333,6 @@ type LoggerSet struct {
 
 	// bucket的token名称
 	TokenName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*

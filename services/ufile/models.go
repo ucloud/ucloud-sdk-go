@@ -3,6 +3,45 @@
 package ufile
 
 /*
+UFileTokenSet - ufile令牌集合
+*/
+type UFileTokenSet struct {
+
+	// 令牌允许操作的bucket
+	AllowedBuckets []string
+
+	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP ]
+	AllowedOps []string
+
+	// 令牌允许操作的key前缀
+	AllowedPrefixes []string
+
+	// 创建时间
+	CreateTime int
+
+	// 令牌的超时时间点
+	ExpireTime int
+
+	// 修改时间
+	ModifyTime int
+
+	// 令牌私钥
+	PrivateKey string
+
+	// 令牌公钥
+	PublicKey string
+
+	// 所属地区
+	Region string
+
+	// 令牌ID
+	TokenId string
+
+	// 令牌名称
+	TokenName string
+}
+
+/*
 UFileDomainSet - DescribeBucket
 */
 type UFileDomainSet struct {
@@ -60,42 +99,33 @@ type UFileBucketSet struct {
 }
 
 /*
-UFileTokenSet - ufile令牌集合
+LifeCycleItem - 生命周期信息
 */
-type UFileTokenSet struct {
+type LifeCycleItem struct {
 
-	// 令牌允许操作的bucket
-	AllowedBuckets []string
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动转换为归档存储类型，0代表不启用；
+	ArchivalDays int
 
-	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP ]
-	AllowedOps []string
+	// 存储空间名称
+	BucketName string
 
-	// 令牌允许操作的key前缀
-	AllowedPrefixes []string
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动删除，0代表不启用；
+	Days int
 
-	// 创建时间
-	CreateTime int
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动转换为低频存储类型，0代表不启用；
+	IADays int
 
-	// 令牌的超时时间点
-	ExpireTime int
+	// 生命周期Id
+	LifeCycleId string
 
-	// 修改时间
-	ModifyTime int
+	// 生命周期名称
+	LifeCycleName string
 
-	// 令牌私钥
-	PrivateKey string
+	// 生命周期所适用的前缀；*为整个存储空间文件；
+	Prefix string
 
-	// 令牌公钥
-	PublicKey string
-
-	// 所属地区
-	Region string
-
-	// 令牌ID
-	TokenId string
-
-	// 令牌名称
-	TokenName string
+	// Enabled -- 启用，Disabled -- 不启用
+	Status string
 }
 
 /*
@@ -103,7 +133,7 @@ UFileTotalReportItem - 总消费信息
 */
 type UFileTotalReportItem struct {
 
-	// API请求次数（次）
+	// API请求次数（万次）
 	ApiTimes float64
 
 	// 忙时流量；单位byte；海外无此字段
@@ -130,7 +160,7 @@ type UFileDailyReportItem struct {
 	// 冷存（归档）存储量；单位byte
 	AcStorage float64
 
-	// API请求次数（次）
+	// API请求次数（万次）
 	ApiTimes float64
 
 	// 忙时流量；单位byte；海外无此字段
