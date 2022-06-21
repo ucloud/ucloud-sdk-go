@@ -226,6 +226,12 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+UHostDiskCustomBackup is request schema for complex param
+*/
+type UHostDiskCustomBackup struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterface struct {
@@ -235,6 +241,15 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
 }
 
 /*
@@ -257,20 +272,11 @@ type UHostDisk struct {
 	// 【功能仅部分可用区开放，详询技术支持】kms key id。选择加密盘时必填。
 	KmsKeyId *string `required:"false"`
 
-	// 磁盘大小，单位GB，必须是10GB的整数倍。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Size *int `required:"true"`
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
 }
 
 /*
@@ -283,6 +289,12 @@ type CreateUHostInstanceParamVolumes struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	IsBoot *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -352,7 +364,7 @@ type CreateUHostInstanceRequest struct {
 	// 【该字段已废弃，请谨慎使用】
 	KeyPair *string `required:"false" deprecated:"true"`
 
-	// KeypairId 密钥对ID，LoginMode为KeyPair时此项必须
+	// KeypairId 密钥对ID，LoginMode为KeyPair时此项必须。
 	KeyPairId *string `required:"false"`
 
 	// 主机登陆模式。密码（默认选项）: Password，密钥：KeyPair。
@@ -373,7 +385,7 @@ type CreateUHostInstanceRequest struct {
 	// UHost实例名称。默认：UHost。请遵照[[api:uhost-api:specification|字段规范]]设定实例名称。
 	Name *string `required:"false"`
 
-	// 网络增强特性。枚举值：Normal（默认），不开启;  Super，开启网络增强1.0； Ultra，开启网络增强2.0（仅支持部分可用区，请参考控制台）
+	// 网络增强特性。枚举值：Normal，不开启;  Super，开启网络增强1.0； Ultra，开启网络增强2.0（详情参考官网文档）
 	NetCapability *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
@@ -1107,6 +1119,12 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
+GetUHostInstancePriceParamVirtualGpu is request schema for complex param
+*/
+type GetUHostInstancePriceParamVirtualGpu struct {
+}
+
+/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1137,12 +1155,6 @@ type GetUHostInstancePriceParamVolumes struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	Type *string `required:"false" deprecated:"true"`
-}
-
-/*
-GetUHostInstancePriceParamVirtualGpu is request schema for complex param
-*/
-type GetUHostInstancePriceParamVirtualGpu struct {
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
