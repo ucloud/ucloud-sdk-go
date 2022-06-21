@@ -13,6 +13,9 @@ type UPhoneInstance struct {
 	// 云手机异步任务回调
 	Callback string
 
+	// 计费模式。枚举值为： > 年 Year，按年付费； > Month，按月付费； > Dynamic，按小时预付费; 默认为月付
+	ChargeType string
+
 	// 城市Id，eg: cn-shanghai, cn-jinan
 	CityId string
 
@@ -25,8 +28,17 @@ type UPhoneInstance struct {
 	// 磁盘大小，单位: GB
 	DiskSize int
 
+	// 到期时间；格式为Unix时间戳
+	ExpireTime int
+
 	// 云手机镜像ID，不超过32个字节。
 	ImageId string
+
+	// 云手机IP地址
+	Ip string
+
+	// IP所属地域Id，eg: hk，th-bkk
+	IpRegion string
 
 	// 内存大小。单位MB
 	Memory int
@@ -184,8 +196,11 @@ type UPhoneDetailInstance struct {
 	// 云手机状态<br />* 启动中: STARTING; <br />* 运行中: RUNNING; <br />* 关机中: STOPPING; <br />* 关机: STOPPED <br />* 重启中: REBOOTING; <br />* 重置中: RESETTING; <br />* 启动失败: START_FAILED; <br />* 关机失败: STOP_FAILED; <br />* 重启失败: REBOOT_FAILED; <br />* 重置失败: RESET_FAILED; <br />* 未知状态：UNDEFINED或""
 	State string
 
-	// 云手机规格名称
+	// 云手机的唯一标识，不超过32个字节。
 	UPhoneId string
+
+	// 云手机规格名称
+	UPhoneModelName string
 
 	// 云手机的名称，不超过65个字符。
 	UPhoneName string
@@ -310,8 +325,14 @@ type UPhoneModelInstance struct {
 	// 虚拟CPU核数。
 	CPU int
 
+	// 型号描述信息
+	Description string
+
 	// 磁盘大小，单位: GB
 	DiskSize int
+
+	// DPI
+	Dpi int
 
 	// 内存大小。单位MB
 	Memory int
@@ -450,11 +471,53 @@ type ServerInstance struct {
 }
 
 /*
+StockInfo - model的可用量信息
+*/
+type StockInfo struct {
+
+	// ServerModel名称
+	ModelName string
+
+	// 资源余量
+	StockCount int
+}
+
+/*
+UPhoneAllowance - 云手机余量结构体
+*/
+type UPhoneAllowance struct {
+
+	// 可创建云手机个数
+	Allowance int
+
+	// 枚举值，云手机型号名称，取值：UPhone X，UPhone Plus，UPhone Pro
+	ModelName string
+}
+
+/*
+UPhonePriceSet - 云手机价格列表
+*/
+type UPhonePriceSet struct {
+
+	// 计费类型，枚举值：Year，Month，Dynamic
+	ChargeType string
+
+	// 产品列表价
+	ListPrice float64
+
+	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）
+	OriginalPrice float64
+
+	// 价格，单位: 元，保留小数点后两位有效数字
+	Price float64
+}
+
+/*
 UPhoneServerPriceSet - 价格列表
 */
 type UPhoneServerPriceSet struct {
 
-	// 计费类型，枚举值：Year，Month
+	// 计费类型，枚举值：Year，Month, Dynamic
 	ChargeType string
 
 	// 产品列表价

@@ -201,15 +201,15 @@ type SrcAreaInfo struct {
 }
 
 /*
-AccelerationAreaInfos - 加速大区信息
+OutPublicIpInfo - 线路回源IP信息
 */
-type AccelerationAreaInfos struct {
+type OutPublicIpInfo struct {
 
-	// 加速区code
-	AccelerationArea string
+	// 线路回源节点机房代号
+	Area string
 
-	// 加速节点信息
-	AccelerationNodes []SrcAreaInfo
+	// 线路回源节点EIP
+	IP string
 }
 
 /*
@@ -228,15 +228,15 @@ type ForwardTask struct {
 }
 
 /*
-OutPublicIpInfo - 线路回源IP信息
+AccelerationAreaInfos - 加速大区信息
 */
-type OutPublicIpInfo struct {
+type AccelerationAreaInfos struct {
 
-	// 线路回源节点机房代号
-	Area string
+	// 加速区code
+	AccelerationArea string
 
-	// 线路回源节点EIP
-	IP string
+	// 加速节点信息
+	AccelerationNodes []SrcAreaInfo
 }
 
 /*
@@ -351,9 +351,9 @@ type AccelerationInfo struct {
 }
 
 /*
-UGAL7Forwarder - UGA实例 7层转发器信息
+UGAL4Forwarder - UGA实例 4层转发器信息
 */
-type UGAL7Forwarder struct {
+type UGAL4Forwarder struct {
 
 	// 接入端口
 	Port int
@@ -363,12 +363,6 @@ type UGAL7Forwarder struct {
 
 	// RSPort，源站监听端口
 	RSPort int
-
-	// 证书ID
-	SSLId string
-
-	// 证书名称
-	SSLName string
 }
 
 /*
@@ -414,9 +408,9 @@ type UGAATask struct {
 }
 
 /*
-UGAL4Forwarder - UGA实例 4层转发器信息
+UGAL7Forwarder - UGA实例 7层转发器信息
 */
-type UGAL4Forwarder struct {
+type UGAL7Forwarder struct {
 
 	// 接入端口
 	Port int
@@ -426,6 +420,12 @@ type UGAL4Forwarder struct {
 
 	// RSPort，源站监听端口
 	RSPort int
+
+	// 证书ID
+	SSLId string
+
+	// 证书名称
+	SSLName string
 }
 
 /*

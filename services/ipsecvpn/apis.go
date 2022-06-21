@@ -155,10 +155,10 @@ func (c *IPSecVPNClient) CreateVPNGateway(req *CreateVPNGatewayRequest) (*Create
 type CreateVPNTunnelRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// IKE协商过程中使用的认证算法，"md5", "sha1", "sha2-256"。默认值为“sha1”
@@ -188,8 +188,11 @@ type CreateVPNTunnelRequest struct {
 	// ike版本，枚举值： "IKE V1"，"IKE V2"，默认v1
 	IKEVersion *string `required:"true"`
 
-	// IPSec隧道中使用的认证算法，枚举值，"md5", "sha1"。默认值为“sha1”
+	// IPSec隧道中使用的认证算法，枚举值，"md5", "sha1","sha2-256"。默认值为“sha1”
 	IPSecAuthenticationAlgorithm *string `required:"false"`
+
+	// IPSec隧道关闭后的处理动作，枚举值：“none”，流量触发；“restart”，自动重联，默认为none
+	IPSecCloseAction *string `required:"false"`
 
 	// IPSec隧道中使用的加密算法，枚举值，"aes128", "aes192", "aes256", "aes512", "3des"。默认值为“aes128”
 	IPSecEncryptionAlgorithm *string `required:"false"`
@@ -793,10 +796,10 @@ func (c *IPSecVPNClient) UpdateVPNGateway(req *UpdateVPNGatewayRequest) (*Update
 type UpdateVPNTunnelAttributeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// IKE协商过程中使用的认证算法
@@ -828,6 +831,9 @@ type UpdateVPNTunnelAttributeRequest struct {
 
 	// IPSec隧道中使用的认证算法
 	IPSecAuthenticationAlgorithm *string `required:"false"`
+
+	// IPSec隧道关闭后的处理动作，默认与原本一致，若原本为空，必传。枚举值：“none”,不处理（推荐为none，流量会自动触发隧道重建）；“restart”重建
+	IPSecCloseAction *string `required:"false"`
 
 	// IPSec隧道中使用的加密算法
 	IPSecEncryptionAlgorithm *string `required:"false"`

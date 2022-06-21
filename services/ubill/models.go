@@ -3,24 +3,24 @@
 package ubill
 
 /*
-OrderDetail -
-*/
-type OrderDetail struct {
-
-	//
-	ProductName string
-
-	//
-	Value string
-}
-
-/*
 ResourceTag -
 */
 type ResourceTag struct {
 
 	//
 	KeyId string
+
+	//
+	Value string
+}
+
+/*
+OrderDetail -
+*/
+type OrderDetail struct {
+
+	//
+	ProductName string
 
 	//
 	Value string
@@ -120,18 +120,6 @@ type AccountInfo struct {
 }
 
 /*
-ItemDetail - 产品配置
-*/
-type ItemDetail struct {
-
-	// 产品小类名称
-	ProductName string
-
-	// 产品小类规格
-	Value string
-}
-
-/*
 ResourceExtendInfo - 资源标识
 */
 type ResourceExtendInfo struct {
@@ -144,11 +132,23 @@ type ResourceExtendInfo struct {
 }
 
 /*
+ItemDetail - 产品配置
+*/
+type ItemDetail struct {
+
+	// 产品小类名称
+	ProductName string
+
+	// 产品小类规格
+	Value string
+}
+
+/*
 BillDetailItem - 账单详情数据
 */
 type BillDetailItem struct {
 
-	// 是否为主账号
+	// 是否为主账号。枚举值：\\ > 0:子账号 \\ > 1:主账号
 	Admin int
 
 	// 订单总金额
@@ -166,7 +166,7 @@ type BillDetailItem struct {
 	// 可用区
 	AzGroupCName string
 
-	// 计费方式
+	// 计费方式 (筛选项, 默认全部)。枚举值：\\ > Dynamic:按时 \\ > Month:按月 \\ > Year:按年 \\ > Once:一次性按量 \\ > Used:按量 \\ > Post:后付费
 	ChargeType string
 
 	// 创建时间（时间戳）
@@ -178,7 +178,7 @@ type BillDetailItem struct {
 	// 订单号
 	OrderNo string
 
-	// 订单类型
+	// 订单类型 (筛选项, 默认全部) 。枚举值：\\ > OT_BUY:新购 \\ > OT_RENEW:续费 \\ > OT_UPGRADE:升级 \\ > OT_REFUND:退费 \\ > OT_DOWNGRADE:降级 \\ > OT_SUSPEND:结算 \\ > OT_PAYMENT:删除资源回款 \\ > OT_POSTPAID_PAYMENT:后付费回款 \\ > OT_RECOVER:删除恢复 \\ > OT_POSTPAID_RENEW:过期续费回款
 	OrderType string
 
 	// 项目名称
@@ -190,13 +190,13 @@ type BillDetailItem struct {
 	// 资源ID
 	ResourceId string
 
-	// 产品类型
+	// 产品类型。枚举值：\\ > uhost:云主机 \\ > udisk:普通云硬盘 \\ > udb:云数据库 \\ > eip:弹性IP \\ > ufile:对象存储 \\ > fortress_host:堡垒机 \\ > ufs:文件存储 \\ > waf:WEB应用防火墙 \\ > ues:弹性搜索 \\ > udisk_ssd:SSD云硬盘 \\ > rssd:RSSD云硬盘
 	ResourceType string
 
 	// 产品类型代码
 	ResourceTypeCode int
 
-	// 订单支付状态
+	// 订单支付状态。枚举值：\\> 0:未支付 \\ > 1:已支付
 	ShowHover int
 
 	// 开始时间（时间戳）

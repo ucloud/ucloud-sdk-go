@@ -70,6 +70,9 @@ type OutTemplate struct {
 	// 审核失败原因
 	ErrDesc string
 
+	// 模板变量属性说明
+	Instruction string
+
 	// 模板类型，选项：1-验证码类 2-通知类 3-会员推广类
 	Purpose int
 
