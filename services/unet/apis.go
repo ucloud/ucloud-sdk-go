@@ -25,13 +25,16 @@ type AllocateEIPRequest struct {
 	// 付费方式, 枚举值为: Year, 按年付费; Month, 按月付费; Dynamic, 按时付费，默认为按月付费。
 	ChargeType *string `required:"false"`
 
+	// 购买EIP数量，默认值为1
+	Count *int `required:"false"`
+
 	// 代金券ID, 默认不使用
 	CouponId *string `required:"false"`
 
 	// 弹性IP的名称, 默认为 "EIP"
 	Name *string `required:"false"`
 
-	// 弹性IP线路，枚举值：国际线路， International；BGP线路：Bgp。使用BGP线路的地域：北京二、上海金融云、上海二、广州等，其他地域均使用国际线路。
+	// 弹性IP线路，枚举值：国际线路， International；BGP线路：Bgp；精品BGP：BGPPro。使用BGP线路的地域：北京二、上海金融云、上海二、广州等，其他地域均使用国际线路。使用BGPPro线路的地域：香港
 	OperatorName *string `required:"true"`
 
 	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. 默认为 "Bandwidth".“PostAccurateBandwidth”：带宽后付费模式
@@ -225,6 +228,9 @@ type BindEIPRequest struct {
 
 	// 弹性IP的资源Id
 	EIPId *string `required:"true"`
+
+	// EIP与内网IP进行绑定时需要传入UNI下未绑定过EIP的内网IP
+	PrivateIP *string `required:"false"`
 
 	// 弹性IP请求绑定的资源ID
 	ResourceId *string `required:"true"`

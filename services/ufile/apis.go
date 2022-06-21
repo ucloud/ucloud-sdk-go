@@ -68,38 +68,118 @@ func (c *UFileClient) CreateBucket(req *CreateBucketRequest) (*CreateBucketRespo
 	return &res, nil
 }
 
+// CreateUFileLifeCycleRequest is request schema for CreateUFileLifeCycle action
+type CreateUFileLifeCycleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后，自动变为归档存储类型；参数范围：[7,36500]，0代表不启用
+	ArchivalDays *int `required:"false"`
+
+	// 存储空间名称
+	BucketName *string `required:"true"`
+
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动删除；参数范围：[7,36500]，0代表不启用
+	Days *int `required:"false"`
+
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后，自动变为低频存储类型；参数范围：[7,36500]，0代表不启用
+	IADays *int `required:"false"`
+
+	// 生命周期名称
+	LifeCycleName *string `required:"true"`
+
+	// 生命周期所适用的前缀；*为整个存储空间文件；一条规则只支持一个文件前缀；
+	Prefix *string `required:"true"`
+
+	// Enabled -- 启用，Disabled -- 不启用
+	Status *string `required:"true"`
+}
+
+// CreateUFileLifeCycleResponse is response schema for CreateUFileLifeCycle action
+type CreateUFileLifeCycleResponse struct {
+	response.CommonBase
+
+	// 生命周期Id
+	LifeCycleId string
+}
+
+// NewCreateUFileLifeCycleRequest will create request of CreateUFileLifeCycle action.
+func (c *UFileClient) NewCreateUFileLifeCycleRequest() *CreateUFileLifeCycleRequest {
+	req := &CreateUFileLifeCycleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUFileLifeCycle
+
+创建生命周期管理
+*/
+func (c *UFileClient) CreateUFileLifeCycle(req *CreateUFileLifeCycleRequest) (*CreateUFileLifeCycleResponse, error) {
+	var err error
+	var res CreateUFileLifeCycleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUFileLifeCycle", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUFileTokenRequest is request schema for CreateUFileToken action
 type CreateUFileTokenRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"false"`
 
 	// 令牌允许操作的bucket，默认*表示全部
 	AllowedBuckets []string `required:"false"`
 
-	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP  ]。默认TOKEN_ALLOW_NONE
+	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP  ，TOKEN_DENY_UPDATE]。默认TOKEN_ALLOW_NONE
 	AllowedOps []string `required:"false"`
 
 	// 令牌允许操作的key前缀，默认*表示全部
 	AllowedPrefixes []string `required:"false"`
+
+	// 令牌黑名单，支持ipv4，ipv6格式。
+	BlackIPList []string `required:"false"`
 
 	// Unix 时间戳，精确到秒，为令牌过期时间点。默认过期时间为一天（即当前Unix时间戳+86400）；注意：过期时间不能超过 4102416000
 	ExpireTime *int `required:"false"`
 
 	// 令牌名称
 	TokenName *string `required:"true"`
+
+	// 令牌白名单，支持ipv4，ipv6格式。
+	WhiteIPList []string `required:"false"`
 }
 
 // CreateUFileTokenResponse is response schema for CreateUFileToken action
 type CreateUFileTokenResponse struct {
 	response.CommonBase
 
-	// 创建令牌的token_id
+	// 令牌唯一ID
 	TokenId string
+
+	// 创建令牌的详细信息
+	UFileTokenSet UFileTokenSet
 }
 
 // NewCreateUFileTokenRequest will create request of CreateUFileToken action.
@@ -179,6 +259,59 @@ func (c *UFileClient) DeleteBucket(req *DeleteBucketRequest) (*DeleteBucketRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteBucket", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUFileLifeCycleRequest is request schema for DeleteUFileLifeCycle action
+type DeleteUFileLifeCycleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// 存储空间名称
+	BucketName *string `required:"true"`
+
+	// 生命周期Id
+	LifeCycleId *string `required:"true"`
+}
+
+// DeleteUFileLifeCycleResponse is response schema for DeleteUFileLifeCycle action
+type DeleteUFileLifeCycleResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteUFileLifeCycleRequest will create request of DeleteUFileLifeCycle action.
+func (c *UFileClient) NewDeleteUFileLifeCycleRequest() *DeleteUFileLifeCycleRequest {
+	req := &DeleteUFileLifeCycleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUFileLifeCycle
+
+删除生命周期管理
+*/
+func (c *UFileClient) DeleteUFileLifeCycle(req *DeleteUFileLifeCycleRequest) (*DeleteUFileLifeCycleResponse, error) {
+	var err error
+	var res DeleteUFileLifeCycleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUFileLifeCycle", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -288,6 +421,62 @@ func (c *UFileClient) DescribeBucket(req *DescribeBucketRequest) (*DescribeBucke
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeBucket", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUFileLifeCycleRequest is request schema for DescribeUFileLifeCycle action
+type DescribeUFileLifeCycleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// 存储空间名称
+	BucketName *string `required:"true"`
+
+	// 生命周期Id；不传递此参数拉取存储空间下面的所有生命周期信息
+	LifeCycleId *string `required:"false"`
+}
+
+// DescribeUFileLifeCycleResponse is response schema for DescribeUFileLifeCycle action
+type DescribeUFileLifeCycleResponse struct {
+	response.CommonBase
+
+	// 生命周期信息
+	DateSet []LifeCycleItem
+}
+
+// NewDescribeUFileLifeCycleRequest will create request of DescribeUFileLifeCycle action.
+func (c *UFileClient) NewDescribeUFileLifeCycleRequest() *DescribeUFileLifeCycleRequest {
+	req := &DescribeUFileLifeCycleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFileLifeCycle
+
+获取生命周期信息
+*/
+func (c *UFileClient) DescribeUFileLifeCycle(req *DescribeUFileLifeCycleRequest) (*DescribeUFileLifeCycleResponse, error) {
+	var err error
+	var res DescribeUFileLifeCycleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFileLifeCycle", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -752,6 +941,77 @@ func (c *UFileClient) UpdateBucket(req *UpdateBucketRequest) (*UpdateBucketRespo
 	return &res, nil
 }
 
+// UpdateUFileLifeCycleRequest is request schema for UpdateUFileLifeCycle action
+type UpdateUFileLifeCycleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动转换为归档存储类型；范围： [7,36500]，0代表不启用
+	ArchivalDays *int `required:"false"`
+
+	// 存储空间名称
+	BucketName *string `required:"true"`
+
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	Days *int `required:"false"`
+
+	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动转换为低频存储类型；范围： [7,36500]，0代表不启用
+	IADays *int `required:"false"`
+
+	// 生命周期Id
+	LifeCycleId *string `required:"true"`
+
+	// 生命周期名称
+	LifeCycleName *string `required:"true"`
+
+	// 生命周期所适用的前缀；*为整个存储空间文件；一条规则只支持一个文件前缀；
+	Prefix *string `required:"true"`
+
+	// Enabled -- 启用，Disabled -- 不启用
+	Status *string `required:"true"`
+}
+
+// UpdateUFileLifeCycleResponse is response schema for UpdateUFileLifeCycle action
+type UpdateUFileLifeCycleResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateUFileLifeCycleRequest will create request of UpdateUFileLifeCycle action.
+func (c *UFileClient) NewUpdateUFileLifeCycleRequest() *UpdateUFileLifeCycleRequest {
+	req := &UpdateUFileLifeCycleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUFileLifeCycle
+
+更新生命周期管理
+*/
+func (c *UFileClient) UpdateUFileLifeCycle(req *UpdateUFileLifeCycleRequest) (*UpdateUFileLifeCycleResponse, error) {
+	var err error
+	var res UpdateUFileLifeCycleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUFileLifeCycle", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UpdateUFileTokenRequest is request schema for UpdateUFileToken action
 type UpdateUFileTokenRequest struct {
 	request.CommonBase
@@ -810,6 +1070,92 @@ func (c *UFileClient) UpdateUFileToken(req *UpdateUFileTokenRequest) (*UpdateUFi
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateUFileToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUdsRuleRequest is request schema for UpdateUdsRule action
+type UpdateUdsRuleRequest struct {
+	request.CommonBase
+
+	// 联系的用户组ID
+	ContactGroupId *string `required:"false"`
+
+	// 目标Bucket名字，全局唯一
+	DstBucket *string `required:"true"`
+
+	// 解压后的目标目录
+	DstDirectory *string `required:"true"`
+
+	// 目标bucket的token之一的tokenId
+	DstTokenId *string `required:"true"`
+
+	// 通知的事件数组
+	Events []string `required:"false"`
+
+	// 是否以压缩文件的前缀为最后一层目录
+	KeepUS3Name *bool `required:"true"`
+
+	// 通知的类型数组
+	NotificationTypes []string `required:"false"`
+
+	// 操作的ops数组,"Ops.0":"unzip"
+	Ops []string `required:"false"`
+
+	// 触发解压缩的前缀
+	Prefixes *string `required:"true"`
+
+	// 规则的唯一Id
+	RuleId *string `required:"true"`
+
+	// 规则名称
+	RuleName *string `required:"true"`
+
+	// 源Bucket名字，全局唯一
+	SrcBucket *string `required:"true"`
+
+	// 源bucket的token之一的tokenId
+	SrcTokenId *string `required:"true"`
+}
+
+// UpdateUdsRuleResponse is response schema for UpdateUdsRule action
+type UpdateUdsRuleResponse struct {
+	response.CommonBase
+
+	// 该请求的消息成功或者失败的描述
+	Mesage string
+
+	// 返回规则的规则ID
+	RuleId string
+}
+
+// NewUpdateUdsRuleRequest will create request of UpdateUdsRule action.
+func (c *UFileClient) NewUpdateUdsRuleRequest() *UpdateUdsRuleRequest {
+	req := &UpdateUdsRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUdsRule
+
+针对对象存储的文件，进行自动触发解压。
+*/
+func (c *UFileClient) UpdateUdsRule(req *UpdateUdsRuleRequest) (*UpdateUdsRuleResponse, error) {
+	var err error
+	var res UpdateUdsRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUdsRule", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

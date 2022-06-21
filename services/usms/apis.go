@@ -90,6 +90,9 @@ type CreateUSMSTemplateRequest struct {
 	// [公共参数] 项目ID，不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
+	// 模板变量属性说明
+	Instruction *string `required:"false"`
+
 	// 标记是否为国际短信。true:国际短信，false:国内短信，若不传值则默认该值为false
 	International *bool `required:"false"`
 
@@ -370,7 +373,7 @@ func (c *USMSClient) QueryUSMSSignature(req *QueryUSMSSignatureRequest) (*QueryU
 type QueryUSMSTemplateRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
 	// 模板ID
@@ -434,9 +437,6 @@ type SendBatchUSMSMessageRequest struct {
 type SendBatchUSMSMessageResponse struct {
 	response.CommonBase
 
-	// 操作名称
-	Action string
-
 	// 未发送成功的详情，返回码非0时该字段有效，可根据该字段数据重发
 	FailContent []BatchInfo
 
@@ -445,9 +445,6 @@ type SendBatchUSMSMessageResponse struct {
 
 	// 本次请求Uuid
 	ReqUuid string
-
-	// 返回码。0表示成功，非0表示失败。
-	RetCode int
 
 	// 本次提交发送任务的唯一ID，可根据该值查询本次发送的短信列表。注：成功提交短信数大于0时，才返回该字段
 	SessionNo string
@@ -506,7 +503,7 @@ type SendUSMSMessageRequest struct {
 	// 模板ID（也即短信模板申请时的工单ID），请到[USMS控制台](https://console.ucloud.cn/usms)的模板管理页面查看；使用的短信模板必须是已申请并通过审核；
 	TemplateId *string `required:"true"`
 
-	// 模板可变参数，以数组的方式填写，举例，TempalteParams.0，TempalteParams.1，... 若模板中无可变参数，则该项可不填写；若模板中有可变参数，则该项为必填项，参数个数需与变量个数保持一致，否则无法发送；
+	// 模板可变参数，以数组的方式填写，举例，TemplateParams.0，TemplateParams.1，... 若模板中无可变参数，则该项可不填写；若模板中有可变参数，则该项为必填项，参数个数需与变量个数保持一致，否则无法发送；
 	TemplateParams []string `required:"false"`
 
 	// 自定义的业务标识ID，字符串（ 长度不能超过32 位），不支持 单引号、表情包符号等特殊字符
@@ -636,8 +633,11 @@ func (c *USMSClient) UpdateUSMSSignature(req *UpdateUSMSSignatureRequest) (*Upda
 type UpdateUSMSTemplateRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
+
+	// 模板变量属性说明
+	Instruction *string `required:"false"`
 
 	// 短信模板申请原因说明，字数不超过128，每个中文、符号、英文、数字等都计为1个字。
 	Remark *string `required:"false"`

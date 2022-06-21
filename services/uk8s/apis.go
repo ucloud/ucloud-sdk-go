@@ -408,21 +408,21 @@ func (c *UK8SClient) AddUK8SUHostNode(req *AddUK8SUHostNodeRequest) (*AddUK8SUHo
 }
 
 /*
-CreateUK8SClusterV2ParamMaster is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMaster struct {
-
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](../summary/regionlist.html)
-	Zone *string `required:"true"`
-}
-
-/*
 CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
 */
 type CreateUK8SClusterV2ParamKubeProxy struct {
 
 	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
 	Mode *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMaster is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMaster struct {
+
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](../summary/regionlist.html)
+	Zone *string `required:"true"`
 }
 
 /*
@@ -750,13 +750,16 @@ type DescribeUK8SClusterResponse struct {
 	ExternalApiServer string
 
 	// kube-proxy配置
-	KubeProxy string
+	KubeProxy KubeProxy
 
 	// Master 节点数量
 	MasterCount int
 
 	// Master节点配置信息，具体参考UhostInfo。托管版不返回该信息
 	MasterList []UhostInfo
+
+	// Master配置预警：Normal正常；Warning 需要升级；Error    需要紧急升级；
+	MasterResourceStatus string
 
 	// Node节点数量
 	NodeCount int
@@ -1148,9 +1151,6 @@ type ListUK8SNodeGroupRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
-
 	// 集群ID
 	ClusterId *string `required:"true"`
 }
@@ -1203,9 +1203,6 @@ type RemoveUK8SNodeGroupRequest struct {
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
 
 	// 集群id
 	ClusterId *string `required:"true"`

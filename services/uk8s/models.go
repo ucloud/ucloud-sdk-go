@@ -102,6 +102,15 @@ type UhostInfo struct {
 }
 
 /*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
+}
+
+/*
 ImageInfo - UK8S 可用镜像信息
 */
 type ImageInfo struct {
@@ -168,15 +177,6 @@ type UHostIPSet struct {
 
 	// IP地址对应的VPC ID
 	VPCId string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
 }
 
 /*

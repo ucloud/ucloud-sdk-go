@@ -1358,6 +1358,62 @@ func (c *UCDNClient) GetUcdnDomainLog(req *GetUcdnDomainLogRequest) (*GetUcdnDom
 	return &res, nil
 }
 
+// GetUcdnDomainLogV2Request is request schema for GetUcdnDomainLogV2 action
+type GetUcdnDomainLogV2Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询的起始时间，格式为Unix Timestamp
+	BeginTime *int `required:"true"`
+
+	// 域名id，创建域名时生成的id。默认全部域名
+	DomainId []string `required:"false"`
+
+	// 查询的结束时间，格式为Unix Timestamp
+	EndTime *int `required:"true"`
+}
+
+// GetUcdnDomainLogV2Response is response schema for GetUcdnDomainLogV2 action
+type GetUcdnDomainLogV2Response struct {
+	response.CommonBase
+
+	//
+	DomainLogSet []DomanLogList
+}
+
+// NewGetUcdnDomainLogV2Request will create request of GetUcdnDomainLogV2 action.
+func (c *UCDNClient) NewGetUcdnDomainLogV2Request() *GetUcdnDomainLogV2Request {
+	req := &GetUcdnDomainLogV2Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainLogV2
+
+获取域名5分钟日志
+*/
+func (c *UCDNClient) GetUcdnDomainLogV2(req *GetUcdnDomainLogV2Request) (*GetUcdnDomainLogV2Response, error) {
+	var err error
+	var res GetUcdnDomainLogV2Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainLogV2", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUcdnDomainOriginHttpCodeRequest is request schema for GetUcdnDomainOriginHttpCode action
 type GetUcdnDomainOriginHttpCodeRequest struct {
 	request.CommonBase
@@ -2237,10 +2293,10 @@ type RefreshNewUcdnDomainCacheRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// 刷新类型，file代表文件刷新，dir 代表路径刷新
+	// 刷新类型，file代表文件刷新，dir 代表路径刷新，m3u8带表m3u8刷新
 	Type *string `required:"true"`
 
-	// 需要刷新的URL，n 从自然数0开始，刷新多个URL列表时，一次最多提交30个。必须以”http://域名/”开始。目录要以”/”结尾， 如刷新目录a下所有文件，格式为：http://abc.ucloud.cn/a/；如刷新文件目录a下面img.png文件， 格式为http://abc.ucloud.cn/a/img.png。请正确提交需要刷新的域名
+	// 需要刷新的URL，n 从自然数0开始，刷新多个URL列表时，一次最多提交100个。必须以”http://域名/”开始。目录要以”/”结尾， 如刷新目录a下所有文件，格式为：http://abc.ucloud.cn/a/；如刷新文件目录a下面img.png文件， 格式为http://abc.ucloud.cn/a/img.png。请正确提交需要刷新的域名
 	UrlList []string `required:"true"`
 }
 

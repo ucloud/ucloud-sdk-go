@@ -70,3 +70,18 @@ type MountPointInfo struct {
 	// Vpc ID
 	VpcId string
 }
+
+/*
+UFSPriceDataSet - ufs 价格信息
+*/
+type UFSPriceDataSet struct {
+
+	// “UFS”
+	ChargeName string
+
+	// Year， Month， Dynamic，Trial
+	ChargeType string
+
+	// 价格 (单位: 分)
+	Price float64
+}

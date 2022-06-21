@@ -513,21 +513,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-CacheKeyInfo - 忽略参数缓存配置
-*/
-type CacheKeyInfo struct {
-
-	// 是否忽略
-	Ignore bool
-
-	// 路径模式，支持正则
-	PathPattern string
-
-	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
-	QueryString string
-}
-
-/*
 ReferConf - refer配置
 */
 type ReferConf struct {
@@ -543,21 +528,18 @@ type ReferConf struct {
 }
 
 /*
-CacheAllConfig - 缓存相关的配置
+CacheKeyInfo - 忽略参数缓存配置
 */
-type CacheAllConfig struct {
+type CacheKeyInfo struct {
 
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
+	// 是否忽略
+	Ignore bool
 
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
+	// 路径模式，支持正则
+	PathPattern string
 
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
+	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
+	QueryString string
 }
 
 /*
@@ -573,6 +555,18 @@ type AdvancedConf struct {
 
 	// 源站http头列表
 	HttpOriginHeader []string
+}
+
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
+
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
+
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*
@@ -612,15 +606,21 @@ type OriginConf struct {
 }
 
 /*
-AccessControlConf - 访问控制配置参数
+CacheAllConfig - 缓存相关的配置
 */
-type AccessControlConf struct {
+type CacheAllConfig struct {
 
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
 
-	// refer配置
-	ReferConf ReferConf
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*
@@ -759,6 +759,30 @@ type LogSetList struct {
 
 	// 域名信息列表，参考LogSetInfo
 	Logs []LogSetInfo
+}
+
+/*
+LogInfo - 日志信息
+*/
+type LogInfo struct {
+
+	// Unix时间戳
+	LogTime int
+
+	// 日志url地址
+	LogUrl string
+}
+
+/*
+DomanLogList - 域名日志列表
+*/
+type DomanLogList struct {
+
+	// 域名
+	Domain string
+
+	// 日志信息列表
+	LogList []LogInfo
 }
 
 /*
