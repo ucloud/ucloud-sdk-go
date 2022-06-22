@@ -196,12 +196,6 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
-UHostDiskCustomBackup is request schema for complex param
-*/
-type UHostDiskCustomBackup struct {
-}
-
-/*
 CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
@@ -232,6 +226,36 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+UHostDiskCustomBackup is request schema for complex param
+*/
+type UHostDiskCustomBackup struct {
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
 UHostDisk is request schema for complex param
 */
 type UHostDisk struct {
@@ -259,15 +283,9 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamSecGroupId is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+type CreateUHostInstanceParamSecGroupId struct {
 }
 
 /*
@@ -277,24 +295,6 @@ type CreateUHostInstanceParamFeatures struct {
 
 	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
 	UNI *bool `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1119,21 +1119,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
-}
-
-/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1155,6 +1140,21 @@ type getUHostInstancePriceParamDisks struct {
 GetUHostInstancePriceParamVirtualGpu is request schema for complex param
 */
 type GetUHostInstancePriceParamVirtualGpu struct {
+}
+
+/*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action

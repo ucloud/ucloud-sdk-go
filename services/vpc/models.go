@@ -435,18 +435,6 @@ type AclInfo struct {
 }
 
 /*
-UNIIpInfo - 虚拟网卡内网IP信息
-*/
-type UNIIpInfo struct {
-
-	// ip 地址
-	IpAddr []string
-
-	// ip类型 SecondaryIp/PrimaryIp
-	IpType string
-}
-
-/*
 UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
 */
 type UNIQuotaInfo struct {
@@ -456,6 +444,18 @@ type UNIQuotaInfo struct {
 
 	// 网卡内网IP配额
 	PrivateIpQuota int
+}
+
+/*
+UNIIpInfo - 虚拟网卡内网IP信息
+*/
+type UNIIpInfo struct {
+
+	// ip 地址
+	IpAddr []string
+
+	// ip类型 SecondaryIp/PrimaryIp
+	IpType string
 }
 
 /*

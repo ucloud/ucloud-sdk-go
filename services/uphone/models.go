@@ -348,21 +348,6 @@ type UPhoneModelInstance struct {
 }
 
 /*
-ServerDiskSet -
-*/
-type ServerDiskSet struct {
-
-	// 磁盘类型。请参考磁盘类型。
-	DiskType string
-
-	// 是否是系统盘。枚举值：> True，是系统盘> False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot bool
-
-	// 磁盘大小，单位: GB
-	Size int
-}
-
-/*
 UPhoneSpec -
 */
 type UPhoneSpec struct {
@@ -375,21 +360,18 @@ type UPhoneSpec struct {
 }
 
 /*
-IpSet -
+ServerDiskSet -
 */
-type IpSet struct {
+type ServerDiskSet struct {
 
-	// IP地址
-	Ip string
+	// 磁盘类型。请参考磁盘类型。
+	DiskType string
 
-	// ipv4或者ipv6
-	IpMode string
+	// 是否是系统盘。枚举值：> True，是系统盘> False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot bool
 
-	// 共有或私有
-	IpType string
-
-	// 运营商
-	Isp string
+	// 磁盘大小，单位: GB
+	Size int
 }
 
 /*
@@ -420,6 +402,24 @@ type ServerModelInstance struct {
 
 	// 【数组】手机说明，包含该服务器规格所能创建的手机规格名及对应手机开数。每项参数可见数据模型 [UPhoneSpec](#UPhoneSpec)
 	UPhoneSpecs []UPhoneSpec
+}
+
+/*
+IpSet -
+*/
+type IpSet struct {
+
+	// IP地址
+	Ip string
+
+	// ipv4或者ipv6
+	IpMode string
+
+	// 共有或私有
+	IpType string
+
+	// 运营商
+	Isp string
 }
 
 /*
