@@ -84,6 +84,18 @@ type ResourceInfo struct {
 }
 
 /*
+EnvList - 容器环境变量列表
+*/
+type EnvList struct {
+
+	// 环境变量key值
+	Key string
+
+	// 环境变量Value值
+	Value string
+}
+
+/*
 CfgDictList - 容器配置字典列表
 */
 type CfgDictList struct {
@@ -99,18 +111,6 @@ type CfgDictList struct {
 }
 
 /*
-EnvList - 容器环境变量列表
-*/
-type EnvList struct {
-
-	// 环境变量key值
-	Key string
-
-	// 环境变量Value值
-	Value string
-}
-
-/*
 IpList - 容器组外网ip列表
 */
 type IpList struct {
@@ -120,24 +120,6 @@ type IpList struct {
 
 	// 运营商
 	Isp string
-}
-
-/*
-StorVolumeInfo - 容器组存储卷信息
-*/
-type StorVolumeInfo struct {
-
-	// 容量（单位GB）
-	DiskSize int
-
-	// 挂载点
-	MountPoint string
-
-	// 名称
-	Name string
-
-	// 资源id
-	ResourceId string
 }
 
 /*
@@ -189,6 +171,24 @@ type ImageList struct {
 
 	// 用户名称
 	UserName string
+}
+
+/*
+StorVolumeInfo - 容器组存储卷信息
+*/
+type StorVolumeInfo struct {
+
+	// 容量（单位GB）
+	DiskSize int
+
+	// 挂载点
+	MountPoint string
+
+	// 名称
+	Name string
+
+	// 资源id
+	ResourceId string
 }
 
 /*
