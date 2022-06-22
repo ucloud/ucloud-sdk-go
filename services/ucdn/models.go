@@ -513,21 +513,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-ReferConf - refer配置
-*/
-type ReferConf struct {
-
-	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
-	NullRefer int
-
-	// Refer防盗链规则列表，支持正则表达式
-	ReferList []string
-
-	// Refer防盗链配置  0白名单，1黑名单
-	ReferType int
-}
-
-/*
 CacheKeyInfo - 忽略参数缓存配置
 */
 type CacheKeyInfo struct {
@@ -543,6 +528,21 @@ type CacheKeyInfo struct {
 }
 
 /*
+ReferConf - refer配置
+*/
+type ReferConf struct {
+
+	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
+	NullRefer int
+
+	// Refer防盗链规则列表，支持正则表达式
+	ReferList []string
+
+	// Refer防盗链配置  0白名单，1黑名单
+	ReferType int
+}
+
+/*
 AdvancedConf - 域名高级配置
 */
 type AdvancedConf struct {
@@ -555,6 +555,24 @@ type AdvancedConf struct {
 
 	// 源站http头列表
 	HttpOriginHeader []string
+}
+
+/*
+CacheAllConfig - 缓存相关的配置
+*/
+type CacheAllConfig struct {
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*
@@ -603,24 +621,6 @@ type OriginConf struct {
 
 	// 源站协议http，http|https   默认http
 	OriginProtocol string
-}
-
-/*
-CacheAllConfig - 缓存相关的配置
-*/
-type CacheAllConfig struct {
-
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
-
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
-
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
 }
 
 /*

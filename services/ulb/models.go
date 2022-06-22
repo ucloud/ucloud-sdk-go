@@ -288,33 +288,6 @@ type ULBVServerSet struct {
 }
 
 /*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
 ULBIPSet - DescribeULB
 */
 type ULBIPSet struct {
@@ -333,6 +306,33 @@ type ULBIPSet struct {
 
 	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
 	OperatorName string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*

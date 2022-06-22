@@ -27,6 +27,42 @@ type KeyPair struct {
 }
 
 /*
+BootDiskInfo - 系统盘信息
+*/
+type BootDiskInfo struct {
+
+	// 磁盘可支持的服务
+	Features []string
+
+	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
+	InstantResize bool
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+DataDiskInfo - 数据盘信息
+*/
+type DataDiskInfo struct {
+
+	// 数据盘可支持的服务
+	Features []string
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
+
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
 Collection - CPU和内存可支持的规格
 */
 type Collection struct {
@@ -57,51 +93,18 @@ type FeatureModes struct {
 }
 
 /*
-DataDiskInfo - 数据盘信息
+Disks - 磁盘信息
 */
-type DataDiskInfo struct {
+type Disks struct {
 
-	// 数据盘可支持的服务
-	Features []string
+	// 系统盘信息
+	BootDisk []BootDiskInfo
 
-	// MaximalSize为磁盘最大值
-	MaximalSize int
+	// 数据盘信息
+	DataDisk []DataDiskInfo
 
-	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
-	MinimalSize int
-
-	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
-}
-
-/*
-BootDiskInfo - 系统盘信息
-*/
-type BootDiskInfo struct {
-
-	// 磁盘可支持的服务
-	Features []string
-
-	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
-	InstantResize bool
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
-}
-
-/*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value int
 }
 
 /*
@@ -117,18 +120,6 @@ type MachineSizes struct {
 }
 
 /*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
 Features - 虚机可支持的特性
 */
 type Features struct {
@@ -137,21 +128,6 @@ type Features struct {
 	Modes []FeatureModes
 
 	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
-}
-
-/*
-Disks - 磁盘信息
-*/
-type Disks struct {
-
-	// 系统盘信息
-	BootDisk []BootDiskInfo
-
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
 }
 
@@ -168,6 +144,30 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value int
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
 }
 
 /*
@@ -288,18 +288,6 @@ type IsolationGroup struct {
 }
 
 /*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -369,6 +357,18 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*
