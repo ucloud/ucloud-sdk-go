@@ -2385,3 +2385,53 @@ func (c *UCDNClient) SwitchUcdnChargeType(req *SwitchUcdnChargeTypeRequest) (*Sw
 
 	return &res, nil
 }
+
+// UpdateUcdnDomainStatusRequest is request schema for UpdateUcdnDomainStatus action
+type UpdateUcdnDomainStatusRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 域名ID，创建加速域名时生成。
+	DomainId *string `required:"true"`
+
+	// 域名状态，enable代表加速中，disable代表停止加速，delete代表删除。
+	Status *string `required:"true"`
+}
+
+// UpdateUcdnDomainStatusResponse is response schema for UpdateUcdnDomainStatus action
+type UpdateUcdnDomainStatusResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateUcdnDomainStatusRequest will create request of UpdateUcdnDomainStatus action.
+func (c *UCDNClient) NewUpdateUcdnDomainStatusRequest() *UpdateUcdnDomainStatusRequest {
+	req := &UpdateUcdnDomainStatusRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUcdnDomainStatus
+
+更新加速域名状态
+*/
+func (c *UCDNClient) UpdateUcdnDomainStatus(req *UpdateUcdnDomainStatusRequest) (*UpdateUcdnDomainStatusResponse, error) {
+	var err error
+	var res UpdateUcdnDomainStatusResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUcdnDomainStatus", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}

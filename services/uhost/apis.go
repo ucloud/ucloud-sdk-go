@@ -232,6 +232,27 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
+}
+
+/*
 UHostDisk is request schema for complex param
 */
 type UHostDisk struct {
@@ -259,33 +280,6 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
-*/
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-}
-
-/*
 CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterface struct {
@@ -295,6 +289,12 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1134,6 +1134,12 @@ type GetUHostInstancePriceParamVolumes struct {
 }
 
 /*
+GetUHostInstancePriceParamVirtualGpu is request schema for complex param
+*/
+type GetUHostInstancePriceParamVirtualGpu struct {
+}
+
+/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1149,12 +1155,6 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-GetUHostInstancePriceParamVirtualGpu is request schema for complex param
-*/
-type GetUHostInstancePriceParamVirtualGpu struct {
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action

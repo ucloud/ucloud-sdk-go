@@ -763,35 +763,38 @@ VPCInfo - VPC信息
 */
 type VPCInfo struct {
 
-	//
+	// 创建时间
 	CreateTime int
 
 	// VPC关联的IPv6网段
 	IPv6Network string
 
-	//
+	// VPC名称
 	Name string
 
-	//
+	// VPC网段
 	Network []string
 
-	//
+	// vpc地址空间信息，详见VPCNetworkInfo
 	NetworkInfo []VPCNetworkInfo
 
 	// VPC关联的IPv6网段所属运营商
 	OperatorName string
 
-	//
+	// 子网数
 	SubnetCount int
 
-	//
+	// 业务组
 	Tag string
 
-	//
+	// 更新时间
 	UpdateTime int
 
-	// VPCId
+	// VPC资源ID
 	VPCId string
+
+	// DefaultVPC 默认VPC，DefinedVPC，自定义VPC
+	VPCType string
 }
 
 /*
