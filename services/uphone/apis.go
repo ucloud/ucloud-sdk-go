@@ -74,6 +74,9 @@ type CreateUPhoneResponse struct {
 
 	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
+
+	// 【数组】创建的云手机ID
+	UPhoneIds []string
 }
 
 // NewCreateUPhoneRequest will create request of CreateUPhone action.
@@ -396,13 +399,13 @@ type DeleteUPhoneRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
+	// 城市Id，通过[获取城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)获取
 	CityId *string `required:"true"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
 
-	// 【数组】云手机实例的资源 ID，调用方式举例：UPhoneIds.0=希望获取信息的云手机 1 的 UPhoneId，UPhoneIds.1=云手机实例 2 的 UPhoneId
+	// 【数组】云手机实例的资源 ID，N<200；调用方式举例：UPhoneIds.0=希望获取信息的云手机 1 的 UPhoneId，UPhoneIds.1=云手机实例 2 的 UPhoneId
 	UPhoneIds []string `required:"true"`
 }
 
@@ -550,6 +553,56 @@ func (c *UPhoneClient) DeleteUPhoneServer(req *DeleteUPhoneServerRequest) (*Dele
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteUPhoneServer", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUPhoneShareBandwidthRequest is request schema for DeleteUPhoneShareBandwidth action
+type DeleteUPhoneShareBandwidthRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 共享带宽ID
+	ShareBandwidthId *string `required:"true"`
+}
+
+// DeleteUPhoneShareBandwidthResponse is response schema for DeleteUPhoneShareBandwidth action
+type DeleteUPhoneShareBandwidthResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewDeleteUPhoneShareBandwidthRequest will create request of DeleteUPhoneShareBandwidth action.
+func (c *UPhoneClient) NewDeleteUPhoneShareBandwidthRequest() *DeleteUPhoneShareBandwidthRequest {
+	req := &DeleteUPhoneShareBandwidthRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUPhoneShareBandwidth
+
+删除云手机共享带宽
+*/
+func (c *UPhoneClient) DeleteUPhoneShareBandwidth(req *DeleteUPhoneShareBandwidthRequest) (*DeleteUPhoneShareBandwidthResponse, error) {
+	var err error
+	var res DeleteUPhoneShareBandwidthResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUPhoneShareBandwidth", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1284,6 +1337,65 @@ func (c *UPhoneClient) DescribeUPhoneServerModel(req *DescribeUPhoneServerModelR
 	return &res, nil
 }
 
+// DescribeUPhoneShareBandwidthRequest is request schema for DescribeUPhoneShareBandwidth action
+type DescribeUPhoneShareBandwidthRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 绑定的目的地域。参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)；不传代表获取所有区域
+	// Region *string `required:"true"`
+
+	// 共享带宽ID，不传表示获取所有共享带宽信息
+	ShareBandwidthId *string `required:"false"`
+}
+
+// DescribeUPhoneShareBandwidthResponse is response schema for DescribeUPhoneShareBandwidth action
+type DescribeUPhoneShareBandwidthResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 共享带宽信息
+	ShareBandwidth []ShareBandwidthInfo
+
+	// 共享带宽总数量
+	TotalCount int
+}
+
+// NewDescribeUPhoneShareBandwidthRequest will create request of DescribeUPhoneShareBandwidth action.
+func (c *UPhoneClient) NewDescribeUPhoneShareBandwidthRequest() *DescribeUPhoneShareBandwidthRequest {
+	req := &DescribeUPhoneShareBandwidthRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUPhoneShareBandwidth
+
+获取共享带宽列表
+*/
+func (c *UPhoneClient) DescribeUPhoneShareBandwidth(req *DescribeUPhoneShareBandwidthRequest) (*DescribeUPhoneShareBandwidthResponse, error) {
+	var err error
+	var res DescribeUPhoneShareBandwidthResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUPhoneShareBandwidth", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUPhoneAllowanceRequest is request schema for GetUPhoneAllowance action
 type GetUPhoneAllowanceRequest struct {
 	request.CommonBase
@@ -1652,6 +1764,68 @@ func (c *UPhoneClient) GetUPhoneServerRenewPrice(req *GetUPhoneServerRenewPriceR
 	return &res, nil
 }
 
+// GetUPhoneShareBandwidthUpgradePriceRequest is request schema for GetUPhoneShareBandwidthUpgradePrice action
+type GetUPhoneShareBandwidthUpgradePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 需要升降级的带宽，默认是当前带宽大小
+	Bandwidth *int `required:"true"`
+
+	// 共享带宽的ID
+	ShareBandwidthId *string `required:"true"`
+}
+
+// GetUPhoneShareBandwidthUpgradePriceResponse is response schema for GetUPhoneShareBandwidthUpgradePrice action
+type GetUPhoneShareBandwidthUpgradePriceResponse struct {
+	response.CommonBase
+
+	// 产品列表价
+	ListPrice float64
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）
+	OriginalPrice float64
+
+	// 规格调整差价。单位: 元，保留小数点后两位有效数字
+	Price float64
+}
+
+// NewGetUPhoneShareBandwidthUpgradePriceRequest will create request of GetUPhoneShareBandwidthUpgradePrice action.
+func (c *UPhoneClient) NewGetUPhoneShareBandwidthUpgradePriceRequest() *GetUPhoneShareBandwidthUpgradePriceRequest {
+	req := &GetUPhoneShareBandwidthUpgradePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUPhoneShareBandwidthUpgradePrice
+
+获取云手机共享带宽升降级价格
+*/
+func (c *UPhoneClient) GetUPhoneShareBandwidthUpgradePrice(req *GetUPhoneShareBandwidthUpgradePriceRequest) (*GetUPhoneShareBandwidthUpgradePriceResponse, error) {
+	var err error
+	var res GetUPhoneShareBandwidthUpgradePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUPhoneShareBandwidthUpgradePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ImportFileRequest is request schema for ImportFile action
 type ImportFileRequest struct {
 	request.CommonBase
@@ -2012,6 +2186,165 @@ func (c *UPhoneClient) ModifyUPhoneServerRemark(req *ModifyUPhoneServerRemarkReq
 	return &res, nil
 }
 
+// ModifyUPhoneShareBandwidthRequest is request schema for ModifyUPhoneShareBandwidth action
+type ModifyUPhoneShareBandwidthRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 共享带宽大小；单位M
+	Bandwidth *string `required:"true"`
+
+	// 共享带宽ID
+	ShareBandwidthId *string `required:"true"`
+}
+
+// ModifyUPhoneShareBandwidthResponse is response schema for ModifyUPhoneShareBandwidth action
+type ModifyUPhoneShareBandwidthResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewModifyUPhoneShareBandwidthRequest will create request of ModifyUPhoneShareBandwidth action.
+func (c *UPhoneClient) NewModifyUPhoneShareBandwidthRequest() *ModifyUPhoneShareBandwidthRequest {
+	req := &ModifyUPhoneShareBandwidthRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUPhoneShareBandwidth
+
+修改云手机共享带宽
+*/
+func (c *UPhoneClient) ModifyUPhoneShareBandwidth(req *ModifyUPhoneShareBandwidthRequest) (*ModifyUPhoneShareBandwidthResponse, error) {
+	var err error
+	var res ModifyUPhoneShareBandwidthResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUPhoneShareBandwidth", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyUPhoneShareBandwidthNameRequest is request schema for ModifyUPhoneShareBandwidthName action
+type ModifyUPhoneShareBandwidthNameRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 共享带宽名称
+	Name *string `required:"true"`
+
+	// 共享带宽ID
+	ShareBandwidthId *string `required:"true"`
+}
+
+// ModifyUPhoneShareBandwidthNameResponse is response schema for ModifyUPhoneShareBandwidthName action
+type ModifyUPhoneShareBandwidthNameResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 `RetCode` 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewModifyUPhoneShareBandwidthNameRequest will create request of ModifyUPhoneShareBandwidthName action.
+func (c *UPhoneClient) NewModifyUPhoneShareBandwidthNameRequest() *ModifyUPhoneShareBandwidthNameRequest {
+	req := &ModifyUPhoneShareBandwidthNameRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUPhoneShareBandwidthName
+
+修改云手机共享带宽名称
+*/
+func (c *UPhoneClient) ModifyUPhoneShareBandwidthName(req *ModifyUPhoneShareBandwidthNameRequest) (*ModifyUPhoneShareBandwidthNameResponse, error) {
+	var err error
+	var res ModifyUPhoneShareBandwidthNameResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUPhoneShareBandwidthName", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyUPhoneShareBandwidthRemarkRequest is request schema for ModifyUPhoneShareBandwidthRemark action
+type ModifyUPhoneShareBandwidthRemarkRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 共享带宽备注
+	Remark *string `required:"true"`
+
+	// 共享带宽ID
+	ShareBandwidthId *string `required:"true"`
+}
+
+// ModifyUPhoneShareBandwidthRemarkResponse is response schema for ModifyUPhoneShareBandwidthRemark action
+type ModifyUPhoneShareBandwidthRemarkResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 `RetCode` 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewModifyUPhoneShareBandwidthRemarkRequest will create request of ModifyUPhoneShareBandwidthRemark action.
+func (c *UPhoneClient) NewModifyUPhoneShareBandwidthRemarkRequest() *ModifyUPhoneShareBandwidthRemarkRequest {
+	req := &ModifyUPhoneShareBandwidthRemarkRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUPhoneShareBandwidthRemark
+
+修改云手机共享带宽备注
+*/
+func (c *UPhoneClient) ModifyUPhoneShareBandwidthRemark(req *ModifyUPhoneShareBandwidthRemarkRequest) (*ModifyUPhoneShareBandwidthRemarkResponse, error) {
+	var err error
+	var res ModifyUPhoneShareBandwidthRemarkResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUPhoneShareBandwidthRemark", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // PoweroffUPhoneRequest is request schema for PoweroffUPhone action
 type PoweroffUPhoneRequest struct {
 	request.CommonBase
@@ -2323,6 +2656,9 @@ type ResetUPhoneRequest struct {
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
 	CityId *string `required:"true"`
+
+	// 镜像ID，默认为空。不为空则手机会以填写的镜像进行重置，为空则手机会以重置前的镜像重置
+	ImageId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -2828,62 +3164,6 @@ func (c *UPhoneClient) SetUPhoneRootMode(req *SetUPhoneRootModeRequest) (*SetUPh
 	return &res, nil
 }
 
-// SetUPhoneSplashScreenRequest is request schema for SetUPhoneSplashScreen action
-type SetUPhoneSplashScreenRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
-
-	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
-	ProductType *string `required:"false"`
-
-	// 云手机ID
-	UPhoneId *string `required:"true"`
-
-	// 启动画面下载地址
-	URL *string `required:"true"`
-}
-
-// SetUPhoneSplashScreenResponse is response schema for SetUPhoneSplashScreen action
-type SetUPhoneSplashScreenResponse struct {
-	response.CommonBase
-}
-
-// NewSetUPhoneSplashScreenRequest will create request of SetUPhoneSplashScreen action.
-func (c *UPhoneClient) NewSetUPhoneSplashScreenRequest() *SetUPhoneSplashScreenRequest {
-	req := &SetUPhoneSplashScreenRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: SetUPhoneSplashScreen
-
-设置云手机启动画面，通过DescribeUPhone接口可以查询该地址
-*/
-func (c *UPhoneClient) SetUPhoneSplashScreen(req *SetUPhoneSplashScreenRequest) (*SetUPhoneSplashScreenResponse, error) {
-	var err error
-	var res SetUPhoneSplashScreenResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("SetUPhoneSplashScreen", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // SetUPhoneTokenRequest is request schema for SetUPhoneToken action
 type SetUPhoneTokenRequest struct {
 	request.CommonBase
@@ -2933,6 +3213,127 @@ func (c *UPhoneClient) SetUPhoneToken(req *SetUPhoneTokenRequest) (*SetUPhoneTok
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("SetUPhoneToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// SwitchUPhoneIndependentIpRequest is request schema for SwitchUPhoneIndependentIp action
+type SwitchUPhoneIndependentIpRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 云手机独立IP地址ID
+	EipId *string `required:"true"`
+}
+
+// SwitchUPhoneIndependentIpResponse is response schema for SwitchUPhoneIndependentIp action
+type SwitchUPhoneIndependentIpResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 `RetCode` 非 0 时提供详细的描述信息
+	Message string
+
+	// 更换后的新IP地址
+	NewIp string
+}
+
+// NewSwitchUPhoneIndependentIpRequest will create request of SwitchUPhoneIndependentIp action.
+func (c *UPhoneClient) NewSwitchUPhoneIndependentIpRequest() *SwitchUPhoneIndependentIpRequest {
+	req := &SwitchUPhoneIndependentIpRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: SwitchUPhoneIndependentIp
+
+更换云手机独立IP
+*/
+func (c *UPhoneClient) SwitchUPhoneIndependentIp(req *SwitchUPhoneIndependentIpRequest) (*SwitchUPhoneIndependentIpResponse, error) {
+	var err error
+	var res SwitchUPhoneIndependentIpResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SwitchUPhoneIndependentIp", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+SwitchUPhoneInstanceParamSwitchInfos is request schema for complex param
+*/
+type SwitchUPhoneInstanceParamSwitchInfos struct {
+
+	// 【数组】云手机实例的镜像ID，N<200，该值为空时，默认使用云手机之前的镜像ID，如果镜像ID已经不存在了则会返回错误
+	ImageId *string `required:"false"`
+
+	// 【数组】云手机实例的资源 ID，N<200
+	UPhoneId *string `required:"true"`
+}
+
+// SwitchUPhoneInstanceRequest is request schema for SwitchUPhoneInstance action
+type SwitchUPhoneInstanceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 城市Id，通过[获取城市列表](https://cms-docs.ucloudadmin.com/api/uphone-api/describe_u_phone_cities)获取
+	CityId *string `required:"true"`
+
+	//
+	SwitchInfos []SwitchUPhoneInstanceParamSwitchInfos `required:"false"`
+}
+
+// SwitchUPhoneInstanceResponse is response schema for SwitchUPhoneInstance action
+type SwitchUPhoneInstanceResponse struct {
+	response.CommonBase
+
+	// 任务ID，用来查询故障更换云手机任务状态
+	JobId string
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewSwitchUPhoneInstanceRequest will create request of SwitchUPhoneInstance action.
+func (c *UPhoneClient) NewSwitchUPhoneInstanceRequest() *SwitchUPhoneInstanceRequest {
+	req := &SwitchUPhoneInstanceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: SwitchUPhoneInstance
+
+故障更换云手机
+*/
+func (c *UPhoneClient) SwitchUPhoneInstance(req *SwitchUPhoneInstanceRequest) (*SwitchUPhoneInstanceResponse, error) {
+	var err error
+	var res SwitchUPhoneInstanceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SwitchUPhoneInstance", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

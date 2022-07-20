@@ -28,6 +28,9 @@ type UPhoneInstance struct {
 	// 磁盘大小，单位: GB
 	DiskSize int
 
+	// 云手机IP地址ID
+	EipId string
+
 	// 到期时间；格式为Unix时间戳
 	ExpireTime int
 
@@ -57,6 +60,12 @@ type UPhoneInstance struct {
 
 	// 云手机所在的服务器ID，不超过32个字节。
 	ServerId string
+
+	// 所属共享带宽ID
+	ShareBandwidthId string
+
+	// 所属共享带宽名称
+	ShareBandwidthName string
 
 	// 云手机启动图片URL链接
 	SplashScreen string
@@ -375,24 +384,6 @@ type UPhoneSpec struct {
 }
 
 /*
-IpSet -
-*/
-type IpSet struct {
-
-	// IP地址
-	Ip string
-
-	// ipv4或者ipv6
-	IpMode string
-
-	// 共有或私有
-	IpType string
-
-	// 运营商
-	Isp string
-}
-
-/*
 ServerModelInstance -
 */
 type ServerModelInstance struct {
@@ -420,6 +411,24 @@ type ServerModelInstance struct {
 
 	// 【数组】手机说明，包含该服务器规格所能创建的手机规格名及对应手机开数。每项参数可见数据模型 [UPhoneSpec](#UPhoneSpec)
 	UPhoneSpecs []UPhoneSpec
+}
+
+/*
+IpSet -
+*/
+type IpSet struct {
+
+	// IP地址
+	Ip string
+
+	// ipv4或者ipv6
+	IpMode string
+
+	// 共有或私有
+	IpType string
+
+	// 运营商
+	Isp string
 }
 
 /*
@@ -480,6 +489,48 @@ type StockInfo struct {
 
 	// 资源余量
 	StockCount int
+}
+
+/*
+ShareBandwidthInfo - 共享带宽信息
+*/
+type ShareBandwidthInfo struct {
+
+	// 带宽大小，单位M
+	Bandwidth int
+
+	// 当前绑定手机数量
+	BindCount int
+
+	// 计费模式。枚举值为： > 年 Year，按年付费； > Month，按月付费； > Dynamic，按小时预付费; 默认为月付
+	ChargeType string
+
+	// 创建时间；格式为Unix时间戳
+	CreateTime int
+
+	// 到期时间；格式为Unix时间戳
+	ExpireTime int
+
+	// 共享带宽ID
+	Id string
+
+	// 当前绑定IP数量
+	IpCount int
+
+	// 云手机IP绑定比例
+	IpProportion int
+
+	// 共享带宽名称
+	Name string
+
+	// 绑定的目的地域。参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Region string
+
+	// 剩余可绑定手机数量
+	RemainCount int
+
+	// 备注
+	Remark string
 }
 
 /*

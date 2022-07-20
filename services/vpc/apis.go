@@ -2947,16 +2947,16 @@ func (c *VPCClient) DescribeVIP(req *DescribeVIPRequest) (*DescribeVIPResponse, 
 type DescribeVPCRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	//
+	// 数据分页值
 	Limit *int `required:"false"`
 
-	//
+	// 数据偏移量，默认为0
 	Offset *int `required:"false"`
 
 	// 业务组名称
@@ -2972,6 +2972,9 @@ type DescribeVPCResponse struct {
 
 	// vpc信息，具体结构见下方VPCInfo
 	DataSet []VPCInfo
+
+	//
+	TotalCount int
 }
 
 // NewDescribeVPCRequest will create request of DescribeVPC action.
