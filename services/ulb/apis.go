@@ -347,6 +347,9 @@ type CreateSSLRequest struct {
 	// 所添加的SSL证书类型，目前只支持Pem格式
 	SSLType *string `required:"false"`
 
+	// USSL证书的ID
+	USSLId *string `required:"false"`
+
 	// 用户的证书
 	UserCert *string `required:"false"`
 }
@@ -1011,10 +1014,10 @@ func (c *ULBClient) DescribePolicyGroup(req *DescribePolicyGroupRequest) (*Descr
 type DescribeSSLRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 数据分页值，默认为20

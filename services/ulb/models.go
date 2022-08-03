@@ -94,6 +94,9 @@ type ULBSSLSet struct {
 	// SSL证书的创建时间
 	CreateTime int
 
+	// USSL证书平台的域名,只有当SSLSource为1时才出现
+	Domains string
+
 	// SSL证书的HASH值
 	HashValue string
 
@@ -106,8 +109,14 @@ type ULBSSLSet struct {
 	// SSL证书的名字
 	SSLName string
 
+	// SSL证书来源，SSL证书来源，0代表证书来自于ULB平台，1代表证书来自于USSL平台
+	SSLSource int
+
 	// SSL证书类型，暂时只有 Pem 一种类型
 	SSLType string
+
+	// USSL证书平台的编号,只有当SSLSource为1时才出现
+	USSLId string
 }
 
 /*
@@ -198,6 +207,60 @@ type PolicyBackendSet struct {
 }
 
 /*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
+ULBPolicySet - 内容转发详细列表
+*/
+type ULBPolicySet struct {
+
+	// 内容转发下rs的详细信息，参考PolicyBackendSet
+	BackendSet []PolicyBackendSet
+
+	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode string
+
+	// 内容转发匹配字段;默认内容转发类型下为空。
+	Match string
+
+	// 内容转发Id，默认内容转发类型下为空。
+	PolicyId string
+
+	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
+	PolicyPriority int
+
+	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
+	PolicyType string
+
+	// 默认内容转发类型下返回当前rs总数
+	TotalCount int
+
+	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
+	Type string
+
+	// 所属VServerId
+	VServerId string
+}
+
+/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -246,60 +309,6 @@ type ULBBackendSet struct {
 
 	// 后端RS权重（在加权轮询算法下有效）
 	Weight int
-}
-
-/*
-ULBPolicySet - 内容转发详细列表
-*/
-type ULBPolicySet struct {
-
-	// 内容转发下rs的详细信息，参考PolicyBackendSet
-	BackendSet []PolicyBackendSet
-
-	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
-	DomainMatchMode string
-
-	// 内容转发匹配字段;默认内容转发类型下为空。
-	Match string
-
-	// 内容转发Id，默认内容转发类型下为空。
-	PolicyId string
-
-	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
-	PolicyPriority int
-
-	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
-	PolicyType string
-
-	// 默认内容转发类型下返回当前rs总数
-	TotalCount int
-
-	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
-	Type string
-
-	// 所属VServerId
-	VServerId string
-}
-
-/*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
 }
 
 /*
@@ -378,21 +387,6 @@ type ULBVServerSet struct {
 }
 
 /*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
-}
-
-/*
 ULBIPSet - DescribeULB
 */
 type ULBIPSet struct {
@@ -423,6 +417,21 @@ type FirewallSet struct {
 
 	// 防火墙名称
 	FirewallName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*

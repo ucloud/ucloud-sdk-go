@@ -210,15 +210,18 @@ type SrcAreaInfo struct {
 }
 
 /*
-AccelerationAreaInfos - 加速大区信息
+ForwardTask - 全球统一接入转发端口任务信息
 */
-type AccelerationAreaInfos struct {
+type ForwardTask struct {
 
-	// 加速区code
-	AccelerationArea string
+	// 加速端口
+	Port int
 
-	// 加速节点信息
-	AccelerationNodes []SrcAreaInfo
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"，"WSWS"，"WSSWS"，"WSSWSS"]。TCP和UDP代表四层转发，其余为七层转发。
+	Protocol string
+
+	// 源站服务器监听的端口号
+	RSPort int
 }
 
 /*
@@ -234,18 +237,15 @@ type OutPublicIpInfo struct {
 }
 
 /*
-ForwardTask - 全球统一接入转发端口任务信息
+AccelerationAreaInfos - 加速大区信息
 */
-type ForwardTask struct {
+type AccelerationAreaInfos struct {
 
-	// 加速端口
-	Port int
+	// 加速区code
+	AccelerationArea string
 
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"，"WSWS"，"WSSWS"，"WSSWSS"]。TCP和UDP代表四层转发，其余为七层转发。
-	Protocol string
-
-	// 源站服务器监听的端口号
-	RSPort int
+	// 加速节点信息
+	AccelerationNodes []SrcAreaInfo
 }
 
 /*
@@ -360,18 +360,6 @@ type AccelerationInfo struct {
 }
 
 /*
-UGAATask - 用户在UGAA实例下配置的多端口任务
-*/
-type UGAATask struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-}
-
-/*
 UGAL7Forwarder - UGA实例 7层转发器信息
 */
 type UGAL7Forwarder struct {
@@ -435,6 +423,18 @@ type UPathSet struct {
 
 	// UPath名字
 	UPathName string
+}
+
+/*
+UGAATask - 用户在UGAA实例下配置的多端口任务
+*/
+type UGAATask struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
 }
 
 /*

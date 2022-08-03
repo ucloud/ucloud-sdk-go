@@ -126,36 +126,6 @@ type ImageList struct {
 }
 
 /*
-StorVolumeInfo - 容器组存储卷信息
-*/
-type StorVolumeInfo struct {
-
-	// 容量（单位GB）
-	DiskSize int
-
-	// 挂载点
-	MountPoint string
-
-	// 名称
-	Name string
-
-	// 资源id
-	ResourceId string
-}
-
-/*
-IpList - 容器组外网ip列表
-*/
-type IpList struct {
-
-	// 外网ip
-	Ip string
-
-	// 运营商
-	Isp string
-}
-
-/*
 DockerInfo - 容器信息
 */
 type DockerInfo struct {
@@ -189,6 +159,36 @@ type DockerInfo struct {
 
 	// 工作目录
 	WorkDir string
+}
+
+/*
+StorVolumeInfo - 容器组存储卷信息
+*/
+type StorVolumeInfo struct {
+
+	// 容量（单位GB）
+	DiskSize int
+
+	// 挂载点
+	MountPoint string
+
+	// 名称
+	Name string
+
+	// 资源id
+	ResourceId string
+}
+
+/*
+IpList - 容器组外网ip列表
+*/
+type IpList struct {
+
+	// 外网ip
+	Ip string
+
+	// 运营商
+	Isp string
 }
 
 /*
