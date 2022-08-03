@@ -7,8 +7,11 @@ UPhoneInstance -
 */
 type UPhoneInstance struct {
 
+	// 云手机的ADB信息
+	ADB string
+
 	// 虚拟CPU核数。
-	CPU int
+	CPU float64
 
 	// 云手机异步任务回调
 	Callback string
@@ -384,6 +387,24 @@ type UPhoneSpec struct {
 }
 
 /*
+IpSet -
+*/
+type IpSet struct {
+
+	// IP地址
+	Ip string
+
+	// ipv4或者ipv6
+	IpMode string
+
+	// 共有或私有
+	IpType string
+
+	// 运营商
+	Isp string
+}
+
+/*
 ServerModelInstance -
 */
 type ServerModelInstance struct {
@@ -411,24 +432,6 @@ type ServerModelInstance struct {
 
 	// 【数组】手机说明，包含该服务器规格所能创建的手机规格名及对应手机开数。每项参数可见数据模型 [UPhoneSpec](#UPhoneSpec)
 	UPhoneSpecs []UPhoneSpec
-}
-
-/*
-IpSet -
-*/
-type IpSet struct {
-
-	// IP地址
-	Ip string
-
-	// ipv4或者ipv6
-	IpMode string
-
-	// 共有或私有
-	IpType string
-
-	// 运营商
-	Isp string
 }
 
 /*
