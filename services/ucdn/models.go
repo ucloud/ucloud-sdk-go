@@ -3,15 +3,6 @@
 package ucdn
 
 /*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
-}
-
-/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -36,6 +27,15 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
 }
 
 /*
@@ -579,21 +579,6 @@ type OriginConf struct {
 }
 
 /*
-AdvancedConf - 域名高级配置
-*/
-type AdvancedConf struct {
-
-	// http转https回源 true是，false否
-	Http2Https bool
-
-	// 客户端响应http头列表
-	HttpClientHeader []string
-
-	// 源站http头列表
-	HttpOriginHeader []string
-}
-
-/*
 CacheAllConfig - 缓存相关的配置
 */
 type CacheAllConfig struct {
@@ -609,6 +594,21 @@ type CacheAllConfig struct {
 
 	// 状态码缓存配置列表，参见CacheConf
 	HttpCodeCacheList []CacheConf
+}
+
+/*
+AdvancedConf - 域名高级配置
+*/
+type AdvancedConf struct {
+
+	// http转https回源 true是，false否
+	Http2Https bool
+
+	// 客户端响应http头列表
+	HttpClientHeader []string
+
+	// 源站http头列表
+	HttpOriginHeader []string
 }
 
 /*
