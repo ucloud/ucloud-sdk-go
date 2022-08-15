@@ -219,6 +219,48 @@ type UPhoneDetailInstance struct {
 }
 
 /*
+EipInfo - EIP信息
+*/
+type EipInfo struct {
+
+	// 当前绑定云手机数量
+	BindCount int
+
+	// 计费模式。枚举值为： > 年 Year，按年付费； > Month，按月付费； > Dynamic，按小时预付费; 默认为月付
+	ChargeType string
+
+	// 创建时间；格式为Unix时间戳
+	CreateTime int
+
+	// Eip资源ID
+	EipId string
+
+	// Eip地址
+	EipIp string
+
+	// 到期时间；格式为Unix时间戳
+	ExpireTime int
+
+	// Eip名称
+	Name string
+
+	// 云手机与Eip绑定比例
+	Proportion int
+
+	// Eip所属区域
+	Region string
+
+	// 剩余可绑定手机数量
+	RemainCount int
+
+	// Eip备注
+	Remark string
+
+	// 绑定的云手机ID
+	UPhoneIds []string
+}
+
+/*
 UPhoneImageInstance -
 */
 type UPhoneImageInstance struct {
@@ -387,24 +429,6 @@ type UPhoneSpec struct {
 }
 
 /*
-IpSet -
-*/
-type IpSet struct {
-
-	// IP地址
-	Ip string
-
-	// ipv4或者ipv6
-	IpMode string
-
-	// 共有或私有
-	IpType string
-
-	// 运营商
-	Isp string
-}
-
-/*
 ServerModelInstance -
 */
 type ServerModelInstance struct {
@@ -432,6 +456,24 @@ type ServerModelInstance struct {
 
 	// 【数组】手机说明，包含该服务器规格所能创建的手机规格名及对应手机开数。每项参数可见数据模型 [UPhoneSpec](#UPhoneSpec)
 	UPhoneSpecs []UPhoneSpec
+}
+
+/*
+IpSet -
+*/
+type IpSet struct {
+
+	// IP地址
+	Ip string
+
+	// ipv4或者ipv6
+	IpMode string
+
+	// 共有或私有
+	IpType string
+
+	// 运营商
+	Isp string
 }
 
 /*

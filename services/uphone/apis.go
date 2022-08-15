@@ -16,9 +16,6 @@ type CreateUPhoneRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// 共享带宽大小
-	Bandwidth *int `required:"false"`
-
 	// 绑定独立IP
 	BindIp *bool `required:"false"`
 
@@ -48,12 +45,6 @@ type CreateUPhoneRequest struct {
 
 	// 购买时长。默认值: 1。月付时，此参数传0，代表购买至月末。
 	Quantity *string `required:"false"`
-
-	// 共享带宽ID，使用现有共享带宽时需要传入此参数
-	ShareBandwidthId *string `required:"false"`
-
-	// 共享带宽名称，可以在创建新的共享带宽时指定一个名称
-	ShareBandwidthName *string `required:"false"`
 
 	// 业务组。默认：Default（Default即为未分组）。请遵照[[api:uhost-api:specification|字段规范]]设定业务组。
 	Tag *string `required:"false"`
@@ -240,7 +231,7 @@ type CreateUPhoneImageRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](https://cms-docs.ucloudadmin.com/api/uphone-api/describe_u_phone_cities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 镜像的描述信息。长度为2~256个英文或中文字符
 	Description *string `required:"false"`
@@ -400,7 +391,7 @@ type DeleteUPhoneRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -617,8 +608,8 @@ type DescribeUPhoneRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取，没有该参数表示获取所有城市
+	CityId *string `required:"false"`
 
 	// 是否返回全部。如果有此参数，分页不生效。
 	IsAll *bool `required:"false"`
@@ -884,7 +875,7 @@ type DescribeUPhoneDetailByAppRequest struct {
 	AppId *string `required:"true"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 返回数据长度，默认为20，最大100
 	Limit *int `required:"false"`
@@ -934,6 +925,65 @@ func (c *UPhoneClient) DescribeUPhoneDetailByApp(req *DescribeUPhoneDetailByAppR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeUPhoneDetailByApp", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUPhoneEipListRequest is request schema for DescribeUPhoneEipList action
+type DescribeUPhoneEipListRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] Eip所属区域，没有该参数表示获取所有区域
+	// Region *string `required:"false"`
+
+	// 云手机与Eip绑定比例，没有该参数表示获取所有绑定比例
+	Proportion *string `required:"false"`
+}
+
+// DescribeUPhoneEipListResponse is response schema for DescribeUPhoneEipList action
+type DescribeUPhoneEipListResponse struct {
+	response.CommonBase
+
+	// Eip信息列表
+	EipInfos []EipInfo
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// Eip信息数量
+	TotalCount int
+}
+
+// NewDescribeUPhoneEipListRequest will create request of DescribeUPhoneEipList action.
+func (c *UPhoneClient) NewDescribeUPhoneEipListRequest() *DescribeUPhoneEipListRequest {
+	req := &DescribeUPhoneEipListRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUPhoneEipList
+
+获取云手机Eip列表
+*/
+func (c *UPhoneClient) DescribeUPhoneEipList(req *DescribeUPhoneEipListRequest) (*DescribeUPhoneEipListResponse, error) {
+	var err error
+	var res DescribeUPhoneEipListResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUPhoneEipList", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1073,7 +1123,7 @@ type DescribeUPhoneJobRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 【数组】Job 的唯一标识 Id，调用方式举例：JobIds.0=希望查询状态的 Job1，JobIds.1=Job2。 如果不传入，则返回当前 城市 所有符合条件的 Job 。
 	JobIds []string `required:"false"`
@@ -1531,7 +1581,7 @@ type GetUPhoneRenewPriceRequest struct {
 	ChargeType *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 云手机的唯一标识，可通过[查询云手机列表]获取。
 	UPhoneId *string `required:"true"`
@@ -1584,7 +1634,7 @@ type GetUPhoneScreenCaptureRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -1834,7 +1884,7 @@ type ImportFileRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市。 参见 [云手机城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 文件名
 	FileName *string `required:"true"`
@@ -1899,7 +1949,7 @@ type InstallUPhoneAppVersionRequest struct {
 	AppVersionId *string `required:"true"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -1958,7 +2008,7 @@ type ModifyUPhoneNameRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 云手机实例名称
 	Name *string `required:"true"`
@@ -2017,7 +2067,7 @@ type ModifyUPhoneRemarkRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 备注
 	Remark *string `required:"false"`
@@ -2353,7 +2403,7 @@ type PoweroffUPhoneRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -2365,6 +2415,9 @@ type PoweroffUPhoneRequest struct {
 // PoweroffUPhoneResponse is response schema for PoweroffUPhone action
 type PoweroffUPhoneResponse struct {
 	response.CommonBase
+
+	// 任务ID，用来查询当前任务状态
+	JobId string
 
 	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
@@ -2409,7 +2462,7 @@ type PoweronUPhoneRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -2421,6 +2474,9 @@ type PoweronUPhoneRequest struct {
 // PoweronUPhoneResponse is response schema for PoweronUPhone action
 type PoweronUPhoneResponse struct {
 	response.CommonBase
+
+	// 任务ID，用来查询当前任务状态
+	JobId string
 
 	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
@@ -2465,7 +2521,7 @@ type RebootUPhoneRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -2554,7 +2610,7 @@ type RenewUPhoneRequest struct {
 	BuildVersionInc *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 自定义设备参数设置的开关，true时会读取用户设置的下列设备参数信息；false时随机读取ucloud内置设备参数。默认false
 	Customize *bool `required:"false"`
@@ -2612,6 +2668,9 @@ type RenewUPhoneRequest struct {
 type RenewUPhoneResponse struct {
 	response.CommonBase
 
+	// 任务ID，用来查询一键新机任务状态
+	JobId string
+
 	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
 }
@@ -2655,7 +2714,7 @@ type ResetUPhoneRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 镜像ID，默认为空。不为空则手机会以填写的镜像进行重置，为空则手机会以重置前的镜像重置
 	ImageId *string `required:"false"`
@@ -2717,7 +2776,7 @@ type RunAsyncCommandRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 待执行的命令。
 	Content *string `required:"true"`
@@ -2779,7 +2838,7 @@ type RunSyncCommandRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 待执行的命令。
 	Content *string `required:"true"`
@@ -2841,7 +2900,7 @@ type SetUPhoneCallbackRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市ID
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -2903,7 +2962,7 @@ type SetUPhoneConfigRequest struct {
 	Bitrate *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 云手机dpi，取值范围[100,1000]
 	Dpi *string `required:"false"`
@@ -2977,6 +3036,9 @@ type SetUPhoneGPSParamUPhoneGPSs struct {
 	// 海拔
 	Altitude *float64 `required:"false"`
 
+	// GPS开关，true开启，false关闭，默认false
+	Enabled *bool `required:"false"`
+
 	// 纬度：-90~90
 	Latitude *float64 `required:"false"`
 
@@ -2995,7 +3057,7 @@ type SetUPhoneGPSRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -3054,7 +3116,7 @@ type SetUPhoneManagerModeRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 管理模式：管理员admin，普通用户user
 	Mode *string `required:"true"`
@@ -3110,7 +3172,10 @@ type SetUPhoneRootModeRequest struct {
 	// ProjectId *string `required:"true"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
+
+	// 【数组】加入应用白名单的包名
+	PkgNames []string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -3172,7 +3237,7 @@ type SetUPhoneTokenRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
@@ -3273,74 +3338,6 @@ func (c *UPhoneClient) SwitchUPhoneIndependentIp(req *SwitchUPhoneIndependentIpR
 	return &res, nil
 }
 
-/*
-SwitchUPhoneInstanceParamSwitchInfos is request schema for complex param
-*/
-type SwitchUPhoneInstanceParamSwitchInfos struct {
-
-	// 【数组】云手机实例的镜像ID，N<200，该值为空时，默认使用云手机之前的镜像ID，如果镜像ID已经不存在了则会返回错误
-	ImageId *string `required:"false"`
-
-	// 【数组】云手机实例的资源 ID，N<200
-	UPhoneId *string `required:"true"`
-}
-
-// SwitchUPhoneInstanceRequest is request schema for SwitchUPhoneInstance action
-type SwitchUPhoneInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// 城市Id，通过[获取城市列表](https://cms-docs.ucloudadmin.com/api/uphone-api/describe_u_phone_cities)获取
-	CityId *string `required:"true"`
-
-	//
-	SwitchInfos []SwitchUPhoneInstanceParamSwitchInfos `required:"false"`
-}
-
-// SwitchUPhoneInstanceResponse is response schema for SwitchUPhoneInstance action
-type SwitchUPhoneInstanceResponse struct {
-	response.CommonBase
-
-	// 任务ID，用来查询故障更换云手机任务状态
-	JobId string
-
-	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
-	Message string
-}
-
-// NewSwitchUPhoneInstanceRequest will create request of SwitchUPhoneInstance action.
-func (c *UPhoneClient) NewSwitchUPhoneInstanceRequest() *SwitchUPhoneInstanceRequest {
-	req := &SwitchUPhoneInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: SwitchUPhoneInstance
-
-故障更换云手机
-*/
-func (c *UPhoneClient) SwitchUPhoneInstance(req *SwitchUPhoneInstanceRequest) (*SwitchUPhoneInstanceResponse, error) {
-	var err error
-	var res SwitchUPhoneInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("SwitchUPhoneInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // UnInstallUPhoneAppVersionRequest is request schema for UnInstallUPhoneAppVersion action
 type UnInstallUPhoneAppVersionRequest struct {
 	request.CommonBase
@@ -3352,7 +3349,7 @@ type UnInstallUPhoneAppVersionRequest struct {
 	AppVersionId *string `required:"true"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
-	CityId *string `required:"true"`
+	CityId *string `required:"false"`
 
 	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
 	ProductType *string `required:"false"`
