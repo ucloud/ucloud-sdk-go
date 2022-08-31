@@ -88,4 +88,7 @@ func TestSign(t *testing.T) {
 	assert.Equal(t, `arr2foobararrMapfoobararrMapMissTyped1arrMapMissTyped2arrayfoobarboolValuetrueboolValuePointertruefloat32TValue42float32TValuePointer42float32Value42.099998474121094float32ValuePointer42.099998474121094float64TValue42float64TValuePointer42float64Value42.1float64ValuePointer42.1int42int1642int16Pointer42int3242int32Pointer42int6442int64Pointer42int842int8Pointer42intPointer42mapfoobarmapArrMapMissTypedstrValuefoostrValuePointerfoouint42uint1642uint16Pointer42uint3242uint32Pointer42uint6442uint64Pointer42uint842uint8Pointer42uintPointer42`, map2String(params))
 	sign := sign(params, "foo")
 	assert.Equal(t, "682fc4fbb46a71c6c690a1f8cb233f4174662845", sign)
+
+	r := CalculateSignature(params, "foo")
+	assert.Equal(t, "682fc4fbb46a71c6c690a1f8cb233f4174662845", r.Sign)
 }
