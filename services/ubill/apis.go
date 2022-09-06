@@ -9,6 +9,56 @@ import (
 
 // UBill API Schema
 
+// CreateRenewRequest is request schema for CreateRenew action
+type CreateRenewRequest struct {
+	request.CommonBase
+
+	// 续费周期数[1~10]，按月计费资源可传值为0，表示续费到月底
+	Quantity *int `required:"true"`
+
+	// 需要续费资源ID
+	ResourceId *string `required:"true"`
+}
+
+// CreateRenewResponse is response schema for CreateRenew action
+type CreateRenewResponse struct {
+	response.CommonBase
+
+	// 订单号
+	OrderNo string
+}
+
+// NewCreateRenewRequest will create request of CreateRenew action.
+func (c *UBillClient) NewCreateRenewRequest() *CreateRenewRequest {
+	req := &CreateRenewRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateRenew
+
+创建单个续费订单
+*/
+func (c *UBillClient) CreateRenew(req *CreateRenewRequest) (*CreateRenewResponse, error) {
+	var err error
+	var res CreateRenewResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateRenew", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeOrderDetailInfoRequest is request schema for DescribeOrderDetailInfo action
 type DescribeOrderDetailInfoRequest struct {
 	request.CommonBase
@@ -345,6 +395,62 @@ func (c *UBillClient) ListUBillOverview(req *ListUBillOverviewRequest) (*ListUBi
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUBillOverview", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyAutoRenewFlagRequest is request schema for ModifyAutoRenewFlag action
+type ModifyAutoRenewFlagRequest struct {
+	request.CommonBase
+
+	// 开关标识(TURN_ON: 打开; TURN_OFF: 关闭)
+	Flag *string `required:"true"`
+
+	// 资源ID
+	ResourceId *string `required:"true"`
+}
+
+// ModifyAutoRenewFlagResponse is response schema for ModifyAutoRenewFlag action
+type ModifyAutoRenewFlagResponse struct {
+	response.CommonBase
+
+	// 操作失败资源数量
+	Fail int
+
+	// 开关资源自动续费结果数组
+	ResultSet []ResultSet
+
+	// 操作成功资源数量
+	Success int
+}
+
+// NewModifyAutoRenewFlagRequest will create request of ModifyAutoRenewFlag action.
+func (c *UBillClient) NewModifyAutoRenewFlagRequest() *ModifyAutoRenewFlagRequest {
+	req := &ModifyAutoRenewFlagRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyAutoRenewFlag
+
+修改资源自动续费标识
+*/
+func (c *UBillClient) ModifyAutoRenewFlag(req *ModifyAutoRenewFlagRequest) (*ModifyAutoRenewFlagResponse, error) {
+	var err error
+	var res ModifyAutoRenewFlagResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyAutoRenewFlag", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

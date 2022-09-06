@@ -543,42 +543,6 @@ type ReferConf struct {
 }
 
 /*
-OriginConf - 回源配置
-*/
-type OriginConf struct {
-
-	// 1如果为false表示BackupOriginIp为空，表示没有备份源站，忽略BackupOriginIp，BackupOriginHost字段2如果为true表示BackupOriginIp.n必须至少有一个备份源站地址
-	BackupOriginEnable bool
-
-	// 备份回源Http请求头部Host，默认是加速域名
-	BackupOriginHost string
-
-	// 备份源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
-	BackupOriginIpList []string
-
-	// 主源响应的回源错误码（如：404|500），默认空字符串
-	OriginErrorCode string
-
-	// 回主源的回源失败数，默认1
-	OriginErrorNum int
-
-	// 跟随301跳转  0=不跟随 1=跟随
-	OriginFollow301 int
-
-	// 回源Http请求头部Host，默认是加速域名
-	OriginHost string
-
-	// 源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
-	OriginIpList []string
-
-	// 回源端口
-	OriginPort int
-
-	// 源站协议http，http|https   默认http
-	OriginProtocol string
-}
-
-/*
 CacheAllConfig - 缓存相关的配置
 */
 type CacheAllConfig struct {
@@ -621,6 +585,42 @@ type AccessControlConf struct {
 
 	// refer配置
 	ReferConf ReferConf
+}
+
+/*
+OriginConf - 回源配置
+*/
+type OriginConf struct {
+
+	// 1如果为false表示BackupOriginIp为空，表示没有备份源站，忽略BackupOriginIp，BackupOriginHost字段2如果为true表示BackupOriginIp.n必须至少有一个备份源站地址
+	BackupOriginEnable bool
+
+	// 备份回源Http请求头部Host，默认是加速域名
+	BackupOriginHost string
+
+	// 备份源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
+	BackupOriginIpList []string
+
+	// 主源响应的回源错误码（如：404|500），默认空字符串
+	OriginErrorCode string
+
+	// 回主源的回源失败数，默认1
+	OriginErrorNum int
+
+	// 跟随301跳转  0=不跟随 1=跟随
+	OriginFollow301 int
+
+	// 回源Http请求头部Host，默认是加速域名
+	OriginHost string
+
+	// 源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
+	OriginIpList []string
+
+	// 回源端口
+	OriginPort int
+
+	// 源站协议http，http|https   默认http
+	OriginProtocol string
 }
 
 /*
@@ -769,7 +769,7 @@ type LogInfo struct {
 	// Unix时间戳
 	LogTime int
 
-	// 日志url地址
+	// 日志url地址，多个URL用分号隔开
 	LogUrl string
 }
 

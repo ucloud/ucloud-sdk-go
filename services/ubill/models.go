@@ -256,3 +256,18 @@ type BillOverviewItem struct {
 	// 账户名   （账单维度按子账号筛选时显示）
 	UserName string
 }
+
+/*
+ResultSet - 结果集
+*/
+type ResultSet struct {
+
+	// 错误信息描述
+	Message string
+
+	// 资源ID
+	ResourceId string
+
+	// 续费结果(0:成功，失败返回错误码)
+	RetCode int
+}

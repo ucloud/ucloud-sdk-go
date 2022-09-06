@@ -27,21 +27,6 @@ type KeyPair struct {
 }
 
 /*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
 FeatureModes - 可以支持的模式类别
 */
 type FeatureModes struct {
@@ -93,15 +78,30 @@ type BootDiskInfo struct {
 }
 
 /*
-MachineSizes - GPU、CPU和内存信息
+Collection - CPU和内存可支持的规格
 */
-type MachineSizes struct {
+type Collection struct {
 
-	// CPU和内存可支持的规格
-	Collection []Collection
+	// CPU规格
+	Cpu int
 
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
 }
 
 /*
@@ -147,6 +147,18 @@ type CpuPlatforms struct {
 }
 
 /*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
 Performance - GPU的性能指标
 */
 type Performance struct {
@@ -156,18 +168,6 @@ type Performance struct {
 
 	// 值，单位是TFlops
 	Value float64
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
 }
 
 /*
@@ -201,6 +201,9 @@ type AvailableInstanceTypes struct {
 
 	// 机型状态：可售|Normal 、 公测|Beta、售罄|Soldout、隐藏|Hidden
 	Status string
+
+	// 可用区信息
+	Zone string
 }
 
 /*
