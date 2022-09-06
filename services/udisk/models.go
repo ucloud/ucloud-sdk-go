@@ -184,7 +184,7 @@ type UDiskSnapshotSet struct {
 	// 磁盘类型，0：普通数据盘；1：普通系统盘；2：SSD数据盘；3：SSD系统盘；4：RSSD数据盘；5：RSSD系统盘。
 	DiskType int
 
-	// 过期时间
+	// 【已废弃】过期时间
 	ExpiredTime int
 
 	// 对应磁盘是否处于可用状态

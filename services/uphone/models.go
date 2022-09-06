@@ -402,6 +402,18 @@ type UPhoneModelInstance struct {
 }
 
 /*
+UPhoneSpec -
+*/
+type UPhoneSpec struct {
+
+	// 手机开数，即该服务器规格能生成对应手机规格的云手机个数
+	UPhoneCount int
+
+	// 手机规格名
+	UPhoneModelName string
+}
+
+/*
 ServerDiskSet -
 */
 type ServerDiskSet struct {
@@ -417,15 +429,21 @@ type ServerDiskSet struct {
 }
 
 /*
-UPhoneSpec -
+IpSet -
 */
-type UPhoneSpec struct {
+type IpSet struct {
 
-	// 手机开数，即该服务器规格能生成对应手机规格的云手机个数
-	UPhoneCount int
+	// IP地址
+	Ip string
 
-	// 手机规格名
-	UPhoneModelName string
+	// ipv4或者ipv6
+	IpMode string
+
+	// 共有或私有
+	IpType string
+
+	// 运营商
+	Isp string
 }
 
 /*
@@ -456,24 +474,6 @@ type ServerModelInstance struct {
 
 	// 【数组】手机说明，包含该服务器规格所能创建的手机规格名及对应手机开数。每项参数可见数据模型 [UPhoneSpec](#UPhoneSpec)
 	UPhoneSpecs []UPhoneSpec
-}
-
-/*
-IpSet -
-*/
-type IpSet struct {
-
-	// IP地址
-	Ip string
-
-	// ipv4或者ipv6
-	IpMode string
-
-	// 共有或私有
-	IpType string
-
-	// 运营商
-	Isp string
 }
 
 /*

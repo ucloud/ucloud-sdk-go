@@ -3129,6 +3129,59 @@ func (c *VPCClient) DescribeWhiteListResource(req *DescribeWhiteListResourceRequ
 	return &res, nil
 }
 
+// DetachNetworkInterfaceRequest is request schema for DetachNetworkInterface action
+type DetachNetworkInterfaceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 云主机ID
+	InstanceId *string `required:"true"`
+
+	// 虚拟网卡ID
+	InterfaceId *string `required:"true"`
+}
+
+// DetachNetworkInterfaceResponse is response schema for DetachNetworkInterface action
+type DetachNetworkInterfaceResponse struct {
+	response.CommonBase
+}
+
+// NewDetachNetworkInterfaceRequest will create request of DetachNetworkInterface action.
+func (c *VPCClient) NewDetachNetworkInterfaceRequest() *DetachNetworkInterfaceRequest {
+	req := &DetachNetworkInterfaceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachNetworkInterface
+
+解绑云主机关联网卡
+*/
+func (c *VPCClient) DetachNetworkInterface(req *DetachNetworkInterfaceRequest) (*DetachNetworkInterfaceResponse, error) {
+	var err error
+	var res DetachNetworkInterfaceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachNetworkInterface", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // EnableWhiteListRequest is request schema for EnableWhiteList action
 type EnableWhiteListRequest struct {
 	request.CommonBase

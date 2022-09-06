@@ -96,6 +96,9 @@ type CloneUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
 	// Year , Month, Dynamic，Postpay，Trial 默认: Month
 	ChargeType *string `required:"false"`
 
@@ -105,8 +108,17 @@ type CloneUDiskRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
+
 	// Host实例ID。克隆出的云盘可直接挂载到该主机上。
 	HostId *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 实例名称
 	Name *string `required:"true"`
@@ -116,6 +128,9 @@ type CloneUDiskRequest struct {
 
 	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
+
+	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
+	Size *int `required:"false"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
 	SnapshotService *string `required:"false"`
@@ -182,6 +197,9 @@ type CloneUDiskSnapshotRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
 	// Year , Month, Dynamic，Postpay 默认: Dynamic
 	ChargeType *string `required:"false"`
 
@@ -191,8 +209,17 @@ type CloneUDiskSnapshotRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
+
 	// Host实例ID。克隆出的云盘可直接挂载到该主机上。
 	HostId *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 实例名称
 	Name *string `required:"true"`
@@ -203,7 +230,7 @@ type CloneUDiskSnapshotRequest struct {
 	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
-	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘快照有效，对云盘快照无效)
+	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"false"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -271,6 +298,9 @@ type CloneUDiskUDataArkRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
 	// Year , Month, Dynamic，Postpay 默认: Dynamic
 	ChargeType *string `required:"false"`
 
@@ -280,8 +310,17 @@ type CloneUDiskUDataArkRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
+
 	// Host实例ID。克隆出的云盘可直接挂载到该主机上。
 	HostId *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 实例名称
 	Name *string `required:"true"`
@@ -292,7 +331,7 @@ type CloneUDiskUDataArkRequest struct {
 	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
-	// 购买UDisk大小,单位:GB,范围[1~8000]。(UDisk大小设定对本地盘备份有效，对云盘备份无效)
+	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"false"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -363,6 +402,9 @@ type CreateAttachUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
 	// Year , Month, Dynamic, Postpay, Trial 。 Size小于等于2000时，默认为Dynamic；Size大于2000时，默认为Month。
 	ChargeType *string `required:"false"`
 
@@ -372,11 +414,20 @@ type CreateAttachUDiskRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
+
 	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// Host实例ID。当创建云盘类型为RSSDDataDisk时，根据传入的HostId，创建与虚机在同一PodId下的云盘。
 	HostId *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 是否允许多点挂载（Yes: 允许多点挂载， No: 不允许多点挂载， 不填默认Yes ）
 	MultiAttach *string `required:"false"`
@@ -467,6 +518,9 @@ type CreateUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
 	// Year , Month, Dynamic, Postpay, Trial 。默认为Dynamic。
 	ChargeType *string `required:"false"`
 
@@ -476,8 +530,17 @@ type CreateUDiskRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
+
 	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 实例名称
 	Name *string `required:"true"`
@@ -893,14 +956,26 @@ type DescribeUDiskPriceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
 	// Year , Month, Dynamic，Postpay，Trial 默认: Month
 	ChargeType *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
 
 	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk(RSSD数据盘)，EfficiencyDataDisk（高效数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDSystemDisk(RSSD系统盘)，EfficiencySystemDisk（高效系统盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
 	// 是否将快照服务(数据方舟)，云硬盘放入一张订单, 是："Yes",否："No"，默认是"No"
 	IsTotalPrice *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 云主机机型（V2.0），枚举值["N", "C", "G", "O", "OM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`
@@ -1038,8 +1113,20 @@ type DescribeUDiskUpgradePriceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	BackupMode *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
+	Day *int `required:"false"`
+
 	// 【已废弃】UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk(RSSD数据盘)，EfficiencyDataDisk（高效数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDSystemDisk(RSSD系统盘)，EfficiencySystemDisk（高效系统盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
+	Hour *int `required:"false"`
+
+	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
+	Journal *int `required:"false"`
 
 	// 【已废弃】云主机机型（V2.0），枚举值["N", "C", "G", "O", "OM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`

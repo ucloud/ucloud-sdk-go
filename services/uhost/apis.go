@@ -244,6 +244,21 @@ type CreateUHostInstanceParamNetworkInterface struct {
 }
 
 /*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
+}
+
+/*
 CreateUHostInstanceParamVolumes is request schema for complex param
 */
 type CreateUHostInstanceParamVolumes struct {
@@ -280,21 +295,6 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -660,8 +660,10 @@ type DescribeAvailableInstanceTypesRequest struct {
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
+	// Zone *string `required:"false"`
 
+	// 指定机型列表
+	MachineTypes []string `required:"false"`
 }
 
 // DescribeAvailableInstanceTypesResponse is response schema for DescribeAvailableInstanceTypes action
@@ -670,6 +672,9 @@ type DescribeAvailableInstanceTypesResponse struct {
 
 	// AvailableInstanceTypes
 	AvailableInstanceTypes []AvailableInstanceTypes
+
+	// 当前区域是否可售
+	Status string
 }
 
 // NewDescribeAvailableInstanceTypesRequest will create request of DescribeAvailableInstanceTypes action.

@@ -42,18 +42,6 @@ type UDBBackupSet struct {
 }
 
 /*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
-}
-
-/*
 UDBSlaveInstanceSet - DescribeUDBSlaveInstance
 */
 type UDBSlaveInstanceSet struct {
@@ -168,6 +156,18 @@ type UDBSlaveInstanceSet struct {
 
 	// 可用区
 	Zone string
+}
+
+/*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
 }
 
 /*
@@ -351,6 +351,9 @@ type LogPackageDataSet struct {
 
 	// 跨可用区高可用备库所在可用区
 	BackupZone string
+
+	// binlog备份类型 Manual //手动备份 Auto //自动备份
+	BinlogType string
 
 	// dbid
 	DBId string
