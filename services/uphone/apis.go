@@ -57,6 +57,9 @@ type CreateUPhoneRequest struct {
 
 	// 云手机规格名称，不超过64个字节。可通过[查询云手机规格列表]()查询支持的云手机规格。
 	UPhoneModelName *string `required:"true"`
+
+	// 使用区域全局共享带宽
+	UseGlobalBws *bool `required:"false"`
 }
 
 // CreateUPhoneResponse is response schema for CreateUPhone action

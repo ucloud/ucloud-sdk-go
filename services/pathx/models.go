@@ -210,15 +210,15 @@ type SrcAreaInfo struct {
 }
 
 /*
-OutPublicIpInfo - 线路回源IP信息
+AccelerationAreaInfos - 加速大区信息
 */
-type OutPublicIpInfo struct {
+type AccelerationAreaInfos struct {
 
-	// 线路回源节点机房代号
-	Area string
+	// 加速区code
+	AccelerationArea string
 
-	// 线路回源节点EIP
-	IP string
+	// 加速节点信息
+	AccelerationNodes []SrcAreaInfo
 }
 
 /*
@@ -237,15 +237,15 @@ type ForwardTask struct {
 }
 
 /*
-AccelerationAreaInfos - 加速大区信息
+OutPublicIpInfo - 线路回源IP信息
 */
-type AccelerationAreaInfos struct {
+type OutPublicIpInfo struct {
 
-	// 加速区code
-	AccelerationArea string
+	// 线路回源节点机房代号
+	Area string
 
-	// 加速节点信息
-	AccelerationNodes []SrcAreaInfo
+	// 线路回源节点EIP
+	IP string
 }
 
 /*
@@ -360,6 +360,27 @@ type AccelerationInfo struct {
 }
 
 /*
+UGAL7Forwarder - UGA实例 7层转发器信息
+*/
+type UGAL7Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+
+	// 证书ID
+	SSLId string
+
+	// 证书名称
+	SSLName string
+}
+
+/*
 UPathSet - uga关联的upath信息
 */
 type UPathSet struct {
@@ -414,27 +435,6 @@ type UGAL4Forwarder struct {
 
 	// RSPort，源站监听端口
 	RSPort int
-}
-
-/*
-UGAL7Forwarder - UGA实例 7层转发器信息
-*/
-type UGAL7Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
-
-	// 证书ID
-	SSLId string
-
-	// 证书名称
-	SSLName string
 }
 
 /*

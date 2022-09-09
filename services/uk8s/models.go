@@ -60,6 +60,15 @@ type DiskSet struct {
 }
 
 /*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
+}
+
+/*
 UhostInfo - 机器信息
 */
 type UhostInfo struct {
@@ -99,15 +108,6 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
 }
 
 /*
