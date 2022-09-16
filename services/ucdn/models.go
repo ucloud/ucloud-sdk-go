@@ -3,15 +3,6 @@
 package ucdn
 
 /*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
-}
-
-/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -36,6 +27,15 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
 }
 
 /*
@@ -159,6 +159,42 @@ type TaskInfo struct {
 
 	// 任务url的信息列表，参考UrlProgressInfo
 	UrlLists []UrlProgressInfo
+}
+
+/*
+KwaiAuthKv - 快手鉴权键值信息
+*/
+type KwaiAuthKv struct {
+
+	// iv信息
+	Iv string
+
+	// key信息
+	Key string
+}
+
+/*
+KwaiAuthConfig - 鉴权信息
+*/
+type KwaiAuthConfig struct {
+
+	//
+	Keys []KwaiAuthKv
+
+	// 类型  pkey / ksc / typeA
+	Type string
+}
+
+/*
+KwaiDomainAuthConfig - 快手域名鉴权信息
+*/
+type KwaiDomainAuthConfig struct {
+
+	//
+	Config []KwaiAuthConfig
+
+	// 域名
+	Domain string
 }
 
 /*
@@ -543,6 +579,21 @@ type CacheKeyInfo struct {
 }
 
 /*
+AdvancedConf - 域名高级配置
+*/
+type AdvancedConf struct {
+
+	// http转https回源 true是，false否
+	Http2Https bool
+
+	// 客户端响应http头列表
+	HttpClientHeader []string
+
+	// 源站http头列表
+	HttpOriginHeader []string
+}
+
+/*
 OriginConf - 回源配置
 */
 type OriginConf struct {
@@ -576,21 +627,6 @@ type OriginConf struct {
 
 	// 源站协议http，http|https   默认http
 	OriginProtocol string
-}
-
-/*
-AdvancedConf - 域名高级配置
-*/
-type AdvancedConf struct {
-
-	// http转https回源 true是，false否
-	Http2Https bool
-
-	// 客户端响应http头列表
-	HttpClientHeader []string
-
-	// 源站http头列表
-	HttpOriginHeader []string
 }
 
 /*

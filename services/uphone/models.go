@@ -402,6 +402,18 @@ type UPhoneModelInstance struct {
 }
 
 /*
+UPhoneSpec -
+*/
+type UPhoneSpec struct {
+
+	// 手机开数，即该服务器规格能生成对应手机规格的云手机个数
+	UPhoneCount int
+
+	// 手机规格名
+	UPhoneModelName string
+}
+
+/*
 ServerDiskSet -
 */
 type ServerDiskSet struct {
@@ -414,18 +426,6 @@ type ServerDiskSet struct {
 
 	// 磁盘大小，单位: GB
 	Size int
-}
-
-/*
-UPhoneSpec -
-*/
-type UPhoneSpec struct {
-
-	// 手机开数，即该服务器规格能生成对应手机规格的云手机个数
-	UPhoneCount int
-
-	// 手机规格名
-	UPhoneModelName string
 }
 
 /*

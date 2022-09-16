@@ -498,7 +498,7 @@ type SendUSMSMessageRequest struct {
 	PhoneNumbers []string `required:"true"`
 
 	// 短信签名内容，请到[USMS控制台](https://console.ucloud.cn/usms)的签名管理页面查看；使用的短信签名必须是已申请并且通过审核；
-	SigContent *string `required:"true"`
+	SigContent *string `required:"false"`
 
 	// 模板ID（也即短信模板申请时的工单ID），请到[USMS控制台](https://console.ucloud.cn/usms)的模板管理页面查看；使用的短信模板必须是已申请并通过审核；
 	TemplateId *string `required:"true"`
