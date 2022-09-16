@@ -207,57 +207,6 @@ type PolicyBackendSet struct {
 }
 
 /*
-ULBBackendSet - DescribeULB
-*/
-type ULBBackendSet struct {
-
-	// 后端资源实例的Id
-	BackendId string
-
-	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
-	Enabled int
-
-	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
-	IsBackup int
-
-	// 后端提供服务的端口
-	Port int
-
-	// 后端提供服务的内网IP
-	PrivateIP string
-
-	// 资源实例的资源Id
-	ResourceId string
-
-	// 资源实例的资源名称
-	ResourceName string
-
-	// 资源实例的类型
-	ResourceType string
-
-	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
-	Status int
-
-	// 资源绑定的虚拟网卡实例的资源Id
-	SubResourceId string
-
-	// 资源绑定的虚拟网卡实例的资源名称
-	SubResourceName string
-
-	// 资源绑定的虚拟网卡实例的类型
-	SubResourceType string
-
-	// 后端提供服务的资源所在的子网的ID
-	SubnetId string
-
-	// 后端服务器所在的VPC
-	VPCId string
-
-	// 后端RS权重（在加权轮询算法下有效）
-	Weight int
-}
-
-/*
 ULBPolicySet - 内容转发详细列表
 */
 type ULBPolicySet struct {
@@ -312,6 +261,57 @@ type BindSecurityPolicy struct {
 }
 
 /*
+ULBBackendSet - DescribeULB
+*/
+type ULBBackendSet struct {
+
+	// 后端资源实例的Id
+	BackendId string
+
+	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
+	Enabled int
+
+	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
+	IsBackup int
+
+	// 后端提供服务的端口
+	Port int
+
+	// 后端提供服务的内网IP
+	PrivateIP string
+
+	// 资源实例的资源Id
+	ResourceId string
+
+	// 资源实例的资源名称
+	ResourceName string
+
+	// 资源实例的类型
+	ResourceType string
+
+	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
+	Status int
+
+	// 资源绑定的虚拟网卡实例的资源Id
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡实例的资源名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡实例的类型
+	SubResourceType string
+
+	// 后端提供服务的资源所在的子网的ID
+	SubnetId string
+
+	// 后端服务器所在的VPC
+	VPCId string
+
+	// 后端RS权重（在加权轮询算法下有效）
+	Weight int
+}
+
+/*
 ULBIPSet - DescribeULB
 */
 type ULBIPSet struct {
@@ -333,18 +333,6 @@ type ULBIPSet struct {
 }
 
 /*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
 LoggerSet - ulb日志信息
 */
 type LoggerSet struct {
@@ -357,6 +345,18 @@ type LoggerSet struct {
 
 	// bucket的token名称
 	TokenName string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*

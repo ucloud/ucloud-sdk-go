@@ -428,6 +428,62 @@ func (c *UCDNClient) DescribeNewUcdnRefreshCacheTask(req *DescribeNewUcdnRefresh
 	return &res, nil
 }
 
+// GetAuthConfigRequest is request schema for GetAuthConfig action
+type GetAuthConfigRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 希望获取的域名，不传则获取所有
+	Domain *string `required:"false"`
+}
+
+// GetAuthConfigResponse is response schema for GetAuthConfig action
+type GetAuthConfigResponse struct {
+	response.CommonBase
+
+	// 鉴权配置列表
+	AuthConfigs []KwaiDomainAuthConfig
+}
+
+// NewGetAuthConfigRequest will create request of GetAuthConfig action.
+func (c *UCDNClient) NewGetAuthConfigRequest() *GetAuthConfigRequest {
+	req := &GetAuthConfigRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetAuthConfig
+
+接口获取鉴权信息（非标使用）
+*/
+func (c *UCDNClient) GetAuthConfig(req *GetAuthConfigRequest) (*GetAuthConfigResponse, error) {
+	var err error
+	var res GetAuthConfigResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetAuthConfig", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetCertificateV2Request is request schema for GetCertificateV2 action
 type GetCertificateV2Request struct {
 	request.CommonBase
