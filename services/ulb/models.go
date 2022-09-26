@@ -333,6 +333,18 @@ type ULBIPSet struct {
 }
 
 /*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
+}
+
+/*
 LoggerSet - ulb日志信息
 */
 type LoggerSet struct {
@@ -345,18 +357,6 @@ type LoggerSet struct {
 
 	// bucket的token名称
 	TokenName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*

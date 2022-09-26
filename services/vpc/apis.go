@@ -1541,6 +1541,56 @@ func (c *VPCClient) DeleteNetworkAclEntry(req *DeleteNetworkAclEntryRequest) (*D
 	return &res, nil
 }
 
+// DeleteNetworkInterfaceRequest is request schema for DeleteNetworkInterface action
+type DeleteNetworkInterfaceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 虚拟网卡ID
+	InterfaceId *string `required:"true"`
+}
+
+// DeleteNetworkInterfaceResponse is response schema for DeleteNetworkInterface action
+type DeleteNetworkInterfaceResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteNetworkInterfaceRequest will create request of DeleteNetworkInterface action.
+func (c *VPCClient) NewDeleteNetworkInterfaceRequest() *DeleteNetworkInterfaceRequest {
+	req := &DeleteNetworkInterfaceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteNetworkInterface
+
+删除网卡
+*/
+func (c *VPCClient) DeleteNetworkInterface(req *DeleteNetworkInterfaceRequest) (*DeleteNetworkInterfaceResponse, error) {
+	var err error
+	var res DeleteNetworkInterfaceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteNetworkInterface", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteRouteTableRequest is request schema for DeleteRouteTable action
 type DeleteRouteTableRequest struct {
 	request.CommonBase

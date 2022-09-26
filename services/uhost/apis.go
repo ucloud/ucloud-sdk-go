@@ -232,12 +232,6 @@ type UHostDiskCustomBackup struct {
 }
 
 /*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-}
-
-/*
 CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterface struct {
@@ -247,6 +241,18 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 /*
@@ -286,15 +292,9 @@ type CreateUHostInstanceParamFeatures struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamSecGroupId is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+type CreateUHostInstanceParamSecGroupId struct {
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1124,12 +1124,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVirtualGpu is request schema for complex param
-*/
-type GetUHostInstancePriceParamVirtualGpu struct {
-}
-
-/*
 GetUHostInstancePriceParamVolumes is request schema for complex param
 */
 type GetUHostInstancePriceParamVolumes struct {
@@ -1142,6 +1136,12 @@ type GetUHostInstancePriceParamVolumes struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	Type *string `required:"false" deprecated:"true"`
+}
+
+/*
+GetUHostInstancePriceParamVirtualGpu is request schema for complex param
+*/
+type GetUHostInstancePriceParamVirtualGpu struct {
 }
 
 /*
