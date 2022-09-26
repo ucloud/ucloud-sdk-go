@@ -27,18 +27,18 @@ type KeyPair struct {
 }
 
 /*
-Collection - CPU和内存可支持的规格
+FeatureModes - 可以支持的模式类别
 */
-type Collection struct {
+type FeatureModes struct {
 
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
 	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
 }
 
 /*
@@ -78,30 +78,30 @@ type BootDiskInfo struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
+Collection - CPU和内存可支持的规格
 */
-type FeatureModes struct {
+type Collection struct {
 
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
 	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
 }
 
 /*
-MachineSizes - GPU、CPU和内存信息
+Features - 虚机可支持的特性
 */
-type MachineSizes struct {
+type Features struct {
 
-	// CPU和内存可支持的规格
-	Collection []Collection
+	// 可以提供的模式类别
+	Modes []FeatureModes
 
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
 }
 
 /*
@@ -117,21 +117,6 @@ type Disks struct {
 
 	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
-}
-
-/*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
 }
 
 /*
@@ -159,15 +144,30 @@ type GraphicsMemory struct {
 }
 
 /*
-Features - 虚机可支持的特性
+CpuPlatforms - CPU平台信息
 */
-type Features struct {
+type CpuPlatforms struct {
 
-	// 可以提供的模式类别
-	Modes []FeatureModes
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
 
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
 }
 
 /*
