@@ -46,6 +46,9 @@ type UPhoneInstance struct {
 	// IP所属地域Id，eg: hk，th-bkk
 	IpRegion string
 
+	// 是否锁定带宽，true代表锁定不可更改，false代表未锁定可以修改带宽
+	LockBandwidth bool
+
 	// 内存大小。单位MB
 	Memory int
 
@@ -79,6 +82,9 @@ type UPhoneInstance struct {
 	// 业务组名称
 	Tag string
 
+	// 云手机带宽，单位Kbps
+	UPhoneBandwidth int
+
 	// 云手机的唯一标识，不超过32个字节。
 	UPhoneId string
 
@@ -87,6 +93,9 @@ type UPhoneInstance struct {
 
 	// 云手机的名称，不超过65个字符。
 	UPhoneName string
+
+	// 云手机场景
+	UPhoneScene string
 }
 
 /*
@@ -402,6 +411,18 @@ type UPhoneModelInstance struct {
 }
 
 /*
+UPhoneSpec -
+*/
+type UPhoneSpec struct {
+
+	// 手机开数，即该服务器规格能生成对应手机规格的云手机个数
+	UPhoneCount int
+
+	// 手机规格名
+	UPhoneModelName string
+}
+
+/*
 ServerDiskSet -
 */
 type ServerDiskSet struct {
@@ -414,18 +435,6 @@ type ServerDiskSet struct {
 
 	// 磁盘大小，单位: GB
 	Size int
-}
-
-/*
-UPhoneSpec -
-*/
-type UPhoneSpec struct {
-
-	// 手机开数，即该服务器规格能生成对应手机规格的云手机个数
-	UPhoneCount int
-
-	// 手机规格名
-	UPhoneModelName string
 }
 
 /*

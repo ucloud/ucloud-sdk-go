@@ -111,6 +111,9 @@ type AllocateShareBandwidthRequest struct {
 	// 共享带宽名字
 	Name *string `required:"true"`
 
+	// 共享带宽线路：BGP 国内多线,International 国际多线,ChinaMobile 移动单线,Unicom 联通单线,Telecom 电信单线,BGPPro 精品BGP（仅香港支持精品BGP）
+	OperatorName *string `required:"false"`
+
 	// 购买时长
 	Quantity *int `required:"false"`
 

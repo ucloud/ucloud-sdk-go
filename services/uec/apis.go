@@ -196,18 +196,6 @@ func (c *UECClient) CreateUEcFirewall(req *CreateUEcFirewallRequest) (*CreateUEc
 }
 
 /*
-CreateUEcHolderParamImage is request schema for complex param
-*/
-type CreateUEcHolderParamImage struct {
-
-	// 镜像用户名和密码（如镜像名：密码）
-	Message *string `required:"false"`
-
-	// 镜像仓库地址
-	StoreAddress *string `required:"false"`
-}
-
-/*
 CreateUEcHolderParamPack is request schema for complex param
 */
 type CreateUEcHolderParamPack struct {
@@ -238,6 +226,18 @@ type CreateUEcHolderParamPack struct {
 
 	// 容器工作目录
 	WorkDir *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamImage is request schema for complex param
+*/
+type CreateUEcHolderParamImage struct {
+
+	// 镜像用户名和密码（如镜像名：密码）
+	Message *string `required:"false"`
+
+	// 镜像仓库地址
+	StoreAddress *string `required:"false"`
 }
 
 /*

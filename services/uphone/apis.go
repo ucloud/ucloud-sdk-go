@@ -22,7 +22,7 @@ type CreateUPhoneRequest struct {
 	// 计费模式。枚举值为： > 年 Year，按年付费； > Month，按月付费； > Dynamic，按小时预付费; 默认为月付
 	ChargeType *string `required:"false"`
 
-	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取；新增一个oversea虚拟城市，可以用来绑定所有支持的海外独立IP
+	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取；新增一个oversea虚拟城市，可以用来绑定海外独立IP
 	CityId *string `required:"true"`
 
 	// 云手机代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看。注：代金券对带宽不适用，仅适用于云手机计费
@@ -52,6 +52,9 @@ type CreateUPhoneRequest struct {
 	// 业务组。默认：Default（Default即为未分组）。请遵照[[api:uhost-api:specification|字段规范]]设定业务组。
 	Tag *string `required:"false"`
 
+	// 单个云手机独立IP网络带宽，单位Kbps；CityId为oversea时不生效；手机规格为UPhone Store和UPhone Live时不生效
+	UPhoneBandwidth *int `required:"false"`
+
 	// 创建云手机的个数
 	UPhoneCount *int `required:"true"`
 
@@ -60,6 +63,9 @@ type CreateUPhoneRequest struct {
 
 	// 使用区域全局共享带宽
 	UseGlobalBws *bool `required:"false"`
+
+	// 使用Kbps限速
+	UseKbps *bool `required:"false"`
 }
 
 // CreateUPhoneResponse is response schema for CreateUPhone action
@@ -399,7 +405,7 @@ type DeleteUPhoneRequest struct {
 	// 城市Id，通过[获取城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)获取
 	CityId *string `required:"false"`
 
-	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
+	// 枚举值。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
 	ProductType *string `required:"false"`
 
 	// 【数组】云手机实例的资源 ID，N<200；调用方式举例：UPhoneIds.0=希望获取信息的云手机 1 的 UPhoneId，UPhoneIds.1=云手机实例 2 的 UPhoneId
@@ -454,6 +460,9 @@ type DeleteUPhoneImageRequest struct {
 
 	// 云手机自定义镜像资源ID
 	ImageId *string `required:"true"`
+
+	// 枚举值【必填项】。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
+	ProductType *string `required:"false"`
 }
 
 // DeleteUPhoneImageResponse is response schema for DeleteUPhoneImage action
@@ -626,7 +635,7 @@ type DescribeUPhoneRequest struct {
 	// 列表起始位置偏移量，默认为0
 	Offset *int `required:"false"`
 
-	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
+	// 枚举值。【必填项】表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
 	ProductType *string `required:"false"`
 
 	// 云手机服务器的资源ID。
@@ -1140,7 +1149,7 @@ type DescribeUPhoneJobRequest struct {
 	// 列表起始位置偏移量，默认为0
 	Offset *int `required:"false"`
 
-	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
+	// 枚举值。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
 	ProductType *string `required:"false"`
 
 	// Job状态，枚举值：* 等待状态: PENDING;* 运行状态: RUNNING;* 成功状态: SUCCESS* 失败状态: FAILED* 部分成功状态：PARTIAL_SUCCESS
@@ -1208,8 +1217,11 @@ type DescribeUPhoneModelRequest struct {
 	// 列表起始位置偏移量，默认为0
 	Offset *int `required:"false"`
 
-	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
+	// 枚举值。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
 	ProductType *string `required:"false"`
+
+	// 使用场景：海外(OVERSEA)，境内(INLAND)
+	Scene *string `required:"false"`
 
 	// 【数组】要获得信息的 UPhoneModel 名称。调用方式举例：UPhoneModelNames.0=希望获取信息的 UPhoneModel1，UPhoneModelNames.1=UPhoneModel2。 如果不传入，则返回当前 城市 所有符合条件的 UPhoneModel。
 	UPhoneModelNames []string `required:"false"`
@@ -1502,6 +1514,71 @@ func (c *UPhoneClient) GetUPhoneAllowance(req *GetUPhoneAllowanceRequest) (*GetU
 	return &res, nil
 }
 
+// GetUPhoneBandwidthUpgradePriceRequest is request schema for GetUPhoneBandwidthUpgradePrice action
+type GetUPhoneBandwidthUpgradePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 带宽大小，单位Kbps，必须是100的整数倍
+	Bandwidth *int `required:"true"`
+
+	// 枚举值。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
+	ProductType *string `required:"true"`
+
+	// 云手机ID
+	UPhoneId *string `required:"true"`
+}
+
+// GetUPhoneBandwidthUpgradePriceResponse is response schema for GetUPhoneBandwidthUpgradePrice action
+type GetUPhoneBandwidthUpgradePriceResponse struct {
+	response.CommonBase
+
+	// 产品列表价
+	ListPrice float64
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）
+	OriginalPrice float64
+
+	// 规格调整差价。单位: 元，保留小数点后两位有效数字
+	Price float64
+}
+
+// NewGetUPhoneBandwidthUpgradePriceRequest will create request of GetUPhoneBandwidthUpgradePrice action.
+func (c *UPhoneClient) NewGetUPhoneBandwidthUpgradePriceRequest() *GetUPhoneBandwidthUpgradePriceRequest {
+	req := &GetUPhoneBandwidthUpgradePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUPhoneBandwidthUpgradePrice
+
+获取云手机带宽升降级价格
+*/
+func (c *UPhoneClient) GetUPhoneBandwidthUpgradePrice(req *GetUPhoneBandwidthUpgradePriceRequest) (*GetUPhoneBandwidthUpgradePriceResponse, error) {
+	var err error
+	var res GetUPhoneBandwidthUpgradePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUPhoneBandwidthUpgradePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUPhonePriceRequest is request schema for GetUPhonePrice action
 type GetUPhonePriceRequest struct {
 	request.CommonBase
@@ -1509,10 +1586,10 @@ type GetUPhonePriceRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// 购买独立IP时需要此参数，带宽线路数量，与云手机数量一致
+	// 购买独立IP并且使用全局共享带宽时需要此参数，带宽线路数量，与云手机数量一致
 	BandwidthLine *int `required:"false"`
 
-	// 计费模式。枚举值为： > Year，按年付费； > Month，按月付费； > Dynamic，按小时预付费; 如果不传某个枚举值，默认返回年付、月付的价格组合集。
+	// 计费模式。枚举值为： > Year，按年付费； > Month，按月付费；> Day，按天付费； > Dynamic，按小时预付费; 如果不传某个枚举值，默认返回年付、月付的价格组合集。
 	ChargeType *string `required:"false"`
 
 	// 城市Id，通过[获取城市列表](#DescribeUPhoneCities)获取
@@ -1530,11 +1607,20 @@ type GetUPhonePriceRequest struct {
 	// 购买时长。默认: 1。 月付时，此参数传0，代表了购买至月末。
 	Quantity *int `required:"false"`
 
+	// 单个云手机带宽大小，单位Kbps，仅在UseKbps为true时生效
+	UPhoneBandwidth *int `required:"false"`
+
 	// 云手机个数
 	UPhoneCount *int `required:"false"`
 
 	// 云手机规格名称
 	UPhoneModelName *int `required:"false"`
+
+	// 使用全局共享带宽
+	UseGlobalBws *bool `required:"false"`
+
+	// 使用Kbps单位带宽，仅在使用全局共享带宽时生效，值为true时BandwidthLine参数不再生效
+	UseKbps *bool `required:"false"`
 }
 
 // GetUPhonePriceResponse is response schema for GetUPhonePrice action
@@ -1889,13 +1975,16 @@ type ImportFileRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
+	// 上传文件为apk时，可强制指定32位还是64位运行。armeabi-v7a（32位）;不填为系统默认值（64位）
+	ABI *string `required:"false"`
+
 	// 城市。 参见 [云手机城市列表](https://docs.ucloud.cn/api/uphone-api/describe_u_phone_cities)
 	CityId *string `required:"false"`
 
 	// 文件名
 	FileName *string `required:"true"`
 
-	// 枚举值。当前操作的产品类型，1、uphone：云手机场景；2、uphone-server：云手机服务器场景。默认云手机服务器场景。
+	// 枚举值。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
 	ProductType *string `required:"false"`
 
 	// 云手机ID
@@ -1999,6 +2088,62 @@ func (c *UPhoneClient) InstallUPhoneAppVersion(req *InstallUPhoneAppVersionReque
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("InstallUPhoneAppVersion", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyUPhoneBandwidthRequest is request schema for ModifyUPhoneBandwidth action
+type ModifyUPhoneBandwidthRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 带宽大小，单位Kbps，必须是100的整数倍
+	Bandwidth *int `required:"true"`
+
+	// 枚举值。表示当前操作的产品类型，目前固定值【uphone】，表示云手机场景。
+	ProductType *string `required:"true"`
+
+	// 云手机ID
+	UPhoneId *string `required:"true"`
+}
+
+// ModifyUPhoneBandwidthResponse is response schema for ModifyUPhoneBandwidth action
+type ModifyUPhoneBandwidthResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewModifyUPhoneBandwidthRequest will create request of ModifyUPhoneBandwidth action.
+func (c *UPhoneClient) NewModifyUPhoneBandwidthRequest() *ModifyUPhoneBandwidthRequest {
+	req := &ModifyUPhoneBandwidthRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUPhoneBandwidth
+
+修改云手机带宽
+*/
+func (c *UPhoneClient) ModifyUPhoneBandwidth(req *ModifyUPhoneBandwidthRequest) (*ModifyUPhoneBandwidthResponse, error) {
+	var err error
+	var res ModifyUPhoneBandwidthResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUPhoneBandwidth", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

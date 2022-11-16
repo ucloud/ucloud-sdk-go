@@ -152,7 +152,7 @@ type CreateUFileTokenRequest struct {
 	// 令牌允许操作的bucket，默认*表示全部
 	AllowedBuckets []string `required:"false"`
 
-	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP  ，TOKEN_DENY_UPDATE]。默认TOKEN_ALLOW_NONE
+	// 令牌允许执行的操作[ TOKEN_ALLOW_NONE 没有权限, TOKEN_ALLOW_READ 下载权限 , TOKEN_ALLOW_WRITE 上传权限 , TOKEN_ALLOW_DELETE 删除权限 , TOKEN_ALLOW_LIST 列表权限, TOKEN_ALLOW_IOP 图片处理权限, TOKEN_DENY_UPDATE 禁止覆盖权限]。默认TOKEN_ALLOW_NONE
 	AllowedOps []string `required:"false"`
 
 	// 令牌允许操作的key前缀，默认*表示全部
