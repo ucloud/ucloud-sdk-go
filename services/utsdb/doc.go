@@ -5,8 +5,8 @@ Package utsdb include resources of ucloud utsdb product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/utsdb-api/index
-	- Product: https://www.ucloud.cn/site/product/utsdb.html
+  - API: https://docs.ucloud.cn/api/utsdb-api/index
+  - Product: https://www.ucloud.cn/site/product/utsdb.html
 
 for detail.
 */

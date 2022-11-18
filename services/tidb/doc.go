@@ -5,8 +5,8 @@ Package tidb include resources of ucloud tidb product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/tidb-api/index
-	- Product: https://www.ucloud.cn/site/product/tidb.html
+  - API: https://docs.ucloud.cn/api/tidb-api/index
+  - Product: https://www.ucloud.cn/site/product/tidb.html
 
 for detail.
 */

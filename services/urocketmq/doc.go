@@ -5,8 +5,8 @@ Package urocketmq include resources of ucloud urocketmq product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/urocketmq-api/index
-	- Product: https://www.ucloud.cn/site/product/urocketmq.html
+  - API: https://docs.ucloud.cn/api/urocketmq-api/index
+  - Product: https://www.ucloud.cn/site/product/urocketmq.html
 
 for detail.
 */

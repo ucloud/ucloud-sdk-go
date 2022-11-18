@@ -20,7 +20,7 @@ type UpdateBackendBatchRequest struct {
 }
 
 /*
-   Attributes.N is request schema for complex param
+Attributes.N is request schema for complex param
 */
 type UpdateBackendBatchParamAttributes struct {
 
@@ -60,9 +60,9 @@ func (c *ULBClient) NewUpdateBackendBatchRequest() *UpdateBackendBatchRequest {
 }
 
 /*
-   API: UpdateBackendBatch
+API: UpdateBackendBatch
 
-   批量更新ULB后端资源实例(服务节点)属性
+批量更新ULB后端资源实例(服务节点)属性
 */
 func (c *ULBClient) UpdateBackendBatch(req *UpdateBackendBatchRequest) (*UpdateBackendBatchResponse, error) {
 	var err error
