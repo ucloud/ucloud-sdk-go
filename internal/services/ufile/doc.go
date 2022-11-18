@@ -5,8 +5,8 @@ Package ufile include resources of ucloud ufile product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/ufile-api/index
-	- Product: https://www.ucloud.cn/site/product/ufile.html
+  - API: https://docs.ucloud.cn/api/ufile-api/index
+  - Product: https://www.ucloud.cn/site/product/ufile.html
 
 for detail.
 */

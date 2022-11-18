@@ -5,8 +5,8 @@ Package udts include resources of ucloud udts product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/udts-api/index
-	- Product: https://www.ucloud.cn/site/product/udts.html
+  - API: https://docs.ucloud.cn/api/udts-api/index
+  - Product: https://www.ucloud.cn/site/product/udts.html
 
 for detail.
 */
