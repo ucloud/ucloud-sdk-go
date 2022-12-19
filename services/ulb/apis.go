@@ -131,6 +131,8 @@ func (c *ULBClient) NewAllocateBackendBatchRequest() *AllocateBackendBatchReques
 
 /*
 API: AllocateBackendBatch
+
+
 */
 func (c *ULBClient) AllocateBackendBatch(req *AllocateBackendBatchRequest) (*AllocateBackendBatchResponse, error) {
 	var err error
@@ -493,7 +495,7 @@ type CreateULBRequest struct {
 	// 负载均衡的名字，默认值为“ULB”
 	ULBName *string `required:"false"`
 
-	// ULB所在的VPC的ID, 如果不传则使用默认的VPC
+	// ULB所在的VPC的ID。 如果不传则使用默认的VPC，若不传且无默认VPC则接口报错
 	VPCId *string `required:"false"`
 }
 

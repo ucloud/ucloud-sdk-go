@@ -3,6 +3,183 @@
 package umongodb
 
 /*
+DiskInfo - 磁盘信息
+*/
+type DiskInfo struct {
+
+	// 磁盘id
+	DiskId string
+
+	// 磁盘容量单位GB
+	DiskSize int
+}
+
+/*
+NodeInfo - 节点信息
+*/
+type NodeInfo struct {
+
+	// 节点所属副本集ID
+	ClusterId string
+
+	// DB实例创建时间
+	CreateTime int
+
+	// 副本集的Mongodb的版本
+	DBVersion string
+
+	// 数据盘信息
+	DataDisk DiskInfo
+
+	// 机型信息
+	MachineType string
+
+	// 机型信息ID
+	MachineTypeId string
+
+	// 节点ID
+	NodeId string
+
+	// 节点角色，Primary/Secondary/Arbiter/Startup等等
+	NodeRole string
+
+	// 节点类型
+	NodeType string
+
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
+	State string
+
+	// 系统盘信息
+	SysDisk DiskInfo
+
+	// 虚拟节点ID
+	VirtualClusterId string
+
+	// 可用区
+	Zone string
+
+	// 可用区ID
+	ZoneId int
+}
+
+/*
+ReplicaInfo - 副本集群信息
+*/
+type ReplicaInfo struct {
+
+	// 集群ID
+	ClusterId string
+
+	// 副本集创建时间
+	CreateTime int
+
+	// 副本集删除时间
+	DeleteTime int
+
+	// 隔离组ID
+	IsolationGroupId string
+
+	// 机器类型
+	MachineType string
+
+	// 机器类型Id
+	MachineTypeId string
+
+	// 副本集修改时间
+	ModifyTime int
+
+	// 副本集下的节点数量
+	NodeCount int
+
+	// 副本集下的节点信息
+	NodeInfos []NodeInfo
+
+	// 副本集ID
+	ReplicaId string
+
+	// 副本类型,ConfigRepl或者DataRepl
+	ReplicaType string
+
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
+	State string
+}
+
+/*
+ClusterInfo - 集群信息
+*/
+type ClusterInfo struct {
+
+	// 集群ID
+	ClusterId string
+
+	// 集群类型，ReplicaSet :副本集，SharedCluster：分片集
+	ClusterType string
+
+	// Config配置集群节点配置，分片集有效
+	ConfigMachineType string
+
+	// Config配置集群节点数量，分片集有效
+	ConfigNodeCount int
+
+	// ConfigSrv信息
+	ConfigReplicaInfo ReplicaInfo
+
+	// 副本集的访问地址
+	ConnectURL string
+
+	// DB实例创建时间
+	CreateTime int
+
+	// 副本集的Mongodb的版本
+	DBVersion string
+
+	// 数据副本信息
+	DataReplicaInfos []ReplicaInfo
+
+	// DB实例删除时间
+	DeleteTime int
+
+	// 磁盘空间(GB), 默认根据配置机型
+	DiskSpace int
+
+	// 实例名称
+	InstanceName string
+
+	// 计算规格
+	MachineTypeId string
+
+	// Mongos节点数量，分片集有效
+	MongosCount int
+
+	// Mongos节点信息
+	MongosInfo []NodeInfo
+
+	// 分片数量，分片集有效
+	ShardCount int
+
+	// 每分片节点数量，分片集有效
+	ShardNodeCount int
+
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
+	State string
+
+	// 子网ID
+	SubnetId string
+
+	// 实例业务组
+	Tag string
+
+	// VPC的ID
+	VPCId string
+
+	// 可用区
+	Zone string
+
+	//
+	ZoneId int
+}
+
+/*
 BackupParam - 备份策略模型
 */
 type BackupParam struct {
