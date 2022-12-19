@@ -34,11 +34,29 @@ type UDBBackupSet struct {
 	// 对应的db名称
 	DBName string
 
+	// 备份错误信息
+	ErrorInfo string
+
+	// 备份文件的MD5值，备份完成后显示，备份中或备份失败时为空,目前只支持Mysql NVMe机型与Mongo
+	MD5 string
+
 	// 备份状态 Backuping // 备份中 Success // 备份成功 Failed // 备份失败 Expired // 备份过期
 	State string
 
 	// 备份所在可用区
 	Zone string
+}
+
+/*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
 }
 
 /*
@@ -156,18 +174,6 @@ type UDBSlaveInstanceSet struct {
 
 	// 可用区
 	Zone string
-}
-
-/*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
 }
 
 /*

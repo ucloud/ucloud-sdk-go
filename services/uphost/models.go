@@ -3,6 +3,18 @@
 package uphost
 
 /*
+PHostClusterSet - 物理云主机集群库存信息
+*/
+type PHostClusterSet struct {
+
+	// 集群名。枚举值：千兆网络集群：1G；万兆网络集群：10G；智能网卡网络：25G；
+	Name string
+
+	// 库存状态。枚举值：有库存：Available；无库存：SoldOut
+	StockStatus string
+}
+
+/*
 PHostCPUSet - DescribePHost
 */
 type PHostCPUSet struct {
@@ -30,18 +42,6 @@ type PHostComponentSet struct {
 
 	// 组件名称
 	Name string
-}
-
-/*
-PHostClusterSet - 物理云主机集群库存信息
-*/
-type PHostClusterSet struct {
-
-	// 集群名。枚举值：千兆网络集群：1G；万兆网络集群：10G；智能网卡网络：25G；
-	Name string
-
-	// 库存状态。枚举值：有库存：Available；无库存：SoldOut
-	StockStatus string
 }
 
 /*

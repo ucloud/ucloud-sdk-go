@@ -5,8 +5,8 @@ Package usms include resources of ucloud usms product
 
 See also
 
-  - API: https://docs.ucloud.cn/api/usms-api/index
-  - Product: https://www.ucloud.cn/site/product/usms.html
+	- API: https://docs.ucloud.cn/api/usms-api/index
+	- Product: https://www.ucloud.cn/site/product/usms.html
 
 for detail.
 */

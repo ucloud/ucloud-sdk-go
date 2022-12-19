@@ -196,18 +196,6 @@ func (c *UECClient) CreateUEcFirewall(req *CreateUEcFirewallRequest) (*CreateUEc
 }
 
 /*
-CreateUEcHolderParamStorage is request schema for complex param
-*/
-type CreateUEcHolderParamStorage struct {
-
-	// 存储卷挂载路径
-	Path *string `required:"false"`
-
-	// 存储卷资源id
-	ResourceId *string `required:"false"`
-}
-
-/*
 CreateUEcHolderParamImage is request schema for complex param
 */
 type CreateUEcHolderParamImage struct {
@@ -217,6 +205,18 @@ type CreateUEcHolderParamImage struct {
 
 	// 镜像仓库地址
 	StoreAddress *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamStorage is request schema for complex param
+*/
+type CreateUEcHolderParamStorage struct {
+
+	// 存储卷挂载路径
+	Path *string `required:"false"`
+
+	// 存储卷资源id
+	ResourceId *string `required:"false"`
 }
 
 /*

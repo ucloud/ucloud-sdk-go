@@ -993,6 +993,8 @@ func (c *PathXClient) NewDescribeGlobalSSHAreaRequest() *DescribeGlobalSSHAreaRe
 
 /*
 API: DescribeGlobalSSHArea
+
+
 */
 func (c *PathXClient) DescribeGlobalSSHArea(req *DescribeGlobalSSHAreaRequest) (*DescribeGlobalSSHAreaResponse, error) {
 	var err error

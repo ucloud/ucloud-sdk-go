@@ -5,8 +5,8 @@ Package uec include resources of ucloud uec product
 
 See also
 
-  - API: https://docs.ucloud.cn/api/uec-api/index
-  - Product: https://www.ucloud.cn/site/product/uec.html
+	- API: https://docs.ucloud.cn/api/uec-api/index
+	- Product: https://www.ucloud.cn/site/product/uec.html
 
 for detail.
 */

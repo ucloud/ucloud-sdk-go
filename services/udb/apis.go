@@ -1167,6 +1167,8 @@ func (c *UDBClient) NewDeleteUDBBackupRequest() *DeleteUDBBackupRequest {
 
 /*
 API: DeleteUDBBackup
+
+
 */
 func (c *UDBClient) DeleteUDBBackup(req *DeleteUDBBackupRequest) (*DeleteUDBBackupResponse, error) {
 	var err error
@@ -1354,13 +1356,13 @@ func (c *UDBClient) DeleteUDBParamGroup(req *DeleteUDBParamGroupRequest) (*Delet
 type DescribeUDBBackupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
@@ -1372,8 +1374,8 @@ type DescribeUDBBackupRequest struct {
 	// 过滤条件:起始时间(Unix时间戳)
 	BeginTime *int `required:"false"`
 
-	// 【该字段已废弃，请谨慎使用】
-	ClassType *string `required:"false" deprecated:"true"`
+	// 如果未指定GroupId，则可选是否选取特定DB类型的配置(sql, nosql, postgresql, sqlserver)
+	ClassType *string `required:"false"`
 
 	// DB实例Id，如果指定，则只获取该db的备份信息 该值可以通过DescribeUDBInstance获取
 	DBId *string `required:"false"`
@@ -1414,7 +1416,7 @@ func (c *UDBClient) NewDescribeUDBBackupRequest() *DescribeUDBBackupRequest {
 /*
 API: DescribeUDBBackup
 
-列表UDB实例备份信息
+列表UDB实例备份信息.Zone不填表示多可用区，填代表单可用区
 */
 func (c *UDBClient) DescribeUDBBackup(req *DescribeUDBBackupRequest) (*DescribeUDBBackupResponse, error) {
 	var err error
@@ -1691,13 +1693,13 @@ func (c *UDBClient) DescribeUDBInstanceBackupState(req *DescribeUDBInstanceBacku
 type DescribeUDBInstanceBackupURLRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// DB实例备份ID,该值可以通过DescribeUDBBackup获取
@@ -1705,6 +1707,9 @@ type DescribeUDBInstanceBackupURLRequest struct {
 
 	// DB实例Id,该值可通过DescribeUDBInstance获取
 	DBId *string `required:"true"`
+
+	// DB响应中URL的过期时间,该值最小默认4小时,最大7天。不填默认为四小时。(单位/秒)
+	ValidTime *int `required:"false"`
 }
 
 // DescribeUDBInstanceBackupURLResponse is response schema for DescribeUDBInstanceBackupURL action
@@ -1716,6 +1721,9 @@ type DescribeUDBInstanceBackupURLResponse struct {
 
 	// DB实例备份文件内网的地址
 	InnerBackupPath string
+
+	// 备份文件的md5值
+	MD5 string
 }
 
 // NewDescribeUDBInstanceBackupURLRequest will create request of DescribeUDBInstanceBackupURL action.

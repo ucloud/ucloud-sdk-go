@@ -153,10 +153,13 @@ type DescribeUMongoDBBackupURLRequest struct {
 	// Zone *string `required:"true"`
 
 	// 文件备份ID
-	BackupId *string `required:"true"`
+	BackupId *string `required:"false"`
 
 	// 集群ID
 	ClusterId *string `required:"true"`
+
+	// 打包ID
+	PackageId *int `required:"false"`
 
 	// 备份链接过期时间（单位秒）
 	ValidTime *int `required:"false"`
@@ -197,6 +200,65 @@ func (c *UMongoDBClient) DescribeUMongoDBBackupURL(req *DescribeUMongoDBBackupUR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeUMongoDBBackupURL", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUMongoDBInstanceRequest is request schema for DescribeUMongoDBInstance action
+type DescribeUMongoDBInstanceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 实例资源ID
+	ClusterId *string `required:"true"`
+
+	// 集群类型，ReplicaSet：副本集，SharedCluster：分片集群
+	ClusterType *string `required:"false"`
+}
+
+// DescribeUMongoDBInstanceResponse is response schema for DescribeUMongoDBInstance action
+type DescribeUMongoDBInstanceResponse struct {
+	response.CommonBase
+
+	// 副本集信息
+	ClusterInfo ClusterInfo
+}
+
+// NewDescribeUMongoDBInstanceRequest will create request of DescribeUMongoDBInstance action.
+func (c *UMongoDBClient) NewDescribeUMongoDBInstanceRequest() *DescribeUMongoDBInstanceRequest {
+	req := &DescribeUMongoDBInstanceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUMongoDBInstance
+
+描述MongoDB实例
+*/
+func (c *UMongoDBClient) DescribeUMongoDBInstance(req *DescribeUMongoDBInstanceRequest) (*DescribeUMongoDBInstanceResponse, error) {
+	var err error
+	var res DescribeUMongoDBInstanceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUMongoDBInstance", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

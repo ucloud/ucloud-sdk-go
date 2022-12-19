@@ -5,8 +5,8 @@ Package uvms include resources of ucloud uvms product
 
 See also
 
-  - API: https://docs.ucloud.cn/api/uvms-api/index
-  - Product: https://www.ucloud.cn/site/product/uvms.html
+	- API: https://docs.ucloud.cn/api/uvms-api/index
+	- Product: https://www.ucloud.cn/site/product/uvms.html
 
 for detail.
 */
