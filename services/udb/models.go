@@ -3,63 +3,6 @@
 package udb
 
 /*
-UDBBackupSet - DescribeUDBBackup
-*/
-type UDBBackupSet struct {
-
-	// 备份完成时间(Unix时间戳)
-	BackupEndTime int
-
-	// 备份id
-	BackupId int
-
-	// 备份名称
-	BackupName string
-
-	// 备份文件大小(字节)
-	BackupSize int
-
-	// 备份时间(Unix时间戳)
-	BackupTime int
-
-	// 备份类型,取值为0或1,0表示自动，1表示手动
-	BackupType int
-
-	// 跨机房高可用备库所在可用区
-	BackupZone string
-
-	// dbid
-	DBId string
-
-	// 对应的db名称
-	DBName string
-
-	// 备份错误信息
-	ErrorInfo string
-
-	// 备份文件的MD5值，备份完成后显示，备份中或备份失败时为空,目前只支持Mysql NVMe机型与Mongo
-	MD5 string
-
-	// 备份状态 Backuping // 备份中 Success // 备份成功 Failed // 备份失败 Expired // 备份过期
-	State string
-
-	// 备份所在可用区
-	Zone string
-}
-
-/*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
-}
-
-/*
 UDBSlaveInstanceSet - DescribeUDBSlaveInstance
 */
 type UDBSlaveInstanceSet struct {
@@ -173,6 +116,57 @@ type UDBSlaveInstanceSet struct {
 	VirtualIPMac string
 
 	// 可用区
+	Zone string
+}
+
+/*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
+}
+
+/*
+MongoDBShardedClusterSet - mongodb分片集群的概览信息
+*/
+type MongoDBShardedClusterSet struct {
+
+	// 分片集群的创建时间
+	CreateTime int
+
+	// 分片集群的资源ID
+	DBId string
+
+	// DB类型id
+	DBTypeId string
+
+	// 集群中mongos的个数
+	MongosCount int
+
+	// 分片集群的名称
+	Name string
+
+	// 集群中分片的个数
+	ShardsrvCount int
+
+	// 子网ID
+	SubnetId string
+
+	// 获取资源其他信息
+	Tag string
+
+	// VPC的ID
+	VPCId string
+
+	// 集群中mongos的IP
+	VirtualIPs []string
+
+	// DB实例所在可用区
 	Zone string
 }
 
@@ -302,6 +296,51 @@ type UDBInstanceSet struct {
 	VirtualIPMac string
 
 	// DB实例所在可用区
+	Zone string
+}
+
+/*
+UDBBackupSet - DescribeUDBBackup
+*/
+type UDBBackupSet struct {
+
+	// 备份完成时间(Unix时间戳)
+	BackupEndTime int
+
+	// 备份id
+	BackupId int
+
+	// 备份名称
+	BackupName string
+
+	// 备份文件大小(字节)
+	BackupSize int
+
+	// 备份时间(Unix时间戳)
+	BackupTime int
+
+	// 备份类型,取值为0或1,0表示自动，1表示手动
+	BackupType int
+
+	// 跨机房高可用备库所在可用区
+	BackupZone string
+
+	// dbid
+	DBId string
+
+	// 对应的db名称
+	DBName string
+
+	// 备份错误信息
+	ErrorInfo string
+
+	// 备份文件的MD5值，备份完成后显示，备份中或备份失败时为空,目前只支持Mysql NVMe机型与Mongo
+	MD5 string
+
+	// 备份状态 Backuping // 备份中 Success // 备份成功 Failed // 备份失败 Expired // 备份过期
+	State string
+
+	// 备份所在可用区
 	Zone string
 }
 

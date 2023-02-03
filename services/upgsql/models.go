@@ -258,6 +258,24 @@ type UDBInstanceSet struct {
 }
 
 /*
+LogSet - 日志信息
+*/
+type LogSet struct {
+
+	//
+	BeginTime int
+
+	//
+	EndTime int
+
+	//
+	Name string
+
+	//
+	Size int
+}
+
+/*
 PgSQLMachineType - 机器类型信息列表
 */
 type PgSQLMachineType struct {
