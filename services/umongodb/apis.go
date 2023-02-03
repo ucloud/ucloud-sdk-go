@@ -139,6 +139,190 @@ func (c *UMongoDBClient) CreateUMongoDBConfigTemplate(req *CreateUMongoDBConfigT
 	return &res, nil
 }
 
+// CreateUMongoDBReplSetRequest is request schema for CreateUMongoDBReplSet action
+type CreateUMongoDBReplSetRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 管理员密码
+	AdminPassword *string `required:"true"`
+
+	// 付费方式：Year， Month， Dynamic，Trial，默认: Month
+	ChargeType *string `required:"false"`
+
+	// 副本集的Mongodb的版本，例如MongoDB_3_6, MongoDB_4_2
+	DBVersion *string `required:"true"`
+
+	// 磁盘空间(GB)
+	DiskSpace *int `required:"true"`
+
+	// mongo服务端口
+	ListenPort *int `required:"false"`
+
+	// 机型配置
+	MachineTypeId *string `required:"true"`
+
+	// 副本集实例名称，至少6位
+	Name *string `required:"true"`
+
+	// 副本集节点数量
+	NodeCount *int `required:"true"`
+
+	// 购买时长，默认值1
+	Quantity *int `required:"false"`
+
+	// 子网ID
+	SubnetId *string `required:"false"`
+
+	// 实例所在的业务组名称
+	Tag *string `required:"false"`
+
+	// VPC的ID
+	VPCId *string `required:"false"`
+}
+
+// CreateUMongoDBReplSetResponse is response schema for CreateUMongoDBReplSet action
+type CreateUMongoDBReplSetResponse struct {
+	response.CommonBase
+}
+
+// NewCreateUMongoDBReplSetRequest will create request of CreateUMongoDBReplSet action.
+func (c *UMongoDBClient) NewCreateUMongoDBReplSetRequest() *CreateUMongoDBReplSetRequest {
+	req := &CreateUMongoDBReplSetRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUMongoDBReplSet
+
+创建一个Mongodb副本集群
+*/
+func (c *UMongoDBClient) CreateUMongoDBReplSet(req *CreateUMongoDBReplSetRequest) (*CreateUMongoDBReplSetResponse, error) {
+	var err error
+	var res CreateUMongoDBReplSetResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUMongoDBReplSet", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateUMongoDBShardedClusterRequest is request schema for CreateUMongoDBShardedCluster action
+type CreateUMongoDBShardedClusterRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 管理员密码
+	AdminPassword *string `required:"true"`
+
+	// 付费方式：Year， Month， Dynamic，Trial，默认: Month
+	ChargeType *string `required:"false"`
+
+	// 副本集的Mongodb的版本，例如MongoDB-3.6, MongoDB-4.2
+	DBVersion *string `required:"true"`
+
+	// 数据节点磁盘空间(GB)
+	DiskSpace *int `required:"true"`
+
+	// mongo服务端口
+	ListenPort *int `required:"false"`
+
+	// 数据节点机型配置
+	MachineTypeId *string `required:"true"`
+
+	// Mongos节点机型配置
+	MongosMachineTypeId *string `required:"false"`
+
+	// Mongos节点数量
+	MongosNodeCount *int `required:"true"`
+
+	// 副本集实例名称，至少6位
+	Name *string `required:"true"`
+
+	// 每个分片中节点数量
+	NodeCount *int `required:"true"`
+
+	// 购买时长，默认值1
+	Quantity *int `required:"false"`
+
+	// 分片数量
+	ShardCount *int `required:"true"`
+
+	// 子网ID
+	SubnetId *string `required:"false"`
+
+	// 实例所在的业务组名称
+	Tag *string `required:"false"`
+
+	// 参数配置模版id
+	TemplateId *string `required:"false"`
+
+	// VPC的ID
+	VPCId *string `required:"false"`
+}
+
+// CreateUMongoDBShardedClusterResponse is response schema for CreateUMongoDBShardedCluster action
+type CreateUMongoDBShardedClusterResponse struct {
+	response.CommonBase
+}
+
+// NewCreateUMongoDBShardedClusterRequest will create request of CreateUMongoDBShardedCluster action.
+func (c *UMongoDBClient) NewCreateUMongoDBShardedClusterRequest() *CreateUMongoDBShardedClusterRequest {
+	req := &CreateUMongoDBShardedClusterRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUMongoDBShardedCluster
+
+创建一个Mongodb分片集群
+*/
+func (c *UMongoDBClient) CreateUMongoDBShardedCluster(req *CreateUMongoDBShardedClusterRequest) (*CreateUMongoDBShardedClusterResponse, error) {
+	var err error
+	var res CreateUMongoDBShardedClusterResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUMongoDBShardedCluster", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUMongoDBBackupURLRequest is request schema for DescribeUMongoDBBackupURL action
 type DescribeUMongoDBBackupURLRequest struct {
 	request.CommonBase

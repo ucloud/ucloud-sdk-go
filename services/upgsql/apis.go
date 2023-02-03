@@ -9,6 +9,77 @@ import (
 
 // UPgSQL API Schema
 
+// BackupUPgSQLLogRequest is request schema for BackupUPgSQLLog action
+type BackupUPgSQLLogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 备份查询结果文件名称
+	BackupFile *string `required:"true"`
+
+	// 备份导出文件名称
+	BackupName *string `required:"true"`
+
+	// 日志开始时间
+	BeginTime *int `required:"false"`
+
+	// 日志结束时间
+	EndTime *int `required:"false"`
+
+	// 资源ID
+	InstanceID *string `required:"true"`
+
+	// 日志类型:slow(慢日志),error(错误日志)
+	LogType *string `required:"false"`
+}
+
+// BackupUPgSQLLogResponse is response schema for BackupUPgSQLLog action
+type BackupUPgSQLLogResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewBackupUPgSQLLogRequest will create request of BackupUPgSQLLog action.
+func (c *UPgSQLClient) NewBackupUPgSQLLogRequest() *BackupUPgSQLLogRequest {
+	req := &BackupUPgSQLLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BackupUPgSQLLog
+
+备份日志包
+*/
+func (c *UPgSQLClient) BackupUPgSQLLog(req *BackupUPgSQLLogRequest) (*BackupUPgSQLLogResponse, error) {
+	var err error
+	var res BackupUPgSQLLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BackupUPgSQLLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUPgSQLInstanceRequest is request schema for CreateUPgSQLInstance action
 type CreateUPgSQLInstanceRequest struct {
 	request.CommonBase
@@ -597,6 +668,77 @@ func (c *UPgSQLClient) GetUPgSQLInstance(req *GetUPgSQLInstanceRequest) (*GetUPg
 	return &res, nil
 }
 
+// GetUPgSQLInstanceLogRequest is request schema for GetUPgSQLInstanceLog action
+type GetUPgSQLInstanceLogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	//
+	AccountID *int `required:"true"`
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	//
+	CompanyID *int `required:"true"`
+
+	// 实例ClusterID
+	DBId *string `required:"true"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 日志类型
+	LogType *string `required:"true"`
+
+	// 可用区
+	ZoneID *int `required:"true"`
+}
+
+// GetUPgSQLInstanceLogResponse is response schema for GetUPgSQLInstanceLog action
+type GetUPgSQLInstanceLogResponse struct {
+	response.CommonBase
+
+	// 返回的日志信息
+	Log string
+}
+
+// NewGetUPgSQLInstanceLogRequest will create request of GetUPgSQLInstanceLog action.
+func (c *UPgSQLClient) NewGetUPgSQLInstanceLogRequest() *GetUPgSQLInstanceLogRequest {
+	req := &GetUPgSQLInstanceLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUPgSQLInstanceLog
+
+可以查询DB的错误日志和满查询日志
+*/
+func (c *UPgSQLClient) GetUPgSQLInstanceLog(req *GetUPgSQLInstanceLogRequest) (*GetUPgSQLInstanceLogResponse, error) {
+	var err error
+	var res GetUPgSQLInstanceLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUPgSQLInstanceLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUPgSQLInstancePriceRequest is request schema for GetUPgSQLInstancePrice action
 type GetUPgSQLInstancePriceRequest struct {
 	request.CommonBase
@@ -913,6 +1055,71 @@ func (c *UPgSQLClient) ListUPgSQLInstance(req *ListUPgSQLInstanceRequest) (*List
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUPgSQLInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUPgSQLLogRequest is request schema for ListUPgSQLLog action
+type ListUPgSQLLogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 查询的日志开始的时间戳
+	BeginTime *int `required:"true"`
+
+	// 查询日志的结束时间戳
+	EndTime *int `required:"true"`
+
+	// 资源ID
+	InstanceID *string `required:"true"`
+}
+
+// ListUPgSQLLogResponse is response schema for ListUPgSQLLog action
+type ListUPgSQLLogResponse struct {
+	response.CommonBase
+
+	// 数据库日志信息列表
+	DataSet []LogSet
+
+	// 错误信息
+	Message string
+}
+
+// NewListUPgSQLLogRequest will create request of ListUPgSQLLog action.
+func (c *UPgSQLClient) NewListUPgSQLLogRequest() *ListUPgSQLLogRequest {
+	req := &ListUPgSQLLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUPgSQLLog
+
+获取数据库日志
+*/
+func (c *UPgSQLClient) ListUPgSQLLog(req *ListUPgSQLLogRequest) (*ListUPgSQLLogResponse, error) {
+	var err error
+	var res ListUPgSQLLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUPgSQLLog", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

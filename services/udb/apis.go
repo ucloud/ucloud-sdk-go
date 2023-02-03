@@ -1352,6 +1352,77 @@ func (c *UDBClient) DeleteUDBParamGroup(req *DeleteUDBParamGroupRequest) (*Delet
 	return &res, nil
 }
 
+// DescribeMongoDBShardedClusterRequest is request schema for DescribeMongoDBShardedCluster action
+type DescribeMongoDBShardedClusterRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 获取相关角色的DB，包括mongos，shardsrv，configsrv
+	ClusterRole *string `required:"false"`
+
+	// 分页显示数量，列表操作则指定
+	Limit *int `required:"true"`
+
+	// 分页显示起始偏移位置，列表操作则指定
+	Offset *int `required:"true"`
+
+	// 分片集群的ID，当ClusterRole和ShardedCluster不传时，返回分片集群的列表信息
+	ShardedCluster *string `required:"false"`
+}
+
+// DescribeMongoDBShardedClusterResponse is response schema for DescribeMongoDBShardedCluster action
+type DescribeMongoDBShardedClusterResponse struct {
+	response.CommonBase
+
+	// DB实例信息列表 UDBInstanceSet
+	DataSet []UDBInstanceSet
+
+	// 分片集群信息列表 MongoDBShardedClusterSet
+	ShardedClusterSet []MongoDBShardedClusterSet
+
+	// 返回列表中DB信息的个数
+	TotalCount int
+}
+
+// NewDescribeMongoDBShardedClusterRequest will create request of DescribeMongoDBShardedCluster action.
+func (c *UDBClient) NewDescribeMongoDBShardedClusterRequest() *DescribeMongoDBShardedClusterRequest {
+	req := &DescribeMongoDBShardedClusterRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeMongoDBShardedCluster
+
+获取分片集群的详细信息
+*/
+func (c *UDBClient) DescribeMongoDBShardedCluster(req *DescribeMongoDBShardedClusterRequest) (*DescribeMongoDBShardedClusterResponse, error) {
+	var err error
+	var res DescribeMongoDBShardedClusterResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeMongoDBShardedCluster", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUDBBackupRequest is request schema for DescribeUDBBackup action
 type DescribeUDBBackupRequest struct {
 	request.CommonBase

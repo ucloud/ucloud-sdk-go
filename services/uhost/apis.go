@@ -232,15 +232,15 @@ type UHostDiskCustomBackup struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
+CreateUHostInstanceParamVolumes is request schema for complex param
 */
-type CreateUHostInstanceParamNetworkInterface struct {
+type CreateUHostInstanceParamVolumes struct {
 
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
 
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 /*
@@ -259,15 +259,15 @@ type CreateUHostInstanceParamFeatures struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
+type CreateUHostInstanceParamNetworkInterface struct {
 
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
 
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 /*
@@ -1124,9 +1124,18 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVirtualGpu is request schema for complex param
+GetUHostInstancePriceParamVolumes is request schema for complex param
 */
-type GetUHostInstancePriceParamVirtualGpu struct {
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
 }
 
 /*
@@ -1148,18 +1157,9 @@ type getUHostInstancePriceParamDisks struct {
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
+GetUHostInstancePriceParamVirtualGpu is request schema for complex param
 */
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
+type GetUHostInstancePriceParamVirtualGpu struct {
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
