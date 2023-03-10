@@ -66,33 +66,6 @@ type PHostCloudMachineTypeSet struct {
 }
 
 /*
-PHostIPSet - DescribePHost
-*/
-type PHostIPSet struct {
-
-	// IP对应带宽，单位Mb，内网IP不显示带宽信息
-	Bandwidth int
-
-	// IP地址，
-	IPAddr string
-
-	// IP资源ID(内网IP无资源ID)（待废弃）
-	IPId string
-
-	// MAC地址
-	MACAddr string
-
-	// 国际: Internation， BGP: BGP， 内网: Private
-	OperatorName string
-
-	// 子网ID
-	SubnetId string
-
-	// VPC ID
-	VPCId string
-}
-
-/*
 PHostDescDiskSet - DescribePHost（包括传统和裸金属1、裸金属2）
 */
 type PHostDescDiskSet struct {
@@ -123,12 +96,42 @@ type PHostDescDiskSet struct {
 }
 
 /*
+PHostIPSet - DescribePHost
+*/
+type PHostIPSet struct {
+
+	// IP对应带宽，单位Mb，内网IP不显示带宽信息
+	Bandwidth int
+
+	// IP地址，
+	IPAddr string
+
+	// IP资源ID(内网IP无资源ID)（待废弃）
+	IPId string
+
+	// MAC地址
+	MACAddr string
+
+	// 国际: Internation， BGP: BGP， 内网: Private
+	OperatorName string
+
+	// 子网ID
+	SubnetId string
+
+	// VPC ID
+	VPCId string
+}
+
+/*
 PHostSet - DescribePHost
 */
 type PHostSet struct {
 
 	// 自动续费
 	AutoRenew string
+
+	// 裸金属机型字段。枚举值：Normal=>正常、ImageMaking=>镜像制作中。
+	BootDiskState string
 
 	// CPU信息，见 PHostCPUSet
 	CPUSet PHostCPUSet
@@ -189,6 +192,9 @@ type PHostSet struct {
 
 	// 是否支持Raid。枚举值：Yes：支持；No：不支持。
 	RaidSupported string
+
+	// RDMA集群id，仅云盘裸金属返回该值；其他类型物理云主机返回""。当物理机的此值与RSSD云盘的RdmaClusterId相同时，RSSD可以挂载到这台物理机。
+	RdmaClusterId string
 
 	// 物理机备注
 	Remark string

@@ -93,15 +93,18 @@ type FeatureModes struct {
 }
 
 /*
-Performance - GPU的性能指标
+CpuPlatforms - CPU平台信息
 */
-type Performance struct {
+type CpuPlatforms struct {
 
-	// 交互展示参数，可忽略
-	Rate int
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
 
-	// 值，单位是TFlops
-	Value float64
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
 }
 
 /*
@@ -132,6 +135,18 @@ type Disks struct {
 }
 
 /*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
 GraphicsMemory - GPU的显存指标
 */
 type GraphicsMemory struct {
@@ -153,21 +168,6 @@ type Features struct {
 
 	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
 	Name string
-}
-
-/*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
 }
 
 /*
@@ -543,6 +543,24 @@ type UHostTagSet struct {
 }
 
 /*
+PriceDetail - 价格详细信息
+*/
+type PriceDetail struct {
+
+	// 快照价格
+	Snapshot float64
+
+	// 云盘价格
+	UDisk float64
+
+	// 主机价格
+	UHost float64
+
+	// 数据卷价格
+	Volume float64
+}
+
+/*
 UHostPriceSet - 主机价格
 */
 type UHostPriceSet struct {
@@ -553,9 +571,18 @@ type UHostPriceSet struct {
 	// 产品列表价。
 	ListPrice float64
 
+	// 列表价详细信息（只有询价接口返回）。
+	ListPriceDetail PriceDetail
+
 	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）。
 	OriginalPrice float64
 
+	// 原价详细信息（只有询价接口返回）。
+	OriginalPriceDetail PriceDetail
+
 	// 价格，单位: 元，保留小数点后两位有效数字
 	Price float64
+
+	// 价格详细信息（只有询价接口返回）。
+	PriceDetail PriceDetail
 }

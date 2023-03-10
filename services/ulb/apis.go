@@ -1853,20 +1853,35 @@ func (c *ULBClient) UpdateSecurityPolicy(req *UpdateSecurityPolicyRequest) (*Upd
 type UpdateULBAttributeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// 名字
+	// 设置用于存储ulb日志的bucket
+	BucketName *string `required:"false"`
+
+	// 日志开关，1代表开启日志，0代表关闭日志，传1时必须同时传BucketName，TokenName与TokenId二选一
+	EnableLog *int `required:"false"`
+
+	// 是否开启WAF。枚举类型：Yes，No，默认值为No
+	IsWAFOn *string `required:"false"`
+
+	// 名字，不传则默认不修改
 	Name *string `required:"false"`
 
-	// 备注
+	// 备注，不传则默认不修改
 	Remark *string `required:"false"`
 
-	// 业务
+	// 业务，不传则默认不修改
 	Tag *string `required:"false"`
+
+	// 用于指定上传到bucket所需的token，与TokenName选填其一即可
+	TokenId *string `required:"false"`
+
+	// 用于指定上传到bucket所需的token，与TokenId选填其一即可
+	TokenName *string `required:"false"`
 
 	// ULB资源ID
 	ULBId *string `required:"true"`
