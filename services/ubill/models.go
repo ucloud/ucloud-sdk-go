@@ -3,24 +3,24 @@
 package ubill
 
 /*
-OrderDetail -
-*/
-type OrderDetail struct {
-
-	//
-	ProductName string
-
-	//
-	Value string
-}
-
-/*
 ResourceTag -
 */
 type ResourceTag struct {
 
 	//
 	KeyId string
+
+	//
+	Value string
+}
+
+/*
+OrderDetail -
+*/
+type OrderDetail struct {
+
+	//
+	ProductName string
 
 	//
 	Value string
@@ -120,18 +120,6 @@ type AccountInfo struct {
 }
 
 /*
-ResourceExtendInfo - 资源标识
-*/
-type ResourceExtendInfo struct {
-
-	// 资源标识健
-	KeyId string
-
-	// 资源标识值
-	Value string
-}
-
-/*
 ItemDetail - 产品配置
 */
 type ItemDetail struct {
@@ -140,6 +128,18 @@ type ItemDetail struct {
 	ProductName string
 
 	// 产品小类规格
+	Value string
+}
+
+/*
+ResourceExtendInfo - 资源标识
+*/
+type ResourceExtendInfo struct {
+
+	// 资源标识健
+	KeyId string
+
+	// 资源标识值
 	Value string
 }
 

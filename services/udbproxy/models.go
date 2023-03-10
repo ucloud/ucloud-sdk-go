@@ -3,15 +3,42 @@
 package udbproxy
 
 /*
-ClientInfo - ClientInfo
+ProxyProcesslist - 连接代理信息
 */
-type ClientInfo struct {
+type ProxyProcesslist struct {
 
-	// 客户端连接IP数
-	Count int
+	// 代理连接DB地址
+	ClientHost string
 
-	// 客户端连接IP
-	IP string
+	// 显示当前连接的执行的命令
+	Command string
+
+	// 当前执行的命令是在哪一个数据库上。如果没有指定数据库，则该值为 NULL
+	DB string
+
+	// 数据库资源ID
+	DBID string
+
+	// 代理连接DB地址
+	Host string
+
+	// 当前连接DB进程ID
+	ID int
+
+	// 一般记录的是线程执行的语句
+	Info string
+
+	// 数据库角色(主库/从库)
+	Role string
+
+	// 线程的状态，和 Command 对应
+	State string
+
+	// 表示该线程处于当前状态的时间
+	Time int
+
+	// 启动这个线程的用户
+	User string
 }
 
 /*
@@ -26,5 +53,5 @@ type NodeClientInfo struct {
 	IP string
 
 	// 客户端IP连接信息
-	Records []ClientInfo
+	Records []ProxyProcesslist
 }

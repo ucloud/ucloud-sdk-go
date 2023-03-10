@@ -998,6 +998,9 @@ type GetUcdnDomain95BandwidthV2Request struct {
 
 	// 查询的结束日期，格式为Unix Timestamp
 	EndTime *int `required:"true"`
+
+	// 是否是动态加速 默认是false
+	IsDcdn *bool `required:"false"`
 }
 
 // GetUcdnDomain95BandwidthV2Response is response schema for GetUcdnDomain95BandwidthV2 action
@@ -1055,16 +1058,19 @@ type GetUcdnDomainBandwidthV2Request struct {
 	// 查询的起始时间，格式为Unix Timestamp。如果有EndTime，BeginTime必须赋值。如没有赋值，则返回缺少参 数错误，如果没有EndTime，BeginTime也可以不赋值，EndTime默认当前时间，BeginTime 默认前一天的当前时间。
 	BeginTime *int `required:"false"`
 
-	// 域名id，创建域名时生成的id。默认全部域名
+	// 域名id，创建域名时生成的id。默认全部域名;例(DomainId.0=ucdn-xxxxxx;DomainId.1=ucdn-xxxxxx)
 	DomainId []string `required:"false"`
 
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
 
+	// 是否全站加速，默认false
+	IsDcdn *bool `required:"false"`
+
 	// 原始带宽，不为0则获取原始带宽，默认为0
 	Primeval *int `required:"false"`
 
-	// 协议，http、https  不传则查所有协议的带宽
+	// 协议，http、https、websocket  不传则查所有协议的带宽，可以查多个协议，用逗号分隔
 	Protocol *string `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照1分钟粒度）
@@ -1120,8 +1126,14 @@ type GetUcdnDomainConfigRequest struct {
 	// 产品类型ucdn，可不填，默认为ucdn
 	ChannelType *string `required:"false"`
 
+	// 域名
+	Domain []string `required:"false"`
+
 	// 域名id，创建域名时生成的id。默认获取账号下的所有域名信息,n为自然数,从DomainId.0开始。
 	DomainId []string `required:"false"`
+
+	// 是否是动态加速 默认是false
+	IsDcdn *bool `required:"false"`
 
 	// 返回数据长度， 默认全部，非负整数
 	Limit *int `required:"false"`
@@ -1191,6 +1203,9 @@ type GetUcdnDomainHitRateRequest struct {
 	// 命中类型：0=整体命中  1=边缘命中  默认是0
 	HitType *int `required:"false"`
 
+	// 是否全站加速，默认false
+	IsDcdn *bool `required:"false"`
+
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照一分钟的粒度）默认5分钟
 	Type *int `required:"true"`
 }
@@ -1252,6 +1267,9 @@ type GetUcdnDomainHttpCodeV2Request struct {
 
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
+
+	// 是否全站加速 默认false
+	IsDcdn *bool `required:"false"`
 
 	// 指定获取的状态码是边缘还是上层    edge 表示边缘  layer 表示上层
 	Layer *string `required:"false"`
@@ -1613,6 +1631,9 @@ type GetUcdnDomainOriginRequestNumRequest struct {
 	// 查询的结束时间，格式为Unix Timestamp
 	EndTime *int `required:"true"`
 
+	// 是否全站加速  默认false
+	IsDcdn *bool `required:"false"`
+
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度, 3=按1分钟）
 	Type *int `required:"true"`
 }
@@ -1787,7 +1808,10 @@ type GetUcdnDomainRequestNumV3Request struct {
 	// 查询的结束时间，格式为Unix Timestamp
 	EndTime *int `required:"true"`
 
-	// 协议，http、https 不传则查所有协议的带宽
+	// 是否全站加速，默认false
+	IsDcdn *bool `required:"false"`
+
+	// 协议，http、https、quic 不传则查所有协议的带宽可同时查询多个协议用逗号隔开
 	Protocol *string `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度, 3=按1分钟）
@@ -1975,6 +1999,9 @@ type GetUcdnPassBandwidthV2Request struct {
 
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
+
+	// 是否全站加速 默认false
+	IsDcdn *bool `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照1分钟粒度）
 	Type *int `required:"true"`
@@ -2201,9 +2228,11 @@ func (c *UCDNClient) GetUcdnTraffic(req *GetUcdnTrafficRequest) (*GetUcdnTraffic
 type GetUcdnTrafficV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
+	// 是否dcdn域名
+	IsDcdn *bool `required:"false"`
 }
 
 // GetUcdnTrafficV2Response is response schema for GetUcdnTrafficV2 action
@@ -2451,6 +2480,9 @@ type UpdateUcdnDomainStatusRequest struct {
 
 	// 域名ID，创建加速域名时生成。
 	DomainId *string `required:"true"`
+
+	// 是否全站加速，默认false
+	IsDcdn *bool `required:"false"`
 
 	// 域名状态，enable代表加速中，disable代表停止加速，delete代表删除。
 	Status *string `required:"true"`

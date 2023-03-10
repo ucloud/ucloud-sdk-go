@@ -408,6 +408,15 @@ func (c *UK8SClient) AddUK8SUHostNode(req *AddUK8SUHostNodeRequest) (*AddUK8SUHo
 }
 
 /*
+CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamKubeProxy struct {
+
+	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
+	Mode *string `required:"false"`
+}
+
+/*
 CreateUK8SClusterV2ParamNodes is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodes struct {
@@ -462,15 +471,6 @@ type CreateUK8SClusterV2ParamMaster struct {
 
 	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](../summary/regionlist.html)
 	Zone *string `required:"true"`
-}
-
-/*
-CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamKubeProxy struct {
-
-	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
-	Mode *string `required:"false"`
 }
 
 // CreateUK8SClusterV2Request is request schema for CreateUK8SClusterV2 action

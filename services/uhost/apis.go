@@ -196,6 +196,12 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
+UHostDiskCustomBackup is request schema for complex param
+*/
+type UHostDiskCustomBackup struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
@@ -226,48 +232,12 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
-UHostDiskCustomBackup is request schema for complex param
-*/
-type UHostDiskCustomBackup struct {
-}
-
-/*
-CreateUHostInstanceParamVolumes is request schema for complex param
-*/
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-}
-
-/*
 CreateUHostInstanceParamFeatures is request schema for complex param
 */
 type CreateUHostInstanceParamFeatures struct {
 
 	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
 	UNI *bool `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 /*
@@ -295,6 +265,36 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1124,21 +1124,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
-}
-
-/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1157,9 +1142,18 @@ type getUHostInstancePriceParamDisks struct {
 }
 
 /*
-GetUHostInstancePriceParamVirtualGpu is request schema for complex param
+GetUHostInstancePriceParamVolumes is request schema for complex param
 */
-type GetUHostInstancePriceParamVirtualGpu struct {
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
@@ -1196,7 +1190,7 @@ type GetUHostInstancePriceRequest struct {
 	// GPU卡核心数。仅GPU机型支持此字段。
 	GPU *int `required:"false"`
 
-	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4S","2080Ti","2080Ti-4C","1080Ti"]
+	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4","MI100","V100S"]
 	GpuType *string `required:"false"`
 
 	// 镜像Id，可通过 [DescribeImage](describe_image.html) 获取镜像ID， 如果镜像ID不传，系统盘大小必传
@@ -1205,7 +1199,7 @@ type GetUHostInstancePriceRequest struct {
 	// 【该字段已废弃，请谨慎使用】
 	LifeCycle *int `required:"false" deprecated:"true"`
 
-	// 云主机机型（V2版本概念）。枚举值["N", "C", "G", "O", "OS", "OPRO", "OMAX", "O.BM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
+	// 云主机机型（V2版本概念）。枚举值["N", "C", "G", "O", "OS", "OPRO", "OMAX", "O.BM", "O.EPC"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`
 
 	// 内存大小。单位：MB。范围 ：[1024, 262144]，取值为1024的倍数（可选范围参照好控制台）。默认值：8192
@@ -1217,11 +1211,17 @@ type GetUHostInstancePriceRequest struct {
 	// 购买时长。默认: 1。按小时购买(Dynamic)时无需此参数。 月付时，此参数传0，代表了购买至月末。
 	Quantity *int `required:"false"`
 
+	// 返回价格详细信息
+	ShowPriceDetails *bool `required:"false"`
+
 	// 【该字段已废弃，请谨慎使用】
 	StorageType *string `required:"false" deprecated:"true"`
 
 	// 【该字段已废弃，请谨慎使用】
 	TimemachineFeature *string `required:"false" deprecated:"true"`
+
+	// 专区云主机。如果要在专区宿主机上创建云主机，该参数可以填写为true
+	UDSetUHostInstance *bool `required:"false"`
 
 	// 【待废弃】云主机机型（V1版本概念）。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
