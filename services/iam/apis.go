@@ -9,6 +9,318 @@ import (
 
 // IAM API Schema
 
+// AddUserToGroupRequest is request schema for AddUserToGroup action
+type AddUserToGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名
+	GroupName *string `required:"true"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// AddUserToGroupResponse is response schema for AddUserToGroup action
+type AddUserToGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewAddUserToGroupRequest will create request of AddUserToGroup action.
+func (c *IAMClient) NewAddUserToGroupRequest() *AddUserToGroupRequest {
+	req := &AddUserToGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddUserToGroup
+
+添加成员到用户组
+*/
+func (c *IAMClient) AddUserToGroup(req *AddUserToGroupRequest) (*AddUserToGroupResponse, error) {
+	var err error
+	var res AddUserToGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddUserToGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AttachPoliciesToGroupRequest is request schema for AttachPoliciesToGroup action
+type AttachPoliciesToGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+
+	// 策略URN
+	PolicyURNs []string `required:"true"`
+
+	// 项目ID（当Scope=Specified时ProjectID必传）
+	ProjectID *string `required:"false"`
+
+	// 应用范围
+	Scope *string `required:"true"`
+}
+
+// AttachPoliciesToGroupResponse is response schema for AttachPoliciesToGroup action
+type AttachPoliciesToGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewAttachPoliciesToGroupRequest will create request of AttachPoliciesToGroup action.
+func (c *IAMClient) NewAttachPoliciesToGroupRequest() *AttachPoliciesToGroupRequest {
+	req := &AttachPoliciesToGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachPoliciesToGroup
+
+关联IAM策略到用户组
+*/
+func (c *IAMClient) AttachPoliciesToGroup(req *AttachPoliciesToGroupRequest) (*AttachPoliciesToGroupResponse, error) {
+	var err error
+	var res AttachPoliciesToGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachPoliciesToGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AttachPoliciesToUserRequest is request schema for AttachPoliciesToUser action
+type AttachPoliciesToUserRequest struct {
+	request.CommonBase
+
+	// 策略URN
+	PolicyURNs []string `required:"true"`
+
+	// 项目ID（当Scope=Specified时ProjectID必传）
+	ProjectID *string `required:"false"`
+
+	// 应用范围
+	Scope *string `required:"true"`
+
+	// 用户名称
+	UserName *string `required:"true"`
+}
+
+// AttachPoliciesToUserResponse is response schema for AttachPoliciesToUser action
+type AttachPoliciesToUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewAttachPoliciesToUserRequest will create request of AttachPoliciesToUser action.
+func (c *IAMClient) NewAttachPoliciesToUserRequest() *AttachPoliciesToUserRequest {
+	req := &AttachPoliciesToUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachPoliciesToUser
+
+关联IAM策略到用户
+*/
+func (c *IAMClient) AttachPoliciesToUser(req *AttachPoliciesToUserRequest) (*AttachPoliciesToUserResponse, error) {
+	var err error
+	var res AttachPoliciesToUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachPoliciesToUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateAccessKeyRequest is request schema for CreateAccessKey action
+type CreateAccessKeyRequest struct {
+	request.CommonBase
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// CreateAccessKeyResponse is response schema for CreateAccessKey action
+type CreateAccessKeyResponse struct {
+	response.CommonBase
+
+	// 密钥实例
+	AccessKey AccessKey
+}
+
+// NewCreateAccessKeyRequest will create request of CreateAccessKey action.
+func (c *IAMClient) NewCreateAccessKeyRequest() *CreateAccessKeyRequest {
+	req := &CreateAccessKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateAccessKey
+
+创建用户密钥
+*/
+func (c *IAMClient) CreateAccessKey(req *CreateAccessKeyRequest) (*CreateAccessKeyResponse, error) {
+	var err error
+	var res CreateAccessKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateAccessKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateGroupRequest is request schema for CreateGroup action
+type CreateGroupRequest struct {
+	request.CommonBase
+
+	// 对用户组的描述
+	Description *string `required:"true"`
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+}
+
+// CreateGroupResponse is response schema for CreateGroup action
+type CreateGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewCreateGroupRequest will create request of CreateGroup action.
+func (c *IAMClient) NewCreateGroupRequest() *CreateGroupRequest {
+	req := &CreateGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateGroup
+
+创建用户组
+*/
+func (c *IAMClient) CreateGroup(req *CreateGroupRequest) (*CreateGroupResponse, error) {
+	var err error
+	var res CreateGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateIAMPolicyRequest is request schema for CreateIAMPolicy action
+type CreateIAMPolicyRequest struct {
+	request.CommonBase
+
+	// 描述
+	Description *string `required:"false"`
+
+	// 策略内容
+	Document *string `required:"true"`
+
+	// 策略名称
+	PolicyName *string `required:"true"`
+}
+
+// CreateIAMPolicyResponse is response schema for CreateIAMPolicy action
+type CreateIAMPolicyResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewCreateIAMPolicyRequest will create request of CreateIAMPolicy action.
+func (c *IAMClient) NewCreateIAMPolicyRequest() *CreateIAMPolicyRequest {
+	req := &CreateIAMPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateIAMPolicy
+
+创建IAM策略
+*/
+func (c *IAMClient) CreateIAMPolicy(req *CreateIAMPolicyRequest) (*CreateIAMPolicyResponse, error) {
+	var err error
+	var res CreateIAMPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateIAMPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateProjectRequest is request schema for CreateProject action
 type CreateProjectRequest struct {
 	request.CommonBase
@@ -59,6 +371,203 @@ func (c *IAMClient) CreateProject(req *CreateProjectRequest) (*CreateProjectResp
 	return &res, nil
 }
 
+// CreateUserRequest is request schema for CreateUser action
+type CreateUserRequest struct {
+	request.CommonBase
+
+	// API密钥访问状态（LoginProfileStatus值为Inactive时，AccessKeyStatus不能为Inactive）
+	AccessKeyStatus *string `required:"true"`
+
+	// 显示名称
+	DisplayName *string `required:"false"`
+
+	// 用户邮箱（LoginProfileStatus值等于Active必传，LoginProfileStatus值等于Inactive不传）
+	Email *string `required:"false"`
+
+	// 控制台登录访问状态（AccessKeyStatus值为Inactive时，LoginProfileStatus不能为Inactive）
+	LoginProfileStatus *string `required:"true"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// CreateUserResponse is response schema for CreateUser action
+type CreateUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewCreateUserRequest will create request of CreateUser action.
+func (c *IAMClient) NewCreateUserRequest() *CreateUserRequest {
+	req := &CreateUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUser
+
+创建IAM用户
+*/
+func (c *IAMClient) CreateUser(req *CreateUserRequest) (*CreateUserResponse, error) {
+	var err error
+	var res CreateUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteAccessKeyRequest is request schema for DeleteAccessKey action
+type DeleteAccessKeyRequest struct {
+	request.CommonBase
+
+	// 用户公钥
+	AccessKeyID *string `required:"true"`
+}
+
+// DeleteAccessKeyResponse is response schema for DeleteAccessKey action
+type DeleteAccessKeyResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteAccessKeyRequest will create request of DeleteAccessKey action.
+func (c *IAMClient) NewDeleteAccessKeyRequest() *DeleteAccessKeyRequest {
+	req := &DeleteAccessKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteAccessKey
+
+删除用户密钥
+*/
+func (c *IAMClient) DeleteAccessKey(req *DeleteAccessKeyRequest) (*DeleteAccessKeyResponse, error) {
+	var err error
+	var res DeleteAccessKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteAccessKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteGroupRequest is request schema for DeleteGroup action
+type DeleteGroupRequest struct {
+	request.CommonBase
+
+	// 待删除用户组名称
+	GroupName *string `required:"true"`
+}
+
+// DeleteGroupResponse is response schema for DeleteGroup action
+type DeleteGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDeleteGroupRequest will create request of DeleteGroup action.
+func (c *IAMClient) NewDeleteGroupRequest() *DeleteGroupRequest {
+	req := &DeleteGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteGroup
+
+删除用户组
+*/
+func (c *IAMClient) DeleteGroup(req *DeleteGroupRequest) (*DeleteGroupResponse, error) {
+	var err error
+	var res DeleteGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteIAMPolicyRequest is request schema for DeleteIAMPolicy action
+type DeleteIAMPolicyRequest struct {
+	request.CommonBase
+
+	// 策略URN
+	PolicyURN *string `required:"true"`
+}
+
+// DeleteIAMPolicyResponse is response schema for DeleteIAMPolicy action
+type DeleteIAMPolicyResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDeleteIAMPolicyRequest will create request of DeleteIAMPolicy action.
+func (c *IAMClient) NewDeleteIAMPolicyRequest() *DeleteIAMPolicyRequest {
+	req := &DeleteIAMPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteIAMPolicy
+
+删除IAM策略
+*/
+func (c *IAMClient) DeleteIAMPolicy(req *DeleteIAMPolicyRequest) (*DeleteIAMPolicyResponse, error) {
+	var err error
+	var res DeleteIAMPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteIAMPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteProjectRequest is request schema for DeleteProject action
 type DeleteProjectRequest struct {
 	request.CommonBase
@@ -99,6 +608,1057 @@ func (c *IAMClient) DeleteProject(req *DeleteProjectRequest) (*DeleteProjectResp
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteProject", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUserRequest is request schema for DeleteUser action
+type DeleteUserRequest struct {
+	request.CommonBase
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// DeleteUserResponse is response schema for DeleteUser action
+type DeleteUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDeleteUserRequest will create request of DeleteUser action.
+func (c *IAMClient) NewDeleteUserRequest() *DeleteUserRequest {
+	req := &DeleteUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUser
+
+删除用户
+*/
+func (c *IAMClient) DeleteUser(req *DeleteUserRequest) (*DeleteUserResponse, error) {
+	var err error
+	var res DeleteUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DetachPoliciesFromGroupRequest is request schema for DetachPoliciesFromGroup action
+type DetachPoliciesFromGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+
+	// 策略URN
+	PolicyURNs []string `required:"true"`
+
+	// 项目ID（当Scope=Specified时ProjectID必传）
+	ProjectID *string `required:"false"`
+
+	// 应用范围
+	Scope *string `required:"true"`
+}
+
+// DetachPoliciesFromGroupResponse is response schema for DetachPoliciesFromGroup action
+type DetachPoliciesFromGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDetachPoliciesFromGroupRequest will create request of DetachPoliciesFromGroup action.
+func (c *IAMClient) NewDetachPoliciesFromGroupRequest() *DetachPoliciesFromGroupRequest {
+	req := &DetachPoliciesFromGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachPoliciesFromGroup
+
+移除用户组关联的IAM策略
+*/
+func (c *IAMClient) DetachPoliciesFromGroup(req *DetachPoliciesFromGroupRequest) (*DetachPoliciesFromGroupResponse, error) {
+	var err error
+	var res DetachPoliciesFromGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachPoliciesFromGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DetachPoliciesFromUserRequest is request schema for DetachPoliciesFromUser action
+type DetachPoliciesFromUserRequest struct {
+	request.CommonBase
+
+	// 策略URN
+	PolicyURNs []string `required:"true"`
+
+	// 项目ID（当Scope=Specified时ProjectID必传）
+	ProjectID *string `required:"false"`
+
+	// 应用范围
+	Scope *string `required:"true"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// DetachPoliciesFromUserResponse is response schema for DetachPoliciesFromUser action
+type DetachPoliciesFromUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDetachPoliciesFromUserRequest will create request of DetachPoliciesFromUser action.
+func (c *IAMClient) NewDetachPoliciesFromUserRequest() *DetachPoliciesFromUserRequest {
+	req := &DetachPoliciesFromUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachPoliciesFromUser
+
+移除用户关联的IAM策略
+*/
+func (c *IAMClient) DetachPoliciesFromUser(req *DetachPoliciesFromUserRequest) (*DetachPoliciesFromUserResponse, error) {
+	var err error
+	var res DetachPoliciesFromUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachPoliciesFromUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetGroupRequest is request schema for GetGroup action
+type GetGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+}
+
+// GetGroupResponse is response schema for GetGroup action
+type GetGroupResponse struct {
+	response.CommonBase
+
+	// 用户组详情信息
+	Group Group
+
+	// 错误消息
+	Message string
+}
+
+// NewGetGroupRequest will create request of GetGroup action.
+func (c *IAMClient) NewGetGroupRequest() *GetGroupRequest {
+	req := &GetGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetGroup
+
+查询用户组详情
+*/
+func (c *IAMClient) GetGroup(req *GetGroupRequest) (*GetGroupResponse, error) {
+	var err error
+	var res GetGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetIAMPolicyRequest is request schema for GetIAMPolicy action
+type GetIAMPolicyRequest struct {
+	request.CommonBase
+
+	// 策略URN
+	PolicyURN *string `required:"true"`
+}
+
+// GetIAMPolicyResponse is response schema for GetIAMPolicy action
+type GetIAMPolicyResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 策略信息
+	Policy IAMPolicy
+}
+
+// NewGetIAMPolicyRequest will create request of GetIAMPolicy action.
+func (c *IAMClient) NewGetIAMPolicyRequest() *GetIAMPolicyRequest {
+	req := &GetIAMPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetIAMPolicy
+
+获取策略详情
+*/
+func (c *IAMClient) GetIAMPolicy(req *GetIAMPolicyRequest) (*GetIAMPolicyResponse, error) {
+	var err error
+	var res GetIAMPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetIAMPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUserRequest is request schema for GetUser action
+type GetUserRequest struct {
+	request.CommonBase
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// GetUserResponse is response schema for GetUser action
+type GetUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 用户信息
+	User User
+}
+
+// NewGetUserRequest will create request of GetUser action.
+func (c *IAMClient) NewGetUserRequest() *GetUserRequest {
+	req := &GetUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUser
+
+获取用户信息
+*/
+func (c *IAMClient) GetUser(req *GetUserRequest) (*GetUserResponse, error) {
+	var err error
+	var res GetUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListAccessKeysRequest is request schema for ListAccessKeys action
+type ListAccessKeysRequest struct {
+	request.CommonBase
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// ListAccessKeysResponse is response schema for ListAccessKeys action
+type ListAccessKeysResponse struct {
+	response.CommonBase
+
+	// 用户密钥信息列表
+	AccessKey []AccessKey
+}
+
+// NewListAccessKeysRequest will create request of ListAccessKeys action.
+func (c *IAMClient) NewListAccessKeysRequest() *ListAccessKeysRequest {
+	req := &ListAccessKeysRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListAccessKeys
+
+获取指定用户密钥列表
+*/
+func (c *IAMClient) ListAccessKeys(req *ListAccessKeysRequest) (*ListAccessKeysResponse, error) {
+	var err error
+	var res ListAccessKeysResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListAccessKeys", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListEntitiesForPolicyRequest is request schema for ListEntitiesForPolicy action
+type ListEntitiesForPolicyRequest struct {
+	request.CommonBase
+
+	// 需要查询的用户组数量
+	Limit *string `required:"false"`
+
+	// 从第几条数据开始查询
+	Offset *string `required:"false"`
+
+	// 策略URN
+	PolicyURN *string `required:"true"`
+}
+
+// ListEntitiesForPolicyResponse is response schema for ListEntitiesForPolicy action
+type ListEntitiesForPolicyResponse struct {
+	response.CommonBase
+
+	// 引用实体信息
+	Entities []Entity
+
+	// 错误消息
+	Message string
+
+	// 数据集合数量
+	TotalCount int
+}
+
+// NewListEntitiesForPolicyRequest will create request of ListEntitiesForPolicy action.
+func (c *IAMClient) NewListEntitiesForPolicyRequest() *ListEntitiesForPolicyRequest {
+	req := &ListEntitiesForPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListEntitiesForPolicy
+
+列出引用权限策略的实体
+*/
+func (c *IAMClient) ListEntitiesForPolicy(req *ListEntitiesForPolicyRequest) (*ListEntitiesForPolicyResponse, error) {
+	var err error
+	var res ListEntitiesForPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListEntitiesForPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListEntitiesForProjectRequest is request schema for ListEntitiesForProject action
+type ListEntitiesForProjectRequest struct {
+	request.CommonBase
+
+	// 需要查询的用户组数量
+	Limit *string `required:"false"`
+
+	// 从第几条数据开始查询
+	Offset *string `required:"false"`
+
+	// 项目ID
+	ProjectID *string `required:"true"`
+}
+
+// ListEntitiesForProjectResponse is response schema for ListEntitiesForProject action
+type ListEntitiesForProjectResponse struct {
+	response.CommonBase
+
+	// 授权项目权限的实体
+	Entities []Entity
+
+	// 错误消息
+	Message string
+
+	// 数据集合数量
+	TotalCount int
+}
+
+// NewListEntitiesForProjectRequest will create request of ListEntitiesForProject action.
+func (c *IAMClient) NewListEntitiesForProjectRequest() *ListEntitiesForProjectRequest {
+	req := &ListEntitiesForProjectRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListEntitiesForProject
+
+列出拥有指定项目权限的实体
+*/
+func (c *IAMClient) ListEntitiesForProject(req *ListEntitiesForProjectRequest) (*ListEntitiesForProjectResponse, error) {
+	var err error
+	var res ListEntitiesForProjectResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListEntitiesForProject", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListProjectsRequest is request schema for ListProjects action
+type ListProjectsRequest struct {
+	request.CommonBase
+
+	//
+	Limit *string `required:"false"`
+
+	//
+	Offset *string `required:"false"`
+}
+
+// ListProjectsResponse is response schema for ListProjects action
+type ListProjectsResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 项目信息
+	Projects []Project
+
+	// 总数
+	TotalCount int
+}
+
+// NewListProjectsRequest will create request of ListProjects action.
+func (c *IAMClient) NewListProjectsRequest() *ListProjectsRequest {
+	req := &ListProjectsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListProjects
+
+列出所有项目
+*/
+func (c *IAMClient) ListProjects(req *ListProjectsRequest) (*ListProjectsResponse, error) {
+	var err error
+	var res ListProjectsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListProjects", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUsersRequest is request schema for ListUsers action
+type ListUsersRequest struct {
+	request.CommonBase
+
+	// 分页Limit(默认：10，最大100)
+	Limit *string `required:"false"`
+
+	// 分页offset
+	Offset *string `required:"false"`
+}
+
+// ListUsersResponse is response schema for ListUsers action
+type ListUsersResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 用户数量
+	TotalCount int
+
+	// 用户信息
+	Users []Users
+}
+
+// NewListUsersRequest will create request of ListUsers action.
+func (c *IAMClient) NewListUsersRequest() *ListUsersRequest {
+	req := &ListUsersRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUsers
+
+列出用户列表
+*/
+func (c *IAMClient) ListUsers(req *ListUsersRequest) (*ListUsersResponse, error) {
+	var err error
+	var res ListUsersResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUsers", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUsersForGroupRequest is request schema for ListUsersForGroup action
+type ListUsersForGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+
+	// 需要查询的组内用户数量
+	Limit *string `required:"false"`
+
+	// 从第几条数据开始查询
+	Offset *string `required:"false"`
+}
+
+// ListUsersForGroupResponse is response schema for ListUsersForGroup action
+type ListUsersForGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 总数
+	TotalCount int
+
+	// 用户信息数组
+	Users []UserForGroup
+}
+
+// NewListUsersForGroupRequest will create request of ListUsersForGroup action.
+func (c *IAMClient) NewListUsersForGroupRequest() *ListUsersForGroupRequest {
+	req := &ListUsersForGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUsersForGroup
+
+列出用户组包含的用户
+*/
+func (c *IAMClient) ListUsersForGroup(req *ListUsersForGroupRequest) (*ListUsersForGroupResponse, error) {
+	var err error
+	var res ListUsersForGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUsersForGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyProjectRequest is request schema for ModifyProject action
+type ModifyProjectRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 新的项目名称
+	ProjectName *string `required:"true"`
+}
+
+// ModifyProjectResponse is response schema for ModifyProject action
+type ModifyProjectResponse struct {
+	response.CommonBase
+}
+
+// NewModifyProjectRequest will create request of ModifyProject action.
+func (c *IAMClient) NewModifyProjectRequest() *ModifyProjectRequest {
+	req := &ModifyProjectRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyProject
+
+修改项目
+*/
+func (c *IAMClient) ModifyProject(req *ModifyProjectRequest) (*ModifyProjectResponse, error) {
+	var err error
+	var res ModifyProjectResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyProject", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// RemoveUserFromGroupRequest is request schema for RemoveUserFromGroup action
+type RemoveUserFromGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// RemoveUserFromGroupResponse is response schema for RemoveUserFromGroup action
+type RemoveUserFromGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewRemoveUserFromGroupRequest will create request of RemoveUserFromGroup action.
+func (c *IAMClient) NewRemoveUserFromGroupRequest() *RemoveUserFromGroupRequest {
+	req := &RemoveUserFromGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RemoveUserFromGroup
+
+移除用户组中的IAM用户
+*/
+func (c *IAMClient) RemoveUserFromGroup(req *RemoveUserFromGroupRequest) (*RemoveUserFromGroupResponse, error) {
+	var err error
+	var res RemoveUserFromGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RemoveUserFromGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// RemoveUserFromProjectRequest is request schema for RemoveUserFromProject action
+type RemoveUserFromProjectRequest struct {
+	request.CommonBase
+
+	// 项目ID
+	ProjectID *string `required:"true"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// RemoveUserFromProjectResponse is response schema for RemoveUserFromProject action
+type RemoveUserFromProjectResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewRemoveUserFromProjectRequest will create request of RemoveUserFromProject action.
+func (c *IAMClient) NewRemoveUserFromProjectRequest() *RemoveUserFromProjectRequest {
+	req := &RemoveUserFromProjectRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RemoveUserFromProject
+
+移除项目中的IAM用户，同时移除此用户在此项目下的所有权限
+*/
+func (c *IAMClient) RemoveUserFromProject(req *RemoveUserFromProjectRequest) (*RemoveUserFromProjectResponse, error) {
+	var err error
+	var res RemoveUserFromProjectResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RemoveUserFromProject", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateAccessKeyRequest is request schema for UpdateAccessKey action
+type UpdateAccessKeyRequest struct {
+	request.CommonBase
+
+	// 用户公钥
+	AccessKeyID *string `required:"true"`
+
+	// 密钥描述
+	Description *string `required:"false"`
+
+	// 密钥状态
+	Status *string `required:"false"`
+}
+
+// UpdateAccessKeyResponse is response schema for UpdateAccessKey action
+type UpdateAccessKeyResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateAccessKeyRequest will create request of UpdateAccessKey action.
+func (c *IAMClient) NewUpdateAccessKeyRequest() *UpdateAccessKeyRequest {
+	req := &UpdateAccessKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateAccessKey
+
+修改用户密钥状态
+*/
+func (c *IAMClient) UpdateAccessKey(req *UpdateAccessKeyRequest) (*UpdateAccessKeyResponse, error) {
+	var err error
+	var res UpdateAccessKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateAccessKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateGroupRequest is request schema for UpdateGroup action
+type UpdateGroupRequest struct {
+	request.CommonBase
+
+	// 用户组描述信息
+	Description *string `required:"true"`
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+}
+
+// UpdateGroupResponse is response schema for UpdateGroup action
+type UpdateGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewUpdateGroupRequest will create request of UpdateGroup action.
+func (c *IAMClient) NewUpdateGroupRequest() *UpdateGroupRequest {
+	req := &UpdateGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateGroup
+
+更新用户组信息
+*/
+func (c *IAMClient) UpdateGroup(req *UpdateGroupRequest) (*UpdateGroupResponse, error) {
+	var err error
+	var res UpdateGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateIAMPolicyRequest is request schema for UpdateIAMPolicy action
+type UpdateIAMPolicyRequest struct {
+	request.CommonBase
+
+	// 描述
+	Description *string `required:"false"`
+
+	// 策略内容
+	Document *string `required:"true"`
+
+	// 策略URN
+	PolicyURN *string `required:"true"`
+}
+
+// UpdateIAMPolicyResponse is response schema for UpdateIAMPolicy action
+type UpdateIAMPolicyResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewUpdateIAMPolicyRequest will create request of UpdateIAMPolicy action.
+func (c *IAMClient) NewUpdateIAMPolicyRequest() *UpdateIAMPolicyRequest {
+	req := &UpdateIAMPolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateIAMPolicy
+
+更新IAM策略
+*/
+func (c *IAMClient) UpdateIAMPolicy(req *UpdateIAMPolicyRequest) (*UpdateIAMPolicyResponse, error) {
+	var err error
+	var res UpdateIAMPolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateIAMPolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateIAMPolicyNameRequest is request schema for UpdateIAMPolicyName action
+type UpdateIAMPolicyNameRequest struct {
+	request.CommonBase
+
+	// 策略描述
+	Description *string `required:"true"`
+
+	// 策略名称
+	PolicyName *string `required:"true"`
+
+	// 策略URN
+	PolicyURN *string `required:"true"`
+}
+
+// UpdateIAMPolicyNameResponse is response schema for UpdateIAMPolicyName action
+type UpdateIAMPolicyNameResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateIAMPolicyNameRequest will create request of UpdateIAMPolicyName action.
+func (c *IAMClient) NewUpdateIAMPolicyNameRequest() *UpdateIAMPolicyNameRequest {
+	req := &UpdateIAMPolicyNameRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateIAMPolicyName
+
+修改自定义策略名称
+*/
+func (c *IAMClient) UpdateIAMPolicyName(req *UpdateIAMPolicyNameRequest) (*UpdateIAMPolicyNameResponse, error) {
+	var err error
+	var res UpdateIAMPolicyNameResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateIAMPolicyName", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUserRequest is request schema for UpdateUser action
+type UpdateUserRequest struct {
+	request.CommonBase
+
+	// 用户名称（用户名称和用户状态不能同时为空）
+	DisplayName *string `required:"false"`
+
+	// 新用户名
+	NewUserName *string `required:"false"`
+
+	// 用户状态（用户名称和用户状态不能同时为空，枚举值：Active:解冻,Frozen:冻结）
+	Status *string `required:"false"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// UpdateUserResponse is response schema for UpdateUser action
+type UpdateUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewUpdateUserRequest will create request of UpdateUser action.
+func (c *IAMClient) NewUpdateUserRequest() *UpdateUserRequest {
+	req := &UpdateUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUser
+
+更新用户
+*/
+func (c *IAMClient) UpdateUser(req *UpdateUserRequest) (*UpdateUserResponse, error) {
+	var err error
+	var res UpdateUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUser", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

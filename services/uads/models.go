@@ -153,21 +153,6 @@ type ServiceInfo struct {
 }
 
 /*
-EIPAddrSet - EIP地址信息
-*/
-type EIPAddrSet struct {
-
-	// IP类型：gaofang
-	EIPType string
-
-	// 弹性IP地址
-	IP string
-
-	// 运营商信息, 枚举值为:  BGP: BGP; International: 国际.
-	OperatorName string
-}
-
-/*
 Resouce - 资源信息
 */
 type Resouce struct {
@@ -186,6 +171,21 @@ type Resouce struct {
 
 	// 地区
 	Zone string
+}
+
+/*
+EIPAddrSet - EIP地址信息
+*/
+type EIPAddrSet struct {
+
+	// IP类型：gaofang
+	EIPType string
+
+	// 弹性IP地址
+	IP string
+
+	// 运营商信息, 枚举值为:  BGP: BGP; International: 国际.
+	OperatorName string
 }
 
 /*
