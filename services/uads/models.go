@@ -121,7 +121,7 @@ type ServiceInfo struct {
 	// 过期时间
 	ExpiredTime int
 
-	// 转发类型，Proxy：代理、Passthrough：透传
+	// 转发类型，Proxy：代理、Passthrough：直连
 	ForwardType string
 
 	// 套餐ID
@@ -133,7 +133,7 @@ type ServiceInfo struct {
 	// 套餐名称
 	Name string
 
-	// 高防类型，1：内地高防、2：亚太高防
+	// 高防类型，1：内地高防、2：海外高防
 	NapType int
 
 	// 项目ID
@@ -150,6 +150,21 @@ type ServiceInfo struct {
 
 	// 供应商ID
 	Vendor int
+}
+
+/*
+EIPAddrSet - EIP地址信息
+*/
+type EIPAddrSet struct {
+
+	// IP类型：gaofang
+	EIPType string
+
+	// 弹性IP地址
+	IP string
+
+	// 运营商信息, 枚举值为:  BGP: BGP; International: 国际.
+	OperatorName string
 }
 
 /*
@@ -171,21 +186,6 @@ type Resouce struct {
 
 	// 地区
 	Zone string
-}
-
-/*
-EIPAddrSet - EIP地址信息
-*/
-type EIPAddrSet struct {
-
-	// IP类型：gaofang
-	EIPType string
-
-	// 弹性IP地址
-	IP string
-
-	// 运营商信息, 枚举值为:  BGP: BGP; International: 国际.
-	OperatorName string
 }
 
 /*
@@ -234,18 +234,6 @@ type FwdSourceInfoConf struct {
 }
 
 /*
-FwdClientProxyInfo - 转发规则，回源代理配置列表
-*/
-type FwdClientProxyInfo struct {
-
-	// 回源IP个数
-	Count int
-
-	// 回源IP列表
-	IPList []string
-}
-
-/*
 FwdSourceInfo - 转发规则，回源配置信息
 */
 type FwdSourceInfo struct {
@@ -255,6 +243,18 @@ type FwdSourceInfo struct {
 
 	// 回源类型，分 IP 和 Domain
 	Type string
+}
+
+/*
+FwdClientProxyInfo - 转发规则，回源代理配置列表
+*/
+type FwdClientProxyInfo struct {
+
+	// 回源IP个数
+	Count int
+
+	// 回源IP列表
+	IPList []string
 }
 
 /*
@@ -273,12 +273,6 @@ type BGPFwdRule struct {
 
 	// 默认为0，为IP协议的转发端口，其余的自定义，在0~65535范围内即可,但是同一IP下配置的规则端口不能重复
 	BgpIPPort int
-
-	// 【废弃，切为ClientProxyInfo】回源IP个数
-	ClientProxyCount int
-
-	// 【废弃，切为ClientProxyInfo】回源IP列表
-	ClientProxyIPList string
 
 	// 回源IP结构
 	ClientProxyInfo FwdClientProxyInfo
@@ -304,20 +298,11 @@ type BGPFwdRule struct {
 	// 表示对源站进行检测：默认为0表示关闭，还可以选择为1表示开启
 	SourceDetect int
 
-	// 【废弃，切为SourceInfo】源站IP。非负载模式仅支持1个，负载模式每条规则支持32个.多个源站ip使用","分隔,如"1.1.1.1, 2.2.2.2"
-	SourceIPInfo string
-
 	// 源站信息结构
 	SourceInfo FwdSourceInfo
 
-	// 【废弃，切为SourceInfo】源站端口,多个端口之间使用","分隔
-	SourcePort string
-
 	// 规则的状态
 	Status string
-
-	// 【废弃，切为SourceInfo】源站TOAID,多个TOAID之间使用","分隔
-	ToaID string
 
 	// 更新时间，unix格式
 	UpdateTime int
@@ -373,7 +358,7 @@ type NapServiceConfigEntry struct {
 	// 按月购买配置
 	MonthPay string
 
-	// 高防类型，1：内地高防、2：亚太高防
+	// 高防类型，1：内地高防、2：海外高防
 	NapType int
 
 	// 按年购买配置

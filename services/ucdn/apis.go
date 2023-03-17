@@ -1045,6 +1045,71 @@ func (c *UCDNClient) GetUcdnDomain95BandwidthV2(req *GetUcdnDomain95BandwidthV2R
 	return &res, nil
 }
 
+// GetUcdnDomainBandwidthByIpProtocolRequest is request schema for GetUcdnDomainBandwidthByIpProtocol action
+type GetUcdnDomainBandwidthByIpProtocolRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询带宽区域 cn代表国内 abroad代表海外 不填默认为全部区域
+	Areacode *string `required:"false"`
+
+	// 查询的起始时间，格式为Unix Timestamp。如果有EndTime，BeginTime必须赋值。如没有赋值，则返回缺少参 数错误，如果没有EndTime，BeginTime也可以不赋值，EndTime默认当前时间，BeginTime 默认前一天的当前时间。
+	BeginTime *int `required:"false"`
+
+	// 域名id，创建域名时生成的id。默认全部域名
+	DomainId []string `required:"false"`
+
+	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
+	EndTime *int `required:"false"`
+
+	// 协议，ipv4、ipv6
+	IpProtocol *string `required:"true"`
+
+	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照1分钟粒度）
+	Type *int `required:"true"`
+}
+
+// GetUcdnDomainBandwidthByIpProtocolResponse is response schema for GetUcdnDomainBandwidthByIpProtocol action
+type GetUcdnDomainBandwidthByIpProtocolResponse struct {
+	response.CommonBase
+
+	// 带宽信息列表，参见BandwidthTrafficInfo
+	BandwidthTrafficList []BandwidthTrafficInfo
+}
+
+// NewGetUcdnDomainBandwidthByIpProtocolRequest will create request of GetUcdnDomainBandwidthByIpProtocol action.
+func (c *UCDNClient) NewGetUcdnDomainBandwidthByIpProtocolRequest() *GetUcdnDomainBandwidthByIpProtocolRequest {
+	req := &GetUcdnDomainBandwidthByIpProtocolRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainBandwidthByIpProtocol
+
+获取域名带宽数据按ip协议(新)
+*/
+func (c *UCDNClient) GetUcdnDomainBandwidthByIpProtocol(req *GetUcdnDomainBandwidthByIpProtocolRequest) (*GetUcdnDomainBandwidthByIpProtocolResponse, error) {
+	var err error
+	var res GetUcdnDomainBandwidthByIpProtocolResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainBandwidthByIpProtocol", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUcdnDomainBandwidthV2Request is request schema for GetUcdnDomainBandwidthV2 action
 type GetUcdnDomainBandwidthV2Request struct {
 	request.CommonBase
@@ -1811,7 +1876,7 @@ type GetUcdnDomainRequestNumV3Request struct {
 	// 是否全站加速，默认false
 	IsDcdn *bool `required:"false"`
 
-	// 协议，http、https、quic 不传则查所有协议的带宽可同时查询多个协议用逗号隔开
+	// 协议，IsDcdn=false时，可传http、https不传则查所有协议的带宽。如果IsDcdn=true，这里可传http_dynamic、http_static、https_dynamic、https_static、quic_dynamic、quic_static、websocket 并支持同时查询多个协议用逗号隔开
 	Protocol *string `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度, 3=按1分钟）

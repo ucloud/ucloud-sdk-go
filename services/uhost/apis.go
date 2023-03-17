@@ -196,6 +196,12 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
+UHostDiskCustomBackup is request schema for complex param
+*/
+type UHostDiskCustomBackup struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
@@ -226,39 +232,12 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
-UHostDiskCustomBackup is request schema for complex param
+CreateUHostInstanceParamFeatures is request schema for complex param
 */
-type UHostDiskCustomBackup struct {
-}
+type CreateUHostInstanceParamFeatures struct {
 
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamVolumes is request schema for complex param
-*/
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
 }
 
 /*
@@ -289,12 +268,33 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamFeatures is request schema for complex param
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
-type CreateUHostInstanceParamFeatures struct {
+type CreateUHostInstanceParamNetworkInterface struct {
 
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action

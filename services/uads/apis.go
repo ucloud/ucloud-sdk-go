@@ -223,7 +223,7 @@ type BuyHighProtectGameServiceRequest struct {
 	// 购买的套餐所在机房，取值范围{"Hangzhou2",  "Hangzhou", "Xiamen"}
 	EngineRoom []string `required:"true"`
 
-	// 转发类型，默认为：Proxy；Proxy：代理、Passthrough：透传
+	// 转发类型，默认为：Proxy；Proxy：代理、Passthrough：直连
 	ForwardType *string `required:"false"`
 
 	// 高防服务名称
@@ -274,6 +274,89 @@ func (c *UADSClient) BuyHighProtectGameService(req *BuyHighProtectGameServiceReq
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("BuyHighProtectGameService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateBGPServiceFwdRuleRequest is request schema for CreateBGPServiceFwdRule action
+type CreateBGPServiceFwdRuleRequest struct {
+	request.CommonBase
+
+	// 备份源站的IP
+	BackupIP *string `required:"false"`
+
+	// 备份源站的端口
+	BackupPort *int `required:"false"`
+
+	// BGP的IP
+	BgpIP *string `required:"true"`
+
+	// 默认为0，为IP协议的转发端口，其余的自定义
+	BgpIPPort *int `required:"false"`
+
+	// 转发协议的类型包括三种：默认为“IP”，还可以选择为“TCP”
+	FwdType *string `required:"false"`
+
+	// 转发协议的类型是否为负载均衡的：默认为“No”，还可以选择为“Yes”。负载均衡模式下必须配置BackupIP
+	LoadBalance *string `required:"false"`
+
+	// 备注，默认为空
+	Remark *string `required:"false"`
+
+	// 资源id
+	ResourceId *string `required:"true"`
+
+	// 回源地址，可填 IP地址 或 域名
+	SourceAddrArr []string `required:"false"`
+
+	// 表示对源站进行检测：默认为0表示关闭，还可以选择为1表示开启
+	SourceDetect *int `required:"false"`
+
+	// 回源端口
+	SourcePortArr []string `required:"false"`
+
+	// 回源TOA
+	SourceToaIDArr []string `required:"false"`
+
+	// 回源类型，分 “IP”、“Domain”
+	SourceType *string `required:"false"`
+}
+
+// CreateBGPServiceFwdRuleResponse is response schema for CreateBGPServiceFwdRule action
+type CreateBGPServiceFwdRuleResponse struct {
+	response.CommonBase
+
+	// 转发规则的数据库索引值
+	RuleIndex int
+}
+
+// NewCreateBGPServiceFwdRuleRequest will create request of CreateBGPServiceFwdRule action.
+func (c *UADSClient) NewCreateBGPServiceFwdRuleRequest() *CreateBGPServiceFwdRuleRequest {
+	req := &CreateBGPServiceFwdRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateBGPServiceFwdRule
+
+创建BGP高防转发规则
+*/
+func (c *UADSClient) CreateBGPServiceFwdRule(req *CreateBGPServiceFwdRuleRequest) (*CreateBGPServiceFwdRuleResponse, error) {
+	var err error
+	var res CreateBGPServiceFwdRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateBGPServiceFwdRule", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1318,7 +1401,7 @@ type GetNapServiceConfigRequest struct {
 	// 线路类型
 	LineType *string `required:"false"`
 
-	// 高防类型；0：全部、1：内地高防、:2：亚太高防
+	// 高防类型；0：全部、1：内地高防、:2：海外高防
 	NapType *int `required:"false"`
 }
 
@@ -1803,9 +1886,6 @@ type UpdateBGPServiceFwdRuleRequest struct {
 
 	// 备份源站的端口
 	BackupPort *int `required:"false"`
-
-	// 备份源站的toa id
-	BackupToa *int `required:"false"`
 
 	// BGP的IP
 	BgpIP *string `required:"true"`
