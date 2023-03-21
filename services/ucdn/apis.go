@@ -305,6 +305,9 @@ type DescribeNewUcdnPrefetchCacheTaskRequest struct {
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
 
+	// 是否全站加速 默认false
+	IsDcdn *bool `required:"false"`
+
 	// 返回数据长度,默认全部，自然数
 	Limit *int `required:"false"`
 
@@ -372,6 +375,9 @@ type DescribeNewUcdnRefreshCacheTaskRequest struct {
 
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
+
+	// 是否全站加速 默认false
+	IsDcdn *bool `required:"false"`
 
 	// 返回数据长度,默认全部，自然数
 	Limit *int `required:"false"`
@@ -1512,6 +1518,9 @@ type GetUcdnDomainLogV2Request struct {
 
 	// 查询的结束时间，格式为Unix Timestamp
 	EndTime *int `required:"true"`
+
+	// 是否全站加速  默认false
+	IsDcdn *bool `required:"false"`
 }
 
 // GetUcdnDomainLogV2Response is response schema for GetUcdnDomainLogV2 action

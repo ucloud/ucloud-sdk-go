@@ -109,7 +109,7 @@ type ServiceInfo struct {
 	// 套餐最大防护组
 	DefenceDDosMaxFlowArr []int
 
-	// 防护状态
+	// 防护状态，Started：正常、Stopped：关闭、Expired：过期
 	DefenceStatus string
 
 	// 防护类型
@@ -234,18 +234,6 @@ type FwdSourceInfoConf struct {
 }
 
 /*
-FwdSourceInfo - 转发规则，回源配置信息
-*/
-type FwdSourceInfo struct {
-
-	// 回源配置列表
-	Conf []FwdSourceInfoConf
-
-	// 回源类型，分 IP 和 Domain
-	Type string
-}
-
-/*
 FwdClientProxyInfo - 转发规则，回源代理配置列表
 */
 type FwdClientProxyInfo struct {
@@ -255,6 +243,18 @@ type FwdClientProxyInfo struct {
 
 	// 回源IP列表
 	IPList []string
+}
+
+/*
+FwdSourceInfo - 转发规则，回源配置信息
+*/
+type FwdSourceInfo struct {
+
+	// 回源配置列表
+	Conf []FwdSourceInfoConf
+
+	// 回源类型，分 IP 和 Domain
+	Type string
 }
 
 /*
