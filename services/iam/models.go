@@ -41,7 +41,7 @@ Group - 用户组模型
 type Group struct {
 
 	// 用户组创建时间戳
-	CreateAt int
+	CreatedAt int
 
 	// 用户组描述信息
 	Description string
