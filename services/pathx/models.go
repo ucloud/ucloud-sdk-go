@@ -210,21 +210,6 @@ type SrcAreaInfo struct {
 }
 
 /*
-ForwardTask - 全球统一接入转发端口任务信息
-*/
-type ForwardTask struct {
-
-	// 加速端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"，"WSWS"，"WSSWS"，"WSSWSS"]。TCP和UDP代表四层转发，其余为七层转发。
-	Protocol string
-
-	// 源站服务器监听的端口号
-	RSPort int
-}
-
-/*
 OutPublicIpInfo - 线路回源IP信息
 */
 type OutPublicIpInfo struct {
@@ -246,6 +231,21 @@ type AccelerationAreaInfos struct {
 
 	// 加速节点信息
 	AccelerationNodes []SrcAreaInfo
+}
+
+/*
+ForwardTask - 全球统一接入转发端口任务信息
+*/
+type ForwardTask struct {
+
+	// 加速端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"，"WSWS"，"WSSWS"，"WSSWSS"]。TCP和UDP代表四层转发，其余为七层转发。
+	Protocol string
+
+	// 源站服务器监听的端口号
+	RSPort int
 }
 
 /*
@@ -360,6 +360,21 @@ type AccelerationInfo struct {
 }
 
 /*
+UGAL4Forwarder - UGA实例 4层转发器信息
+*/
+type UGAL4Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+}
+
+/*
 UPathSet - uga关联的upath信息
 */
 type UPathSet struct {
@@ -420,21 +435,6 @@ type UGAATask struct {
 
 	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
 	Protocol string
-}
-
-/*
-UGAL4Forwarder - UGA实例 4层转发器信息
-*/
-type UGAL4Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
 }
 
 /*
