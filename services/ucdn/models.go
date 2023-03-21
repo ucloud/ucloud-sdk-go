@@ -3,15 +3,6 @@
 package ucdn
 
 /*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
-}
-
-/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -36,6 +27,15 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
 }
 
 /*
@@ -579,24 +579,6 @@ type ReferConf struct {
 }
 
 /*
-CacheAllConfig - 缓存相关的配置
-*/
-type CacheAllConfig struct {
-
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
-
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
-
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
-}
-
-/*
 OriginConf - 回源配置
 */
 type OriginConf struct {
@@ -630,6 +612,24 @@ type OriginConf struct {
 
 	// 源站协议http，http|https   默认http
 	OriginProtocol string
+}
+
+/*
+CacheAllConfig - 缓存相关的配置
+*/
+type CacheAllConfig struct {
+
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
+
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
+
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*

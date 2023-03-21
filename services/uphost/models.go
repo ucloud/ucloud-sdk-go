@@ -3,18 +3,6 @@
 package uphost
 
 /*
-PHostComponentSet - GetPHostTypeInfo
-*/
-type PHostComponentSet struct {
-
-	// 组件数量
-	Count int
-
-	// 组件名称
-	Name string
-}
-
-/*
 PHostClusterSet - 物理云主机集群库存信息
 */
 type PHostClusterSet struct {
@@ -42,6 +30,18 @@ type PHostCPUSet struct {
 
 	// CPU型号
 	Model string
+}
+
+/*
+PHostComponentSet - GetPHostTypeInfo
+*/
+type PHostComponentSet struct {
+
+	// 组件数量
+	Count int
+
+	// 组件名称
+	Name string
 }
 
 /*

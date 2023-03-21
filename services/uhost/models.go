@@ -27,6 +27,36 @@ type KeyPair struct {
 }
 
 /*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
 DataDiskInfo - 数据盘信息
 */
 type DataDiskInfo struct {
@@ -63,33 +93,51 @@ type BootDiskInfo struct {
 }
 
 /*
-Collection - CPU和内存可支持的规格
+Performance - GPU的性能指标
 */
-type Collection struct {
+type Performance struct {
 
-	// CPU规格
-	Cpu int
+	// 交互展示参数，可忽略
+	Rate int
 
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
+	// 值，单位是TFlops
+	Value float64
 }
 
 /*
-FeatureModes - 可以支持的模式类别
+MachineSizes - GPU、CPU和内存信息
 */
-type FeatureModes struct {
+type MachineSizes struct {
 
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
+	// CPU和内存可支持的规格
+	Collection []Collection
 
-	// 模式|特性名称
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
 	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
 }
 
 /*
@@ -108,30 +156,6 @@ type Disks struct {
 }
 
 /*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -144,30 +168,6 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
 }
 
 /*
