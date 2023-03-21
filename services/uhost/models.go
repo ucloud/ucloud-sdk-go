@@ -42,21 +42,18 @@ type FeatureModes struct {
 }
 
 /*
-DataDiskInfo - 数据盘信息
+Collection - CPU和内存可支持的规格
 */
-type DataDiskInfo struct {
+type Collection struct {
 
-	// 数据盘可支持的服务
-	Features []string
+	// CPU规格
+	Cpu int
 
-	// MaximalSize为磁盘最大值
-	MaximalSize int
+	// 内存规格
+	Memory []int
 
-	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
-	MinimalSize int
-
-	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
 }
 
 /*
@@ -78,18 +75,21 @@ type BootDiskInfo struct {
 }
 
 /*
-Collection - CPU和内存可支持的规格
+DataDiskInfo - 数据盘信息
 */
-type Collection struct {
+type DataDiskInfo struct {
 
-	// CPU规格
-	Cpu int
+	// 数据盘可支持的服务
+	Features []string
 
-	// 内存规格
-	Memory []int
+	// MaximalSize为磁盘最大值
+	MaximalSize int
 
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
+
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
 }
 
 /*
@@ -101,21 +101,6 @@ type Features struct {
 	Modes []FeatureModes
 
 	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
-}
-
-/*
-Disks - 磁盘信息
-*/
-type Disks struct {
-
-	// 系统盘信息
-	BootDisk []BootDiskInfo
-
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
 }
 
@@ -168,6 +153,21 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	Name string
 }
 
 /*
@@ -291,6 +291,39 @@ type IsolationGroup struct {
 }
 
 /*
+UHostDiskSet - DescribeUHostInstance
+*/
+type UHostDiskSet struct {
+
+	// 备份方案。若开通了数据方舟，则为DATAARK
+	BackupType string
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -327,39 +360,6 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
-}
-
-/*
-UHostDiskSet - DescribeUHostInstance
-*/
-type UHostDiskSet struct {
-
-	// 备份方案。若开通了数据方舟，则为DATAARK
-	BackupType string
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
 }
 
 /*
