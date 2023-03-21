@@ -27,6 +27,21 @@ type KeyPair struct {
 }
 
 /*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
 DataDiskInfo - 数据盘信息
 */
 type DataDiskInfo struct {
@@ -78,18 +93,15 @@ type Collection struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
+Features - 虚机可支持的特性
 */
-type FeatureModes struct {
+type Features struct {
 
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
+	// 可以提供的模式类别
+	Modes []FeatureModes
 
-	// 模式|特性名称
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
 	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
 }
 
 /*
@@ -108,30 +120,6 @@ type Disks struct {
 }
 
 /*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -147,6 +135,18 @@ type CpuPlatforms struct {
 }
 
 /*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
 MachineSizes - GPU、CPU和内存信息
 */
 type MachineSizes struct {
@@ -159,15 +159,15 @@ type MachineSizes struct {
 }
 
 /*
-Features - 虚机可支持的特性
+GraphicsMemory - GPU的显存指标
 */
-type Features struct {
+type GraphicsMemory struct {
 
-	// 可以提供的模式类别
-	Modes []FeatureModes
+	// 交互展示参数，可忽略
+	Rate int
 
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
+	// 值，单位是GB
+	Value int
 }
 
 /*
@@ -291,51 +291,6 @@ type IsolationGroup struct {
 }
 
 /*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
-UHostDiskSet - DescribeUHostInstance
-*/
-type UHostDiskSet struct {
-
-	// 备份方案。若开通了数据方舟，则为DATAARK
-	BackupType string
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -372,6 +327,51 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
+}
+
+/*
+UHostDiskSet - DescribeUHostInstance
+*/
+type UHostDiskSet struct {
+
+	// 备份方案。若开通了数据方舟，则为DATAARK
+	BackupType string
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*
