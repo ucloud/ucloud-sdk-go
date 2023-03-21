@@ -223,7 +223,7 @@ type CreateGroupRequest struct {
 	request.CommonBase
 
 	// 对用户组的描述
-	Description *string `required:"true"`
+	Description *string `required:"false"`
 
 	// 用户组名称
 	GroupName *string `required:"true"`
