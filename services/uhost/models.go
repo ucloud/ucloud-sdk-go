@@ -27,6 +27,21 @@ type KeyPair struct {
 }
 
 /*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
 FeatureModes - 可以支持的模式类别
 */
 type FeatureModes struct {
@@ -39,24 +54,6 @@ type FeatureModes struct {
 
 	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
 	RelatedToImageFeature []string
-}
-
-/*
-DataDiskInfo - 数据盘信息
-*/
-type DataDiskInfo struct {
-
-	// 数据盘可支持的服务
-	Features []string
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
-	MinimalSize int
-
-	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
 }
 
 /*
@@ -78,18 +75,33 @@ type BootDiskInfo struct {
 }
 
 /*
-Collection - CPU和内存可支持的规格
+DataDiskInfo - 数据盘信息
 */
-type Collection struct {
+type DataDiskInfo struct {
 
-	// CPU规格
-	Cpu int
+	// 数据盘可支持的服务
+	Features []string
 
-	// 内存规格
-	Memory []int
+	// MaximalSize为磁盘最大值
+	MaximalSize int
 
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
+
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
 }
 
 /*
@@ -102,6 +114,30 @@ type Features struct {
 
 	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
 	Name string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
 }
 
 /*
@@ -132,42 +168,6 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
-}
-
-/*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
 }
 
 /*

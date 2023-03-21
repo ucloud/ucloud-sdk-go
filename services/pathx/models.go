@@ -210,15 +210,18 @@ type SrcAreaInfo struct {
 }
 
 /*
-AccelerationAreaInfos - 加速大区信息
+ForwardTask - 全球统一接入转发端口任务信息
 */
-type AccelerationAreaInfos struct {
+type ForwardTask struct {
 
-	// 加速区code
-	AccelerationArea string
+	// 加速端口
+	Port int
 
-	// 加速节点信息
-	AccelerationNodes []SrcAreaInfo
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"，"WSWS"，"WSSWS"，"WSSWSS"]。TCP和UDP代表四层转发，其余为七层转发。
+	Protocol string
+
+	// 源站服务器监听的端口号
+	RSPort int
 }
 
 /*
@@ -234,18 +237,15 @@ type OutPublicIpInfo struct {
 }
 
 /*
-ForwardTask - 全球统一接入转发端口任务信息
+AccelerationAreaInfos - 加速大区信息
 */
-type ForwardTask struct {
+type AccelerationAreaInfos struct {
 
-	// 加速端口
-	Port int
+	// 加速区code
+	AccelerationArea string
 
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"，"WSWS"，"WSSWS"，"WSSWSS"]。TCP和UDP代表四层转发，其余为七层转发。
-	Protocol string
-
-	// 源站服务器监听的端口号
-	RSPort int
+	// 加速节点信息
+	AccelerationNodes []SrcAreaInfo
 }
 
 /*
@@ -360,6 +360,42 @@ type AccelerationInfo struct {
 }
 
 /*
+UGAL7Forwarder - UGA实例 7层转发器信息
+*/
+type UGAL7Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+
+	// 证书ID
+	SSLId string
+
+	// 证书名称
+	SSLName string
+}
+
+/*
+UGAL4Forwarder - UGA实例 4层转发器信息
+*/
+type UGAL4Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+}
+
+/*
 UPathSet - uga关联的upath信息
 */
 type UPathSet struct {
@@ -390,21 +426,6 @@ type UPathSet struct {
 }
 
 /*
-UGAL4Forwarder - UGA实例 4层转发器信息
-*/
-type UGAL4Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
-}
-
-/*
 UGAATask - 用户在UGAA实例下配置的多端口任务
 */
 type UGAATask struct {
@@ -414,27 +435,6 @@ type UGAATask struct {
 
 	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
 	Protocol string
-}
-
-/*
-UGAL7Forwarder - UGA实例 7层转发器信息
-*/
-type UGAL7Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
-
-	// 证书ID
-	SSLId string
-
-	// 证书名称
-	SSLName string
 }
 
 /*
