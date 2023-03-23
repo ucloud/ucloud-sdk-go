@@ -3,6 +3,15 @@
 package ucdn
 
 /*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
+}
+
+/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -27,15 +36,6 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
-}
-
-/*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
 }
 
 /*
@@ -549,21 +549,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-CacheKeyInfo - 忽略参数缓存配置
-*/
-type CacheKeyInfo struct {
-
-	// 是否忽略
-	Ignore bool
-
-	// 路径模式，支持正则
-	PathPattern string
-
-	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
-	QueryString string
-}
-
-/*
 ReferConf - refer配置
 */
 type ReferConf struct {
@@ -579,21 +564,39 @@ type ReferConf struct {
 }
 
 /*
-CacheAllConfig - 缓存相关的配置
+CacheKeyInfo - 忽略参数缓存配置
 */
-type CacheAllConfig struct {
+type CacheKeyInfo struct {
 
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
+	// 是否忽略
+	Ignore bool
 
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
+	// 路径模式，支持正则
+	PathPattern string
 
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
+	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
+	QueryString string
+}
 
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
+/*
+AdvancedConf - 域名高级配置
+*/
+type AdvancedConf struct {
+
+	// http转https回源 true是，false否
+	Http2Https bool
+
+	// 客户端响应http头列表
+	HttpClientHeader []string
+
+	// 源站http头列表
+	HttpOriginHeader []string
+
+	// 是否开启quic
+	QuicEnable bool
+
+	// 是否开启websocket
+	WebSocketEnable bool
 }
 
 /*
@@ -645,24 +648,21 @@ type OriginConf struct {
 }
 
 /*
-AdvancedConf - 域名高级配置
+CacheAllConfig - 缓存相关的配置
 */
-type AdvancedConf struct {
+type CacheAllConfig struct {
 
-	// http转https回源 true是，false否
-	Http2Https bool
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
 
-	// 客户端响应http头列表
-	HttpClientHeader []string
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
 
-	// 源站http头列表
-	HttpOriginHeader []string
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
 
-	// 是否开启quic
-	QuicEnable bool
-
-	// 是否开启websocket
-	WebSocketEnable bool
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*
