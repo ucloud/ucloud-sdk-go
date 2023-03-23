@@ -1141,7 +1141,7 @@ type GetUcdnDomainBandwidthV2Request struct {
 	// 原始带宽，不为0则获取原始带宽，默认为0
 	Primeval *int `required:"false"`
 
-	// 协议，http、https、websocket  不传则查所有协议的带宽，可以查多个协议，用逗号分隔
+	// 协议，http、https、websocket、quic  不传则查所有协议的带宽，可以查多个协议，用逗号分隔
 	Protocol *string `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示按照1分钟粒度）

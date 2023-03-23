@@ -1064,8 +1064,8 @@ func (c *PathXClient) DescribeGlobalSSHInstance(req *DescribeGlobalSSHInstanceRe
 type DescribePathXLineConfigRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID,如org-xxxx。不填为默认项目。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
 }
 
