@@ -17,22 +17,22 @@ type AccessKey struct {
 	CreatedAt int
 
 	// 密钥删除时间
-	DeletedAt string
+	DeletedAt int
 
 	// 密钥备注
 	Description string
 
 	// 密钥过期时间
-	ExpiredAt string
+	ExpiredAt int
 
 	// 密钥状态
 	Status string
 
 	// 密钥更新时间
-	UpdatedAt string
+	UpdatedAt int
 
 	// 用户ID
-	UserID int
+	UserId int
 }
 
 /*

@@ -549,21 +549,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-ReferConf - refer配置
-*/
-type ReferConf struct {
-
-	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
-	NullRefer int
-
-	// Refer防盗链规则列表，支持正则表达式
-	ReferList []string
-
-	// Refer防盗链配置  0白名单，1黑名单
-	ReferType int
-}
-
-/*
 CacheKeyInfo - 忽略参数缓存配置
 */
 type CacheKeyInfo struct {
@@ -576,6 +561,21 @@ type CacheKeyInfo struct {
 
 	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
 	QueryString string
+}
+
+/*
+ReferConf - refer配置
+*/
+type ReferConf struct {
+
+	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
+	NullRefer int
+
+	// Refer防盗链规则列表，支持正则表达式
+	ReferList []string
+
+	// Refer防盗链配置  0白名单，1黑名单
+	ReferType int
 }
 
 /*
@@ -597,18 +597,6 @@ type AdvancedConf struct {
 
 	// 是否开启websocket
 	WebSocketEnable bool
-}
-
-/*
-AccessControlConf - 访问控制配置参数
-*/
-type AccessControlConf struct {
-
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
-
-	// refer配置
-	ReferConf ReferConf
 }
 
 /*
@@ -663,6 +651,18 @@ type CacheAllConfig struct {
 
 	// 状态码缓存配置列表，参见CacheConf
 	HttpCodeCacheList []CacheConf
+}
+
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
+
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
+
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*
