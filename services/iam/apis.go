@@ -874,6 +874,53 @@ func (c *IAMClient) GetIAMPolicy(req *GetIAMPolicyRequest) (*GetIAMPolicyRespons
 	return &res, nil
 }
 
+// GetLoginProfileRequest is request schema for GetLoginProfile action
+type GetLoginProfileRequest struct {
+	request.CommonBase
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// GetLoginProfileResponse is response schema for GetLoginProfile action
+type GetLoginProfileResponse struct {
+	response.CommonBase
+
+	// 登录资料
+	LoginProfile LoginProfile
+}
+
+// NewGetLoginProfileRequest will create request of GetLoginProfile action.
+func (c *IAMClient) NewGetLoginProfileRequest() *GetLoginProfileRequest {
+	req := &GetLoginProfileRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetLoginProfile
+
+获取用户登录资料
+*/
+func (c *IAMClient) GetLoginProfile(req *GetLoginProfileRequest) (*GetLoginProfileResponse, error) {
+	var err error
+	var res GetLoginProfileResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetLoginProfile", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUserRequest is request schema for GetUser action
 type GetUserRequest struct {
 	request.CommonBase
@@ -1082,6 +1129,56 @@ func (c *IAMClient) ListEntitiesForProject(req *ListEntitiesForProjectRequest) (
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListEntitiesForProject", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListGroupsRequest is request schema for ListGroups action
+type ListGroupsRequest struct {
+	request.CommonBase
+}
+
+// ListGroupsResponse is response schema for ListGroups action
+type ListGroupsResponse struct {
+	response.CommonBase
+
+	// 用户组数组
+	Groups []Group
+
+	// 错误消息
+	Message string
+
+	// 总数
+	TotalCount int
+}
+
+// NewListGroupsRequest will create request of ListGroups action.
+func (c *IAMClient) NewListGroupsRequest() *ListGroupsRequest {
+	req := &ListGroupsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListGroups
+
+列出用户组
+*/
+func (c *IAMClient) ListGroups(req *ListGroupsRequest) (*ListGroupsResponse, error) {
+	var err error
+	var res ListGroupsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListGroups", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1603,6 +1700,62 @@ func (c *IAMClient) UpdateIAMPolicyName(req *UpdateIAMPolicyNameRequest) (*Updat
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateIAMPolicyName", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateLoginProfileRequest is request schema for UpdateLoginProfile action
+type UpdateLoginProfileRequest struct {
+	request.CommonBase
+
+	// 是否必需绑定MFA
+	MFABindRequired *bool `required:"false"`
+
+	// 密码最长有效期，单位：天
+	MaxPasswordAge *int `required:"false"`
+
+	// 登录资料状态
+	Status *string `required:"false"`
+
+	// 用户真实邮箱
+	UserEmail *string `required:"false"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// UpdateLoginProfileResponse is response schema for UpdateLoginProfile action
+type UpdateLoginProfileResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateLoginProfileRequest will create request of UpdateLoginProfile action.
+func (c *IAMClient) NewUpdateLoginProfileRequest() *UpdateLoginProfileRequest {
+	req := &UpdateLoginProfileRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateLoginProfile
+
+更新用户登录资料
+*/
+func (c *IAMClient) UpdateLoginProfile(req *UpdateLoginProfileRequest) (*UpdateLoginProfileResponse, error) {
+	var err error
+	var res UpdateLoginProfileResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateLoginProfile", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

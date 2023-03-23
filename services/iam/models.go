@@ -93,6 +93,21 @@ type IAMPolicy struct {
 }
 
 /*
+LoginProfile - 登录资料
+*/
+type LoginProfile struct {
+
+	// 是否必需绑定MFA
+	MFABindRequired bool
+
+	// 密码最长有效期，单位：天
+	MaxPasswordAge int
+
+	// 登录资料状态
+	Status string
+}
+
+/*
 User - 用户模型
 */
 type User struct {
