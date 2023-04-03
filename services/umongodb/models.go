@@ -15,6 +15,48 @@ type DiskInfo struct {
 }
 
 /*
+ReplicaInfo - 副本集群信息
+*/
+type ReplicaInfo struct {
+
+	// 集群ID
+	ClusterId string
+
+	// 副本集创建时间
+	CreateTime int
+
+	// 副本集删除时间
+	DeleteTime int
+
+	// 隔离组ID
+	IsolationGroupId string
+
+	// 机器类型
+	MachineType string
+
+	// 机器类型Id
+	MachineTypeId string
+
+	// 副本集修改时间
+	ModifyTime int
+
+	// 副本集下的节点数量
+	NodeCount int
+
+	// 副本集下的节点信息
+	NodeInfos []NodeInfo
+
+	// 副本集ID
+	ReplicaId string
+
+	// 副本类型,ConfigRepl或者DataRepl
+	ReplicaType string
+
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
+	State string
+}
+
+/*
 NodeInfo - 节点信息
 */
 type NodeInfo struct {
@@ -60,48 +102,6 @@ type NodeInfo struct {
 
 	// 可用区ID
 	ZoneId int
-}
-
-/*
-ReplicaInfo - 副本集群信息
-*/
-type ReplicaInfo struct {
-
-	// 集群ID
-	ClusterId string
-
-	// 副本集创建时间
-	CreateTime int
-
-	// 副本集删除时间
-	DeleteTime int
-
-	// 隔离组ID
-	IsolationGroupId string
-
-	// 机器类型
-	MachineType string
-
-	// 机器类型Id
-	MachineTypeId string
-
-	// 副本集修改时间
-	ModifyTime int
-
-	// 副本集下的节点数量
-	NodeCount int
-
-	// 副本集下的节点信息
-	NodeInfos []NodeInfo
-
-	// 副本集ID
-	ReplicaId string
-
-	// 副本类型,ConfigRepl或者DataRepl
-	ReplicaType string
-
-	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
-	State string
 }
 
 /*

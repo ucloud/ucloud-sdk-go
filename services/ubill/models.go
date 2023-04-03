@@ -3,24 +3,24 @@
 package ubill
 
 /*
-ResourceTag -
-*/
-type ResourceTag struct {
-
-	//
-	KeyId string
-
-	//
-	Value string
-}
-
-/*
 OrderDetail -
 */
 type OrderDetail struct {
 
 	//
 	ProductName string
+
+	//
+	Value string
+}
+
+/*
+ResourceTag -
+*/
+type ResourceTag struct {
+
+	//
+	KeyId string
 
 	//
 	Value string

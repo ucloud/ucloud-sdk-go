@@ -1248,6 +1248,136 @@ func (c *IAMClient) ListPolicies(req *ListPoliciesRequest) (*ListPoliciesRespons
 	return &res, nil
 }
 
+// ListPoliciesForGroupRequest is request schema for ListPoliciesForGroup action
+type ListPoliciesForGroupRequest struct {
+	request.CommonBase
+
+	// 用户组名称
+	GroupName *string `required:"true"`
+
+	// 需要查询的用户组数量
+	Limit *string `required:"false"`
+
+	// 从第几条数据开始查询
+	Offset *string `required:"false"`
+
+	// 项目ID
+	ProjectID *string `required:"false"`
+
+	// 应用范围
+	Scope *string `required:"false"`
+}
+
+// ListPoliciesForGroupResponse is response schema for ListPoliciesForGroup action
+type ListPoliciesForGroupResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 用户信息数组
+	Policies []Policy
+
+	// 总数
+	TotalCount int
+}
+
+// NewListPoliciesForGroupRequest will create request of ListPoliciesForGroup action.
+func (c *IAMClient) NewListPoliciesForGroupRequest() *ListPoliciesForGroupRequest {
+	req := &ListPoliciesForGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListPoliciesForGroup
+
+列出用户组关联的权限策略
+*/
+func (c *IAMClient) ListPoliciesForGroup(req *ListPoliciesForGroupRequest) (*ListPoliciesForGroupResponse, error) {
+	var err error
+	var res ListPoliciesForGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListPoliciesForGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListPoliciesForUserRequest is request schema for ListPoliciesForUser action
+type ListPoliciesForUserRequest struct {
+	request.CommonBase
+
+	// 需要查询的用户组数量
+	Limit *string `required:"false"`
+
+	// 从第几条数据开始查询
+	Offset *string `required:"false"`
+
+	// 项目ID
+	ProjectID *string `required:"false"`
+
+	// 应用范围
+	Scope *string `required:"false"`
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// ListPoliciesForUserResponse is response schema for ListPoliciesForUser action
+type ListPoliciesForUserResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 策略信息
+	Policies []Policy
+
+	// 数据集合数量
+	TotalCount int
+}
+
+// NewListPoliciesForUserRequest will create request of ListPoliciesForUser action.
+func (c *IAMClient) NewListPoliciesForUserRequest() *ListPoliciesForUserRequest {
+	req := &ListPoliciesForUserRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListPoliciesForUser
+
+列出用户关联的IAM策略
+*/
+func (c *IAMClient) ListPoliciesForUser(req *ListPoliciesForUserRequest) (*ListPoliciesForUserResponse, error) {
+	var err error
+	var res ListPoliciesForUserResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListPoliciesForUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListProjectsRequest is request schema for ListProjects action
 type ListProjectsRequest struct {
 	request.CommonBase

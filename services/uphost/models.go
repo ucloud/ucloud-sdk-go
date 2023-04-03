@@ -3,24 +3,6 @@
 package uphost
 
 /*
-PHostCPUSet - DescribePHost
-*/
-type PHostCPUSet struct {
-
-	// CPU核数
-	CoreCount int
-
-	// CPU个数
-	Count int
-
-	// CPU主频
-	Frequence float64
-
-	// CPU型号
-	Model string
-}
-
-/*
 PHostComponentSet - GetPHostTypeInfo
 */
 type PHostComponentSet struct {
@@ -42,6 +24,24 @@ type PHostClusterSet struct {
 
 	// 库存状态。枚举值：有库存：Available；无库存：SoldOut
 	StockStatus string
+}
+
+/*
+PHostCPUSet - DescribePHost
+*/
+type PHostCPUSet struct {
+
+	// CPU核数
+	CoreCount int
+
+	// CPU个数
+	Count int
+
+	// CPU主频
+	Frequence float64
+
+	// CPU型号
+	Model string
 }
 
 /*

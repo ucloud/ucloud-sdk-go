@@ -111,42 +111,6 @@ type CfgDictList struct {
 }
 
 /*
-DockerInfo - 容器信息
-*/
-type DockerInfo struct {
-
-	// 参数
-	Args string
-
-	// 容器配置字典（详情参考CfgDictList）
-	CfgDictList []CfgDictList
-
-	// 命令
-	Command string
-
-	// CPU核数（/核）精度0.1核
-	CpuCores float64
-
-	// 环境变量（详情参考EnvList）
-	EnvList []EnvList
-
-	// 镜像名称
-	ImageName string
-
-	// 内存大小（Gi）
-	MemSize float64
-
-	// 容器名称
-	Name string
-
-	// 容器状态，0：初始化；1：拉取镜像；2：拉取镜像失败；3：启动中；4：运行中；5：正在停止；6：已停止；7：已删除；8：镜像拉取成功；9：启动失败；99：异常
-	State int
-
-	// 工作目录
-	WorkDir string
-}
-
-/*
 StorVolumeInfo - 容器组存储卷信息
 */
 type StorVolumeInfo struct {
@@ -189,6 +153,42 @@ type IpList struct {
 
 	// 运营商
 	Isp string
+}
+
+/*
+DockerInfo - 容器信息
+*/
+type DockerInfo struct {
+
+	// 参数
+	Args string
+
+	// 容器配置字典（详情参考CfgDictList）
+	CfgDictList []CfgDictList
+
+	// 命令
+	Command string
+
+	// CPU核数（/核）精度0.1核
+	CpuCores float64
+
+	// 环境变量（详情参考EnvList）
+	EnvList []EnvList
+
+	// 镜像名称
+	ImageName string
+
+	// 内存大小（Gi）
+	MemSize float64
+
+	// 容器名称
+	Name string
+
+	// 容器状态，0：初始化；1：拉取镜像；2：拉取镜像失败；3：启动中；4：运行中；5：正在停止；6：已停止；7：已删除；8：镜像拉取成功；9：启动失败；99：异常
+	State int
+
+	// 工作目录
+	WorkDir string
 }
 
 /*
