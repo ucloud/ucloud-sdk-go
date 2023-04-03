@@ -129,6 +129,33 @@ type Entity struct {
 }
 
 /*
+Policy - 权限策略
+*/
+type Policy struct {
+
+	// 策略被添加到用户组时的时间戳
+	AttachedAt int
+
+	// 创建时间
+	CreatedAt int
+
+	// 描述
+	Description string
+
+	// 权限策略名称
+	PolicyName string
+
+	// 策略URN
+	PolicyURN string
+
+	// 项目ID
+	ProjectID string
+
+	// 应用范围（ScopeRequired:项目级, ScopeEmpty:全局级, ScopeUnrestricted:项目级/全局级）
+	Scope string
+}
+
+/*
 Project - 项目模型
 */
 type Project struct {
