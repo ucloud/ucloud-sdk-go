@@ -51,27 +51,12 @@ type Group struct {
 }
 
 /*
-Customize - IAM策略版本信息
-*/
-type Customize struct {
-
-	// 版本号
-	Version string
-
-	// 版本描述
-	VersionDescription string
-}
-
-/*
 IAMPolicy - 获取IAM权限策略详情
 */
 type IAMPolicy struct {
 
 	// IAM权限策略创建时间
 	CreatedAt int
-
-	// IAM权限策略版本信息
-	Customize Customize
 
 	// IAM权限策略描述
 	Description string

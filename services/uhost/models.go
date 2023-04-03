@@ -108,18 +108,6 @@ type Disks struct {
 }
 
 /*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -135,15 +123,27 @@ type CpuPlatforms struct {
 }
 
 /*
-Performance - GPU的性能指标
+MachineSizes - GPU、CPU和内存信息
 */
-type Performance struct {
+type MachineSizes struct {
 
-	// 交互展示参数，可忽略
-	Rate int
+	// CPU和内存可支持的规格
+	Collection []Collection
 
-	// 值，单位是TFlops
-	Value float64
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
 }
 
 /*
@@ -159,15 +159,15 @@ type GraphicsMemory struct {
 }
 
 /*
-Features - 虚机可支持的特性
+Performance - GPU的性能指标
 */
-type Features struct {
+type Performance struct {
 
-	// 可以提供的模式类别
-	Modes []FeatureModes
+	// 交互展示参数，可忽略
+	Rate int
 
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
+	// 值，单位是TFlops
+	Value float64
 }
 
 /*
@@ -291,18 +291,6 @@ type IsolationGroup struct {
 }
 
 /*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -339,6 +327,18 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*
