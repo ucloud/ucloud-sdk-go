@@ -207,60 +207,6 @@ type PolicyBackendSet struct {
 }
 
 /*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
-ULBPolicySet - 内容转发详细列表
-*/
-type ULBPolicySet struct {
-
-	// 内容转发下rs的详细信息，参考PolicyBackendSet
-	BackendSet []PolicyBackendSet
-
-	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
-	DomainMatchMode string
-
-	// 内容转发匹配字段;默认内容转发类型下为空。
-	Match string
-
-	// 内容转发Id，默认内容转发类型下为空。
-	PolicyId string
-
-	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
-	PolicyPriority int
-
-	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
-	PolicyType string
-
-	// 默认内容转发类型下返回当前rs总数
-	TotalCount int
-
-	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
-	Type string
-
-	// 所属VServerId
-	VServerId string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -309,6 +255,72 @@ type ULBBackendSet struct {
 
 	// 后端RS权重（在加权轮询算法下有效）
 	Weight int
+}
+
+/*
+ULBPolicySet - 内容转发详细列表
+*/
+type ULBPolicySet struct {
+
+	// 内容转发下rs的详细信息，参考PolicyBackendSet
+	BackendSet []PolicyBackendSet
+
+	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode string
+
+	// 内容转发匹配字段;默认内容转发类型下为空。
+	Match string
+
+	// 内容转发Id，默认内容转发类型下为空。
+	PolicyId string
+
+	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
+	PolicyPriority int
+
+	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
+	PolicyType string
+
+	// 默认内容转发类型下返回当前rs总数
+	TotalCount int
+
+	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
+	Type string
+
+	// 所属VServerId
+	VServerId string
+}
+
+/*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -384,18 +396,6 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*

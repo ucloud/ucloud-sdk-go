@@ -381,36 +381,6 @@ type AccelerationInfo struct {
 }
 
 /*
-UPathSet - uga关联的upath信息
-*/
-type UPathSet struct {
-
-	// 带宽 Mbps, 1~800Mbps
-	Bandwidth int
-
-	// 线路起点英文代号，加速区域
-	LineFrom string
-
-	// 线路起点中文名字，加速区域
-	LineFromName string
-
-	// 线路ID
-	LineId string
-
-	// 线路对端英文代号，源站区域
-	LineTo string
-
-	// 线路对端中文名字，源站区域
-	LineToName string
-
-	// UPath 实例ID
-	UPathId string
-
-	// UPath名字
-	UPathName string
-}
-
-/*
 UGAL7Forwarder - UGA实例 7层转发器信息
 */
 type UGAL7Forwarder struct {
@@ -456,6 +426,36 @@ type UGAATask struct {
 
 	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
 	Protocol string
+}
+
+/*
+UPathSet - uga关联的upath信息
+*/
+type UPathSet struct {
+
+	// 带宽 Mbps, 1~800Mbps
+	Bandwidth int
+
+	// 线路起点英文代号，加速区域
+	LineFrom string
+
+	// 线路起点中文名字，加速区域
+	LineFromName string
+
+	// 线路ID
+	LineId string
+
+	// 线路对端英文代号，源站区域
+	LineTo string
+
+	// 线路对端中文名字，源站区域
+	LineToName string
+
+	// UPath 实例ID
+	UPathId string
+
+	// UPath名字
+	UPathName string
 }
 
 /*
