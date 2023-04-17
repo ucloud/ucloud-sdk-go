@@ -216,6 +216,21 @@ type NatGWIPResInfo struct {
 }
 
 /*
+NatGatewaySubnetSet - natgw里面的子网信息
+*/
+type NatGatewaySubnetSet struct {
+
+	// 子网网段
+	Subnet string
+
+	// 子网名字
+	SubnetName string
+
+	// 子网id
+	SubnetworkId string
+}
+
+/*
 NatGatewayIPSet - IPSet信息
 */
 type NatGatewayIPSet struct {
@@ -234,21 +249,6 @@ type NatGatewayIPSet struct {
 
 	// 权重为100的为出口
 	Weight int
-}
-
-/*
-NatGatewaySubnetSet - natgw里面的子网信息
-*/
-type NatGatewaySubnetSet struct {
-
-	// 子网网段
-	Subnet string
-
-	// 子网名字
-	SubnetName string
-
-	// 子网id
-	SubnetworkId string
 }
 
 /*
@@ -435,18 +435,6 @@ type AclInfo struct {
 }
 
 /*
-UNIIpInfo - 虚拟网卡内网IP信息
-*/
-type UNIIpInfo struct {
-
-	// ip 地址
-	IpAddr []string
-
-	// ip类型 SecondaryIp/PrimaryIp
-	IpType string
-}
-
-/*
 UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
 */
 type UNIQuotaInfo struct {
@@ -456,6 +444,18 @@ type UNIQuotaInfo struct {
 
 	// 网卡内网IP配额
 	PrivateIpQuota int
+}
+
+/*
+UNIIpInfo - 虚拟网卡内网IP信息
+*/
+type UNIIpInfo struct {
+
+	// ip 地址
+	IpAddr []string
+
+	// ip类型 SecondaryIp/PrimaryIp
+	IpType string
 }
 
 /*

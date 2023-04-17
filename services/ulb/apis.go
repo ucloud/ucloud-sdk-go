@@ -208,19 +208,22 @@ func (c *ULBClient) BindSSL(req *BindSSLRequest) (*BindSSLResponse, error) {
 type CreatePolicyRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 内容转发策略应用的后端资源实例的ID，来源于 AllocateBackend 返回的 BackendId
 	BackendId []string `required:"true"`
 
+	// 内容转发规则中域名的匹配方式，默认与原本一致。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode *string `required:"false"`
+
 	// 内容转发匹配字段
 	Match *string `required:"true"`
 
-	// 策略优先级，1-9999
+	// 策略优先级，1-9999；只针对路径规则生效
 	PolicyPriority *int `required:"false"`
 
 	// 内容转发匹配字段的类型
@@ -1637,6 +1640,9 @@ type UpdatePolicyRequest struct {
 
 	// 转发规则的ID，当Type为Default时，可以不传或为空
 	PolicyId *string `required:"false"`
+
+	// 策略优先级，1-9999；只针对路径规则生效
+	PolicyPriority *int `required:"false"`
 
 	// 内容转发匹配字段的类型，枚举值：Domain -> 域名转发规则；Path -> 路径转发规则；Default -> 默认转发规则，不传默认值Domain
 	Type *string `required:"false"`
