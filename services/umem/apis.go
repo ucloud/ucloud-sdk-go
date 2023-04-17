@@ -202,26 +202,35 @@ func (c *UMemClient) CreateUMemBackup(req *CreateUMemBackupRequest) (*CreateUMem
 type CreateUMemSpaceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// Year , Month, Dynamic, Trial 默认: Month
+	// 分片个数
+	BlockCnt *int `required:"false"`
+
+	// Year , Month, Dynamic 默认: Month
 	ChargeType *string `required:"false"`
+
+	// 是否是cluster模式（参数为cluster创建redis cluster，其他参数或者不传该参数仍然创建老版本分布式）
+	ClusterMode *string `required:"false"`
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
+	// 是否创建性能增强性。默认为false，或者不填，填true为性能增强型。
+	HighPerformance *bool `required:"false"`
+
 	// 空间名称,长度(6<=size<=63)
 	Name *string `required:"true"`
 
-	// 【该字段已废弃，请谨慎使用】
-	Password *string `required:"false" deprecated:"true"`
+	// URedis密码。请遵照[[api:uhost-api:specification|字段规范]]设定密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64UGFzc3dvcmQx。
+	Password *string `required:"false"`
 
 	// 协议:memcache, redis (默认redis).注意:redis无single类型
 	Protocol *string `required:"false"`
@@ -232,17 +241,23 @@ type CreateUMemSpaceRequest struct {
 	// 内存大小, 单位:GB, 范围[1~1024]
 	Size *int `required:"true"`
 
-	//
+	// 跨机房UDRedis，slave所在可用区（必须和Zone在同一Region，且不可相同）
+	SlaveZone *string `required:"false"`
+
+	// 子网ID
 	SubnetId *string `required:"false"`
 
-	// 【该字段已废弃，请谨慎使用】
-	Tag *string `required:"false" deprecated:"true"`
+	//
+	Tag *string `required:"false"`
 
 	// 空间类型:single(无热备),double(热备)(默认: double)
 	Type *string `required:"false"`
 
-	//
+	// VPC的ID
 	VPCId *string `required:"false"`
+
+	// 分布式分片版本（默认版本是4.0，其他版本见DescribeUDRedisBlockVersion）
+	Version *string `required:"false"`
 }
 
 // CreateUMemSpaceResponse is response schema for CreateUMemSpace action
@@ -275,6 +290,8 @@ func (c *UMemClient) CreateUMemSpace(req *CreateUMemSpaceRequest) (*CreateUMemSp
 	var res CreateUMemSpaceResponse
 
 	reqCopier := *req
+
+	reqCopier.Password = request.ToBase64Query(reqCopier.Password)
 
 	err = c.Client.InvokeAction("CreateUMemSpace", &reqCopier, &res)
 	if err != nil {
@@ -2497,14 +2514,14 @@ func (c *UMemClient) ResizeUDredisSpace(req *ResizeUDredisSpaceRequest) (*Resize
 type ResizeUMemSpaceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
 	// 【该字段已废弃，请谨慎使用】
 	ChargeType *string `required:"false" deprecated:"true"`
@@ -2518,8 +2535,8 @@ type ResizeUMemSpaceRequest struct {
 	// UMem 内存空间Id
 	SpaceId *string `required:"true"`
 
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
+	// 空间类型:single(无热备),double(热备)(默认: double)
+	Type *string `required:"false"`
 }
 
 // ResizeUMemSpaceResponse is response schema for ResizeUMemSpace action
@@ -2542,7 +2559,7 @@ func (c *UMemClient) NewResizeUMemSpaceRequest() *ResizeUMemSpaceRequest {
 /*
 API: ResizeUMemSpace
 
-调整内存空间容量
+调整内存空间容量，只支持存量老分布式产品，不支持高性能分布式
 */
 func (c *UMemClient) ResizeUMemSpace(req *ResizeUMemSpaceRequest) (*ResizeUMemSpaceResponse, error) {
 	var err error

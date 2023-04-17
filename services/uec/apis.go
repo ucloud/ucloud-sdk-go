@@ -208,18 +208,6 @@ type CreateUEcHolderParamImage struct {
 }
 
 /*
-CreateUEcHolderParamStorage is request schema for complex param
-*/
-type CreateUEcHolderParamStorage struct {
-
-	// 存储卷挂载路径
-	Path *string `required:"false"`
-
-	// 存储卷资源id
-	ResourceId *string `required:"false"`
-}
-
-/*
 CreateUEcHolderParamPack is request schema for complex param
 */
 type CreateUEcHolderParamPack struct {
@@ -250,6 +238,18 @@ type CreateUEcHolderParamPack struct {
 
 	// 容器工作目录
 	WorkDir *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamStorage is request schema for complex param
+*/
+type CreateUEcHolderParamStorage struct {
+
+	// 存储卷挂载路径
+	Path *string `required:"false"`
+
+	// 存储卷资源id
+	ResourceId *string `required:"false"`
 }
 
 // CreateUEcHolderRequest is request schema for CreateUEcHolder action
