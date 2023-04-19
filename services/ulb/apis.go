@@ -131,8 +131,6 @@ func (c *ULBClient) NewAllocateBackendBatchRequest() *AllocateBackendBatchReques
 
 /*
 API: AllocateBackendBatch
-
-
 */
 func (c *ULBClient) AllocateBackendBatch(req *AllocateBackendBatchRequest) (*AllocateBackendBatchResponse, error) {
 	var err error

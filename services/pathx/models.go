@@ -243,18 +243,6 @@ type AccelerationAreaInfos struct {
 }
 
 /*
-OutPublicIpInfo - 线路回源IP信息
-*/
-type OutPublicIpInfo struct {
-
-	// 线路回源节点机房代号
-	Area string
-
-	// 线路回源节点EIP
-	IP string
-}
-
-/*
 ForwardTask - 全球统一接入转发端口任务信息
 */
 type ForwardTask struct {
@@ -267,6 +255,18 @@ type ForwardTask struct {
 
 	// 源站服务器监听的端口号
 	RSPort int
+}
+
+/*
+OutPublicIpInfo - 线路回源IP信息
+*/
+type OutPublicIpInfo struct {
+
+	// 线路回源节点机房代号
+	Area string
+
+	// 线路回源节点EIP
+	IP string
 }
 
 /*

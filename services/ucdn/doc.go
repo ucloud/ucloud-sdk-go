@@ -5,8 +5,8 @@ Package ucdn include resources of ucloud ucdn product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/ucdn-api/index
-	- Product: https://www.ucloud.cn/site/product/ucdn.html
+  - API: https://docs.ucloud.cn/api/ucdn-api/index
+  - Product: https://www.ucloud.cn/site/product/ucdn.html
 
 for detail.
 */

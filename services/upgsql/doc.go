@@ -5,8 +5,8 @@ Package upgsql include resources of ucloud upgsql product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/upgsql-api/index
-	- Product: https://www.ucloud.cn/site/product/upgsql.html
+  - API: https://docs.ucloud.cn/api/upgsql-api/index
+  - Product: https://www.ucloud.cn/site/product/upgsql.html
 
 for detail.
 */

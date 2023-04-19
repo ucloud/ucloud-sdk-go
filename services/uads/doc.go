@@ -5,8 +5,8 @@ Package uads include resources of ucloud uads product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/uads-api/index
-	- Product: https://www.ucloud.cn/site/product/uads.html
+  - API: https://docs.ucloud.cn/api/uads-api/index
+  - Product: https://www.ucloud.cn/site/product/uads.html
 
 for detail.
 */
