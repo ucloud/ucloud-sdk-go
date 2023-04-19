@@ -1,6 +1,6 @@
 ## 0.22.0 (2023-04-19)
 
-ENHANCEMENTS:
+FEATURES:
 - support custom transport
 
 ## 0.21.37 (2022-05-19)
