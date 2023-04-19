@@ -918,7 +918,7 @@ func (c *UPgSQLClient) NewGetUPgSQLUpgradePriceRequest() *GetUPgSQLUpgradePriceR
 /*
 API: GetUPgSQLUpgradePrice
 
- 获取 PG 云数据库升降级价格
+	获取 PG 云数据库升降级价格
 */
 func (c *UPgSQLClient) GetUPgSQLUpgradePrice(req *GetUPgSQLUpgradePriceRequest) (*GetUPgSQLUpgradePriceResponse, error) {
 	var err error
