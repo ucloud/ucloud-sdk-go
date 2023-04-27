@@ -5,8 +5,8 @@ Package ufs include resources of ucloud ufs product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/ufs-api/index
-	- Product: https://www.ucloud.cn/site/product/ufs.html
+  - API: https://docs.ucloud.cn/api/ufs-api/index
+  - Product: https://www.ucloud.cn/site/product/ufs.html
 
 for detail.
 */

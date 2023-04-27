@@ -28,22 +28,22 @@ type AllocateBackendRequest struct {
 	// 所添加的后端资源服务端口，取值范围[1-65535]，默认80
 	Port *int `required:"false"`
 
-	// 所添加的后端服务器的资源实例IP，当ResourceType 为 UHybrid 时有效，且必填
+	// 所添加的后端服务器的资源实例IP，当ResourceType 为 UHybrid 或 IP时有效，且必填；与ResourceId二选一必填
 	ResourceIP *string `required:"false"`
 
-	// 所添加的后端资源的资源ID
-	ResourceId *string `required:"true"`
+	// 所添加的后端资源的资源ID；与ResourceIP二选一必填
+	ResourceId *string `required:"false"`
 
-	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UNI -> 虚拟网卡；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube，USDP->智能大数据平台；默认值为UHost。报文转发模式不支持UDocker、UHybrid、CUBE
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UNI -> 虚拟网卡；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube，USDP->智能大数据平台， IP->IP类型；默认值为UHost。报文转发模式不支持UDocker、UHybrid、CUBE、IP
 	ResourceType *string `required:"true"`
 
-	// 所添加的后端服务器所在的子网，当ResourceType 为 UHybrid 时有效，且必填
+	// 所添加的后端服务器所在的子网，当ResourceType 为 UHybrid 或 IP 时有效，且必填
 	SubnetId *string `required:"false"`
 
 	// 负载均衡实例的ID
 	ULBId *string `required:"true"`
 
-	// 所添加的后端服务器所在的vpc，当ResourceType 为 UHybrid 时有效，且必填
+	// 所添加的后端服务器所在的vpc，当ResourceType 为 UHybrid 或 IP 时有效，且必填
 	VPCId *string `required:"false"`
 
 	// VServer实例的ID
@@ -131,8 +131,6 @@ func (c *ULBClient) NewAllocateBackendBatchRequest() *AllocateBackendBatchReques
 
 /*
 API: AllocateBackendBatch
-
-
 */
 func (c *ULBClient) AllocateBackendBatch(req *AllocateBackendBatchRequest) (*AllocateBackendBatchResponse, error) {
 	var err error
