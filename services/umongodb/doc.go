@@ -5,8 +5,8 @@ Package umongodb include resources of ucloud umongodb product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/umongodb-api/index
-	- Product: https://www.ucloud.cn/site/product/umongodb.html
+  - API: https://docs.ucloud.cn/api/umongodb-api/index
+  - Product: https://www.ucloud.cn/site/product/umongodb.html
 
 for detail.
 */

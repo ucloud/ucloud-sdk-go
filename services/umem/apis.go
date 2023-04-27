@@ -2493,8 +2493,6 @@ func (c *UMemClient) NewResizeUDredisSpaceRequest() *ResizeUDredisSpaceRequest {
 
 /*
 API: ResizeUDredisSpace
-
-
 */
 func (c *UMemClient) ResizeUDredisSpace(req *ResizeUDredisSpaceRequest) (*ResizeUDredisSpaceResponse, error) {
 	var err error

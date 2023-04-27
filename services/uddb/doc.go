@@ -5,8 +5,8 @@ Package uddb include resources of ucloud uddb product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/uddb-api/index
-	- Product: https://www.ucloud.cn/site/product/uddb.html
+  - API: https://docs.ucloud.cn/api/uddb-api/index
+  - Product: https://www.ucloud.cn/site/product/uddb.html
 
 for detail.
 */

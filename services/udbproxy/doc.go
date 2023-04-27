@@ -5,8 +5,8 @@ Package udbproxy include resources of ucloud udbproxy product
 
 See also
 
-	- API: https://docs.ucloud.cn/api/udbproxy-api/index
-	- Product: https://www.ucloud.cn/site/product/udbproxy.html
+  - API: https://docs.ucloud.cn/api/udbproxy-api/index
+  - Product: https://www.ucloud.cn/site/product/udbproxy.html
 
 for detail.
 */

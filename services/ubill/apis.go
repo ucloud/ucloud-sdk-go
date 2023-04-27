@@ -131,8 +131,6 @@ func (c *UBillClient) NewDescribeOrderDetailInfoRequest() *DescribeOrderDetailIn
 
 /*
 API: DescribeOrderDetailInfo
-
-
 */
 func (c *UBillClient) DescribeOrderDetailInfo(req *DescribeOrderDetailInfoRequest) (*DescribeOrderDetailInfoResponse, error) {
 	var err error
