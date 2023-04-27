@@ -1167,8 +1167,6 @@ func (c *UDBClient) NewDeleteUDBBackupRequest() *DeleteUDBBackupRequest {
 
 /*
 API: DeleteUDBBackup
-
-
 */
 func (c *UDBClient) DeleteUDBBackup(req *DeleteUDBBackupRequest) (*DeleteUDBBackupResponse, error) {
 	var err error

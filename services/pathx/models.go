@@ -243,18 +243,6 @@ type AccelerationAreaInfos struct {
 }
 
 /*
-OutPublicIpInfo - 线路回源IP信息
-*/
-type OutPublicIpInfo struct {
-
-	// 线路回源节点机房代号
-	Area string
-
-	// 线路回源节点EIP
-	IP string
-}
-
-/*
 ForwardTask - 全球统一接入转发端口任务信息
 */
 type ForwardTask struct {
@@ -267,6 +255,18 @@ type ForwardTask struct {
 
 	// 源站服务器监听的端口号
 	RSPort int
+}
+
+/*
+OutPublicIpInfo - 线路回源IP信息
+*/
+type OutPublicIpInfo struct {
+
+	// 线路回源节点机房代号
+	Area string
+
+	// 线路回源节点EIP
+	IP string
 }
 
 /*
@@ -381,6 +381,36 @@ type AccelerationInfo struct {
 }
 
 /*
+UPathSet - uga关联的upath信息
+*/
+type UPathSet struct {
+
+	// 带宽 Mbps, 1~800Mbps
+	Bandwidth int
+
+	// 线路起点英文代号，加速区域
+	LineFrom string
+
+	// 线路起点中文名字，加速区域
+	LineFromName string
+
+	// 线路ID
+	LineId string
+
+	// 线路对端英文代号，源站区域
+	LineTo string
+
+	// 线路对端中文名字，源站区域
+	LineToName string
+
+	// UPath 实例ID
+	UPathId string
+
+	// UPath名字
+	UPathName string
+}
+
+/*
 UGAATask - 用户在UGAA实例下配置的多端口任务
 */
 type UGAATask struct {
@@ -426,36 +456,6 @@ type UGAL4Forwarder struct {
 
 	// RSPort，源站监听端口
 	RSPort int
-}
-
-/*
-UPathSet - uga关联的upath信息
-*/
-type UPathSet struct {
-
-	// 带宽 Mbps, 1~800Mbps
-	Bandwidth int
-
-	// 线路起点英文代号，加速区域
-	LineFrom string
-
-	// 线路起点中文名字，加速区域
-	LineFromName string
-
-	// 线路ID
-	LineId string
-
-	// 线路对端英文代号，源站区域
-	LineTo string
-
-	// 线路对端中文名字，源站区域
-	LineToName string
-
-	// UPath 实例ID
-	UPathId string
-
-	// UPath名字
-	UPathName string
 }
 
 /*
