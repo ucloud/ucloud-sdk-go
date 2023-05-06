@@ -93,15 +93,15 @@ type BootDiskInfo struct {
 }
 
 /*
-Performance - GPU的性能指标
+GraphicsMemory - GPU的显存指标
 */
-type Performance struct {
+type GraphicsMemory struct {
 
 	// 交互展示参数，可忽略
 	Rate int
 
-	// 值，单位是TFlops
-	Value float64
+	// 值，单位是GB
+	Value int
 }
 
 /*
@@ -132,6 +132,18 @@ type CpuPlatforms struct {
 }
 
 /*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
 MachineSizes - GPU、CPU和内存信息
 */
 type MachineSizes struct {
@@ -141,18 +153,6 @@ type MachineSizes struct {
 
 	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
 	Gpu int
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
 }
 
 /*
@@ -303,39 +303,6 @@ type UHostKeyPair struct {
 }
 
 /*
-UHostDiskSet - DescribeUHostInstance
-*/
-type UHostDiskSet struct {
-
-	// 备份方案。若开通了数据方舟，则为DATAARK
-	BackupType string
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -372,6 +339,39 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
+}
+
+/*
+UHostDiskSet - DescribeUHostInstance
+*/
+type UHostDiskSet struct {
+
+	// 备份方案。若开通了数据方舟，则为DATAARK
+	BackupType string
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
 }
 
 /*
@@ -585,4 +585,19 @@ type UHostPriceSet struct {
 
 	// 价格详细信息（只有询价接口返回）。
 	PriceDetail PriceDetail
+}
+
+/*
+BasePriceSet - 价格信息
+*/
+type BasePriceSet struct {
+
+	// 计费类型
+	ChargeType string
+
+	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）。
+	OriginalPrice float64
+
+	// 价格，单位: 元，保留小数点后两位有效数字
+	Price float64
 }

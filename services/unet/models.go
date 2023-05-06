@@ -78,36 +78,6 @@ type UnetBandwidthUsageEIPSet struct {
 }
 
 /*
-UnetEIPResourceSet - DescribeEIP
-*/
-type UnetEIPResourceSet struct {
-
-	// 弹性IP的资源ID
-	EIPId string
-
-	// 已绑定资源的资源ID
-	ResourceID string
-
-	//
-	ResourceId string `deprecated:"true"`
-
-	// 已绑定的资源名称
-	ResourceName string
-
-	// 已绑定的资源类型, 枚举值为: uhost, 云主机；natgw：NAT网关；ulb：负载均衡器；upm: 物理机; hadoophost: 大数据集群;fortresshost：堡垒机；udockhost：容器；udhost：私有专区主机；vpngw：IPSec VPN；ucdr：云灾备；dbaudit：数据库审计，uni：虚拟网卡。
-	ResourceType string
-
-	// 资源绑定的虚拟网卡的ID
-	SubResourceId string
-
-	// 资源绑定的虚拟网卡的名称
-	SubResourceName string
-
-	// 资源绑定的虚拟网卡的类型。uni，虚拟网卡。
-	SubResourceType string
-}
-
-/*
 EIPBinding - EIP绑定内网IP关系数据
 */
 type EIPBinding struct {
@@ -135,6 +105,36 @@ type ShareBandwidthSet struct {
 
 	// 共享带宽的资源名称
 	ShareBandwidthName string
+}
+
+/*
+UnetEIPResourceSet - DescribeEIP
+*/
+type UnetEIPResourceSet struct {
+
+	// 弹性IP的资源ID
+	EIPId string
+
+	// 已绑定资源的资源ID
+	ResourceID string
+
+	//
+	ResourceId string `deprecated:"true"`
+
+	// 已绑定的资源名称
+	ResourceName string
+
+	// 已绑定的资源类型, 枚举值为: uhost, 云主机；natgw：NAT网关；ulb：负载均衡器；upm: 物理机; hadoophost: 大数据集群;fortresshost：堡垒机；udockhost：容器；udhost：私有专区主机；vpngw：IPSec VPN；ucdr：云灾备；dbaudit：数据库审计，uni：虚拟网卡。
+	ResourceType string
+
+	// 资源绑定的虚拟网卡的ID
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡的名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡的类型。uni，虚拟网卡。
+	SubResourceType string
 }
 
 /*

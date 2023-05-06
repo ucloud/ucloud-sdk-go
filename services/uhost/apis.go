@@ -196,12 +196,6 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-}
-
-/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -226,9 +220,21 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+}
+
+/*
 UHostDiskCustomBackup is request schema for complex param
 */
 type UHostDiskCustomBackup struct {
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
 }
 
 /*
@@ -271,18 +277,6 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
-*/
-type CreateUHostInstanceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-}
-
-/*
 CreateUHostInstanceParamFeatures is request schema for complex param
 */
 type CreateUHostInstanceParamFeatures struct {
@@ -292,9 +286,15 @@ type CreateUHostInstanceParamFeatures struct {
 }
 
 /*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
+CreateUHostInstanceParamVolumes is request schema for complex param
 */
-type CreateUHostInstanceParamSecGroupId struct {
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1124,21 +1124,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
-}
-
-/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1154,6 +1139,21 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
@@ -1330,6 +1330,62 @@ func (c *UHostClient) GetUHostInstanceVncInfo(req *GetUHostInstanceVncInfoReques
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUHostInstanceVncInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUHostRenewPriceRequest is request schema for GetUHostRenewPrice action
+type GetUHostRenewPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 计费类型。Year，Month，Dynamic，默认返回全部计费方式对应的价格
+	ChargeType *string `required:"true"`
+
+	// UHost实例ID
+	UHostId *string `required:"true"`
+}
+
+// GetUHostRenewPriceResponse is response schema for GetUHostRenewPrice action
+type GetUHostRenewPriceResponse struct {
+	response.CommonBase
+
+	// 价格列表
+	PriceSet []BasePriceSet
+}
+
+// NewGetUHostRenewPriceRequest will create request of GetUHostRenewPrice action.
+func (c *UHostClient) NewGetUHostRenewPriceRequest() *GetUHostRenewPriceRequest {
+	req := &GetUHostRenewPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUHostRenewPrice
+
+获取主机续费价格
+*/
+func (c *UHostClient) GetUHostRenewPrice(req *GetUHostRenewPriceRequest) (*GetUHostRenewPriceResponse, error) {
+	var err error
+	var res GetUHostRenewPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUHostRenewPrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

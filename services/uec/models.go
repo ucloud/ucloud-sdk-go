@@ -84,6 +84,18 @@ type ResourceInfo struct {
 }
 
 /*
+EnvList - 容器环境变量列表
+*/
+type EnvList struct {
+
+	// 环境变量key值
+	Key string
+
+	// 环境变量Value值
+	Value string
+}
+
+/*
 CfgDictList - 容器配置字典列表
 */
 type CfgDictList struct {
@@ -96,18 +108,6 @@ type CfgDictList struct {
 
 	// 资源id
 	ResourceId string
-}
-
-/*
-EnvList - 容器环境变量列表
-*/
-type EnvList struct {
-
-	// 环境变量key值
-	Key string
-
-	// 环境变量Value值
-	Value string
 }
 
 /*
