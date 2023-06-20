@@ -111,6 +111,24 @@ type CfgDictList struct {
 }
 
 /*
+StorVolumeInfo - 容器组存储卷信息
+*/
+type StorVolumeInfo struct {
+
+	// 容量（单位GB）
+	DiskSize int
+
+	// 挂载点
+	MountPoint string
+
+	// 名称
+	Name string
+
+	// 资源id
+	ResourceId string
+}
+
+/*
 DockerInfo - 容器信息
 */
 type DockerInfo struct {
@@ -147,21 +165,6 @@ type DockerInfo struct {
 }
 
 /*
-ImageList - 容器组镜像密钥列表
-*/
-type ImageList struct {
-
-	// 镜像密钥
-	ImageKey string
-
-	// 仓库地址
-	StoreAddr string
-
-	// 用户名称
-	UserName string
-}
-
-/*
 IpList - 容器组外网ip列表
 */
 type IpList struct {
@@ -174,21 +177,18 @@ type IpList struct {
 }
 
 /*
-StorVolumeInfo - 容器组存储卷信息
+ImageList - 容器组镜像密钥列表
 */
-type StorVolumeInfo struct {
+type ImageList struct {
 
-	// 容量（单位GB）
-	DiskSize int
+	// 镜像密钥
+	ImageKey string
 
-	// 挂载点
-	MountPoint string
+	// 仓库地址
+	StoreAddr string
 
-	// 名称
-	Name string
-
-	// 资源id
-	ResourceId string
+	// 用户名称
+	UserName string
 }
 
 /*

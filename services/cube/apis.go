@@ -22,31 +22,31 @@ type CreateCubeDeploymentRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Postpay， \\ 后付费；默认为后付费
+	// 计费模式
 	ChargeType *string `required:"false"`
 
-	// Cpu平台（V6：Intel、A2：AMD），默认V6。支持的地域（北京2B、北京2E、上海2A、广东、香港 、东京）目前北京2E仅有A2，其余地域仅有V6
+	// CPU平台
 	CpuPlatform *string `required:"false"`
 
-	// base64编码的Deployment的yaml。大小不超过16KB
+	// Deployment yaml，使用base64编码
 	Deployment *string `required:"true"`
 
-	// base64编码的kubeconfig。大小不超过16KB
-	KubeConfig *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	KubeConfig *string `required:"false" deprecated:"true"`
 
 	// Deployment名称
 	Name *string `required:"false"`
 
-	// 购买时长。默认:值 1。 月付时，此参数传0，代表购买至月末。
-	Quantity *int `required:"false"`
+	// 数量，默认为1
+	Quantity *string `required:"false"`
 
-	// 子网Id
+	// Deployment所属子网
 	SubnetId *string `required:"true"`
 
-	// 业务组。默认：Default（Default即为未分组）
+	// 标签
 	Tag *string `required:"false"`
 
-	// VPCId
+	// Deployment所属VPC
 	VPCId *string `required:"true"`
 }
 
@@ -54,10 +54,10 @@ type CreateCubeDeploymentRequest struct {
 type CreateCubeDeploymentResponse struct {
 	response.CommonBase
 
-	// 经过base64编码的Deployment的yaml
+	// Deployment yaml，使用base64编码
 	Deployment string
 
-	// 控制器ID
+	// Deployment ID
 	DeploymentId string
 }
 
@@ -76,7 +76,7 @@ func (c *CubeClient) NewCreateCubeDeploymentRequest() *CreateCubeDeploymentReque
 /*
 API: CreateCubeDeployment
 
-创建Cube的Deployment
+创建容器实例Deployment
 */
 func (c *CubeClient) CreateCubeDeployment(req *CreateCubeDeploymentRequest) (*CreateCubeDeploymentResponse, error) {
 	var err error
@@ -105,37 +105,37 @@ type CreateCubePodRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Postpay， \\ 后付费；默认为后付费
-	ChargeType *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	ChargeType *string `required:"false" deprecated:"true"`
 
-	// 代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
-	CouponId *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
 
-	// Cpu平台（V6：Intel、A2：AMD、Auto），默认Auto。支持的地域（北京2B、北京2E、上海2A、广东、香港 、东京）目前北京2E仅有A2，其余地域仅有V6
-	CpuPlatform *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	CpuPlatform *string `required:"false" deprecated:"true"`
 
-	// pod所在组
-	Group *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Group *string `required:"false" deprecated:"true"`
 
-	// base64编码的kubeconfig。大小不超过16KB
-	KubeConfig *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	KubeConfig *string `required:"false" deprecated:"true"`
 
-	// pod的名字
-	Name *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Name *string `required:"false" deprecated:"true"`
 
-	// base64编码的Pod的yaml。大小不超过16KB
+	// Pod yaml，使用base64编码
 	Pod *string `required:"true"`
 
-	// 购买时长。默认:值 1。 月付时，此参数传0，代表购买至月末。
-	Quantity *int `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Quantity *int `required:"false" deprecated:"true"`
 
-	// 子网Id
+	// 容器实例所属的子网ID
 	SubnetId *string `required:"true"`
 
-	// 业务组。默认：Default（Default即为未分组）
-	Tag *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Tag *string `required:"false" deprecated:"true"`
 
-	// VPCId
+	// 容器实例所属的VPC ID
 	VPCId *string `required:"true"`
 }
 
@@ -146,10 +146,10 @@ type CreateCubePodResponse struct {
 	// 【该字段已废弃，请谨慎使用】
 	Action string `deprecated:"true"`
 
-	// cube的资源Id
+	// 容器实例ID
 	CubeId string
 
-	// base64编码的yaml
+	// Pod yaml，使用base64编码
 	Pod string
 
 	// 【该字段已废弃，请谨慎使用】
@@ -171,7 +171,7 @@ func (c *CubeClient) NewCreateCubePodRequest() *CreateCubePodRequest {
 /*
 API: CreateCubePod
 
-创建Pod
+创建一个容器实例
 */
 func (c *CubeClient) CreateCubePod(req *CreateCubePodRequest) (*CreateCubePodResponse, error) {
 	var err error
@@ -197,11 +197,11 @@ type DeleteCubeDeploymentRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Zone *string `required:"false" deprecated:"true"`
 
-	// 控制器Id
-	DeploymentId *string `required:"true"`
+	// 【该字段已废弃，请谨慎使用】
+	DeploymentId *string `required:"true" deprecated:"true"`
 }
 
 // DeleteCubeDeploymentResponse is response schema for DeleteCubeDeployment action
@@ -224,7 +224,7 @@ func (c *CubeClient) NewDeleteCubeDeploymentRequest() *DeleteCubeDeploymentReque
 /*
 API: DeleteCubeDeployment
 
-删除Cube的Deployment
+删除容器实例Deployment
 */
 func (c *CubeClient) DeleteCubeDeployment(req *DeleteCubeDeploymentRequest) (*DeleteCubeDeploymentResponse, error) {
 	var err error
@@ -244,22 +244,22 @@ func (c *CubeClient) DeleteCubeDeployment(req *DeleteCubeDeploymentRequest) (*De
 type DeleteCubePodRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
-	// cubeid和uid任意一个（必须）
+	// 要删除的容器实例ID，若填写了Uid则可忽略
 	CubeId *string `required:"false"`
 
-	// 删除cube时是否释放绑定的EIP。默认为false。
-	ReleaseEIP *bool `required:"false"`
+	// 要释放的EIP，如果容器实例绑定了EIP则可以填写，会将EIP一并释放。否则EIP会被保留。
+	ReleaseEIP *string `required:"false"`
 
-	// cubeid和uid任意一个（必须）
+	// 要删除的容器实例UID，若填写了CubeId则可忽略
 	Uid *string `required:"false"`
 }
 
@@ -283,7 +283,7 @@ func (c *CubeClient) NewDeleteCubePodRequest() *DeleteCubePodRequest {
 /*
 API: DeleteCubePod
 
-删除Pod
+删除容器实例
 */
 func (c *CubeClient) DeleteCubePod(req *DeleteCubePodRequest) (*DeleteCubePodResponse, error) {
 	var err error
@@ -310,9 +310,9 @@ type GetCubeDeploymentRequest struct {
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
+	// Zone *string `required:"true"`
 
-	// Deployment的Id
+	// Deployment ID
 	DeploymentId *string `required:"true"`
 }
 
@@ -320,7 +320,7 @@ type GetCubeDeploymentRequest struct {
 type GetCubeDeploymentResponse struct {
 	response.CommonBase
 
-	// 经过base64编码的Deployment的yaml
+	// Deployment yaml，使用base64编码
 	Deployment string
 }
 
@@ -339,7 +339,7 @@ func (c *CubeClient) NewGetCubeDeploymentRequest() *GetCubeDeploymentRequest {
 /*
 API: GetCubeDeployment
 
-获取Deployment的详细信息
+获取容器实例Deployment详细信息
 */
 func (c *CubeClient) GetCubeDeployment(req *GetCubeDeploymentRequest) (*GetCubeDeploymentResponse, error) {
 	var err error
@@ -360,21 +360,21 @@ type GetCubeExecTokenRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
+	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
+	// Zone *string `required:"true"`
 
-	// 容器名称
+	// 要执行的容器名称
 	ContainerName *string `required:"true"`
 
-	// CubeId 和 Uid 中必须填写任意一个。CubeId 是所有 Cube 资源的唯一 ID，如非在 UK8S 通过 Virtual Kubelet 插件创建的 Cube， 则必填 CubeId
+	// 容器实例ID，若填写了Uid则可忽略
 	CubeId *string `required:"false"`
 
-	// CubeId 和 Uid 中必须填写任意一个。Uid 是在 UK8S 中通过 Virtual Kubelet 插件创建出的 Cube 的唯一标识
+	// 容器实例UID，若填写了CubeId则可忽略
 	Uid *string `required:"false"`
 }
 
@@ -382,10 +382,10 @@ type GetCubeExecTokenRequest struct {
 type GetCubeExecTokenResponse struct {
 	response.CommonBase
 
-	// terminal的登录连接地址，限单点登录，有效时间5min
+	// 终端url
 	TerminalUrl string
 
-	// 有效时间5min
+	// 执行Token
 	Token string
 }
 
@@ -404,7 +404,7 @@ func (c *CubeClient) NewGetCubeExecTokenRequest() *GetCubeExecTokenRequest {
 /*
 API: GetCubeExecToken
 
-获取登录容器的token
+获取容器实例执行token
 */
 func (c *CubeClient) GetCubeExecToken(req *GetCubeExecTokenRequest) (*GetCubeExecTokenResponse, error) {
 	var err error
@@ -424,24 +424,24 @@ func (c *CubeClient) GetCubeExecToken(req *GetCubeExecTokenRequest) (*GetCubeExe
 type GetCubeExtendInfoRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
-	// id列表以逗号(,)分割
-	CubeIds *string `required:"true"`
+	// 容器实例ID，用逗号分割
+	CubeIds *string `required:"false"`
 }
 
 // GetCubeExtendInfoResponse is response schema for GetCubeExtendInfo action
 type GetCubeExtendInfoResponse struct {
 	response.CommonBase
 
-	// CubeExtendInfo
+	// 容器实例的附加信息
 	ExtendInfo []CubeExtendInfo
 }
 
@@ -460,7 +460,7 @@ func (c *CubeClient) NewGetCubeExtendInfoRequest() *GetCubeExtendInfoRequest {
 /*
 API: GetCubeExtendInfo
 
-获取Cube的额外信息
+获取容器实例附加信息
 */
 func (c *CubeClient) GetCubeExtendInfo(req *GetCubeExtendInfoRequest) (*GetCubeExtendInfoResponse, error) {
 	var err error
@@ -490,18 +490,18 @@ type GetCubeMetricsRequest struct {
 	// Zone *string `required:"true"`
 
 	// 开始时间
-	BeginTime *int `required:"true"`
+	BeginTime *string `required:"true"`
 
-	// Pod内容器名称
+	// 容器名称
 	ContainerName *string `required:"true"`
 
-	// 结束时间，必须大于开始时间
-	EndTime *int `required:"true"`
+	// 结束时间
+	EndTime *string `required:"true"`
 
-	// 监控指标名称
-	MetricName []string `required:"true"`
+	// 指标名称
+	MetricName *string `required:"true"`
 
-	// Cube实例资源ID
+	// 资源ID
 	ResourceId *string `required:"true"`
 }
 
@@ -509,11 +509,11 @@ type GetCubeMetricsRequest struct {
 type GetCubeMetricsResponse struct {
 	response.CommonBase
 
-	// 时间序列集合
+	// 指标数据
 	DataSets []MetricDataSet
 
-	// 错误信息
-	Message string
+	// 【该字段已废弃，请谨慎使用】
+	Message string `deprecated:"true"`
 }
 
 // NewGetCubeMetricsRequest will create request of GetCubeMetrics action.
@@ -531,7 +531,7 @@ func (c *CubeClient) NewGetCubeMetricsRequest() *GetCubeMetricsRequest {
 /*
 API: GetCubeMetrics
 
-获取Cube实例（Pod，PodX，Deploy等）监控数据时间序列
+获取容器实例指标
 */
 func (c *CubeClient) GetCubeMetrics(req *GetCubeMetricsRequest) (*GetCubeMetricsResponse, error) {
 	var err error
@@ -682,21 +682,21 @@ type GetCubeTokenRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
+	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
+	// Zone *string `required:"true"`
 
 	// 容器名称
 	ContainerName *string `required:"true"`
 
-	// CubeId 和 Uid 中必须填写任意一个。CubeId 是所有 Cube 资源的唯一 ID，如非在 UK8S 通过 Virtual Kubelet 插件创建的 Cube， 则必填 CubeId
+	// 容器实例ID，若填写了Uid则可忽略
 	CubeId *string `required:"false"`
 
-	// CubeId 和 Uid 中必须填写任意一个。Uid 是在 UK8S 中通过 Virtual Kubelet 插件创建出的 Cube 的唯一标识
+	// 容器实例UID，若填写了CubeId则可忽略
 	Uid *string `required:"false"`
 }
 
@@ -704,7 +704,7 @@ type GetCubeTokenRequest struct {
 type GetCubeTokenResponse struct {
 	response.CommonBase
 
-	// 有效时间5min
+	// 容器实例Token
 	Token string
 }
 
@@ -723,7 +723,7 @@ func (c *CubeClient) NewGetCubeTokenRequest() *GetCubeTokenRequest {
 /*
 API: GetCubeToken
 
-获取Cube的token，可用于terminal登录、log获取
+获取容器实例Token
 */
 func (c *CubeClient) GetCubeToken(req *GetCubeTokenRequest) (*GetCubeTokenResponse, error) {
 	var err error
@@ -812,24 +812,24 @@ type ListCubePodRequest struct {
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
+	// Zone *string `required:"true"`
 
-	// Deployment的Id
+	// 容器实例所属Deployment
 	DeploymentId *string `required:"false"`
 
-	// 组名称
+	// 容器实例组
 	Group *string `required:"false"`
 
-	// 默认20
+	// 返回数据长度，默认为20，最大100
 	Limit *int `required:"false"`
 
-	// 默认0
+	// 列表起始位置偏移量，默认为0
 	Offset *int `required:"false"`
 
-	// 子网Id
+	// 容器实例所属子网
 	SubnetId *string `required:"false"`
 
-	// VPC的Id
+	// 容器实例所属VPC
 	VPCId *string `required:"false"`
 }
 
@@ -837,10 +837,10 @@ type ListCubePodRequest struct {
 type ListCubePodResponse struct {
 	response.CommonBase
 
-	// Pod列表，每条数据都做了base64编码
+	// 容器实例yaml列表，以base64编码
 	Pods []string
 
-	// Cube的总数
+	// 容器实例总数
 	TotalCount int
 }
 
@@ -859,7 +859,7 @@ func (c *CubeClient) NewListCubePodRequest() *ListCubePodRequest {
 /*
 API: ListCubePod
 
-获取Pods列表
+获取容器实例详细列表
 */
 func (c *CubeClient) ListCubePod(req *ListCubePodRequest) (*ListCubePodResponse, error) {
 	var err error
@@ -994,19 +994,19 @@ func (c *CubeClient) ModifyCubeTag(req *ModifyCubeTagRequest) (*ModifyCubeTagRes
 type RenewCubePodRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
-	// 容器Id
-	CubeId *string `required:"true"`
+	// 要更新的容器实例ID
+	CubeId *string `required:"false"`
 
-	// base64编码的Pod的yaml
+	// Pod yaml，以base64编码
 	Pod *string `required:"true"`
 }
 
@@ -1014,7 +1014,7 @@ type RenewCubePodRequest struct {
 type RenewCubePodResponse struct {
 	response.CommonBase
 
-	// base64编码过的yaml，需要解码获取信息
+	// Pod yaml，以base64编码
 	Pod string
 }
 
@@ -1033,7 +1033,7 @@ func (c *CubeClient) NewRenewCubePodRequest() *RenewCubePodRequest {
 /*
 API: RenewCubePod
 
-更新Pod
+更新容器实例
 */
 func (c *CubeClient) RenewCubePod(req *RenewCubePodRequest) (*RenewCubePodResponse, error) {
 	var err error
