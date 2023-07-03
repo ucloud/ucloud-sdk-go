@@ -1113,6 +1113,62 @@ func (c *UNetClient) DisassociateFirewall(req *DisassociateFirewallRequest) (*Di
 	return &res, nil
 }
 
+// GetEIPExclusiveUTPInfoRequest is request schema for GetEIPExclusiveUTPInfo action
+type GetEIPExclusiveUTPInfoRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// EIP资源Id
+	EIPId *string `required:"true"`
+}
+
+// GetEIPExclusiveUTPInfoResponse is response schema for GetEIPExclusiveUTPInfo action
+type GetEIPExclusiveUTPInfoResponse struct {
+	response.CommonBase
+
+	// EIP专属流量包信息
+	EIPExclusiveInfo EIPExclusiveInfo
+}
+
+// NewGetEIPExclusiveUTPInfoRequest will create request of GetEIPExclusiveUTPInfo action.
+func (c *UNetClient) NewGetEIPExclusiveUTPInfoRequest() *GetEIPExclusiveUTPInfoRequest {
+	req := &GetEIPExclusiveUTPInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetEIPExclusiveUTPInfo
+
+获取EIP专属流量包信息
+*/
+func (c *UNetClient) GetEIPExclusiveUTPInfo(req *GetEIPExclusiveUTPInfoRequest) (*GetEIPExclusiveUTPInfoResponse, error) {
+	var err error
+	var res GetEIPExclusiveUTPInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetEIPExclusiveUTPInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetEIPPayModeRequest is request schema for GetEIPPayMode action
 type GetEIPPayModeRequest struct {
 	request.CommonBase
