@@ -199,9 +199,6 @@ type BuyHighProtectGameServiceRequest struct {
 	// [公共参数] 项目ID。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// 接入模式，默认为：IP；Domain：网站接入、IP：非网站接入
-	AccessMode *string `required:"false"`
-
 	// 线路区域, 可取范围{"SouthChina",   "EastChina"}
 	AreaLine *string `required:"true"`
 
@@ -1246,9 +1243,6 @@ func (c *UADSClient) GetBGPServiceIP(req *GetBGPServiceIPRequest) (*GetBGPServic
 // GetBuyNapServicePriceRequest is request schema for GetBuyNapServicePrice action
 type GetBuyNapServicePriceRequest struct {
 	request.CommonBase
-
-	// 接入模式，Domain：网站接入、IP：非网站接入；默认为：IP
-	AccessMode *string `required:"false"`
 
 	// 地区线路
 	AreaLine *string `required:"true"`

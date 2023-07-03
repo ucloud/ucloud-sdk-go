@@ -1794,6 +1794,65 @@ func (c *ULBClient) UpdateSSLAttribute(req *UpdateSSLAttributeRequest) (*UpdateS
 	return &res, nil
 }
 
+// UpdateSSLBindingRequest is request schema for UpdateSSLBinding action
+type UpdateSSLBindingRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 所操作VServer实例ID（仅ListenerId传参时，将更换该Vserver所有原证书为OldSSLId的绑定关系；LoadBalancerId和ListenerId都不传参则将更新该项目下所有原证书为OldSSLId的绑定关系；若LoadBalancerId与ListenerId皆有传参，则会强校验ULB与Vsserver的所属关系，将更换该ulb下vserver所绑定的OldSSLId为NewSSLId）
+	ListenerId *string `required:"false"`
+
+	// 所操作ULB实例ID（仅LoadBalancerId传参时，将更换该ULB所有原证书为OldSSLId的绑定关系；LoadBalancerId和ListenerId都不传参则将更新该项目下所有原证书为OldSSLId的绑定关系）
+	LoadBalancerId *string `required:"false"`
+
+	// VServer实例需要绑定的新的证书
+	NewSSLId *string `required:"true"`
+
+	// VServer实例绑定的旧的证书
+	OldSSLId *string `required:"true"`
+}
+
+// UpdateSSLBindingResponse is response schema for UpdateSSLBinding action
+type UpdateSSLBindingResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateSSLBindingRequest will create request of UpdateSSLBinding action.
+func (c *ULBClient) NewUpdateSSLBindingRequest() *UpdateSSLBindingRequest {
+	req := &UpdateSSLBindingRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateSSLBinding
+
+将VServer绑定的证书更换为另一个证书
+*/
+func (c *ULBClient) UpdateSSLBinding(req *UpdateSSLBindingRequest) (*UpdateSSLBindingResponse, error) {
+	var err error
+	var res UpdateSSLBindingResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateSSLBinding", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UpdateSecurityPolicyRequest is request schema for UpdateSecurityPolicy action
 type UpdateSecurityPolicyRequest struct {
 	request.CommonBase

@@ -1801,6 +1801,71 @@ func (c *UCDNClient) GetUcdnDomainPrefetchEnable(req *GetUcdnDomainPrefetchEnabl
 	return &res, nil
 }
 
+// GetUcdnDomainPrefetchRefreshStateRequest is request schema for GetUcdnDomainPrefetchRefreshState action
+type GetUcdnDomainPrefetchRefreshStateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 域名ID，创建加速域名时生成。
+	DomainId *string `required:"true"`
+}
+
+// GetUcdnDomainPrefetchRefreshStateResponse is response schema for GetUcdnDomainPrefetchRefreshState action
+type GetUcdnDomainPrefetchRefreshStateResponse struct {
+	response.CommonBase
+
+	// 预热配额
+	PrefetchQuota int
+
+	// 目录刷新配额
+	RefreshDirQuota int
+
+	// 文件刷新配额
+	RefreshFileQuota int
+
+	// 已提交预热个数
+	SubmitPrefetchCount int
+
+	// 已提交的目录刷新个数
+	SubmitRefreshDir int
+
+	// 已提交的文件刷新个数
+	SubmitRefreshFile int
+}
+
+// NewGetUcdnDomainPrefetchRefreshStateRequest will create request of GetUcdnDomainPrefetchRefreshState action.
+func (c *UCDNClient) NewGetUcdnDomainPrefetchRefreshStateRequest() *GetUcdnDomainPrefetchRefreshStateRequest {
+	req := &GetUcdnDomainPrefetchRefreshStateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUcdnDomainPrefetchRefreshState
+
+获取域名预取刷新配额信息
+*/
+func (c *UCDNClient) GetUcdnDomainPrefetchRefreshState(req *GetUcdnDomainPrefetchRefreshStateRequest) (*GetUcdnDomainPrefetchRefreshStateResponse, error) {
+	var err error
+	var res GetUcdnDomainPrefetchRefreshStateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUcdnDomainPrefetchRefreshState", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUcdnDomainRequestNumV2Request is request schema for GetUcdnDomainRequestNumV2 action
 type GetUcdnDomainRequestNumV2Request struct {
 	request.CommonBase

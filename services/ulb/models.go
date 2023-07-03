@@ -207,27 +207,6 @@ type PolicyBackendSet struct {
 }
 
 /*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -279,6 +258,27 @@ type ULBBackendSet struct {
 }
 
 /*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
 ULBPolicySet - 内容转发详细列表
 */
 type ULBPolicySet struct {
@@ -309,6 +309,54 @@ type ULBPolicySet struct {
 
 	// 所属VServerId
 	VServerId string
+}
+
+/*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -384,54 +432,6 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
-}
-
-/*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*

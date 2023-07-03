@@ -13,7 +13,7 @@ import (
 type AddMemberToProjectRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID，请参考[GetProjectList接口](../summary/get_project_list.html)的描述。不填写为创建时间最早的项目。
+	// [公共参数] 项目ID，请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)的描述。不填写为创建时间最早的项目。
 	// ProjectId *string `required:"false"`
 
 	// 被加入成员归属角色ID

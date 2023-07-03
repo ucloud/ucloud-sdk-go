@@ -3,15 +3,6 @@
 package ucdn
 
 /*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
-}
-
-/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -36,6 +27,15 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
 }
 
 /*
@@ -549,6 +549,21 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
+CacheKeyInfo - 忽略参数缓存配置
+*/
+type CacheKeyInfo struct {
+
+	// 是否忽略
+	Ignore bool
+
+	// 路径模式，支持正则
+	PathPattern string
+
+	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
+	QueryString string
+}
+
+/*
 ReferConf - refer配置
 */
 type ReferConf struct {
@@ -564,18 +579,21 @@ type ReferConf struct {
 }
 
 /*
-CacheKeyInfo - 忽略参数缓存配置
+CacheAllConfig - 缓存相关的配置
 */
-type CacheKeyInfo struct {
+type CacheAllConfig struct {
 
-	// 是否忽略
-	Ignore bool
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
 
-	// 路径模式，支持正则
-	PathPattern string
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
 
-	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
-	QueryString string
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
+
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
 }
 
 /*
@@ -597,36 +615,6 @@ type AdvancedConf struct {
 
 	// 是否开启websocket
 	WebSocketEnable bool
-}
-
-/*
-AccessControlConf - 访问控制配置参数
-*/
-type AccessControlConf struct {
-
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
-
-	// refer配置
-	ReferConf ReferConf
-}
-
-/*
-CacheAllConfig - 缓存相关的配置
-*/
-type CacheAllConfig struct {
-
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
-
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
-
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
-
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
 }
 
 /*
@@ -663,6 +651,18 @@ type OriginConf struct {
 
 	// 源站协议http，http|https   默认http
 	OriginProtocol string
+}
+
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
+
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
+
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*
