@@ -202,12 +202,6 @@ type UHostDiskCustomBackup struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-}
-
-/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -232,9 +226,9 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
 */
-type CreateUHostInstanceParamSecGroupId struct {
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
 }
 
 /*
@@ -260,6 +254,9 @@ type UHostDisk struct {
 	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Size *int `required:"true"`
 
+	// 从快照创建盘时所用快照id，目前仅支持数据盘
+	SnapshotId *string `required:"false"`
+
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
 }
@@ -283,6 +280,12 @@ type CreateUHostInstanceParamFeatures struct {
 
 	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
 	UNI *bool `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
 }
 
 /*
@@ -322,7 +325,7 @@ type CreateUHostInstanceRequest struct {
 	// 虚拟CPU核数。可选参数：1-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
 	CPU *int `required:"false"`
 
-	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\Preemptive计费为抢占式实例(内测阶段) \\ 默认为月付
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\ > Spot计费为抢占式实例(内测阶段) \\ 默认为月付
 	ChargeType *string `required:"false"`
 
 	// 主机代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
@@ -342,6 +345,9 @@ type CreateUHostInstanceRequest struct {
 
 	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","A100"]，MachineType为G时必填
 	GpuType *string `required:"false"`
+
+	// 【私有专区属性】专区云主机开启宿住关联属性
+	HostBinding *bool `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
 	HostType *string `required:"false" deprecated:"true"`
@@ -426,6 +432,12 @@ type CreateUHostInstanceRequest struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	TimemachineFeature *string `required:"false" deprecated:"true"`
+
+	// 【私有专区属性】专区宿主机id
+	UDHostId *string `required:"false"`
+
+	// 【私有专区属性】专区id
+	UDSetId *string `required:"false"`
 
 	// 【建议后续不再使用】云主机机型（V1.0），在本字段和字段MachineType中，仅需要其中1个字段即可。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
@@ -1124,21 +1136,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
-}
-
-/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1154,6 +1151,21 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action

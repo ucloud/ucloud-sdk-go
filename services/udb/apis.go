@@ -13,16 +13,16 @@ import (
 type BackupUDBInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
-	// 使用的备份方式。（快照备份即物理备份。注意只有SSD版本的mysql实例支持设置为snapshot）
+	// 使用的备份方式。默认使用逻辑备份（快照备份即物理备份。SSD版本的mysql/mongodb实例支持设置为snapshot，NVMe版本的mysql实例支持设置为xtrabackup）
 	BackupMethod *string `required:"false"`
 
 	// 备份名称
@@ -81,13 +81,13 @@ func (c *UDBClient) BackupUDBInstance(req *BackupUDBInstanceRequest) (*BackupUDB
 type BackupUDBInstanceBinlogRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 需要备份文件,可通过DescribeUDBInstanceBinlog获得 如果要传入多个文件名，以空格键分割,用单引号包含.
@@ -311,16 +311,16 @@ func (c *UDBClient) ChangeUDBParamGroup(req *ChangeUDBParamGroupRequest) (*Chang
 type CheckRecoverUDBInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
-	// 源实例的Id
+	// 源实例的Id(只支持普通版DB不支持高可用)
 	SrcDBId *string `required:"true"`
 }
 
@@ -420,13 +420,13 @@ func (c *UDBClient) CheckUDBInstanceToHAAllowance(req *CheckUDBInstanceToHAAllow
 type ClearUDBLogRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 删除时间点(至少前一天)之前log，采用时间戳(秒)，默认当 前时间点前一天
@@ -619,6 +619,9 @@ type CreateUDBInstanceRequest struct {
 	// cpu核数，如果db类型为sqlserver，必传参数
 	CPU *int `required:"false"`
 
+	// mysql大小写参数, 0 为大小写敏感, 1 为大小写不敏感, 目前只针对mysql8.0有效
+	CaseSensitivityParam *int `required:"false"`
+
 	// Year， Month， Dynamic，Trial，默认: Month
 	ChargeType *string `required:"false"`
 
@@ -627,6 +630,9 @@ type CreateUDBInstanceRequest struct {
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
+
+	// mysql小版本号，支持指定小版本创建
+	DBSubVersion *string `required:"false"`
 
 	// DB类型，mysql/mongodb/postgesql/sqlserver按版本细分 mysql-8.0, mysql-5.5, percona-5.5, mysql-5.6, percona-5.6, mysql-5.7, percona-5.7, mariadb-10.0, postgresql-9.6, postgresql-10.4, postgresql-12.8, postgresql-13.4，mongodb-2.6, mongodb-3.0, mongodb-3.6, mongodb-4.0, sqlserver-2017
 	DBTypeId *string `required:"true"`
@@ -877,17 +883,23 @@ func (c *UDBClient) CreateUDBParamGroup(req *CreateUDBParamGroupRequest) (*Creat
 type CreateUDBReplicationInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
+
+	// Year， Month， Dynamic，Trial，默认和主库保持一致
+	ChargeType *string `required:"false"`
 
 	// 使用的代金券id
 	CouponId *string `required:"false"`
+
+	// UDB数据库机型: "Normal": "标准机型" , "SATA_SSD": "SSD机型" , "PCIE_SSD": "SSD高性能机型" , "Normal_Volume": "标准大容量机型", "SATA_SSD_Volume": "SSD大容量机型" , "PCIE_SSD_Volume": "SSD高性能大容量机型", "NVMe_SSD": "快杰机型"
+	InstanceType *string `required:"false"`
 
 	// 是否是仲裁节点，默认false，仲裁节点按最小机型创建
 	IsArbiter *bool `required:"false"`
@@ -898,10 +910,13 @@ type CreateUDBReplicationInstanceRequest struct {
 	// 端口号，默认27017，取值范围3306至65535。
 	Port *int `required:"false"`
 
+	// 购买时长，默认默认和主库保持一致
+	Quantity *string `required:"false"`
+
 	// primary节点的DBId,该值可以通过DescribeUDBInstance获取
 	SrcId *string `required:"true"`
 
-	// 是否使用SSD，默认 为 true
+	// 是否使用SSD，默认为true。目前主要可用区、海外机房、新机房只提供SSD资源，非SSD资源不再提供。
 	UseSSD *bool `required:"false"`
 }
 

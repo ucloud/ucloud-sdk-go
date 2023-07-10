@@ -231,6 +231,18 @@ type SrcAreaInfo struct {
 }
 
 /*
+AccelerationAreaInfos - 加速大区信息
+*/
+type AccelerationAreaInfos struct {
+
+	// 加速区code
+	AccelerationArea string
+
+	// 加速节点信息
+	AccelerationNodes []SrcAreaInfo
+}
+
+/*
 ForwardTask - 全球统一接入转发端口任务信息
 */
 type ForwardTask struct {
@@ -243,18 +255,6 @@ type ForwardTask struct {
 
 	// 源站服务器监听的端口号
 	RSPort int
-}
-
-/*
-AccelerationAreaInfos - 加速大区信息
-*/
-type AccelerationAreaInfos struct {
-
-	// 加速区code
-	AccelerationArea string
-
-	// 加速节点信息
-	AccelerationNodes []SrcAreaInfo
 }
 
 /*
