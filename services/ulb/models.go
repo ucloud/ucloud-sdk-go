@@ -207,6 +207,27 @@ type PolicyBackendSet struct {
 }
 
 /*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -258,27 +279,6 @@ type ULBBackendSet struct {
 }
 
 /*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
 ULBPolicySet - 内容转发详细列表
 */
 type ULBPolicySet struct {
@@ -312,18 +312,15 @@ type ULBPolicySet struct {
 }
 
 /*
-LoggerSet - ulb日志信息
+FirewallSet - ulb防火墙信息
 */
-type LoggerSet struct {
+type FirewallSet struct {
 
-	// ulb日志上传的bucket
-	BucketName string
+	// 防火墙ID
+	FirewallId string
 
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -345,18 +342,6 @@ type ULBIPSet struct {
 
 	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
 	OperatorName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*
@@ -432,6 +417,21 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*

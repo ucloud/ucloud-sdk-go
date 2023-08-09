@@ -202,6 +202,12 @@ type UHostDiskCustomBackup struct {
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -223,12 +229,6 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
 }
 
 /*
@@ -274,21 +274,6 @@ type CreateUHostInstanceParamNetworkInterface struct {
 }
 
 /*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-}
-
-/*
 CreateUHostInstanceParamVolumes is request schema for complex param
 */
 type CreateUHostInstanceParamVolumes struct {
@@ -298,6 +283,21 @@ type CreateUHostInstanceParamVolumes struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	IsBoot *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1136,6 +1136,21 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Size *int `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Type *string `required:"false" deprecated:"true"`
+}
+
+/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1151,21 +1166,6 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
@@ -1342,6 +1342,59 @@ func (c *UHostClient) GetUHostInstanceVncInfo(req *GetUHostInstanceVncInfoReques
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUHostInstanceVncInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUHostRefundPriceRequest is request schema for GetUHostRefundPrice action
+type GetUHostRefundPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 【数组】UHost实例ID。参见 [DescribeUHostInstance](describe_uhost_instance.html)
+	UHostIds []string `required:"true"`
+}
+
+// GetUHostRefundPriceResponse is response schema for GetUHostRefundPrice action
+type GetUHostRefundPriceResponse struct {
+	response.CommonBase
+
+	// 主机删除扣除费用详情
+	RefundPriceSet []UHostRefundPriceSet
+}
+
+// NewGetUHostRefundPriceRequest will create request of GetUHostRefundPrice action.
+func (c *UHostClient) NewGetUHostRefundPriceRequest() *GetUHostRefundPriceRequest {
+	req := &GetUHostRefundPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUHostRefundPrice
+
+获取主机删除扣除费用。包括主机、磁盘、快照服务、EIP等资源的费用
+*/
+func (c *UHostClient) GetUHostRefundPrice(req *GetUHostRefundPriceRequest) (*GetUHostRefundPriceResponse, error) {
+	var err error
+	var res GetUHostRefundPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUHostRefundPrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

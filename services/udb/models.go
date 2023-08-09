@@ -48,18 +48,6 @@ type UDBBackupSet struct {
 }
 
 /*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
-}
-
-/*
 UDBSlaveInstanceSet - DescribeUDBSlaveInstance
 */
 type UDBSlaveInstanceSet struct {
@@ -174,6 +162,18 @@ type UDBSlaveInstanceSet struct {
 
 	// 可用区
 	Zone string
+}
+
+/*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
 }
 
 /*

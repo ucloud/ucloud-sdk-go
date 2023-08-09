@@ -27,21 +27,6 @@ type KeyPair struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
 DataDiskInfo - 数据盘信息
 */
 type DataDiskInfo struct {
@@ -93,15 +78,18 @@ type Collection struct {
 }
 
 /*
-Features - 虚机可支持的特性
+FeatureModes - 可以支持的模式类别
 */
-type Features struct {
+type FeatureModes struct {
 
-	// 可以提供的模式类别
-	Modes []FeatureModes
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
 
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	// 模式|特性名称
 	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
 }
 
 /*
@@ -132,21 +120,6 @@ type Disks struct {
 }
 
 /*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
-}
-
-/*
 MachineSizes - GPU、CPU和内存信息
 */
 type MachineSizes struct {
@@ -168,6 +141,33 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
+CpuPlatforms - CPU平台信息
+*/
+type CpuPlatforms struct {
+
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
+
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
 }
 
 /*
@@ -300,6 +300,18 @@ type IsolationGroup struct {
 }
 
 /*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
+
+/*
 UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
 type UDSetUDHostAttribute struct {
@@ -315,48 +327,12 @@ type UDSetUDHostAttribute struct {
 }
 
 /*
-UHostDiskSet - DescribeUHostInstance
+SpotAttribute - 竞价实例属性
 */
-type UHostDiskSet struct {
+type SpotAttribute struct {
 
-	// 备份方案。若开通了数据方舟，则为DATAARK
-	BackupType string
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
+	// 回收时间
+	RecycleTime int
 }
 
 /*
@@ -399,12 +375,36 @@ type UHostIPSet struct {
 }
 
 /*
-SpotAttribute - 竞价实例属性
+UHostDiskSet - DescribeUHostInstance
 */
-type SpotAttribute struct {
+type UHostDiskSet struct {
 
-	// 回收时间
-	RecycleTime int
+	// 备份方案。若开通了数据方舟，则为DATAARK
+	BackupType string
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
 }
 
 /*
@@ -639,6 +639,24 @@ type UHostPriceSet struct {
 
 	// 价格详细信息（只有询价接口返回）。
 	PriceDetail PriceDetail
+}
+
+/*
+UHostRefundPriceSet - 删除退费详情
+*/
+type UHostRefundPriceSet struct {
+
+	// 实例操作结果的错误码。0为成功
+	Code int
+
+	// 当 Code 非 0 时提供详细的描述信息
+	Message string
+
+	// 实例的删除退费金额
+	RefundPrice float64
+
+	// UHost实例ID
+	UHostId string
 }
 
 /*

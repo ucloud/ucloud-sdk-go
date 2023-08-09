@@ -3,18 +3,6 @@
 package uphost
 
 /*
-PHostComponentSet - GetPHostTypeInfo
-*/
-type PHostComponentSet struct {
-
-	// 组件数量
-	Count int
-
-	// 组件名称
-	Name string
-}
-
-/*
 PHostClusterSet - 物理云主机集群库存信息
 */
 type PHostClusterSet struct {
@@ -45,6 +33,18 @@ type PHostCPUSet struct {
 }
 
 /*
+PHostComponentSet - GetPHostTypeInfo
+*/
+type PHostComponentSet struct {
+
+	// 组件数量
+	Count int
+
+	// 组件名称
+	Name string
+}
+
+/*
 PHostCloudMachineTypeSet - 裸金属云盘的MachineTypeSet
 */
 type PHostCloudMachineTypeSet struct {
@@ -63,6 +63,33 @@ type PHostCloudMachineTypeSet struct {
 
 	// 物理云主机机型别名，全网唯一。
 	Type string
+}
+
+/*
+PHostIPSet - DescribePHost
+*/
+type PHostIPSet struct {
+
+	// IP对应带宽，单位Mb，内网IP不显示带宽信息
+	Bandwidth int
+
+	// IP地址，
+	IPAddr string
+
+	// IP资源ID(内网IP无资源ID)（待废弃）
+	IPId string
+
+	// MAC地址
+	MACAddr string
+
+	// 国际: Internation， BGP: BGP， 内网: Private
+	OperatorName string
+
+	// 子网ID
+	SubnetId string
+
+	// VPC ID
+	VPCId string
 }
 
 /*
@@ -93,33 +120,6 @@ type PHostDescDiskSet struct {
 
 	// 磁盘属性
 	Type string
-}
-
-/*
-PHostIPSet - DescribePHost
-*/
-type PHostIPSet struct {
-
-	// IP对应带宽，单位Mb，内网IP不显示带宽信息
-	Bandwidth int
-
-	// IP地址，
-	IPAddr string
-
-	// IP资源ID(内网IP无资源ID)（待废弃）
-	IPId string
-
-	// MAC地址
-	MACAddr string
-
-	// 国际: Internation， BGP: BGP， 内网: Private
-	OperatorName string
-
-	// 子网ID
-	SubnetId string
-
-	// VPC ID
-	VPCId string
 }
 
 /*

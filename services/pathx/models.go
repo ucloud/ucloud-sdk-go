@@ -231,6 +231,18 @@ type SrcAreaInfo struct {
 }
 
 /*
+OutPublicIpInfo - 线路回源IP信息
+*/
+type OutPublicIpInfo struct {
+
+	// 线路回源节点机房代号
+	Area string
+
+	// 线路回源节点EIP
+	IP string
+}
+
+/*
 AccelerationAreaInfos - 加速大区信息
 */
 type AccelerationAreaInfos struct {
@@ -255,18 +267,6 @@ type ForwardTask struct {
 
 	// 源站服务器监听的端口号
 	RSPort int
-}
-
-/*
-OutPublicIpInfo - 线路回源IP信息
-*/
-type OutPublicIpInfo struct {
-
-	// 线路回源节点机房代号
-	Area string
-
-	// 线路回源节点EIP
-	IP string
 }
 
 /*
@@ -381,18 +381,6 @@ type AccelerationInfo struct {
 }
 
 /*
-UGAATask - 用户在UGAA实例下配置的多端口任务
-*/
-type UGAATask struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-}
-
-/*
 UPathSet - uga关联的upath信息
 */
 type UPathSet struct {
@@ -420,6 +408,18 @@ type UPathSet struct {
 
 	// UPath名字
 	UPathName string
+}
+
+/*
+UGAATask - 用户在UGAA实例下配置的多端口任务
+*/
+type UGAATask struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
 }
 
 /*
