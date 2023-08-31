@@ -27,30 +27,6 @@ type Bundle struct {
 }
 
 /*
-ULHostDiskSet - 轻量应用主机的磁盘信息
-*/
-type ULHostDiskSet struct {
-
-	// 磁盘Id
-	DiskId string
-
-	// 磁盘类型。如："CLOUD_RSSD"、"CLOUD_SSD"
-	DiskType string
-
-	// 磁盘盘符。系统盘："vda"
-	Drive string
-
-	// 是否为系统盘。是："True"；否："False"
-	IsBoot string
-
-	// 磁盘大小。单位：GB
-	Size int
-
-	// 磁盘类型。系统盘："Boot"；数据盘："Data"
-	Type string
-}
-
-/*
 UHostIPSet -
 */
 type UHostIPSet struct {
@@ -87,6 +63,30 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
+}
+
+/*
+ULHostDiskSet - 轻量应用主机的磁盘信息
+*/
+type ULHostDiskSet struct {
+
+	// 磁盘Id
+	DiskId string
+
+	// 磁盘类型。如："CLOUD_RSSD"、"CLOUD_SSD"
+	DiskType string
+
+	// 磁盘盘符。系统盘："vda"
+	Drive string
+
+	// 是否为系统盘。是："True"；否："False"
+	IsBoot string
+
+	// 磁盘大小。单位：GB
+	Size int
+
+	// 磁盘类型。系统盘："Boot"；数据盘："Data"
+	Type string
 }
 
 /*

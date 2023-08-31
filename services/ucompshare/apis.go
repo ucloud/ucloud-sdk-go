@@ -39,6 +39,15 @@ type CreateULHostInstanceRequest struct {
 
 	// 购买时长。默认：1。不支持购买到月末
 	Quantity *int `required:"false"`
+
+	// 防火墙ID，默认：Web推荐防火墙。如何查询SecurityGroupId请参见 [DescribeFirewall](api/unet-api/describe_firewall.html)。
+	SecurityGroupId *string `required:"false"`
+
+	// 子网 ID。默认为当前地域的默认子网。
+	SubnetId *string `required:"false"`
+
+	// VPC ID。默认为当前地域的默认VPC。
+	VPCId *string `required:"false"`
 }
 
 // CreateULHostInstanceResponse is response schema for CreateULHostInstance action

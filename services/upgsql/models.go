@@ -297,6 +297,30 @@ type PgSQLMachineType struct {
 }
 
 /*
+TemplateGroup -
+*/
+type TemplateGroup struct {
+
+	// 应用的DB版本
+	DBVersion string
+
+	// 描述信息
+	Description string
+
+	// 参数模板ID
+	GroupID int
+
+	// 参数模板名称
+	GroupName string
+
+	// 是否可以修改
+	Modifiable bool
+
+	// 模板组类型名称
+	ParamGroupTypeName string
+}
+
+/*
 PgSQLVersion - postgresql版本信息
 */
 type PgSQLVersion struct {
