@@ -3,6 +3,15 @@
 package ucdn
 
 /*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
+}
+
+/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -27,15 +36,6 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
-}
-
-/*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
 }
 
 /*
@@ -549,21 +549,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-ReferConf - refer配置
-*/
-type ReferConf struct {
-
-	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
-	NullRefer int
-
-	// Refer防盗链规则列表，支持正则表达式
-	ReferList []string
-
-	// Refer防盗链配置  0白名单，1黑名单
-	ReferType int
-}
-
-/*
 CacheKeyInfo - 忽略参数缓存配置
 */
 type CacheKeyInfo struct {
@@ -579,33 +564,39 @@ type CacheKeyInfo struct {
 }
 
 /*
-AccessControlConf - 访问控制配置参数
+ReferConf - refer配置
 */
-type AccessControlConf struct {
+type ReferConf struct {
 
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
+	// ReferType为白名单时（删除），NullRefer为0代表不允许NULL refer访问，为1代表允许Null refer访问
+	NullRefer int
 
-	// refer配置
-	ReferConf ReferConf
+	// Refer防盗链规则列表，支持正则表达式
+	ReferList []string
+
+	// Refer防盗链配置  0白名单，1黑名单
+	ReferType int
 }
 
 /*
-CacheAllConfig - 缓存相关的配置
+AdvancedConf - 域名高级配置
 */
-type CacheAllConfig struct {
+type AdvancedConf struct {
 
-	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
-	CacheHost string
+	// http转https回源 true是，false否
+	Http2Https bool
 
-	// 忽略参数缓存配置列表，参见CacheKeyInfo
-	CacheKeyList []CacheKeyInfo
+	// 客户端响应http头列表
+	HttpClientHeader []string
 
-	// 缓存配置列表，参见CacheConf
-	CacheList []CacheConf
+	// 源站http头列表
+	HttpOriginHeader []string
 
-	// 状态码缓存配置列表，参见CacheConf
-	HttpCodeCacheList []CacheConf
+	// 是否开启quic
+	QuicEnable bool
+
+	// 是否开启websocket
+	WebSocketEnable bool
 }
 
 /*
@@ -645,24 +636,33 @@ type OriginConf struct {
 }
 
 /*
-AdvancedConf - 域名高级配置
+CacheAllConfig - 缓存相关的配置
 */
-type AdvancedConf struct {
+type CacheAllConfig struct {
 
-	// http转https回源 true是，false否
-	Http2Https bool
+	// 缓存Host，不同的域名可以配置为同一个CacheHost来实现缓存共享，默认为加速域名
+	CacheHost string
 
-	// 客户端响应http头列表
-	HttpClientHeader []string
+	// 忽略参数缓存配置列表，参见CacheKeyInfo
+	CacheKeyList []CacheKeyInfo
 
-	// 源站http头列表
-	HttpOriginHeader []string
+	// 缓存配置列表，参见CacheConf
+	CacheList []CacheConf
 
-	// 是否开启quic
-	QuicEnable bool
+	// 状态码缓存配置列表，参见CacheConf
+	HttpCodeCacheList []CacheConf
+}
 
-	// 是否开启websocket
-	WebSocketEnable bool
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
+
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
+
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*

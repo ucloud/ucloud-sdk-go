@@ -31,6 +31,15 @@ type CreatePHostParamNetworkInterfaceEIP struct {
 }
 
 /*
+CreatePHostParamNetworkInterface is request schema for complex param
+*/
+type CreatePHostParamNetworkInterface struct {
+
+	//
+	EIP *CreatePHostParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
 CreatePHostParamDisks is request schema for complex param
 */
 type CreatePHostParamDisks struct {
@@ -48,15 +57,6 @@ type CreatePHostParamDisks struct {
 	Type *string `required:"false"`
 }
 
-/*
-CreatePHostParamNetworkInterface is request schema for complex param
-*/
-type CreatePHostParamNetworkInterface struct {
-
-	//
-	EIP *CreatePHostParamNetworkInterfaceEIP `required:"false"`
-}
-
 // CreatePHostRequest is request schema for CreatePHost action
 type CreatePHostRequest struct {
 	request.CommonBase
@@ -72,9 +72,6 @@ type CreatePHostRequest struct {
 
 	// 短期促销活动时所需参数
 	ActivityId *int `required:"false"`
-
-	// 授权角色名, K8S专用，其他用户忽略
-	CharacterName *string `required:"false"`
 
 	// 计费模式，枚举值为：Year, 按年付费； Month,按月付费；默认按月付费
 	ChargeType *string `required:"false"`

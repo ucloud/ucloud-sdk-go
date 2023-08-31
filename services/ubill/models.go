@@ -120,18 +120,6 @@ type AccountInfo struct {
 }
 
 /*
-ResourceExtendInfo - 资源标识
-*/
-type ResourceExtendInfo struct {
-
-	// 资源标识健
-	KeyId string
-
-	// 资源标识值
-	Value string
-}
-
-/*
 ItemDetail - 产品配置
 */
 type ItemDetail struct {
@@ -140,6 +128,18 @@ type ItemDetail struct {
 	ProductName string
 
 	// 产品小类规格
+	Value string
+}
+
+/*
+ResourceExtendInfo - 资源标识
+*/
+type ResourceExtendInfo struct {
+
+	// 资源标识健
+	KeyId string
+
+	// 资源标识值
 	Value string
 }
 
@@ -166,11 +166,17 @@ type BillDetailItem struct {
 	// 可用区
 	AzGroupCName string
 
+	// 业务组
+	BusinessGroup string
+
 	// 计费方式 (筛选项, 默认全部)。枚举值：\\ > Year:按年\\ > Month:按月 \\ > Day:按天 \\ > Dynamic:按时 \\ > Used:按量 \\ > Donate:赠送 \\ > Trial:试用 \\ > Post:后付费 \\ > Spot:抢占式
 	ChargeType string
 
 	// 创建时间（时间戳）
 	CreateTime int
+
+	// 结束时间（时间戳）
+	EndTime int
 
 	// 产品配置
 	ItemDetails []ItemDetail

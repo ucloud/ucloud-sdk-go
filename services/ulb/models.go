@@ -207,57 +207,6 @@ type PolicyBackendSet struct {
 }
 
 /*
-ULBBackendSet - DescribeULB
-*/
-type ULBBackendSet struct {
-
-	// 后端资源实例的Id
-	BackendId string
-
-	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
-	Enabled int
-
-	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
-	IsBackup int
-
-	// 后端提供服务的端口
-	Port int
-
-	// 后端提供服务的内网IP
-	PrivateIP string
-
-	// 资源实例的资源Id
-	ResourceId string
-
-	// 资源实例的资源名称
-	ResourceName string
-
-	// 资源实例的类型
-	ResourceType string
-
-	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
-	Status int
-
-	// 资源绑定的虚拟网卡实例的资源Id
-	SubResourceId string
-
-	// 资源绑定的虚拟网卡实例的资源名称
-	SubResourceName string
-
-	// 资源绑定的虚拟网卡实例的类型
-	SubResourceType string
-
-	// 后端提供服务的资源所在的子网的ID
-	SubnetId string
-
-	// 后端服务器所在的VPC
-	VPCId string
-
-	// 后端RS权重（在加权轮询算法下有效）
-	Weight int
-}
-
-/*
 BindSecurityPolicy - VServer绑定的安全策略组信息
 */
 type BindSecurityPolicy struct {
@@ -312,18 +261,66 @@ type ULBPolicySet struct {
 }
 
 /*
-LoggerSet - ulb日志信息
+ULBBackendSet - DescribeULB
 */
-type LoggerSet struct {
+type ULBBackendSet struct {
 
-	// ulb日志上传的bucket
-	BucketName string
+	// 后端资源实例的Id
+	BackendId string
 
-	// 上传到bucket使用的token的tokenid
-	TokenID string
+	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
+	Enabled int
 
-	// bucket的token名称
-	TokenName string
+	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
+	IsBackup int
+
+	// 后端提供服务的端口
+	Port int
+
+	// 后端提供服务的内网IP
+	PrivateIP string
+
+	// 资源实例的资源Id
+	ResourceId string
+
+	// 资源实例的资源名称
+	ResourceName string
+
+	// 资源实例的类型
+	ResourceType string
+
+	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
+	Status int
+
+	// 资源绑定的虚拟网卡实例的资源Id
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡实例的资源名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡实例的类型
+	SubResourceType string
+
+	// 后端提供服务的资源所在的子网的ID
+	SubnetId string
+
+	// 后端服务器所在的VPC
+	VPCId string
+
+	// 后端RS权重（在加权轮询算法下有效）
+	Weight int
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -345,18 +342,6 @@ type ULBIPSet struct {
 
 	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
 	OperatorName string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*
@@ -432,6 +417,21 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*

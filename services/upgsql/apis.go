@@ -1184,6 +1184,68 @@ func (c *UPgSQLClient) ListUPgSQLMachineType(req *ListUPgSQLMachineTypeRequest) 
 	return &res, nil
 }
 
+// ListUPgSQLParamTemplateRequest is request schema for ListUPgSQLParamTemplate action
+type ListUPgSQLParamTemplateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 总数
+	Count *int `required:"false"`
+
+	// 偏移量, 默认是0,100
+	Offset *int `required:"false"`
+}
+
+// ListUPgSQLParamTemplateResponse is response schema for ListUPgSQLParamTemplate action
+type ListUPgSQLParamTemplateResponse struct {
+	response.CommonBase
+
+	// 参数模板信息
+	Data []TemplateGroup
+
+	// 描述信息
+	Message string
+}
+
+// NewListUPgSQLParamTemplateRequest will create request of ListUPgSQLParamTemplate action.
+func (c *UPgSQLClient) NewListUPgSQLParamTemplateRequest() *ListUPgSQLParamTemplateRequest {
+	req := &ListUPgSQLParamTemplateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUPgSQLParamTemplate
+
+获取可用参数模板列表
+*/
+func (c *UPgSQLClient) ListUPgSQLParamTemplate(req *ListUPgSQLParamTemplateRequest) (*ListUPgSQLParamTemplateResponse, error) {
+	var err error
+	var res ListUPgSQLParamTemplateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUPgSQLParamTemplate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListUPgSQLVersionRequest is request schema for ListUPgSQLVersion action
 type ListUPgSQLVersionRequest struct {
 	request.CommonBase

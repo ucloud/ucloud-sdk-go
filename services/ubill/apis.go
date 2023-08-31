@@ -300,8 +300,14 @@ type ListUBillDetailRequest struct {
 type ListUBillDetailResponse struct {
 	response.CommonBase
 
+	// 操作名称
+	Action string
+
 	// 账单明细数组
 	Items []BillDetailItem
+
+	// 返回码
+	RetCode int
 
 	// 账单明细总长度
 	TotalCount int
