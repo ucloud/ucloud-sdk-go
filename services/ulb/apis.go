@@ -34,7 +34,7 @@ type AllocateBackendRequest struct {
 	// 所添加的后端资源的资源ID；与ResourceIP二选一必填
 	ResourceId *string `required:"false"`
 
-	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UNI -> 虚拟网卡；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube，USDP->智能大数据平台， IP->IP类型；默认值为UHost。报文转发模式不支持UDocker、UHybrid、CUBE、IP
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UNI -> 虚拟网卡；UPM -> 物理云主机；UHybrid->混合云主机；CUBE->Cube， IP->IP类型；默认值为UHost。报文转发模式不支持UHybrid、CUBE、IP
 	ResourceType *string `required:"true"`
 
 	// 所添加的后端服务器所在的子网，当ResourceType 为 UHybrid 或 IP 时有效，且必填

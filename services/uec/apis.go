@@ -229,18 +229,6 @@ type CreateUEcHolderParamPack struct {
 }
 
 /*
-CreateUEcHolderParamImage is request schema for complex param
-*/
-type CreateUEcHolderParamImage struct {
-
-	// 镜像用户名和密码（如镜像名：密码）
-	Message *string `required:"false"`
-
-	// 镜像仓库地址
-	StoreAddress *string `required:"false"`
-}
-
-/*
 CreateUEcHolderParamStorage is request schema for complex param
 */
 type CreateUEcHolderParamStorage struct {
@@ -250,6 +238,18 @@ type CreateUEcHolderParamStorage struct {
 
 	// 存储卷资源id
 	ResourceId *string `required:"false"`
+}
+
+/*
+CreateUEcHolderParamImage is request schema for complex param
+*/
+type CreateUEcHolderParamImage struct {
+
+	// 镜像用户名和密码（如镜像名：密码）
+	Message *string `required:"false"`
+
+	// 镜像仓库地址
+	StoreAddress *string `required:"false"`
 }
 
 // CreateUEcHolderRequest is request schema for CreateUEcHolder action
