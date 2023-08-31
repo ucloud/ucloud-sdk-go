@@ -1186,6 +1186,77 @@ func (c *UDiskClient) DescribeUDiskUpgradePrice(req *DescribeUDiskUpgradePriceRe
 	return &res, nil
 }
 
+// DetachDeleteUDiskRequest is request schema for DetachDeleteUDisk action
+type DetachDeleteUDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 是否删除快照服务。Yes：删除，No：不删除，默认值：Yes。
+	DeleteSnapshotService *string `required:"false"`
+
+	// Host实例ID
+	HostId *string `required:"false"`
+
+	// 需要卸载的UDisk实例ID
+	UDiskId *string `required:"true"`
+
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"false"`
+}
+
+// DetachDeleteUDiskResponse is response schema for DetachDeleteUDisk action
+type DetachDeleteUDiskResponse struct {
+	response.CommonBase
+
+	// 卸载的Host实例ID
+	HostId string
+
+	// 卸载删除的UDisk实例ID
+	UDiskId string
+
+	// 卸载的UHost实例ID。【即将废弃，建议使用HostId】
+	UHostId string
+}
+
+// NewDetachDeleteUDiskRequest will create request of DetachDeleteUDisk action.
+func (c *UDiskClient) NewDetachDeleteUDiskRequest() *DetachDeleteUDiskRequest {
+	req := &DetachDeleteUDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachDeleteUDisk
+
+卸载删除某个已经挂载在指定UHost实例上的UDisk
+*/
+func (c *UDiskClient) DetachDeleteUDisk(req *DetachDeleteUDiskRequest) (*DetachDeleteUDiskResponse, error) {
+	var err error
+	var res DetachDeleteUDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachDeleteUDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DetachUDiskRequest is request schema for DetachUDisk action
 type DetachUDiskRequest struct {
 	request.CommonBase

@@ -298,6 +298,9 @@ type AddUK8SUHostNodeRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 系统盘大小，单位GB。默认40。范围：[40, 500]。注意SSD本地盘无法调整。
+	BootDiskSize *int `required:"false"`
+
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。默认为SSD云盘
 	BootDiskType *string `required:"false"`
 
@@ -350,7 +353,13 @@ type AddUK8SUHostNodeRequest struct {
 	Mem *int `required:"true"`
 
 	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"；"Intel/CascadelakeR"; “Amd/Epyc2”,"Amd/Auto"],默认值是"Intel/Auto"
-	MinmalCpuPlatform *string `required:"false"`
+	MinimalCpuPlatform *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	MinmalCpuPlatform *string `required:"false" deprecated:"true"`
+
+	// 节点池id
+	NodeGroupId *string `required:"false"`
 
 	// Node节点密码。请遵照[[api:uhost-api:specification|字段规范]]设定密码。密码需使用base64进行编码，如下：# echo -n Password1 | base64
 	Password *string `required:"true"`
@@ -361,6 +370,12 @@ type AddUK8SUHostNodeRequest struct {
 	// 子网 ID。默认为集群创建时填写的子网ID，也可以填写集群同VPC内的子网ID。
 	SubnetId *string `required:"false"`
 
+	// 业务组
+	Tag *string `required:"false"`
+
+	// Node节点污点，形式为key=value:effect，多组taints用”,“隔开,最多支持五组。
+	Taints *string `required:"false"`
+
 	// 用户自定义数据。当镜像支持Cloud-init Feature时可填写此字段。注意：1、总数据量大小不超过 16K；2、使用base64编码。
 	UserData *string `required:"false"`
 }
@@ -369,8 +384,8 @@ type AddUK8SUHostNodeRequest struct {
 type AddUK8SUHostNodeResponse struct {
 	response.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	Message string `deprecated:"true"`
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息。
+	Message string
 
 	// Node实例Id集合
 	NodeIds []string
@@ -421,6 +436,9 @@ CreateUK8SClusterV2ParamNodes is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodes struct {
 
+	// Node节点的系统盘大小，单位GB，默认为40。范围：[40, 500]。注意SSD本地盘无法调整。
+	BootDiskSIze *int `required:"false"`
+
 	// 一组Node节点的系统盘类型，请参考[[api:uhost-api:disk_type|磁盘类型]]。默认为SSD云盘
 	BootDiskType *string `required:"false"`
 
@@ -458,9 +476,15 @@ type CreateUK8SClusterV2ParamNodes struct {
 	Mem *int `required:"true"`
 
 	// Node节点的最低cpu平台，不选则随机。枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"。
-	MinmalCpuPlatform *string `required:"false"`
+	MinimalCpuPlatform *string `required:"false"`
 
-	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](../summary/regionlist.html)
+	// 【该字段已废弃，请谨慎使用】
+	MinmalCpuPlatform *string `required:"false" deprecated:"true"`
+
+	// Node节点污点，形式为key=value:effect，多组taints用”,“隔开,最多支持五组。
+	Taints *string `required:"false"`
+
+	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	Zone *string `required:"true"`
 }
 
@@ -469,7 +493,7 @@ CreateUK8SClusterV2ParamMaster is request schema for complex param
 */
 type CreateUK8SClusterV2ParamMaster struct {
 
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](../summary/regionlist.html)
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	Zone *string `required:"true"`
 }
 
@@ -477,14 +501,17 @@ type CreateUK8SClusterV2ParamMaster struct {
 type CreateUK8SClusterV2Request struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 集群所有节点的付费模式。枚举值为： Year，按年付费； Month，按月付费； Dynamic，按小时付费（需开启权限），默认按月。
 	ChargeType *string `required:"false"`
+
+	// 创建集群的时候定义clusterdomain
+	ClusterDomain *string `required:"false"`
 
 	// 集群名称
 	ClusterName *string `required:"true"`
@@ -506,6 +533,9 @@ type CreateUK8SClusterV2Request struct {
 
 	//
 	Master []CreateUK8SClusterV2ParamMaster `required:"false"`
+
+	// Master节点系统盘大小，单位GB，默认为40。范围：[40, 500]。注意SSD本地盘无法调整。
+	MasterBootDiskSize *int `required:"false"`
 
 	// Master节点系统盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。默认为SSD云盘
 	MasterBootDiskType *string `required:"false"`
@@ -529,7 +559,10 @@ type CreateUK8SClusterV2Request struct {
 	MasterMem *int `required:"true"`
 
 	// Master节点的最低cpu平台，不选则随机。枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake"。
-	MasterMinmalCpuPlatform *string `required:"false"`
+	MasterMinimalCpuPlatform *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	MasterMinmalCpuPlatform *string `required:"false" deprecated:"true"`
 
 	//
 	Nodes []CreateUK8SClusterV2ParamNodes `required:"false"`
@@ -545,6 +578,9 @@ type CreateUK8SClusterV2Request struct {
 
 	// 集群Node及Pod所属子网
 	SubnetId *string `required:"true"`
+
+	// 业务组
+	Tag *string `required:"false"`
 
 	// 用户自定义数据。注意：1、总数据量大小不超多16K；2、使用base64编码。
 	UserData *string `required:"false"`
