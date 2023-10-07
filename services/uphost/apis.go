@@ -31,15 +31,6 @@ type CreatePHostParamNetworkInterfaceEIP struct {
 }
 
 /*
-CreatePHostParamNetworkInterface is request schema for complex param
-*/
-type CreatePHostParamNetworkInterface struct {
-
-	//
-	EIP *CreatePHostParamNetworkInterfaceEIP `required:"false"`
-}
-
-/*
 CreatePHostParamDisks is request schema for complex param
 */
 type CreatePHostParamDisks struct {
@@ -55,6 +46,15 @@ type CreatePHostParamDisks struct {
 
 	// 裸金属机型参数->磁盘类型：枚举值：CLOUD_RSSD
 	Type *string `required:"false"`
+}
+
+/*
+CreatePHostParamNetworkInterface is request schema for complex param
+*/
+type CreatePHostParamNetworkInterface struct {
+
+	//
+	EIP *CreatePHostParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreatePHostRequest is request schema for CreatePHost action

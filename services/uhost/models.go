@@ -105,6 +105,18 @@ type MachineSizes struct {
 }
 
 /*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
 Features - 虚机可支持的特性
 */
 type Features struct {
@@ -113,6 +125,21 @@ type Features struct {
 	Modes []FeatureModes
 
 	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
 }
 
@@ -141,33 +168,6 @@ type Performance struct {
 
 	// 值，单位是TFlops
 	Value float64
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
-Disks - 磁盘信息
-*/
-type Disks struct {
-
-	// 系统盘信息
-	BootDisk []BootDiskInfo
-
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
-	Name string
 }
 
 /*
@@ -300,6 +300,30 @@ type IsolationGroup struct {
 }
 
 /*
+UDSetUDHostAttribute - 私有专区对应的宿主机属性
+*/
+type UDSetUDHostAttribute struct {
+
+	// 是否绑定私有专区宿主机
+	HostBinding bool
+
+	// 私有专区宿主机
+	UDHostId string
+
+	// 私有专区
+	UDSetId string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -339,42 +363,6 @@ type UHostIPSet struct {
 }
 
 /*
-UDSetUDHostAttribute - 私有专区对应的宿主机属性
-*/
-type UDSetUDHostAttribute struct {
-
-	// 是否绑定私有专区宿主机
-	HostBinding bool
-
-	// 私有专区宿主机
-	UDHostId string
-
-	// 私有专区
-	UDSetId string
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -405,6 +393,18 @@ type UHostDiskSet struct {
 
 	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*

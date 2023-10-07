@@ -111,6 +111,18 @@ type CfgDictList struct {
 }
 
 /*
+IpList - 容器组外网ip列表
+*/
+type IpList struct {
+
+	// 外网ip
+	Ip string
+
+	// 运营商
+	Isp string
+}
+
+/*
 DockerInfo - 容器信息
 */
 type DockerInfo struct {
@@ -177,18 +189,6 @@ type StorVolumeInfo struct {
 
 	// 资源id
 	ResourceId string
-}
-
-/*
-IpList - 容器组外网ip列表
-*/
-type IpList struct {
-
-	// 外网ip
-	Ip string
-
-	// 运营商
-	Isp string
 }
 
 /*

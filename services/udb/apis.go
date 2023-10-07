@@ -1570,13 +1570,13 @@ func (c *UDBClient) DescribeUDBBinlogBackupURL(req *DescribeUDBBinlogBackupURLRe
 type DescribeUDBInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区，不填时默认全部可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区，不填时默认全部可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// DB种类，如果是列表操作，则需要指定,不区分大小写，其取值如下：mysql: SQL；mongo: NOSQL；postgresql: postgresql
@@ -1597,8 +1597,14 @@ type DescribeUDBInstanceRequest struct {
 	// 分页显示起始偏移位置，列表操作时必填
 	Offset *int `required:"false"`
 
+	// 根据 业务组 筛选DB
+	Tag *string `required:"false"`
+
 	// IsInUDBC为True,UDBCId为空，说明查看整个可用区的专区的db，如果UDBId不为空则只查看此专区下面的db
 	UDBCId *string `required:"false"`
+
+	// 根据VPCId筛选DB
+	VPCId *string `required:"false"`
 }
 
 // DescribeUDBInstanceResponse is response schema for DescribeUDBInstance action
@@ -2119,6 +2125,9 @@ type DescribeUDBInstanceUpgradePriceRequest struct {
 
 	// 磁盘空间(GB), 暂时支持20G - 500G
 	DiskSpace *int `required:"true"`
+
+	// "SATA_SSD", "NVMe_SSD"
+	InstanceType *string `required:"false"`
 
 	// 内存限制(MB)
 	MemoryLimit *int `required:"true"`
@@ -3323,6 +3332,62 @@ func (c *UDBClient) RestartUDBInstance(req *RestartUDBInstanceRequest) (*Restart
 	return &res, nil
 }
 
+// RollbackUDBInstanceRequest is request schema for RollbackUDBInstance action
+type RollbackUDBInstanceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 恢复到某个时间点的时间戳(UTC时间格式，默认单位秒)
+	RecoveryTime *string `required:"true"`
+
+	// 源实例的Id
+	SrcDBId *string `required:"true"`
+
+	// 指定需要恢复的表，格式为(库名.表名)， 指定多个用逗号隔开，eg: [ udb.test, mysql_school.my_student]
+	Tables *string `required:"true"`
+}
+
+// RollbackUDBInstanceResponse is response schema for RollbackUDBInstance action
+type RollbackUDBInstanceResponse struct {
+	response.CommonBase
+
+	// 源实例的Id
+	DBId string
+}
+
+// NewRollbackUDBInstanceRequest will create request of RollbackUDBInstance action.
+func (c *UDBClient) NewRollbackUDBInstanceRequest() *RollbackUDBInstanceRequest {
+	req := &RollbackUDBInstanceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RollbackUDBInstance
+
+在原实例回档指定库表
+*/
+func (c *UDBClient) RollbackUDBInstance(req *RollbackUDBInstanceRequest) (*RollbackUDBInstanceResponse, error) {
+	var err error
+	var res RollbackUDBInstanceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RollbackUDBInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // SetUDBRWSplittingRequest is request schema for SetUDBRWSplitting action
 type SetUDBRWSplittingRequest struct {
 	request.CommonBase
@@ -3862,6 +3927,74 @@ func (c *UDBClient) UpgradeUDBInstanceToHA(req *UpgradeUDBInstanceToHARequest) (
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpgradeUDBInstanceToHA", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpgradeUDBVersionRequest is request schema for UpgradeUDBVersion action
+type UpgradeUDBVersionRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// db实例资源id
+	DBId *string `required:"true"`
+
+	// db需要升级的小版本
+	DBSubVersion *string `required:"true"`
+
+	// 该值为一个unix时间戳，代表开始预期切换实例结束的时间
+	SwitchEndTime *int `required:"false"`
+
+	// 该值为一个unix时间戳，代表开始切换实例的时间
+	SwitchStartTime *int `required:"false"`
+
+	// 切换类型，可选值为"immediately"和"customize"，分别代表立即切换和自定义切换时间，自定义切换时间需要填写SwitchStartTime和SwitchEndTime
+	SwitchType *string `required:"true"`
+}
+
+// UpgradeUDBVersionResponse is response schema for UpgradeUDBVersion action
+type UpgradeUDBVersionResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpgradeUDBVersionRequest will create request of UpgradeUDBVersion action.
+func (c *UDBClient) NewUpgradeUDBVersionRequest() *UpgradeUDBVersionRequest {
+	req := &UpgradeUDBVersionRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpgradeUDBVersion
+
+升级db实例版本
+*/
+func (c *UDBClient) UpgradeUDBVersion(req *UpgradeUDBVersionRequest) (*UpgradeUDBVersionResponse, error) {
+	var err error
+	var res UpgradeUDBVersionResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpgradeUDBVersion", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

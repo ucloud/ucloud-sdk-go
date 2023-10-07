@@ -3,6 +3,45 @@
 package ulb
 
 /*
+TargetSet - 服务节点信息
+*/
+type TargetSet struct {
+
+	// 服务节点是否启用。 默认值：true
+	Enabled bool
+
+	// 服务节点的标识ID。
+	Id string
+
+	// 服务节点是否为备节点。 默认值：false
+	IsBackup bool
+
+	// 服务节点的端口。限定取值：[1-65535]； 默认值：80
+	Port int
+
+	// 服务节点的IP。在IP类型时，必传
+	ResourceIP string
+
+	// 服务节点的资源ID。在非IP类型时，必传
+	ResourceId string
+
+	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
+	ResourceType string
+
+	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
+	State string
+
+	// 服务节点的子网资源ID。在IP类型时，必传
+	SubnetId string
+
+	// 服务节点的VPC资源ID。在IP类型时，必传
+	VPCId string
+
+	// 服务节点的权重。限定取值：[1-100]； 仅在加权轮询算法时有效； 默认值：1
+	Weight int
+}
+
+/*
 BackendSet -
 */
 type BackendSet struct {
@@ -207,27 +246,6 @@ type PolicyBackendSet struct {
 }
 
 /*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -312,24 +330,24 @@ type ULBPolicySet struct {
 }
 
 /*
-ULBIPSet - DescribeULB
+BindSecurityPolicy - VServer绑定的安全策略组信息
 */
-type ULBIPSet struct {
+type BindSecurityPolicy struct {
 
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
+	// 加密套件
+	SSLCiphers []string
 
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
+	// 安全策略组ID
+	SecurityPolicyId string
 
-	// 弹性IP地址
-	EIP string
+	// 安全策略组名称
+	SecurityPolicyName string
 
-	// 弹性IP的ID
-	EIPId string
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
 
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
+	// TLS最低版本
+	TLSVersion string
 }
 
 /*
@@ -342,21 +360,6 @@ type FirewallSet struct {
 
 	// 防火墙名称
 	FirewallName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
 }
 
 /*
@@ -432,6 +435,42 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
+}
+
+/*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*

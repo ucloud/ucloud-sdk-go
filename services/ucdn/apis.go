@@ -1271,7 +1271,7 @@ type GetUcdnDomainHitRateRequest struct {
 	// 查询的结束时间，格式为Unix Timestamp。EndTime默认为当前时间，BeginTime默认为当前时间前一天时间。
 	EndTime *int `required:"false"`
 
-	// 命中类型：0=整体命中  1=边缘命中  默认是0
+	// 默认是0
 	HitType *int `required:"false"`
 
 	// 是否全站加速，默认false
@@ -1342,7 +1342,7 @@ type GetUcdnDomainHttpCodeV2Request struct {
 	// 是否全站加速 默认false
 	IsDcdn *bool `required:"false"`
 
-	// 指定获取的状态码是边缘还是上层    edge 表示边缘  layer 表示上层
+	// edge 表示边缘
 	Layer *string `required:"false"`
 
 	// 时间粒度（0表示按照5分钟粒度，1表示按照1小时粒度，2表示按照一天的粒度，3表示1分钟粒度）
