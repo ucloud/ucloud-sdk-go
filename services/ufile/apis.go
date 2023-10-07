@@ -98,6 +98,9 @@ type CreateUFileLifeCycleRequest struct {
 
 	// Enabled -- 启用，Disabled -- 不启用
 	Status *string `required:"true"`
+
+	// Tag，参数格式"k1=v1&k2=v2"，key的最大长度为128， value最大长度为256byte，单个object的tag的最大数量为10
+	Tags *string `required:"false"`
 }
 
 // CreateUFileLifeCycleResponse is response schema for CreateUFileLifeCycle action
@@ -974,6 +977,9 @@ type UpdateUFileLifeCycleRequest struct {
 
 	// Enabled -- 启用，Disabled -- 不启用
 	Status *string `required:"true"`
+
+	// Tag，参数格式"k1=v1&k2=v2"，key的最大长度为128， value最大长度为256byte，单个object的tag的最大数量为10
+	Tags *string `required:"false"`
 }
 
 // UpdateUFileLifeCycleResponse is response schema for UpdateUFileLifeCycle action

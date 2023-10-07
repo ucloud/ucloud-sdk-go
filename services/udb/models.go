@@ -48,18 +48,6 @@ type UDBBackupSet struct {
 }
 
 /*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
-}
-
-/*
 UDBSlaveInstanceSet - DescribeUDBSlaveInstance
 */
 type UDBSlaveInstanceSet struct {
@@ -81,6 +69,9 @@ type UDBSlaveInstanceSet struct {
 
 	// 备份策略，一天内备份时间间隔，单位小时，默认24小时
 	BackupDuration int
+
+	// 0 区分大小写, 1不区分, 只针对mysql8.0
+	CaseSensitivityParam int
 
 	// Year， Month， Dynamic，Trial，默认: Dynamic
 	ChargeType string
@@ -139,6 +130,9 @@ type UDBSlaveInstanceSet struct {
 	// 端口号，mysql默认3306，mongodb默认27017
 	Port int
 
+	// 延时从库时长
+	ReplicationDelaySeconds int
+
 	// DB实例角色，mysql区分master/slave，mongodb多种角色
 	Role string
 
@@ -148,7 +142,7 @@ type UDBSlaveInstanceSet struct {
 	// 对mysql的slave而言是master的DBId，对master则为空， 对mongodb则是副本集id
 	SrcDBId string
 
-	// DB状态标记 Init：初始化中，Fail：安装失败，Starting：启动中，Running：运行，Shutdown：关闭中，Shutoff：已关闭，Delete：已删除，Upgrading：升级中，Promoting：提升为独库进行中，Recovering：恢复中，Recover fail：恢复失败
+	// DB状态标记 Init：初始化中，Fail：安装失败，Starting：启动中，Running：运行，Shutdown：关闭中，Shutoff：已关闭，Delete：已删除，Upgrading：升级中，Promoting：提升为独库进行中，Recovering：恢复中，Recover fail：恢复失败,Remakeing:重做中,RemakeFail:重做失败
 	State string
 
 	// 子网ID
@@ -177,6 +171,18 @@ type UDBSlaveInstanceSet struct {
 }
 
 /*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
+}
+
+/*
 UDBInstanceSet - DescribeUDBInstance
 */
 type UDBInstanceSet struct {
@@ -202,6 +208,9 @@ type UDBInstanceSet struct {
 	// 跨可用区高可用备库所在可用区
 	BackupZone string
 
+	// 0区分大小写, 1不分区
+	CaseSensitivityParam int
+
 	// Year， Month， Dynamic，Trial，默认: Dynamic
 	ChargeType string
 
@@ -216,6 +225,9 @@ type UDBInstanceSet struct {
 
 	// DB实例id
 	DBId string
+
+	// mysql实例提供具体小版本信息
+	DBSubVersion string
 
 	// DB类型id，mysql/mongodb按版本细分各有一个id 目前id的取值范围为[1,7],数值对应的版本如下： 1：mysql-5.5，2：mysql-5.1，3：percona-5.5 4：mongodb-2.4，5：mongodb-2.6，6：mysql-5.6， 7：percona-5.6
 	DBTypeId string
@@ -244,7 +256,7 @@ type UDBInstanceSet struct {
 	// UDB数据库机型
 	InstanceType string
 
-	// UDB数据库机型ID
+	// UDB数据库机型ID (已弃用)
 	InstanceTypeId int
 
 	// DB实例日志文件大小，单位GB
@@ -274,7 +286,7 @@ type UDBInstanceSet struct {
 	// 对mysql的slave而言是master的DBId，对master则为空， 对mongodb则是副本集id
 	SrcDBId string
 
-	// DB状态标记 Init：初始化中，Fail：安装失败，Starting：启动中，Running：运行，Shutdown：关闭中，Shutoff：已关闭，Delete：已删除，Upgrading：升级中，Promoting：提升为独库进行中，Recovering：恢复中，Recover fail：恢复失败
+	// DB状态标记 Init：初始化中，Fail：安装失败，Starting：启动中，Running：运行，Shutdown：关闭中，Shutoff：已关闭，Delete：已删除，Upgrading：升级中，Promoting：提升为独库进行中，Recovering：恢复中，Recover fail：恢复失败, Remakeing:重做中,RemakeFail:重做失败，VersionUpgrading:小版本升级中，VersionUpgradeWaitForSwitch:高可用等待切换，VersionUpgradeFail：小版本升级失败
 	State string
 
 	// 子网ID

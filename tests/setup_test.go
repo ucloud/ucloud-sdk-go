@@ -57,8 +57,8 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
-	"github.com/ucloud/ucloud-sdk-go/services/sts"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
+	"github.com/ucloud/ucloud-sdk-go/services/uai_modelverse"
 	"github.com/ucloud/ucloud-sdk-go/services/ubox"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
@@ -157,14 +157,14 @@ func testSetup() {
 	spec.AddFixture("PathX", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return pathx.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("STS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return sts.NewClient(&cfg, &credential), nil
-	}))
 	spec.AddFixture("StepFlow", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return stepflow.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("TiDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return tidb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UAI_Modelverse", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uai_modelverse.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UAccount", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uaccount.NewClient(&cfg, &credential), nil
