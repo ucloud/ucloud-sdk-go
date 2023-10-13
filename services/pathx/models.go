@@ -231,6 +231,18 @@ type SrcAreaInfo struct {
 }
 
 /*
+OutPublicIpInfo - 线路回源IP信息
+*/
+type OutPublicIpInfo struct {
+
+	// 线路回源节点机房代号
+	Area string
+
+	// 线路回源节点EIP
+	IP string
+}
+
+/*
 ForwardTask - 全球统一接入转发端口任务信息
 */
 type ForwardTask struct {
@@ -243,18 +255,6 @@ type ForwardTask struct {
 
 	// 源站服务器监听的端口号
 	RSPort int
-}
-
-/*
-OutPublicIpInfo - 线路回源IP信息
-*/
-type OutPublicIpInfo struct {
-
-	// 线路回源节点机房代号
-	Area string
-
-	// 线路回源节点EIP
-	IP string
 }
 
 /*
@@ -381,9 +381,9 @@ type AccelerationInfo struct {
 }
 
 /*
-UGAL7Forwarder - UGA实例 7层转发器信息
+UGAL4Forwarder - UGA实例 4层转发器信息
 */
-type UGAL7Forwarder struct {
+type UGAL4Forwarder struct {
 
 	// 接入端口
 	Port int
@@ -393,12 +393,6 @@ type UGAL7Forwarder struct {
 
 	// RSPort，源站监听端口
 	RSPort int
-
-	// 证书ID
-	SSLId string
-
-	// 证书名称
-	SSLName string
 }
 
 /*
@@ -444,9 +438,9 @@ type UGAATask struct {
 }
 
 /*
-UGAL4Forwarder - UGA实例 4层转发器信息
+UGAL7Forwarder - UGA实例 7层转发器信息
 */
-type UGAL4Forwarder struct {
+type UGAL7Forwarder struct {
 
 	// 接入端口
 	Port int
@@ -456,6 +450,12 @@ type UGAL4Forwarder struct {
 
 	// RSPort，源站监听端口
 	RSPort int
+
+	// 证书ID
+	SSLId string
+
+	// 证书名称
+	SSLName string
 }
 
 /*
