@@ -1679,6 +1679,9 @@ type UpdateUPgSQLPasswordRequest struct {
 	// DB实例Id
 	InstanceID *string `required:"true"`
 
+	// 数据库用户的名称。默认是root
+	Name *string `required:"false"`
+
 	// 新的db密码
 	Password *string `required:"true"`
 }
@@ -1706,7 +1709,7 @@ func (c *UPgSQLClient) NewUpdateUPgSQLPasswordRequest() *UpdateUPgSQLPasswordReq
 /*
 API: UpdateUPgSQLPassword
 
-更新数据库密码
+更新数据库用户密码
 */
 func (c *UPgSQLClient) UpdateUPgSQLPassword(req *UpdateUPgSQLPasswordRequest) (*UpdateUPgSQLPasswordResponse, error) {
 	var err error

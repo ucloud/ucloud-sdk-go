@@ -216,6 +216,21 @@ type NatGWIPResInfo struct {
 }
 
 /*
+NatGatewaySubnetSet - natgw里面的子网信息
+*/
+type NatGatewaySubnetSet struct {
+
+	// 子网网段
+	Subnet string
+
+	// 子网名字
+	SubnetName string
+
+	// 子网id
+	SubnetworkId string
+}
+
+/*
 NatGatewayIPSet - IPSet信息
 */
 type NatGatewayIPSet struct {
@@ -234,21 +249,6 @@ type NatGatewayIPSet struct {
 
 	// 权重为100的为出口
 	Weight int
-}
-
-/*
-NatGatewaySubnetSet - natgw里面的子网信息
-*/
-type NatGatewaySubnetSet struct {
-
-	// 子网网段
-	Subnet string
-
-	// 子网名字
-	SubnetName string
-
-	// 子网id
-	SubnetworkId string
 }
 
 /*

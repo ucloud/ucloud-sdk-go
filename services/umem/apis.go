@@ -235,6 +235,9 @@ type CreateUMemSpaceRequest struct {
 	// 协议:memcache, redis (默认redis).注意:redis无single类型
 	Protocol *string `required:"false"`
 
+	// 分布式代理CPU核数
+	ProxySize *int `required:"false"`
+
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
@@ -1108,8 +1111,17 @@ type DescribeUMemPriceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// umem 分片个数
+	BlockCnt *int `required:"false"`
+
 	// Year， Month， Dynamic 如果不指定，则一次性获取三种计费
 	ChargeType *string `required:"false"`
+
+	// 实例类型是否为性能增强型。默认为false，或者不填，true为性能增强型。
+	HighPerformance *bool `required:"false"`
+
+	// umem 代理CPU核心数
+	ProxySize *int `required:"false"`
 
 	// 购买UMem的时长，默认值为1
 	Quantity *int `required:"false"`
@@ -1749,17 +1761,20 @@ func (c *UMemClient) DescribeURedisGroup(req *DescribeURedisGroupRequest) (*Desc
 type DescribeURedisPriceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 计费模式，Year， Month， Dynamic；如果不指定，则一次性获取三种计费
 	ChargeType *string `required:"false"`
+
+	// 查询高性能Redis， 默认为false， 或者不填， 查询高性能为true
+	HighPerformance *bool `required:"false"`
 
 	// 产品类型：MS_Redis（标准主备版），S_Redis（从库），默认为MS_Redis
 	ProductType *string `required:"false"`
@@ -1800,7 +1815,7 @@ func (c *UMemClient) NewDescribeURedisPriceRequest() *DescribeURedisPriceRequest
 /*
 API: DescribeURedisPrice
 
-取uredis价格信息
+获取URedis价格信息
 */
 func (c *UMemClient) DescribeURedisPrice(req *DescribeURedisPriceRequest) (*DescribeURedisPriceResponse, error) {
 	var err error

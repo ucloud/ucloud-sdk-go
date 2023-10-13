@@ -84,18 +84,6 @@ type ResourceInfo struct {
 }
 
 /*
-EnvList - 容器环境变量列表
-*/
-type EnvList struct {
-
-	// 环境变量key值
-	Key string
-
-	// 环境变量Value值
-	Value string
-}
-
-/*
 CfgDictList - 容器配置字典列表
 */
 type CfgDictList struct {
@@ -111,15 +99,15 @@ type CfgDictList struct {
 }
 
 /*
-IpList - 容器组外网ip列表
+EnvList - 容器环境变量列表
 */
-type IpList struct {
+type EnvList struct {
 
-	// 外网ip
-	Ip string
+	// 环境变量key值
+	Key string
 
-	// 运营商
-	Isp string
+	// 环境变量Value值
+	Value string
 }
 
 /*
@@ -156,6 +144,18 @@ type DockerInfo struct {
 
 	// 工作目录
 	WorkDir string
+}
+
+/*
+IpList - 容器组外网ip列表
+*/
+type IpList struct {
+
+	// 外网ip
+	Ip string
+
+	// 运营商
+	Isp string
 }
 
 /*
