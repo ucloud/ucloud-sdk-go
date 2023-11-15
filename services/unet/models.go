@@ -78,6 +78,21 @@ type UnetBandwidthUsageEIPSet struct {
 }
 
 /*
+ShareBandwidthSet - DescribeEIP
+*/
+type ShareBandwidthSet struct {
+
+	// 共享带宽带宽值
+	ShareBandwidth int
+
+	// 共享带宽ID
+	ShareBandwidthId string
+
+	// 共享带宽的资源名称
+	ShareBandwidthName string
+}
+
+/*
 UnetEIPResourceSet - DescribeEIP
 */
 type UnetEIPResourceSet struct {
@@ -120,21 +135,6 @@ type EIPBinding struct {
 
 	// 内网ip类型：PrimaryIP（默认）、SecondaryIP（非默认）
 	PrivateIPType string
-}
-
-/*
-ShareBandwidthSet - DescribeEIP
-*/
-type ShareBandwidthSet struct {
-
-	// 共享带宽带宽值
-	ShareBandwidth int
-
-	// 共享带宽ID
-	ShareBandwidthId string
-
-	// 共享带宽的资源名称
-	ShareBandwidthName string
 }
 
 /*

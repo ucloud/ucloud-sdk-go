@@ -85,7 +85,7 @@ func (c *ULBClient) NewAddTargetsRequest() *AddTargetsRequest {
 /*
 API: AddTargets
 
-给监听器添加后端服务节点
+给应用型负载均衡监听器添加后端服务节点
 */
 func (c *ULBClient) AddTargets(req *AddTargetsRequest) (*AddTargetsResponse, error) {
 	var err error
@@ -295,21 +295,6 @@ func (c *ULBClient) BindSSL(req *BindSSLRequest) (*BindSSLResponse, error) {
 }
 
 /*
-CreateListenerParamStickinessConfig is request schema for complex param
-*/
-type CreateListenerParamStickinessConfig struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效；限定字符长度：[0-255]
-	CookieName *string `required:"false"`
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现；默认值为：false
-	Enabled *bool `required:"false"`
-
-	// （应用型专用）Cookie处理方式。限定枚举值："ServerInsert" / "UserDefined"；默认值为：“ServerInsert”
-	Type *string `required:"false"`
-}
-
-/*
 CreateListenerParamHealthCheckConfig is request schema for complex param
 */
 type CreateListenerParamHealthCheckConfig struct {
@@ -324,6 +309,21 @@ type CreateListenerParamHealthCheckConfig struct {
 	Path *string `required:"false"`
 
 	// 健康检查方式。应用型限定取值：“Port”/"HTTP"，默认值：“Port”
+	Type *string `required:"false"`
+}
+
+/*
+CreateListenerParamStickinessConfig is request schema for complex param
+*/
+type CreateListenerParamStickinessConfig struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效；限定字符长度：[0-255]
+	CookieName *string `required:"false"`
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现；默认值为：false
+	Enabled *bool `required:"false"`
+
+	// （应用型专用）Cookie处理方式。限定枚举值："ServerInsert" / "UserDefined"；默认值为：“ServerInsert”
 	Type *string `required:"false"`
 }
 
@@ -406,7 +406,7 @@ func (c *ULBClient) NewCreateListenerRequest() *CreateListenerRequest {
 /*
 API: CreateListener
 
-创建一个应用型负载均衡监听器或者一个网络型负载均衡监听器
+创建一个应用型负载均衡的监听器
 */
 func (c *ULBClient) CreateListener(req *CreateListenerRequest) (*CreateListenerResponse, error) {
 	var err error
@@ -2072,7 +2072,7 @@ func (c *ULBClient) NewRemoveTargetsRequest() *RemoveTargetsRequest {
 /*
 API: RemoveTargets
 
-从监听器删除后端服务节点
+从应用型负载均衡监听器删除后端服务节点
 */
 func (c *ULBClient) RemoveTargets(req *RemoveTargetsRequest) (*RemoveTargetsResponse, error) {
 	var err error
@@ -2442,7 +2442,7 @@ func (c *ULBClient) NewUpdateListenerAttributeRequest() *UpdateListenerAttribute
 /*
 API: UpdateListenerAttribute
 
-更新一个应用型负载均衡监听器或者一个网络型负载均衡监听器的属性
+更新一个应用型负载均衡监听器的属性
 */
 func (c *ULBClient) UpdateListenerAttribute(req *UpdateListenerAttributeRequest) (*UpdateListenerAttributeResponse, error) {
 	var err error
@@ -2519,7 +2519,7 @@ func (c *ULBClient) NewUpdateLoadBalancerAttributeRequest() *UpdateLoadBalancerA
 /*
 API: UpdateLoadBalancerAttribute
 
-更新一个应用型负载均衡实例或者一个网络型负载均衡实例的属性
+更新一个应用型负载均衡实例的属性
 */
 func (c *ULBClient) UpdateLoadBalancerAttribute(req *UpdateLoadBalancerAttributeRequest) (*UpdateLoadBalancerAttributeResponse, error) {
 	var err error
@@ -3022,7 +3022,7 @@ func (c *ULBClient) NewUpdateTargetsAttributeRequest() *UpdateTargetsAttributeRe
 /*
 API: UpdateTargetsAttribute
 
-更新监听器后端服务节点的属性
+更新应用型负载均衡监听器后端服务节点的属性
 */
 func (c *ULBClient) UpdateTargetsAttribute(req *UpdateTargetsAttributeRequest) (*UpdateTargetsAttributeResponse, error) {
 	var err error

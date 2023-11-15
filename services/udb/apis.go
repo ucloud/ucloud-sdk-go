@@ -2475,13 +2475,13 @@ func (c *UDBClient) DescribeUDBSplittingInfo(req *DescribeUDBSplittingInfoReques
 type DescribeUDBTypeRequest struct {
 	request.CommonBase
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 跨可用区高可用DB的备库所在区域，仅当该可用区支持跨可用区高可用时填入。参见 [可用区列表](../summary/regionlist.html)
+	// 跨可用区高可用DB的备库所在区域，仅当该可用区支持跨可用区高可用时填入。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	BackupZone *string `required:"false"`
 
 	// 返回从备份创建实例时，该版本号所支持的备份创建版本。如果没传，则表示不是从备份创建。
@@ -2489,6 +2489,9 @@ type DescribeUDBTypeRequest struct {
 
 	// DB实例类型，如mysql，sqlserver，mongo，postgresql
 	DBClusterType *string `required:"false"`
+
+	// 返回从备份创建实例时，该小版本号所支持的备份创建小版本。如果没传，则表示不是从备份创建。
+	DBSubVersion *string `required:"false"`
 
 	// 返回支持某种磁盘类型的DB类型，如Normal、SSD、NVMe_SSD。如果没传，则表示任何磁盘类型均可。
 	DiskType *string `required:"false"`

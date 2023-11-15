@@ -978,6 +978,9 @@ type ModifyUMongoDBBackupParamRequest struct {
 
 	// 实例ID
 	ClusterId *string `required:"true"`
+
+	// 是否禁用,true:禁用;false:开启
+	Disabled *bool `required:"false"`
 }
 
 // ModifyUMongoDBBackupParamResponse is response schema for ModifyUMongoDBBackupParam action
