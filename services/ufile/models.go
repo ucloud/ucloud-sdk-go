@@ -129,27 +129,6 @@ type LifeCycleItem struct {
 }
 
 /*
-UFileTotalReportItem - 总消费信息
-*/
-type UFileTotalReportItem struct {
-
-	// API请求次数（万次）
-	ApiTimes float64
-
-	// 忙时流量；单位GB；海外无此字段
-	BusyFlow float64
-
-	// cdn回源流量;单位GB
-	CdnFlow float64
-
-	// 下载流量：单位GB；国内无此字段
-	Flow float64
-
-	// 闲时流量；单位GB；海外无此字段
-	IdleFlow float64
-}
-
-/*
 UFileDailyReportItem -
 */
 type UFileDailyReportItem struct {
@@ -186,6 +165,27 @@ type UFileDailyReportItem struct {
 
 	// 标准存储量；单位GB
 	Storage float64
+}
+
+/*
+UFileTotalReportItem - 总消费信息
+*/
+type UFileTotalReportItem struct {
+
+	// API请求次数（万次）
+	ApiTimes float64
+
+	// 忙时流量；单位GB；海外无此字段
+	BusyFlow float64
+
+	// cdn回源流量;单位GB
+	CdnFlow float64
+
+	// 下载流量：单位GB；国内无此字段
+	Flow float64
+
+	// 闲时流量；单位GB；海外无此字段
+	IdleFlow float64
 }
 
 /*

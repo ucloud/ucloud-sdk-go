@@ -40,6 +40,33 @@ type CheckUDTSTaskParamSourceMySQLNodeSyncData struct {
 }
 
 /*
+CheckUDTSTaskParamTargetMySQLNode is request schema for complex param
+*/
+type CheckUDTSTaskParamTargetMySQLNode struct {
+
+	// 目标数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 目标数据库地址， 比如 10.9.37.212
+	Host *string `required:"false"`
+
+	// 目标数据库密码
+	Password *string `required:"false"`
+
+	// 目标数据库端口，比如 3306
+	Port *int `required:"false"`
+
+	// 目标数据库子网 ID ,比如 subnet-zl44fktq
+	SubnetId *string `required:"false"`
+
+	// 目标数据库用户名，比如 root
+	User *string `required:"false"`
+
+	// 目标数据库 VPC,比如 uvnet-1wz5rqte
+	VPCId *string `required:"false"`
+}
+
+/*
 CheckUDTSTaskParamSourceMySQLNode is request schema for complex param
 */
 type CheckUDTSTaskParamSourceMySQLNode struct {
@@ -79,30 +106,18 @@ type CheckUDTSTaskParamSourceMySQLNode struct {
 }
 
 /*
-CheckUDTSTaskParamTargetMySQLNode is request schema for complex param
+CheckUDTSTaskParamTarget is request schema for complex param
 */
-type CheckUDTSTaskParamTargetMySQLNode struct {
+type CheckUDTSTaskParamTarget struct {
 
-	// 目标数据库地域，比如 cn-bj2
-	DataRegion *string `required:"false"`
+	// 目标数据库类型，比如 mysql
+	DataType *string `required:"false"`
 
-	// 目标数据库地址， 比如 10.9.37.212
-	Host *string `required:"false"`
+	//
+	MySQLNode *CheckUDTSTaskParamTargetMySQLNode `required:"false"`
 
-	// 目标数据库密码
-	Password *string `required:"false"`
-
-	// 目标数据库端口，比如 3306
-	Port *int `required:"false"`
-
-	// 目标数据库子网 ID ,比如 subnet-zl44fktq
-	SubnetId *string `required:"false"`
-
-	// 目标数据库用户名，比如 root
-	User *string `required:"false"`
-
-	// 目标数据库 VPC,比如 uvnet-1wz5rqte
-	VPCId *string `required:"false"`
+	// 目标 db 网络类型，目前进支持 user
+	NWType *string `required:"false"`
 }
 
 /*
@@ -124,21 +139,6 @@ type CheckUDTSTaskParamSource struct {
 
 	// 服务类型，值可以是 small、medium、large，分别对应 “基础版”、“轻量版” 和 “旗舰版”
 	ServiceType *string `required:"true"`
-}
-
-/*
-CheckUDTSTaskParamTarget is request schema for complex param
-*/
-type CheckUDTSTaskParamTarget struct {
-
-	// 目标数据库类型，比如 mysql
-	DataType *string `required:"false"`
-
-	//
-	MySQLNode *CheckUDTSTaskParamTargetMySQLNode `required:"false"`
-
-	// 目标 db 网络类型，目前进支持 user
-	NWType *string `required:"false"`
 }
 
 // CheckUDTSTaskRequest is request schema for CheckUDTSTask action
@@ -240,6 +240,21 @@ type CreateUDTSTaskParamSourceMySQLNodeQueryDataTableData struct {
 }
 
 /*
+CreateUDTSTaskParamSourceMySQLNodeSSLSecurity is request schema for complex param
+*/
+type CreateUDTSTaskParamSourceMySQLNodeSSLSecurity struct {
+
+	// ca 证书，目前仅支持 pem 格式; 需要将文件内容 base64
+	SSLCA *string `required:"false"`
+
+	// 客户端证书; 需要将文件内容 base64
+	SSLCert *string `required:"false"`
+
+	// 客户端私钥， 需要将文件内容 base64
+	SSLKey *string `required:"false"`
+}
+
+/*
 CreateUDTSTaskParamSourceMySQLNodeSyncData is request schema for complex param
 */
 type CreateUDTSTaskParamSourceMySQLNodeSyncData struct {
@@ -258,21 +273,6 @@ type CreateUDTSTaskParamSourceMySQLNodeSyncData struct {
 }
 
 /*
-CreateUDTSTaskParamSourceMySQLNodeSSLSecurity is request schema for complex param
-*/
-type CreateUDTSTaskParamSourceMySQLNodeSSLSecurity struct {
-
-	// ca 证书，目前仅支持 pem 格式; 需要将文件内容 base64
-	SSLCA *string `required:"false"`
-
-	// 客户端证书; 需要将文件内容 base64
-	SSLCert *string `required:"false"`
-
-	// 客户端私钥， 需要将文件内容 base64
-	SSLKey *string `required:"false"`
-}
-
-/*
 CreateUDTSTaskParamSourceMySQLNodeQueryData is request schema for complex param
 */
 type CreateUDTSTaskParamSourceMySQLNodeQueryData struct {
@@ -288,6 +288,36 @@ type CreateUDTSTaskParamSourceMySQLNodeQueryData struct {
 
 	//
 	TableMaps []CreateUDTSTaskParamSourceMySQLNodeQueryDataTableMaps `required:"false"`
+}
+
+/*
+CreateUDTSTaskParamTargetMySQLNode is request schema for complex param
+*/
+type CreateUDTSTaskParamTargetMySQLNode struct {
+
+	// 目标数据库地域，比如 cn-bj2
+	DataRegion *string `required:"false"`
+
+	// 目标数据库地址， 比如 10.9.37.212
+	Host *string `required:"false"`
+
+	// 是否在全量过程中，临时禁用目标 MySQL 产生 binlog，在目标磁盘空间不足，或者需要获取更快的迁移速度时可以使用，该参数会破坏目标 MySQL 的高可用
+	NoBinlog *bool `required:"false"`
+
+	// 目标数据库密码
+	Password *string `required:"false"`
+
+	// 目标数据库端口，比如 3306
+	Port *int `required:"false"`
+
+	// 目标数据库子网 ID ,比如 subnet-zl44fktq
+	SubnetId *string `required:"false"`
+
+	// 目标数据库用户名，比如 root
+	User *string `required:"false"`
+
+	// 目标数据库 VPC,比如 uvnet-1wz5rqte
+	VPCId *string `required:"false"`
 }
 
 /*
@@ -339,33 +369,24 @@ type CreateUDTSTaskParamSourceMySQLNode struct {
 }
 
 /*
-CreateUDTSTaskParamTargetMySQLNode is request schema for complex param
+CreateUDTSTaskParamTarget is request schema for complex param
 */
-type CreateUDTSTaskParamTargetMySQLNode struct {
+type CreateUDTSTaskParamTarget struct {
 
-	// 目标数据库地域，比如 cn-bj2
-	DataRegion *string `required:"false"`
+	// 目标端限速，单位为 MB/s
+	BandwidthLimit *string `required:"false"`
 
-	// 目标数据库地址， 比如 10.9.37.212
-	Host *string `required:"false"`
+	// 目标数据库类型，比如 mysql
+	DataType *string `required:"true"`
 
-	// 是否在全量过程中，临时禁用目标 MySQL 产生 binlog，在目标磁盘空间不足，或者需要获取更快的迁移速度时可以使用，该参数会破坏目标 MySQL 的高可用
-	NoBinlog *bool `required:"false"`
+	//
+	Mode *string `required:"true"`
 
-	// 目标数据库密码
-	Password *string `required:"false"`
+	//
+	MySQLNode *CreateUDTSTaskParamTargetMySQLNode `required:"false"`
 
-	// 目标数据库端口，比如 3306
-	Port *int `required:"false"`
-
-	// 目标数据库子网 ID ,比如 subnet-zl44fktq
-	SubnetId *string `required:"false"`
-
-	// 目标数据库用户名，比如 root
-	User *string `required:"false"`
-
-	// 目标数据库 VPC,比如 uvnet-1wz5rqte
-	VPCId *string `required:"false"`
+	// 目标 db 网络类型，目前仅支持 user
+	NWType *string `required:"true"`
 }
 
 /*
@@ -390,27 +411,6 @@ type CreateUDTSTaskParamSource struct {
 
 	// 服务类型，值可以是small、medium、large，分别对应“基础版”、“轻量版”和“旗舰版”
 	ServiceType *string `required:"true"`
-}
-
-/*
-CreateUDTSTaskParamTarget is request schema for complex param
-*/
-type CreateUDTSTaskParamTarget struct {
-
-	// 目标端限速，单位为 MB/s
-	BandwidthLimit *string `required:"false"`
-
-	// 目标数据库类型，比如 mysql
-	DataType *string `required:"true"`
-
-	//
-	Mode *string `required:"true"`
-
-	//
-	MySQLNode *CreateUDTSTaskParamTargetMySQLNode `required:"false"`
-
-	// 目标 db 网络类型，目前仅支持 user
-	NWType *string `required:"true"`
 }
 
 // CreateUDTSTaskRequest is request schema for CreateUDTSTask action
