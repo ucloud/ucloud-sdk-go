@@ -111,6 +111,24 @@ type CfgDictList struct {
 }
 
 /*
+StorVolumeInfo - 容器组存储卷信息
+*/
+type StorVolumeInfo struct {
+
+	// 容量（单位GB）
+	DiskSize int
+
+	// 挂载点
+	MountPoint string
+
+	// 名称
+	Name string
+
+	// 资源id
+	ResourceId string
+}
+
+/*
 ImageList - 容器组镜像密钥列表
 */
 type ImageList struct {
@@ -159,24 +177,6 @@ type DockerInfo struct {
 
 	// 工作目录
 	WorkDir string
-}
-
-/*
-StorVolumeInfo - 容器组存储卷信息
-*/
-type StorVolumeInfo struct {
-
-	// 容量（单位GB）
-	DiskSize int
-
-	// 挂载点
-	MountPoint string
-
-	// 名称
-	Name string
-
-	// 资源id
-	ResourceId string
 }
 
 /*

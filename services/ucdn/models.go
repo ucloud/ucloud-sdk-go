@@ -579,27 +579,6 @@ type ReferConf struct {
 }
 
 /*
-AdvancedConf - 域名高级配置
-*/
-type AdvancedConf struct {
-
-	// http转https回源 true是，false否
-	Http2Https bool
-
-	// 客户端响应http头列表
-	HttpClientHeader []string
-
-	// 源站http头列表
-	HttpOriginHeader []string
-
-	// 是否开启quic
-	QuicEnable bool
-
-	// 是否开启websocket
-	WebSocketEnable bool
-}
-
-/*
 CacheAllConfig - 缓存相关的配置
 */
 type CacheAllConfig struct {
@@ -615,18 +594,6 @@ type CacheAllConfig struct {
 
 	// 状态码缓存配置列表，参见CacheConf
 	HttpCodeCacheList []CacheConf
-}
-
-/*
-AccessControlConf - 访问控制配置参数
-*/
-type AccessControlConf struct {
-
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
-
-	// refer配置
-	ReferConf ReferConf
 }
 
 /*
@@ -663,6 +630,39 @@ type OriginConf struct {
 
 	// 源站协议http，http|https   默认http
 	OriginProtocol string
+}
+
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
+
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
+
+	// refer配置
+	ReferConf ReferConf
+}
+
+/*
+AdvancedConf - 域名高级配置
+*/
+type AdvancedConf struct {
+
+	// http转https回源 true是，false否
+	Http2Https bool
+
+	// 客户端响应http头列表
+	HttpClientHeader []string
+
+	// 源站http头列表
+	HttpOriginHeader []string
+
+	// 是否开启quic
+	QuicEnable bool
+
+	// 是否开启websocket
+	WebSocketEnable bool
 }
 
 /*
