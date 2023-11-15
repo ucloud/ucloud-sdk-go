@@ -75,32 +75,29 @@ type PolicyData struct {
 }
 
 /*
-UDWNode - UDW 结点
+RedisNode - Redis节点
 */
-type UDWNode struct {
+type RedisNode struct {
 
-	// DB 名字， 长度不超过63个字符
-	DataBase string
+	// 数据库地址，只填写主(master)地址，集群模式下，多个地址用 ; 相连
+	Address string
 
-	// 地域
+	// 数据库所在的地域。 只有当 Host 为 UCloud 用户内网地址的时候需要提供
 	DataRegion string
 
-	// 数据库地址，长度不能超过 60个字符
-	Host string
+	// Redis2Redis全量迁移是否使用rump，默认是dump-restore
+	IsRump string
 
-	// 数据库密码，长度不起来32个字符
+	// redis密码
 	Password string
 
-	// 数据库端口，端口范围 1-65535
-	Port int
-
-	// 子网 ID, 只有当源目属于不同的地域的时候需要提供。
+	// 子网 ID, 只有当 Host 为 UCloud 用户内网地址并且源目属于不同的地域的时候需要提供
 	SubnetId string
 
-	// 数据库用户名，长度不能超过 32个字符
-	User string
+	// redis模式
+	Type string
 
-	// VPC 资源ID, 只有当 Host 为 UCloud 用户内网地址的时候需要提供。
+	// 数据库所在机器的 VPCId, 只有内网跨域迁移的时候需要提供
 	VPCId string
 }
 
@@ -138,6 +135,30 @@ type MySQLNode struct {
 
 	// VPC 资源ID, 只有当 Host 为 UCloud 用户内网地址的时候需要提供。
 	VPCId string
+}
+
+/*
+CSVNode - CSV 结点
+*/
+type CSVNode struct {
+
+	// 如果 DupAction 为 ignore或者replace,  并且需要调整列的顺序的时候使用。 以逗号分割的列名字符串。
+	Columns string
+
+	// 当加载重复数据的时候所采取的行为，有效值有 ignore - 忽略， replace - 替换， update - 更新。 默认为replace
+	DupAction string
+
+	// 数据迁移的时候是否保留原有数据， 默认为 false 不保留
+	KeepExistData bool
+
+	// 如果 DupAction 为 update, 并且在插入数据的同时想给一些列赋予特定的值的时候使用。
+	SetPolicy []PolicyData
+
+	// 数据路径
+	URL string
+
+	// 如果 DupAction 为 update, 并且不想用CSV数据完整替换原有数据的时候使用。
+	UpdatePolicy []PolicyData
 }
 
 /*
@@ -198,54 +219,33 @@ type TiDBNode struct {
 }
 
 /*
-RedisNode - Redis节点
+UDWNode - UDW 结点
 */
-type RedisNode struct {
+type UDWNode struct {
 
-	// 数据库地址，只填写主(master)地址，集群模式下，多个地址用 ; 相连
-	Address string
+	// DB 名字， 长度不超过63个字符
+	DataBase string
 
-	// 数据库所在的地域。 只有当 Host 为 UCloud 用户内网地址的时候需要提供
+	// 地域
 	DataRegion string
 
-	// Redis2Redis全量迁移是否使用rump，默认是dump-restore
-	IsRump string
+	// 数据库地址，长度不能超过 60个字符
+	Host string
 
-	// redis密码
+	// 数据库密码，长度不起来32个字符
 	Password string
 
-	// 子网 ID, 只有当 Host 为 UCloud 用户内网地址并且源目属于不同的地域的时候需要提供
+	// 数据库端口，端口范围 1-65535
+	Port int
+
+	// 子网 ID, 只有当源目属于不同的地域的时候需要提供。
 	SubnetId string
 
-	// redis模式
-	Type string
+	// 数据库用户名，长度不能超过 32个字符
+	User string
 
-	// 数据库所在机器的 VPCId, 只有内网跨域迁移的时候需要提供
+	// VPC 资源ID, 只有当 Host 为 UCloud 用户内网地址的时候需要提供。
 	VPCId string
-}
-
-/*
-CSVNode - CSV 结点
-*/
-type CSVNode struct {
-
-	// 如果 DupAction 为 ignore或者replace,  并且需要调整列的顺序的时候使用。 以逗号分割的列名字符串。
-	Columns string
-
-	// 当加载重复数据的时候所采取的行为，有效值有 ignore - 忽略， replace - 替换， update - 更新。 默认为replace
-	DupAction string
-
-	// 数据迁移的时候是否保留原有数据， 默认为 false 不保留
-	KeepExistData bool
-
-	// 如果 DupAction 为 update, 并且在插入数据的同时想给一些列赋予特定的值的时候使用。
-	SetPolicy []PolicyData
-
-	// 数据路径
-	URL string
-
-	// 如果 DupAction 为 update, 并且不想用CSV数据完整替换原有数据的时候使用。
-	UpdatePolicy []PolicyData
 }
 
 /*

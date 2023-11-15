@@ -3,6 +3,18 @@
 package uphost
 
 /*
+PHostComponentSet - GetPHostTypeInfo
+*/
+type PHostComponentSet struct {
+
+	// 组件数量
+	Count int
+
+	// 组件名称
+	Name string
+}
+
+/*
 PHostGpuInfoV2 - 裸金属Gpu信息V2版本
 */
 type PHostGpuInfoV2 struct {
@@ -18,18 +30,6 @@ type PHostGpuInfoV2 struct {
 
 	// GPU性能指标
 	Performance string
-}
-
-/*
-PHostComponentSet - GetPHostTypeInfo
-*/
-type PHostComponentSet struct {
-
-	// 组件数量
-	Count int
-
-	// 组件名称
-	Name string
 }
 
 /*
@@ -153,33 +153,6 @@ type PHostCPUSet struct {
 }
 
 /*
-PHostIPSet - DescribePHost
-*/
-type PHostIPSet struct {
-
-	// IP对应带宽，单位Mb，内网IP不显示带宽信息
-	Bandwidth int
-
-	// IP地址，
-	IPAddr string
-
-	// IP资源ID(内网IP无资源ID)（待废弃）
-	IPId string
-
-	// MAC地址
-	MACAddr string
-
-	// 国际: Internation， BGP: BGP， 内网: Private
-	OperatorName string
-
-	// 子网ID
-	SubnetId string
-
-	// VPC ID
-	VPCId string
-}
-
-/*
 PHostDescDiskSet - DescribePHost（包括传统和裸金属1、裸金属2）
 */
 type PHostDescDiskSet struct {
@@ -207,6 +180,33 @@ type PHostDescDiskSet struct {
 
 	// 磁盘属性
 	Type string
+}
+
+/*
+PHostIPSet - DescribePHost
+*/
+type PHostIPSet struct {
+
+	// IP对应带宽，单位Mb，内网IP不显示带宽信息
+	Bandwidth int
+
+	// IP地址，
+	IPAddr string
+
+	// IP资源ID(内网IP无资源ID)（待废弃）
+	IPId string
+
+	// MAC地址
+	MACAddr string
+
+	// 国际: Internation， BGP: BGP， 内网: Private
+	OperatorName string
+
+	// 子网ID
+	SubnetId string
+
+	// VPC ID
+	VPCId string
 }
 
 /*
