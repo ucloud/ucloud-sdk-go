@@ -31,15 +31,6 @@ type CreatePHostParamNetworkInterfaceEIP struct {
 }
 
 /*
-CreatePHostParamNetworkInterface is request schema for complex param
-*/
-type CreatePHostParamNetworkInterface struct {
-
-	//
-	EIP *CreatePHostParamNetworkInterfaceEIP `required:"false"`
-}
-
-/*
 CreatePHostParamDisks is request schema for complex param
 */
 type CreatePHostParamDisks struct {
@@ -55,6 +46,15 @@ type CreatePHostParamDisks struct {
 
 	// 裸金属机型参数->磁盘类型：枚举值：CLOUD_RSSD
 	Type *string `required:"false"`
+}
+
+/*
+CreatePHostParamNetworkInterface is request schema for complex param
+*/
+type CreatePHostParamNetworkInterface struct {
+
+	//
+	EIP *CreatePHostParamNetworkInterfaceEIP `required:"false"`
 }
 
 // CreatePHostRequest is request schema for CreatePHost action
@@ -245,6 +245,9 @@ type DescribeBaremetalMachineTypeRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 请求版本。仅支持v2，不传或传其他值表示请求旧版本
+	APIVersion *string `required:"false"`
+
 	// 具体机型。若不填写，则返回全部机型
 	Type *string `required:"false"`
 }
@@ -253,8 +256,8 @@ type DescribeBaremetalMachineTypeRequest struct {
 type DescribeBaremetalMachineTypeResponse struct {
 	response.CommonBase
 
-	// 机型列表，模型：PHostCloudMachineTypeSet
-	MachineTypes []PHostCloudMachineTypeSet
+	// 机型列表，模型：PHostCloudMachineTypeSetV2,仅在入参Version=v2时返回
+	MachineTypes []PHostCloudMachineTypeSetV2
 }
 
 // NewDescribeBaremetalMachineTypeRequest will create request of DescribeBaremetalMachineType action.
@@ -372,6 +375,9 @@ type DescribePHostImageRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 机器的网络集群，MachineType传是必须传，默认25G
+	Cluster *string `required:"false"`
+
 	// 镜像ID
 	ImageId []string `required:"false"`
 
@@ -438,10 +444,13 @@ type DescribePHostMachineTypeRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
+	// Region *string `required:"false"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
+	// Zone *string `required:"false"`
+
+	// 请求版本。仅支持v2，不传或传其他值表示请求旧版本
+	APIVersion *string `required:"false"`
 
 	// 具体机型。若不填写，则返回全部机型
 	Type *string `required:"false"`
@@ -451,8 +460,8 @@ type DescribePHostMachineTypeRequest struct {
 type DescribePHostMachineTypeResponse struct {
 	response.CommonBase
 
-	// 机型列表，模型：PHostMachineTypeSet
-	MachineTypes []PHostMachineTypeSet
+	// 机型列表，模型：PHostCloudMachineTypeSetV2,仅在入参Version=v2时返回
+	MachineTypes []PHostCloudMachineTypeSetV2
 }
 
 // NewDescribePHostMachineTypeRequest will create request of DescribePHostMachineType action.

@@ -27,36 +27,6 @@ type KeyPair struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
 DataDiskInfo - 数据盘信息
 */
 type DataDiskInfo struct {
@@ -93,6 +63,36 @@ type BootDiskInfo struct {
 }
 
 /*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
 GraphicsMemory - GPU的显存指标
 */
 type GraphicsMemory struct {
@@ -102,30 +102,6 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
 }
 
 /*
@@ -168,6 +144,30 @@ type Performance struct {
 
 	// 值，单位是TFlops
 	Value float64
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
 }
 
 /*
@@ -300,6 +300,15 @@ type IsolationGroup struct {
 }
 
 /*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
 UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
 type UDSetUDHostAttribute struct {
@@ -312,27 +321,6 @@ type UDSetUDHostAttribute struct {
 
 	// 私有专区
 	UDSetId string
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
 }
 
 /*
@@ -366,6 +354,18 @@ type UHostDiskSet struct {
 
 	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*

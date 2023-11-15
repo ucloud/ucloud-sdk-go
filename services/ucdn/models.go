@@ -3,15 +3,6 @@
 package ucdn
 
 /*
-AccessConf - 访问控制
-*/
-type AccessConf struct {
-
-	// 多个ip用逗号隔开
-	IpBlacklist string
-}
-
-/*
 CacheConf - 缓存配置
 */
 type CacheConf struct {
@@ -36,6 +27,15 @@ type CacheConf struct {
 
 	// 路径模式，支持正则
 	PathPattern string
+}
+
+/*
+AccessConf - 访问控制
+*/
+type AccessConf struct {
+
+	// 多个ip用逗号隔开
+	IpBlacklist string
 }
 
 /*
@@ -579,39 +579,24 @@ type ReferConf struct {
 }
 
 /*
-OriginConf - 回源配置
+AdvancedConf - 域名高级配置
 */
-type OriginConf struct {
+type AdvancedConf struct {
 
-	// 1如果为false表示BackupOriginIp为空，表示没有备份源站，忽略BackupOriginIp，BackupOriginHost字段2如果为true表示BackupOriginIp.n必须至少有一个备份源站地址
-	BackupOriginEnable bool
+	// http转https回源 true是，false否
+	Http2Https bool
 
-	// 备份回源Http请求头部Host，默认是加速域名
-	BackupOriginHost string
+	// 客户端响应http头列表
+	HttpClientHeader []string
 
-	// 备份源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
-	BackupOriginIpList []string
+	// 源站http头列表
+	HttpOriginHeader []string
 
-	// 主源响应的回源错误码（如：404|500），默认空字符串
-	OriginErrorCode string
+	// 是否开启quic
+	QuicEnable bool
 
-	// 回主源的回源失败数，默认1
-	OriginErrorNum int
-
-	// 跟随301跳转  0=不跟随 1=跟随
-	OriginFollow301 int
-
-	// 回源Http请求头部Host，默认是加速域名
-	OriginHost string
-
-	// 源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
-	OriginIpList []string
-
-	// 回源端口
-	OriginPort int
-
-	// 源站协议http，http|https   默认http
-	OriginProtocol string
+	// 是否开启websocket
+	WebSocketEnable bool
 }
 
 /*
@@ -645,24 +630,39 @@ type AccessControlConf struct {
 }
 
 /*
-AdvancedConf - 域名高级配置
+OriginConf - 回源配置
 */
-type AdvancedConf struct {
+type OriginConf struct {
 
-	// http转https回源 true是，false否
-	Http2Https bool
+	// 1如果为false表示BackupOriginIp为空，表示没有备份源站，忽略BackupOriginIp，BackupOriginHost字段2如果为true表示BackupOriginIp.n必须至少有一个备份源站地址
+	BackupOriginEnable bool
 
-	// 客户端响应http头列表
-	HttpClientHeader []string
+	// 备份回源Http请求头部Host，默认是加速域名
+	BackupOriginHost string
 
-	// 源站http头列表
-	HttpOriginHeader []string
+	// 备份源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
+	BackupOriginIpList []string
 
-	// 是否开启quic
-	QuicEnable bool
+	// 主源响应的回源错误码（如：404|500），默认空字符串
+	OriginErrorCode string
 
-	// 是否开启websocket
-	WebSocketEnable bool
+	// 回主源的回源失败数，默认1
+	OriginErrorNum int
+
+	// 跟随301跳转  0=不跟随 1=跟随
+	OriginFollow301 int
+
+	// 回源Http请求头部Host，默认是加速域名
+	OriginHost string
+
+	// 源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
+	OriginIpList []string
+
+	// 回源端口
+	OriginPort int
+
+	// 源站协议http，http|https   默认http
+	OriginProtocol string
 }
 
 /*
