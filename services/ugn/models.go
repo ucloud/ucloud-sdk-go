@@ -39,36 +39,6 @@ type InterRegionBandwidth struct {
 }
 
 /*
-UGN - 云联网信息
-*/
-type UGN struct {
-
-	// 云联网创建时间
-	CreateTime int
-
-	// 实例Id
-	Instances []string
-
-	// 跨域路由Id
-	InterRegionBandwidths []string
-
-	// 云联网名称
-	Name string
-
-	// 云联网备注
-	Remark string
-
-	// 路由规则Id
-	RouteRules []string
-
-	// 业务组Id
-	Tag string
-
-	// 云联网Id
-	UGNId string
-}
-
-/*
 Instance - 云联网实例信息
 */
 type Instance struct {

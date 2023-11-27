@@ -205,25 +205,25 @@ type CreateUGNRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// 云联网名称，如果没有传入，默认值为“UGN”
+	//
 	Name *string `required:"false"`
 
-	// 云联网备注，如果没有传入的话，默认为“”
-	Remark *string `required:"false"`
+	// 数组，数组内每个元素的字段如下：NetworkID：string，网络实例 ID，如 uvnet-xxxx；Type：string，网络实例类型，枚举值：VPC/HybridGW/...；Region：string，网络实例所属地域，如 cn-sh2；OrgName：string，网络实例所属项目名，如 org-xxx
+	Networks []string `required:"false"`
 
-	// 业务组Id，如果没有传入，默认值为“Default”
-	Tag *string `required:"false"`
+	//
+	Remark *string `required:"false"`
 }
 
 // CreateUGNResponse is response schema for CreateUGN action
 type CreateUGNResponse struct {
 	response.CommonBase
 
-	// 返回码描述信息
+	//
 	Message string
 
-	// 云联网Id
-	UGNId string
+	//
+	UGNID string
 }
 
 // NewCreateUGNRequest will create request of CreateUGN action.
@@ -418,68 +418,6 @@ func (c *UGNClient) DescribeInterRegionBandwidth(req *DescribeInterRegionBandwid
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeInterRegionBandwidth", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// DescribeUGNRequest is request schema for DescribeUGN action
-type DescribeUGNRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
-
-	// 数据分页值。默认为20
-	Limit *int `required:"false"`
-
-	// 数据偏移量。默认为0
-	Offset *int `required:"false"`
-
-	// 云联网Id
-	UGNIds []string `required:"false"`
-}
-
-// DescribeUGNResponse is response schema for DescribeUGN action
-type DescribeUGNResponse struct {
-	response.CommonBase
-
-	// 返回码描述信息
-	Message string
-
-	// UGNs字段的数量
-	TotalCount int
-
-	// 云联网信息
-	UGNs []UGN
-}
-
-// NewDescribeUGNRequest will create request of DescribeUGN action.
-func (c *UGNClient) NewDescribeUGNRequest() *DescribeUGNRequest {
-	req := &DescribeUGNRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: DescribeUGN
-
-查询云联网
-*/
-func (c *UGNClient) DescribeUGN(req *DescribeUGNRequest) (*DescribeUGNResponse, error) {
-	var err error
-	var res DescribeUGNResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("DescribeUGN", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -953,6 +891,107 @@ func (c *UGNClient) UnpublishUGNRouteRule(req *UnpublishUGNRouteRuleRequest) (*U
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UnpublishUGNRouteRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUGNBwPackageRequest is request schema for UpdateUGNBwPackage action
+type UpdateUGNBwPackageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	//
+	BwBidRate *float64 `required:"true"`
+
+	//
+	BwULRate *float64 `required:"true"`
+
+	//
+	ChargeType *string `required:"false"`
+
+	//
+	Coupon *string `required:"false"`
+
+	// 名称
+	Name *string `required:"false"`
+
+	// 带宽包 ID
+	PackageID *string `required:"true"`
+
+	//
+	Path *string `required:"true"`
+
+	//
+	PayMode *string `required:"true"`
+
+	//
+	Qos *string `required:"true"`
+
+	//
+	Quantity *string `required:"false"`
+
+	//
+	RegionA *string `required:"true"`
+
+	//
+	RegionABwMax *int `required:"true"`
+
+	//
+	RegionABwMin *int `required:"true"`
+
+	//
+	RegionB *string `required:"true"`
+
+	//
+	RegionBBwMax *int `required:"true"`
+
+	//
+	RegionBBwMin *int `required:"true"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	// 所绑定的 UGN ID
+	UGNID *string `required:"true"`
+}
+
+// UpdateUGNBwPackageResponse is response schema for UpdateUGNBwPackage action
+type UpdateUGNBwPackageResponse struct {
+	response.CommonBase
+
+	//
+	Message string
+}
+
+// NewUpdateUGNBwPackageRequest will create request of UpdateUGNBwPackage action.
+func (c *UGNClient) NewUpdateUGNBwPackageRequest() *UpdateUGNBwPackageRequest {
+	req := &UpdateUGNBwPackageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUGNBwPackage
+
+更新带宽包配置
+*/
+func (c *UGNClient) UpdateUGNBwPackage(req *UpdateUGNBwPackageRequest) (*UpdateUGNBwPackageResponse, error) {
+	var err error
+	var res UpdateUGNBwPackageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUGNBwPackage", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
