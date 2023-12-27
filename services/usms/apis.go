@@ -9,6 +9,74 @@ import (
 
 // USMS API Schema
 
+// AddBackfillRequest is request schema for AddBackfill action
+type AddBackfillRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 回填时间，秒级别时间戳
+	BackfillTime *int `required:"false"`
+
+	// 回填内容
+	Content *string `required:"false"`
+
+	// 发送Number，记录一次发送请求的唯一性
+	SendNo *string `required:"true"`
+
+	// 发送请求的时间，秒级别时间戳
+	SendTime *int `required:"false"`
+
+	// 短信的接收目标,手机号需要添加国家码，比如(1)231xxxx
+	Target *string `required:"true"`
+}
+
+// AddBackfillResponse is response schema for AddBackfill action
+type AddBackfillResponse struct {
+	response.CommonBase
+
+	// 返回错误消息。当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewAddBackfillRequest will create request of AddBackfill action.
+func (c *USMSClient) NewAddBackfillRequest() *AddBackfillRequest {
+	req := &AddBackfillRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddBackfill
+
+用户通过接口发送消息，当消息在终端被消费，调用该接口，进行记录。
+*/
+func (c *USMSClient) AddBackfill(req *AddBackfillRequest) (*AddBackfillResponse, error) {
+	var err error
+	var res AddBackfillResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddBackfill", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUSMSSignatureRequest is request schema for CreateUSMSSignature action
 type CreateUSMSSignatureRequest struct {
 	request.CommonBase
