@@ -39,6 +39,135 @@ type InterRegionBandwidth struct {
 }
 
 /*
+SimpleNetwork - 简洁版云联网网络实例
+*/
+type SimpleNetwork struct {
+
+	//
+	CreateTime int
+
+	// 网络实例名称
+	Name string
+
+	// 网络实例的ID，如 vnet-xxxxx
+	NetworkID string
+
+	// 网络实例所在项目的ID
+	OrgID int
+
+	// 网络实例所在项目名
+	OrgName string
+
+	// 网络实例所在地域
+	Region string
+
+	// 网络实例所在地域ID
+	RegionID int
+
+	// 网络实例类型：VPC/HybridGW/...
+	Type string
+}
+
+/*
+SimpleBwPackage - 简洁版带宽包
+*/
+type SimpleBwPackage struct {
+
+	// 带宽值
+	BandWidth float64
+
+	// 带宽包切换计费类型
+	ChangePayMode string
+
+	// 带宽包切换状态
+	ChangeStatus int
+
+	// 带宽包切换时间
+	ChangeTime int
+
+	// 创建时间
+	CreateTime int
+
+	// 过期时间
+	ExpireTime int
+
+	//
+	Name string
+
+	//
+	PackageID string
+
+	// 智能路径Delay:最低时延｜IGP:普通线路｜TCO:最低成本
+	Path string
+
+	// 计费模式 FixedBw:固定带宽｜Peak95:经典95｜Max5:第五峰值｜Traffic:流量计费
+	PayMode string
+
+	// 服务质量Diamond:钻石｜Platinum:铂金｜Gold:黄金
+	Qos string
+
+	// 地域A名称
+	RegionA string
+
+	// 地域B名称
+	RegionB string
+
+	//
+	Remark string
+
+	//
+	UGNID string
+}
+
+/*
+UGN - 云联网信息
+*/
+type UGN struct {
+
+	// 绑定带宽包数量
+	BwPackageCount int
+
+	// 云联网创建时间
+	CreateTime int
+
+	// 云联网名称
+	Name string
+
+	// 关联网络实例数量
+	NetworkCount int
+
+	// 云联网备注
+	Remark string
+
+	// 云联网资源 ID
+	UGNID string
+}
+
+/*
+SimpleRoute - 简洁版云联网路由条目
+*/
+type SimpleRoute struct {
+
+	// 目的网段
+	DstAddr string
+
+	// 下一跳网络实例 ID
+	NextHopID string
+
+	// 下一跳网络实例所属地域
+	NextHopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NextHopRegionID int
+
+	// 下一跳网络实例类型
+	NextHopType string
+
+	// 路由优先级
+	Priority int
+}
+
+/*
 Instance - 云联网实例信息
 */
 type Instance struct {
@@ -117,4 +246,112 @@ type RouteRule struct {
 
 	// 路由规则类型，枚举值 0：自动发布的LOCAL和动态路由1：手动发布的自定义路由
 	RouteRuleType int
+}
+
+/*
+Route - 云联网路由条目
+*/
+type Route struct {
+
+	// 目的网段
+	DstAddr string
+
+	// 下一跳网络实例 ID
+	NexthopID string
+
+	// 下一跳网络实例所属地域
+	NexthopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NexthopRegionID int
+
+	// 下一跳网络实例类型
+	NexthopType string
+
+	// 路由优先级
+	Priority int
+}
+
+/*
+SNetwork - 简洁版云联网网络实例
+*/
+type SNetwork struct {
+
+	//
+	CreateTime string
+
+	// 网络实例名称
+	Name string
+
+	// 网络实例的ID，如 vnet-xxxxx
+	NetworkID string
+
+	// 网络实例所在项目的ID
+	OrgID int
+
+	// 网络实例所在项目名
+	OrgName string
+
+	// 网络实例所在地域
+	Region string
+
+	// 网络实例所在地域ID
+	RegionID int
+
+	// 网络实例类型：VPC/HybridGW/...
+	Type string
+}
+
+/*
+SBwPackage - 简洁版带宽包
+*/
+type SBwPackage struct {
+
+	// 带宽值
+	BandWidth int
+
+	// 带宽包切换计费类型
+	ChangePayMode string
+
+	// 带宽包切换状态
+	ChangeStatus int
+
+	// 带宽包切换时间
+	ChangeTime int
+
+	// 创建时间
+	CreateTime int
+
+	// 过期时间
+	ExpireTime int
+
+	// 备注信息
+	Message string
+
+	//
+	Name string
+
+	//
+	PackageID string
+
+	// 智能路径Delay:最低时延｜IGP:普通线路｜TCO:最低成本
+	Path string
+
+	// 计费模式 FixedBw:固定带宽｜Peak95:经典95｜Max5:第五峰值｜Traffic:流量计费
+	PayMode string
+
+	// 服务质量Diamond:钻石｜Platinum:铂金｜Gold:黄金
+	Qos string
+
+	// 地域A名称
+	RegionA string
+
+	// 地域B名称
+	RegionB string
+
+	//
+	Remark string
+
+	//
+	UGNID string
 }
