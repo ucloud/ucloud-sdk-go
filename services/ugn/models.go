@@ -39,6 +39,54 @@ type InterRegionBandwidth struct {
 }
 
 /*
+UGN - 云联网信息
+*/
+type UGN struct {
+
+	// 绑定带宽包数量
+	BwPackageCount int
+
+	// 云联网创建时间
+	CreateTime int
+
+	// 云联网名称
+	Name string
+
+	// 关联网络实例数量
+	NetworkCount int
+
+	// 云联网备注
+	Remark string
+
+	// 云联网资源 ID
+	UGNID string
+}
+
+/*
+SimpleRoute - 简洁版云联网路由条目
+*/
+type SimpleRoute struct {
+
+	// 目的网段
+	DstAddr string
+
+	// 下一跳网络实例 ID
+	NextHopID string
+
+	// 下一跳网络实例所属地域
+	NextHopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NextHopRegionID int
+
+	// 下一跳网络实例类型
+	NextHopType string
+
+	// 路由优先级
+	Priority int
+}
+
+/*
 SimpleNetwork - 简洁版云联网网络实例
 */
 type SimpleNetwork struct {
@@ -117,54 +165,6 @@ type SimpleBwPackage struct {
 
 	//
 	UGNID string
-}
-
-/*
-UGN - 云联网信息
-*/
-type UGN struct {
-
-	// 绑定带宽包数量
-	BwPackageCount int
-
-	// 云联网创建时间
-	CreateTime int
-
-	// 云联网名称
-	Name string
-
-	// 关联网络实例数量
-	NetworkCount int
-
-	// 云联网备注
-	Remark string
-
-	// 云联网资源 ID
-	UGNID string
-}
-
-/*
-SimpleRoute - 简洁版云联网路由条目
-*/
-type SimpleRoute struct {
-
-	// 目的网段
-	DstAddr string
-
-	// 下一跳网络实例 ID
-	NextHopID string
-
-	// 下一跳网络实例所属地域
-	NextHopRegion string
-
-	// 下一跳网络实例所属地域 id
-	NextHopRegionID int
-
-	// 下一跳网络实例类型
-	NextHopType string
-
-	// 路由优先级
-	Priority int
 }
 
 /*

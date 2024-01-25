@@ -66,6 +66,15 @@ type ForwardTargetSet struct {
 }
 
 /*
+ForwardConfigSet - 转发服务节点相关配置
+*/
+type ForwardConfigSet struct {
+
+	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
+	Targets []ForwardTargetSet
+}
+
+/*
 PathConfigSet - 路径相关配置
 */
 type PathConfigSet struct {
@@ -87,12 +96,15 @@ type HostConfigSet struct {
 }
 
 /*
-ForwardConfigSet - 转发服务节点相关配置
+RuleAction - 转发动作
 */
-type ForwardConfigSet struct {
+type RuleAction struct {
 
-	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
-	Targets []ForwardTargetSet
+	// 转发服务节点相关配置。 具体结构详见 ForwardConfigSet
+	ForwardConfig ForwardConfigSet
+
+	// 动作类型。限定枚举值：Forward
+	Type string
 }
 
 /*
@@ -111,30 +123,33 @@ type RuleCondition struct {
 }
 
 /*
-RuleAction - 转发动作
+HealthCheckConfigSet - 健康检查相关配置
 */
-type RuleAction struct {
+type HealthCheckConfigSet struct {
 
-	// 转发服务节点相关配置。 具体结构详见 ForwardConfigSet
-	ForwardConfig ForwardConfigSet
+	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	Domain string
 
-	// 动作类型。限定枚举值：Forward
+	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	Enabled bool
+
+	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	Path string
+
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
 	Type string
 }
 
 /*
-StickinessConfigSet - 会话保持相关配置
+Certificate - （应用型专用）服务器证书信息
 */
-type StickinessConfigSet struct {
+type Certificate struct {
 
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
+	// 是否为默认证书
+	IsDefault bool
 
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
+	// 证书ID
+	SSLId string
 }
 
 /*
@@ -159,32 +174,17 @@ type Rule struct {
 }
 
 /*
-Certificate - （应用型专用）服务器证书信息
+StickinessConfigSet - 会话保持相关配置
 */
-type Certificate struct {
+type StickinessConfigSet struct {
 
-	// 是否为默认证书
-	IsDefault bool
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
 
-	// 证书ID
-	SSLId string
-}
-
-/*
-HealthCheckConfigSet - 健康检查相关配置
-*/
-type HealthCheckConfigSet struct {
-
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
-	Domain string
-
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
 	Enabled bool
 
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
 	Type string
 }
 
@@ -291,18 +291,6 @@ type Listener struct {
 }
 
 /*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
 AccessLogConfigSet - （应用型专用）访问日志相关配置
 */
 type AccessLogConfigSet struct {
@@ -315,6 +303,18 @@ type AccessLogConfigSet struct {
 
 	// （应用型专用）上传访问日志到bucket所需的token
 	US3TokenId string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -813,21 +813,6 @@ type ULBPolicySet struct {
 }
 
 /*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
-}
-
-/*
 ULBVServerSet - DescribeULB
 */
 type ULBVServerSet struct {
@@ -921,6 +906,21 @@ type ULBIPSet struct {
 
 	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
 	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*
