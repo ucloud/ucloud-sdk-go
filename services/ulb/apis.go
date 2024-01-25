@@ -3004,15 +3004,6 @@ type UpdateRuleAttributeParamRuleActionsForwardConfigTargets struct {
 }
 
 /*
-UpdateRuleAttributeParamRuleActionsForwardConfig is request schema for complex param
-*/
-type UpdateRuleAttributeParamRuleActionsForwardConfig struct {
-
-	//
-	Targets []UpdateRuleAttributeParamRuleActionsForwardConfigTargets `required:"false"`
-}
-
-/*
 UpdateRuleAttributeParamRuleConditionsPathConfig is request schema for complex param
 */
 type UpdateRuleAttributeParamRuleConditionsPathConfig struct {
@@ -3034,15 +3025,12 @@ type UpdateRuleAttributeParamRuleConditionsHostConfig struct {
 }
 
 /*
-UpdateRuleAttributeParamRuleActions is request schema for complex param
+UpdateRuleAttributeParamRuleActionsForwardConfig is request schema for complex param
 */
-type UpdateRuleAttributeParamRuleActions struct {
+type UpdateRuleAttributeParamRuleActionsForwardConfig struct {
 
 	//
-	ForwardConfig *UpdateRuleAttributeParamRuleActionsForwardConfig `required:"false"`
-
-	// 动作类型。限定枚举值："Forward"；RuleActions数组长度不为0时必填
-	Type *string `required:"false"`
+	Targets []UpdateRuleAttributeParamRuleActionsForwardConfigTargets `required:"false"`
 }
 
 /*
@@ -3057,6 +3045,18 @@ type UpdateRuleAttributeParamRuleConditions struct {
 	PathConfig *UpdateRuleAttributeParamRuleConditionsPathConfig `required:"false"`
 
 	// 匹配条件类型。限定枚举值："Host"/"Path"；RuleConditions数组长度不为0时必填
+	Type *string `required:"false"`
+}
+
+/*
+UpdateRuleAttributeParamRuleActions is request schema for complex param
+*/
+type UpdateRuleAttributeParamRuleActions struct {
+
+	//
+	ForwardConfig *UpdateRuleAttributeParamRuleActionsForwardConfig `required:"false"`
+
+	// 动作类型。限定枚举值："Forward"；RuleActions数组长度不为0时必填
 	Type *string `required:"false"`
 }
 
