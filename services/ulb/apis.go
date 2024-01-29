@@ -295,6 +295,21 @@ func (c *ULBClient) BindSSL(req *BindSSLRequest) (*BindSSLResponse, error) {
 }
 
 /*
+CreateListenerParamStickinessConfig is request schema for complex param
+*/
+type CreateListenerParamStickinessConfig struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效；限定字符长度：[0-255]
+	CookieName *string `required:"false"`
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现；默认值为：false
+	Enabled *bool `required:"false"`
+
+	// （应用型专用）Cookie处理方式。限定枚举值："ServerInsert" / "UserDefined"；默认值为：“ServerInsert”
+	Type *string `required:"false"`
+}
+
+/*
 CreateListenerParamHealthCheckConfig is request schema for complex param
 */
 type CreateListenerParamHealthCheckConfig struct {
@@ -309,21 +324,6 @@ type CreateListenerParamHealthCheckConfig struct {
 	Path *string `required:"false"`
 
 	// 健康检查方式。应用型限定取值：“Port”/"HTTP"，默认值：“Port”
-	Type *string `required:"false"`
-}
-
-/*
-CreateListenerParamStickinessConfig is request schema for complex param
-*/
-type CreateListenerParamStickinessConfig struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效；限定字符长度：[0-255]
-	CookieName *string `required:"false"`
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现；默认值为：false
-	Enabled *bool `required:"false"`
-
-	// （应用型专用）Cookie处理方式。限定枚举值："ServerInsert" / "UserDefined"；默认值为：“ServerInsert”
 	Type *string `required:"false"`
 }
 
@@ -2669,6 +2669,21 @@ func (c *ULBClient) UpdateBackendBatch(req *UpdateBackendBatchRequest) (*UpdateB
 }
 
 /*
+UpdateListenerAttributeParamStickinessConfig is request schema for complex param
+*/
+type UpdateListenerAttributeParamStickinessConfig struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效；限定字符长度：[0-255]
+	CookieName *string `required:"false"`
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现，网络型负载均衡则基于源IP，保证在对应的空闲超时时间内，同一个源IP送到同一个服务节点。默认值为：false
+	Enabled *bool `required:"false"`
+
+	// （应用型专用）Cookie处理方式。限定枚举值："ServerInsert" / "UserDefined"，默认值为：“ServerInsert”
+	Type *string `required:"false"`
+}
+
+/*
 UpdateListenerAttributeParamHealthCheckConfig is request schema for complex param
 */
 type UpdateListenerAttributeParamHealthCheckConfig struct {
@@ -2683,21 +2698,6 @@ type UpdateListenerAttributeParamHealthCheckConfig struct {
 	Path *string `required:"false"`
 
 	// 健康检查方式。应用型限定取值：“Port”/"HTTP"；默认值：“Port”
-	Type *string `required:"false"`
-}
-
-/*
-UpdateListenerAttributeParamStickinessConfig is request schema for complex param
-*/
-type UpdateListenerAttributeParamStickinessConfig struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效；限定字符长度：[0-255]
-	CookieName *string `required:"false"`
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现，网络型负载均衡则基于源IP，保证在对应的空闲超时时间内，同一个源IP送到同一个服务节点。默认值为：false
-	Enabled *bool `required:"false"`
-
-	// （应用型专用）Cookie处理方式。限定枚举值："ServerInsert" / "UserDefined"，默认值为：“ServerInsert”
 	Type *string `required:"false"`
 }
 
@@ -3004,6 +3004,15 @@ type UpdateRuleAttributeParamRuleActionsForwardConfigTargets struct {
 }
 
 /*
+UpdateRuleAttributeParamRuleActionsForwardConfig is request schema for complex param
+*/
+type UpdateRuleAttributeParamRuleActionsForwardConfig struct {
+
+	//
+	Targets []UpdateRuleAttributeParamRuleActionsForwardConfigTargets `required:"false"`
+}
+
+/*
 UpdateRuleAttributeParamRuleConditionsPathConfig is request schema for complex param
 */
 type UpdateRuleAttributeParamRuleConditionsPathConfig struct {
@@ -3025,12 +3034,15 @@ type UpdateRuleAttributeParamRuleConditionsHostConfig struct {
 }
 
 /*
-UpdateRuleAttributeParamRuleActionsForwardConfig is request schema for complex param
+UpdateRuleAttributeParamRuleActions is request schema for complex param
 */
-type UpdateRuleAttributeParamRuleActionsForwardConfig struct {
+type UpdateRuleAttributeParamRuleActions struct {
 
 	//
-	Targets []UpdateRuleAttributeParamRuleActionsForwardConfigTargets `required:"false"`
+	ForwardConfig *UpdateRuleAttributeParamRuleActionsForwardConfig `required:"false"`
+
+	// 动作类型。限定枚举值："Forward"；RuleActions数组长度不为0时必填
+	Type *string `required:"false"`
 }
 
 /*
@@ -3045,18 +3057,6 @@ type UpdateRuleAttributeParamRuleConditions struct {
 	PathConfig *UpdateRuleAttributeParamRuleConditionsPathConfig `required:"false"`
 
 	// 匹配条件类型。限定枚举值："Host"/"Path"；RuleConditions数组长度不为0时必填
-	Type *string `required:"false"`
-}
-
-/*
-UpdateRuleAttributeParamRuleActions is request schema for complex param
-*/
-type UpdateRuleAttributeParamRuleActions struct {
-
-	//
-	ForwardConfig *UpdateRuleAttributeParamRuleActionsForwardConfig `required:"false"`
-
-	// 动作类型。限定枚举值："Forward"；RuleActions数组长度不为0时必填
 	Type *string `required:"false"`
 }
 

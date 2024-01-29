@@ -66,15 +66,6 @@ type ForwardTargetSet struct {
 }
 
 /*
-ForwardConfigSet - 转发服务节点相关配置
-*/
-type ForwardConfigSet struct {
-
-	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
-	Targets []ForwardTargetSet
-}
-
-/*
 PathConfigSet - 路径相关配置
 */
 type PathConfigSet struct {
@@ -96,15 +87,12 @@ type HostConfigSet struct {
 }
 
 /*
-RuleAction - 转发动作
+ForwardConfigSet - 转发服务节点相关配置
 */
-type RuleAction struct {
+type ForwardConfigSet struct {
 
-	// 转发服务节点相关配置。 具体结构详见 ForwardConfigSet
-	ForwardConfig ForwardConfigSet
-
-	// 动作类型。限定枚举值：Forward
-	Type string
+	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
+	Targets []ForwardTargetSet
 }
 
 /*
@@ -123,20 +111,14 @@ type RuleCondition struct {
 }
 
 /*
-HealthCheckConfigSet - 健康检查相关配置
+RuleAction - 转发动作
 */
-type HealthCheckConfigSet struct {
+type RuleAction struct {
 
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
-	Domain string
+	// 转发服务节点相关配置。 具体结构详见 ForwardConfigSet
+	ForwardConfig ForwardConfigSet
 
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
-	Enabled bool
-
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
+	// 动作类型。限定枚举值：Forward
 	Type string
 }
 
@@ -153,38 +135,20 @@ type Certificate struct {
 }
 
 /*
-Rule - （应用型专用）转发规则信息
+HealthCheckConfigSet - 健康检查相关配置
 */
-type Rule struct {
+type HealthCheckConfigSet struct {
 
-	// 是否为默认转发规则
-	IsDefault bool
+	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	Domain string
 
-	// 当转发的服务节点为空时，规则是否忽略
-	Pass bool
-
-	// 转发动作。具体规则详见RuleAction
-	RuleActions []RuleAction
-
-	// 转发规则匹配条件。具体结构详见 RuleCondition
-	RuleConditions []RuleCondition
-
-	// 转发规则的ID
-	RuleId string
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
 	Enabled bool
 
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	Path string
+
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
 	Type string
 }
 
@@ -228,6 +192,42 @@ type Target struct {
 
 	// 服务节点的权重。仅在加权轮询算法时有效
 	Weight int
+}
+
+/*
+StickinessConfigSet - 会话保持相关配置
+*/
+type StickinessConfigSet struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
+}
+
+/*
+Rule - （应用型专用）转发规则信息
+*/
+type Rule struct {
+
+	// 是否为默认转发规则
+	IsDefault bool
+
+	// 当转发的服务节点为空时，规则是否忽略
+	Pass bool
+
+	// 转发动作。具体规则详见RuleAction
+	RuleActions []RuleAction
+
+	// 转发规则匹配条件。具体结构详见 RuleCondition
+	RuleConditions []RuleCondition
+
+	// 转发规则的ID
+	RuleId string
 }
 
 /*
@@ -291,33 +291,6 @@ type Listener struct {
 }
 
 /*
-AccessLogConfigSet - （应用型专用）访问日志相关配置
-*/
-type AccessLogConfigSet struct {
-
-	// （应用型专用）是否开启访问日志记录功能
-	Enabled bool
-
-	// （应用型专用）用于存储访问日志的bucket
-	US3BucketName string
-
-	// （应用型专用）上传访问日志到bucket所需的token
-	US3TokenId string
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
 IPInfo - 绑定的IP信息
 */
 type IPInfo struct {
@@ -342,6 +315,33 @@ type IPInfo struct {
 
 	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
 	OperatorName string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
+}
+
+/*
+AccessLogConfigSet - （应用型专用）访问日志相关配置
+*/
+type AccessLogConfigSet struct {
+
+	// （应用型专用）是否开启访问日志记录功能
+	Enabled bool
+
+	// （应用型专用）用于存储访问日志的bucket
+	US3BucketName string
+
+	// （应用型专用）上传访问日志到bucket所需的token
+	US3TokenId string
 }
 
 /*
@@ -708,6 +708,60 @@ type PolicyBackendSet struct {
 }
 
 /*
+ULBPolicySet - 内容转发详细列表
+*/
+type ULBPolicySet struct {
+
+	// 内容转发下rs的详细信息，参考PolicyBackendSet
+	BackendSet []PolicyBackendSet
+
+	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode string
+
+	// 内容转发匹配字段;默认内容转发类型下为空。
+	Match string
+
+	// 内容转发Id，默认内容转发类型下为空。
+	PolicyId string
+
+	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
+	PolicyPriority int
+
+	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
+	PolicyType string
+
+	// 默认内容转发类型下返回当前rs总数
+	TotalCount int
+
+	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
+	Type string
+
+	// 所属VServerId
+	VServerId string
+}
+
+/*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -756,60 +810,6 @@ type ULBBackendSet struct {
 
 	// 后端RS权重（在加权轮询算法下有效）
 	Weight int
-}
-
-/*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
-ULBPolicySet - 内容转发详细列表
-*/
-type ULBPolicySet struct {
-
-	// 内容转发下rs的详细信息，参考PolicyBackendSet
-	BackendSet []PolicyBackendSet
-
-	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
-	DomainMatchMode string
-
-	// 内容转发匹配字段;默认内容转发类型下为空。
-	Match string
-
-	// 内容转发Id，默认内容转发类型下为空。
-	PolicyId string
-
-	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
-	PolicyPriority int
-
-	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
-	PolicyType string
-
-	// 默认内容转发类型下返回当前rs总数
-	TotalCount int
-
-	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
-	Type string
-
-	// 所属VServerId
-	VServerId string
 }
 
 /*
@@ -888,6 +888,21 @@ type ULBVServerSet struct {
 }
 
 /*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
+}
+
+/*
 ULBIPSet - DescribeULB
 */
 type ULBIPSet struct {
@@ -906,21 +921,6 @@ type ULBIPSet struct {
 
 	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
 	OperatorName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
 }
 
 /*
