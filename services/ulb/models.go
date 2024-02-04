@@ -123,15 +123,18 @@ type RuleAction struct {
 }
 
 /*
-Certificate - （应用型专用）服务器证书信息
+StickinessConfigSet - 会话保持相关配置
 */
-type Certificate struct {
+type StickinessConfigSet struct {
 
-	// 是否为默认证书
-	IsDefault bool
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
 
-	// 证书ID
-	SSLId string
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
 }
 
 /*
@@ -150,6 +153,39 @@ type HealthCheckConfigSet struct {
 
 	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
 	Type string
+}
+
+/*
+Rule - （应用型专用）转发规则信息
+*/
+type Rule struct {
+
+	// 是否为默认转发规则
+	IsDefault bool
+
+	// 当转发的服务节点为空时，规则是否忽略
+	Pass bool
+
+	// 转发动作。具体规则详见RuleAction
+	RuleActions []RuleAction
+
+	// 转发规则匹配条件。具体结构详见 RuleCondition
+	RuleConditions []RuleCondition
+
+	// 转发规则的ID
+	RuleId string
+}
+
+/*
+Certificate - （应用型专用）服务器证书信息
+*/
+type Certificate struct {
+
+	// 是否为默认证书
+	IsDefault bool
+
+	// 证书ID
+	SSLId string
 }
 
 /*
@@ -192,42 +228,6 @@ type Target struct {
 
 	// 服务节点的权重。仅在加权轮询算法时有效
 	Weight int
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
-}
-
-/*
-Rule - （应用型专用）转发规则信息
-*/
-type Rule struct {
-
-	// 是否为默认转发规则
-	IsDefault bool
-
-	// 当转发的服务节点为空时，规则是否忽略
-	Pass bool
-
-	// 转发动作。具体规则详见RuleAction
-	RuleActions []RuleAction
-
-	// 转发规则匹配条件。具体结构详见 RuleCondition
-	RuleConditions []RuleCondition
-
-	// 转发规则的ID
-	RuleId string
 }
 
 /*
@@ -318,18 +318,6 @@ type IPInfo struct {
 }
 
 /*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
 AccessLogConfigSet - （应用型专用）访问日志相关配置
 */
 type AccessLogConfigSet struct {
@@ -342,6 +330,18 @@ type AccessLogConfigSet struct {
 
 	// （应用型专用）上传访问日志到bucket所需的token
 	US3TokenId string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -813,6 +813,27 @@ type ULBBackendSet struct {
 }
 
 /*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
 ULBVServerSet - DescribeULB
 */
 type ULBVServerSet struct {
@@ -900,27 +921,6 @@ type LoggerSet struct {
 
 	// bucket的token名称
 	TokenName string
-}
-
-/*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
 }
 
 /*
