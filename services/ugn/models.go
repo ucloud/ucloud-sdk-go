@@ -39,54 +39,6 @@ type InterRegionBandwidth struct {
 }
 
 /*
-UGN - 云联网信息
-*/
-type UGN struct {
-
-	// 绑定带宽包数量
-	BwPackageCount int
-
-	// 云联网创建时间
-	CreateTime int
-
-	// 云联网名称
-	Name string
-
-	// 关联网络实例数量
-	NetworkCount int
-
-	// 云联网备注
-	Remark string
-
-	// 云联网资源 ID
-	UGNID string
-}
-
-/*
-SimpleRoute - 简洁版云联网路由条目
-*/
-type SimpleRoute struct {
-
-	// 目的网段
-	DstAddr string
-
-	// 下一跳网络实例 ID
-	NextHopID string
-
-	// 下一跳网络实例所属地域
-	NextHopRegion string
-
-	// 下一跳网络实例所属地域 id
-	NextHopRegionID int
-
-	// 下一跳网络实例类型
-	NextHopType string
-
-	// 路由优先级
-	Priority int
-}
-
-/*
 SimpleNetwork - 简洁版云联网网络实例
 */
 type SimpleNetwork struct {
@@ -165,6 +117,54 @@ type SimpleBwPackage struct {
 
 	//
 	UGNID string
+}
+
+/*
+UGN - 云联网信息
+*/
+type UGN struct {
+
+	// 绑定带宽包数量
+	BwPackageCount int
+
+	// 云联网创建时间
+	CreateTime int
+
+	// 云联网名称
+	Name string
+
+	// 关联网络实例数量
+	NetworkCount int
+
+	// 云联网备注
+	Remark string
+
+	// 云联网资源 ID
+	UGNID string
+}
+
+/*
+SimpleRoute - 简洁版云联网路由条目
+*/
+type SimpleRoute struct {
+
+	// 目的网段
+	DstAddr string
+
+	// 下一跳网络实例 ID
+	NextHopID string
+
+	// 下一跳网络实例所属地域
+	NextHopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NextHopRegionID int
+
+	// 下一跳网络实例类型
+	NextHopType string
+
+	// 路由优先级
+	Priority int
 }
 
 /*
@@ -249,60 +249,6 @@ type RouteRule struct {
 }
 
 /*
-Route - 云联网路由条目
-*/
-type Route struct {
-
-	// 目的网段
-	DstAddr string
-
-	// 下一跳网络实例 ID
-	NexthopID string
-
-	// 下一跳网络实例所属地域
-	NexthopRegion string
-
-	// 下一跳网络实例所属地域 id
-	NexthopRegionID int
-
-	// 下一跳网络实例类型
-	NexthopType string
-
-	// 路由优先级
-	Priority int
-}
-
-/*
-SNetwork - 简洁版云联网网络实例
-*/
-type SNetwork struct {
-
-	//
-	CreateTime string
-
-	// 网络实例名称
-	Name string
-
-	// 网络实例的ID，如 vnet-xxxxx
-	NetworkID string
-
-	// 网络实例所在项目的ID
-	OrgID int
-
-	// 网络实例所在项目名
-	OrgName string
-
-	// 网络实例所在地域
-	Region string
-
-	// 网络实例所在地域ID
-	RegionID int
-
-	// 网络实例类型：VPC/HybridGW/...
-	Type string
-}
-
-/*
 SBwPackage - 简洁版带宽包
 */
 type SBwPackage struct {
@@ -354,4 +300,58 @@ type SBwPackage struct {
 
 	//
 	UGNID string
+}
+
+/*
+Route - 云联网路由条目
+*/
+type Route struct {
+
+	// 目的网段
+	DstAddr string
+
+	// 下一跳网络实例 ID
+	NexthopID string
+
+	// 下一跳网络实例所属地域
+	NexthopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NexthopRegionID int
+
+	// 下一跳网络实例类型
+	NexthopType string
+
+	// 路由优先级
+	Priority int
+}
+
+/*
+SNetwork - 简洁版云联网网络实例
+*/
+type SNetwork struct {
+
+	//
+	CreateTime string
+
+	// 网络实例名称
+	Name string
+
+	// 网络实例的ID，如 vnet-xxxxx
+	NetworkID string
+
+	// 网络实例所在项目的ID
+	OrgID int
+
+	// 网络实例所在项目名
+	OrgName string
+
+	// 网络实例所在地域
+	Region string
+
+	// 网络实例所在地域ID
+	RegionID int
+
+	// 网络实例类型：VPC/HybridGW/...
+	Type string
 }

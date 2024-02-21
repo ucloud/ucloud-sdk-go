@@ -65,6 +65,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/ufs"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
+	"github.com/ucloud/ucloud-sdk-go/services/umongodb"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
 )
 
@@ -209,6 +210,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UMem", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return umem.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UMongoDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return umongodb.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UNVS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return unvs.NewClient(&cfg, &credential), nil
