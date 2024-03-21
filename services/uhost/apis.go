@@ -262,18 +262,6 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *int `required:"false"`
-}
-
-/*
 CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterface struct {
@@ -286,15 +274,15 @@ type CreateUHostInstanceParamNetworkInterface struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamSecGroupId is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
+type CreateUHostInstanceParamSecGroupId struct {
 
-	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
 
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
 }
 
 /*
@@ -304,6 +292,18 @@ type CreateUHostInstanceParamFeatures struct {
 
 	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
 	UNI *bool `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+
+	// 【该字段已废弃，请谨慎使用】
+	CouponId *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	IsBoot *string `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action

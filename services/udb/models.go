@@ -48,6 +48,18 @@ type UDBBackupSet struct {
 }
 
 /*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
+}
+
+/*
 UDBSlaveInstanceSet - DescribeUDBSlaveInstance
 */
 type UDBSlaveInstanceSet struct {
@@ -171,18 +183,6 @@ type UDBSlaveInstanceSet struct {
 
 	// 可用区
 	Zone string
-}
-
-/*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
 }
 
 /*
@@ -504,4 +504,31 @@ type ConnNumMap struct {
 
 	// 该Ip连接数
 	Num int
+}
+
+/*
+TableData - 用户表详情
+*/
+type TableData struct {
+
+	// 表所属的库名称
+	DBName string
+
+	// 表的引擎（innodb, myisam）
+	Engine string
+
+	// 表名称
+	TableName string
+}
+
+/*
+UDBDatabaseData - 某个库的详细信息
+*/
+type UDBDatabaseData struct {
+
+	// 数据库名称
+	DBName string
+
+	// 该库所有的表集合
+	TableDataSet []TableData
 }

@@ -39,30 +39,6 @@ type InterRegionBandwidth struct {
 }
 
 /*
-UGN - 云联网信息
-*/
-type UGN struct {
-
-	// 绑定带宽包数量
-	BwPackageCount int
-
-	// 云联网创建时间
-	CreateTime int
-
-	// 云联网名称
-	Name string
-
-	// 关联网络实例数量
-	NetworkCount int
-
-	// 云联网备注
-	Remark string
-
-	// 云联网资源 ID
-	UGNID string
-}
-
-/*
 SimpleRoute - 简洁版云联网路由条目
 */
 type SimpleRoute struct {
@@ -164,6 +140,30 @@ type SimpleBwPackage struct {
 	Remark string
 
 	//
+	UGNID string
+}
+
+/*
+UGN - 云联网信息
+*/
+type UGN struct {
+
+	// 绑定带宽包数量
+	BwPackageCount int
+
+	// 云联网创建时间
+	CreateTime int
+
+	// 云联网名称
+	Name string
+
+	// 关联网络实例数量
+	NetworkCount int
+
+	// 云联网备注
+	Remark string
+
+	// 云联网资源 ID
 	UGNID string
 }
 
