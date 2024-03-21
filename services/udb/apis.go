@@ -2967,6 +2967,56 @@ func (c *UDBClient) GetUDBInstanceSSLCertURL(req *GetUDBInstanceSSLCertURLReques
 	return &res, nil
 }
 
+// ListUDBUserTablesRequest is request schema for ListUDBUserTables action
+type ListUDBUserTablesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// udb实例的ID
+	DBId *string `required:"true"`
+}
+
+// ListUDBUserTablesResponse is response schema for ListUDBUserTables action
+type ListUDBUserTablesResponse struct {
+	response.CommonBase
+
+	// 用户库表的集合
+	Tables []UDBDatabaseData
+}
+
+// NewListUDBUserTablesRequest will create request of ListUDBUserTables action.
+func (c *UDBClient) NewListUDBUserTablesRequest() *ListUDBUserTablesRequest {
+	req := &ListUDBUserTablesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUDBUserTables
+
+查看udb实例所有的用户表集合 （只包括引擎为innodb和myisam的表）
+*/
+func (c *UDBClient) ListUDBUserTables(req *ListUDBUserTablesRequest) (*ListUDBUserTablesResponse, error) {
+	var err error
+	var res ListUDBUserTablesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUDBUserTables", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ModifyUDBInstanceNameRequest is request schema for ModifyUDBInstanceName action
 type ModifyUDBInstanceNameRequest struct {
 	request.CommonBase

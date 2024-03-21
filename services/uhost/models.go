@@ -27,21 +27,18 @@ type KeyPair struct {
 }
 
 /*
-BootDiskInfo - 系统盘信息
+FeatureModes - 可以支持的模式类别
 */
-type BootDiskInfo struct {
+type FeatureModes struct {
 
-	// 磁盘可支持的服务
-	Features []string
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
 
-	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
-	InstantResize bool
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	// 模式|特性名称
 	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
 }
 
 /*
@@ -63,6 +60,24 @@ type DataDiskInfo struct {
 }
 
 /*
+BootDiskInfo - 系统盘信息
+*/
+type BootDiskInfo struct {
+
+	// 磁盘可支持的服务
+	Features []string
+
+	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
+	InstantResize bool
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
 Collection - CPU和内存可支持的规格
 */
 type Collection struct {
@@ -78,21 +93,6 @@ type Collection struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
 GraphicsMemory - GPU的显存指标
 */
 type GraphicsMemory struct {
@@ -102,6 +102,18 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
 }
 
 /*
@@ -135,18 +147,6 @@ type CpuPlatforms struct {
 }
 
 /*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
 Performance - GPU的性能指标
 */
 type Performance struct {
@@ -159,15 +159,15 @@ type Performance struct {
 }
 
 /*
-Features - 虚机可支持的特性
+MachineSizes - GPU、CPU和内存信息
 */
-type Features struct {
+type MachineSizes struct {
 
-	// 可以提供的模式类别
-	Modes []FeatureModes
+	// CPU和内存可支持的规格
+	Collection []Collection
 
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
 }
 
 /*
@@ -214,7 +214,7 @@ type UHostImageSet struct {
 	// 创建时间，格式为Unix时间戳
 	CreateTime int
 
-	// 特殊状态标识， 目前包含NetEnhnced（网络增强1.0）, NetEnhanced_Ultra（网络增强2.0）, HotPlug(热升级), GPU（GPU镜像）,CloudInit, IPv6（支持IPv6网络）,RssdAttachable（支持RSSD云盘）,Vgpu_AMD（支持AMD的vgpu）,Vgpu_NVIDIA（支持NVIDIA的vgpu）,Aarch64_Type（支持arm64架构）
+	// 特殊状态标识，目前包含NetEnhnced（网络增强1.0）, NetEnhanced_Ultra（网络增强2.0）, NetEnhanced_Extreme（网络增强3.0）, HotPlug(热升级), GPU（GPU镜像）,CloudInit, IPv6（支持IPv6网络）,RssdAttachable（支持RSSD云盘）,Vgpu_AMD（支持AMD的vgpu）,Vgpu_NVIDIA（支持NVIDIA的vgpu）,Aarch64_Type（支持arm64架构）
 	Features []string
 
 	// 行业镜像类型（仅行业镜像将返回这个值）
@@ -300,6 +300,15 @@ type IsolationGroup struct {
 }
 
 /*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
 UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
 type UDSetUDHostAttribute struct {
@@ -312,15 +321,6 @@ type UDSetUDHostAttribute struct {
 
 	// 私有专区
 	UDSetId string
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
 }
 
 /*
