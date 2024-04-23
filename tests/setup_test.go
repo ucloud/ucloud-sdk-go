@@ -56,6 +56,7 @@ import (
 
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
+	"github.com/ucloud/ucloud-sdk-go/services/label"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
 	"github.com/ucloud/ucloud-sdk-go/services/ubox"
@@ -152,6 +153,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("ISMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return isms.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("Label", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return label.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("PathX", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return pathx.NewClient(&cfg, &credential), nil

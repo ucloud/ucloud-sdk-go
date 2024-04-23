@@ -386,6 +386,12 @@ type ListResourcesByLabelsRequest struct {
 // ListResourcesByLabelsResponse is response schema for ListResourcesByLabels action
 type ListResourcesByLabelsResponse struct {
 	response.CommonBase
+
+	// 资源列表
+	Resources []ListResourcesByLabelsResource
+
+	// 资源总数
+	TotalCount int
 }
 
 // NewListResourcesByLabelsRequest will create request of ListResourcesByLabels action.
