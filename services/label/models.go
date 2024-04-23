@@ -52,3 +52,42 @@ type ListProjectsByLabelsProject struct {
 	// 资源类型列表
 	ResourceTypes []string
 }
+
+/*
+ListResourcesByLabelsLabel - 标签
+*/
+type ListResourcesByLabelsLabel struct {
+
+	// 标签类型，system：系统标签；custom：自定义标签
+	Category string
+
+	// 标签键
+	Key string
+
+	// 标签值
+	Value string
+}
+
+/*
+ListResourcesByLabelsResource - 资源标签绑定的资源信息
+*/
+type ListResourcesByLabelsResource struct {
+
+	// 标签数组
+	Labels []ListResourcesByLabelsLabel
+
+	// 项目id
+	ProjectId string
+
+	// 项目名称
+	ProjectName string
+
+	// 资源id
+	ResourceId string
+
+	// 资源名称
+	ResourceName string
+
+	// 资源类型
+	ResourceType string
+}
