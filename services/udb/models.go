@@ -48,18 +48,6 @@ type UDBBackupSet struct {
 }
 
 /*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
-}
-
-/*
 UDBSlaveInstanceSet - DescribeUDBSlaveInstance
 */
 type UDBSlaveInstanceSet struct {
@@ -186,6 +174,18 @@ type UDBSlaveInstanceSet struct {
 }
 
 /*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
+}
+
+/*
 UDBInstanceSet - DescribeUDBInstance
 */
 type UDBInstanceSet struct {
@@ -213,6 +213,9 @@ type UDBInstanceSet struct {
 
 	// 跨可用区高可用备库所在可用区
 	BackupZone string
+
+	// CPU核数
+	CPU int
 
 	// 0区分大小写, 1不分区
 	CaseSensitivityParam int
