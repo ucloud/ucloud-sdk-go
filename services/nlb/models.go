@@ -7,11 +7,17 @@ Target - 服务节点信息
 */
 type Target struct {
 
+	// 服务节点是否开启
+	Enabled bool
+
 	// 服务节点的标识 ID说明：添加服务节点的时候无需传更新服务节点属性时必传
 	Id string
 
 	// 服务节点的端口
 	Port int
+
+	// 服务节点所在地域
+	Region string
 
 	// 服务节点的IP。在IP类型时，必传
 	ResourceIP string
