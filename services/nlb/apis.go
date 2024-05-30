@@ -14,8 +14,14 @@ AddNLBTargetsParamTargets is request schema for complex param
 */
 type AddNLBTargetsParamTargets struct {
 
+	// 服务节点是否启用
+	Enabled *bool `required:"false"`
+
 	// 服务节点的端口，限定取值：[1-65535]
 	Port *int `required:"false"`
+
+	// 服务节点所在地域
+	Region *string `required:"false"`
 
 	// 服务节点的IP。在IP类型时，必传
 	ResourceIP *string `required:"false"`
