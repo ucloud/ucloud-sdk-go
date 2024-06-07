@@ -187,6 +187,9 @@ type BillDetailItem struct {
 	// 资源标识
 	ResourceExtendInfo []ResourceExtendInfo
 
+	// 资源标签
+	ResourceLabel map[string]string
+
 	// 资源ID
 	ResourceId string
 
