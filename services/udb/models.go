@@ -140,7 +140,7 @@ type UDBSlaveInstanceSet struct {
 	SSDType string
 
 	// 实例计算规格类型，0或不传代表使用内存方式购买，1代表使用内存-cpu可选配比方式购买，需要填写MachineType
-	SpecificationType string
+	SpecificationType int
 
 	// 对mysql的slave而言是master的DBId，对master则为空， 对mongodb则是副本集id
 	SrcDBId string

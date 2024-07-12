@@ -3431,6 +3431,9 @@ type ResizeUDBInstanceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// 数据库的CPU核数（只对普通版的SQLServer有用）
+	CPU *int `required:"false"`
+
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
