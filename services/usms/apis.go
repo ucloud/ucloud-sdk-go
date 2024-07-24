@@ -176,7 +176,7 @@ type CreateUSMSTemplateRequest struct {
 	// 短信模板名称，不超过32个字符，每个中文、符号、英文、数字等都计为1个字。
 	TemplateName *string `required:"true"`
 
-	// 当Purpose为3时，也即会员推广类短信模板，该项必填。枚举值：TD退订、回T退订、回N退订、回TD退订、退订回T、退订回D、退订回TD、退订回复T、退订回复D、退订回复N、退订回复TD、拒收回T
+	// 当Purpose=3并且International=false时，也即国内会员推广类短信模板，该项必填。枚举值：【拒收请回复R】
 	UnsubscribeInfo *string `required:"false"`
 }
 
@@ -374,6 +374,89 @@ func (c *USMSClient) GetUSMSSendReceipt(req *GetUSMSSendReceiptRequest) (*GetUSM
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUSMSSendReceipt", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUSMSSendStatisticsRequest is request schema for GetUSMSSendStatistics action
+type GetUSMSSendStatisticsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID，不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 国际简码，如CN表示中国，当需要查询多个国家时，使用-分割，如CN-ID。
+	BrevityCode *string `required:"false"`
+
+	// 国内标记，0-国际短信 1-国内短信
+	Domestic *int `required:"true"`
+
+	// 结束日期，格式为YYYY-MM-DD
+	EndDate *string `required:"true"`
+
+	// 每页记录个数
+	NumPerPage *int `required:"true"`
+
+	// 排序字段，如BrevityCode表示按照BrevityCode排列，配合OrderType使用。目前支持SendDate、BrevityCode
+	OrderBy *string `required:"true"`
+
+	// 排序方式，asc-正序 desc-倒序
+	OrderType *string `required:"true"`
+
+	// 页编号，从0开始
+	Page *int `required:"true"`
+
+	// 短信类型，1-验证码 2-通知类 3-营销类
+	Purpose *int `required:"false"`
+
+	// 开始日期，格式为YYYY-MM-DD
+	StartDate *string `required:"true"`
+}
+
+// GetUSMSSendStatisticsResponse is response schema for GetUSMSSendStatistics action
+type GetUSMSSendStatisticsResponse struct {
+	response.CommonBase
+
+	// 以天为统计维度的发送数据统计集合，每天的统计数据字段详见StatisticsDataInfo模型
+	Data []StatisticsDataInfo
+
+	// 描述信息
+	Message string
+
+	// 符合查询条件的发送数据统计求和集，具体字段信息见StatisticsData模型
+	StatisticsData StatisticsData
+
+	// 返回记录数
+	Total int
+}
+
+// NewGetUSMSSendStatisticsRequest will create request of GetUSMSSendStatistics action.
+func (c *USMSClient) NewGetUSMSSendStatisticsRequest() *GetUSMSSendStatisticsRequest {
+	req := &GetUSMSSendStatisticsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUSMSSendStatistics
+
+获取发送统计数据
+*/
+func (c *USMSClient) GetUSMSSendStatistics(req *GetUSMSSendStatisticsRequest) (*GetUSMSSendStatisticsResponse, error) {
+	var err error
+	var res GetUSMSSendStatisticsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUSMSSendStatistics", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

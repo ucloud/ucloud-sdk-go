@@ -42,6 +42,90 @@ type ReceiptPerSession struct {
 }
 
 /*
+StatisticsData - 统计信息
+*/
+type StatisticsData struct {
+
+	// 发送失败数（拆分条数）
+	FailCostCount int
+
+	// 发送失败数（提交条数）
+	FailCount int
+
+	// 发送总数（拆分条数）
+	SendCostCount int
+
+	// 发送总数（提交条数）
+	SendCount int
+
+	// 提交失败数（拆分条数）
+	SubmitFailCostCount int
+
+	// 提交失败数（提交条数）
+	SubmitFailCount int
+
+	// 发送成功数（拆分条数）
+	SuccessCostCount int
+
+	// 发送成功数（提交条数）
+	SuccessCount int
+
+	// 状态未知数（拆分条数）
+	UnknownCostCount int
+
+	// 状态未知数（提交条数）
+	UnknownCount int
+}
+
+/*
+StatisticsDataInfo - 统计信息按天聚合
+*/
+type StatisticsDataInfo struct {
+
+	// 国际/地区标识码
+	BrevityCode string
+
+	// 发送总数（拆分条数）
+	CostCount int
+
+	// 发送总数（提交条数）
+	Count int
+
+	// 发送失败数（拆分条数）
+	FailedCostCount int
+
+	// 发送失败数（提交条数）
+	FailedCount int
+
+	// 发送时间
+	SendDate string
+
+	// 提交失败数（拆分条数）
+	SubmitFailedCostCount int
+
+	// 提交失败数（提交条数）
+	SubmitFailedCount int
+
+	// 发送成功数（拆分条数）
+	SuccessCostCount int
+
+	// 发送成功数（提交条数）
+	SuccessCount int
+
+	// 发送成功率
+	SuccessRate float64
+
+	// 状态未知数（拆分条数）
+	UnknownCostCount int
+
+	// 状态未知数（提交条数）
+	UnknownCount int
+
+	// UserId
+	UserId string
+}
+
+/*
 OutSignature - 短信签名
 */
 type OutSignature struct {
