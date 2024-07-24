@@ -117,21 +117,6 @@ type Features struct {
 }
 
 /*
-Disks - 磁盘信息
-*/
-type Disks struct {
-
-	// 系统盘信息
-	BootDisk []BootDiskInfo
-
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
-	Name string
-}
-
-/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -168,6 +153,21 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	Name string
 }
 
 /*
@@ -303,27 +303,6 @@ type IsolationGroup struct {
 }
 
 /*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -393,6 +372,27 @@ type UHostDiskSet struct {
 
 	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*
