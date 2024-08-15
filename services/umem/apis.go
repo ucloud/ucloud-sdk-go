@@ -1549,6 +1549,15 @@ func (c *UMemClient) DescribeUMemcachePrice(req *DescribeUMemcachePriceRequest) 
 type DescribeUMemcacheUpgradePriceRequest struct {
 	request.CommonBase
 
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
 	// 需要升级的空间的GroupId,请参考DescribeUMemcacheGroup接口
 	GroupId *string `required:"true"`
 
@@ -1560,8 +1569,14 @@ type DescribeUMemcacheUpgradePriceRequest struct {
 type DescribeUMemcacheUpgradePriceResponse struct {
 	response.CommonBase
 
-	// 价格，单位：元
-	Price float64
+	// 列表价格
+	ListPrice int
+
+	// 原价
+	OriginalPrice int
+
+	// 价格
+	Price int
 }
 
 // NewDescribeUMemcacheUpgradePriceRequest will create request of DescribeUMemcacheUpgradePrice action.
