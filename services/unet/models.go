@@ -78,18 +78,18 @@ type UnetBandwidthUsageEIPSet struct {
 }
 
 /*
-EIPBinding - EIP绑定内网IP关系数据
+ShareBandwidthSet - DescribeEIP
 */
-type EIPBinding struct {
+type ShareBandwidthSet struct {
 
-	// 外网ip
-	EIP string
+	// 共享带宽带宽值
+	ShareBandwidth int
 
-	// 内网ip
-	PrivateIP string
+	// 共享带宽ID
+	ShareBandwidthId string
 
-	// 内网ip类型：PrimaryIP（默认）、SecondaryIP（非默认）
-	PrivateIPType string
+	// 共享带宽的资源名称
+	ShareBandwidthName string
 }
 
 /*
@@ -123,18 +123,18 @@ type UnetEIPResourceSet struct {
 }
 
 /*
-ShareBandwidthSet - DescribeEIP
+EIPBinding - EIP绑定内网IP关系数据
 */
-type ShareBandwidthSet struct {
+type EIPBinding struct {
 
-	// 共享带宽带宽值
-	ShareBandwidth int
+	// 外网ip
+	EIP string
 
-	// 共享带宽ID
-	ShareBandwidthId string
+	// 内网ip
+	PrivateIP string
 
-	// 共享带宽的资源名称
-	ShareBandwidthName string
+	// 内网ip类型：PrimaryIP（默认）、SecondaryIP（非默认）
+	PrivateIPType string
 }
 
 /*

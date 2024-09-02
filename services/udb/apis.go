@@ -646,8 +646,8 @@ type CreateUDBInstanceRequest struct {
 	// UDB实例模式类型, 可选值如下: "Normal": 普通版UDB实例 "HA": 高可用版UDB实例 默认是"Normal"
 	InstanceMode *string `required:"false"`
 
-	// 【该字段已废弃，请谨慎使用】
-	InstanceType *string `required:"false" deprecated:"true"`
+	// UDB数据库机型: "SATA_SSD": "SSD机型" , "PCIE_SSD": "SSD高性能机型" , "Normal_Volume": "标准大容量机型", "SATA_SSD_Volume": "SSD大容量机型" , "PCIE_SSD_Volume": "SSD高性能大容量机型", "NVMe_SSD": "快杰机型"
+	InstanceType *string `required:"false"`
 
 	// 规格类型ID,当SpecificationType为1时有效
 	MachineType *string `required:"false"`
