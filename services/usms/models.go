@@ -42,6 +42,42 @@ type ReceiptPerSession struct {
 }
 
 /*
+StatisticsData - 统计信息
+*/
+type StatisticsData struct {
+
+	// 发送失败数（拆分条数）
+	FailCostCount int
+
+	// 发送失败数（提交条数）
+	FailCount int
+
+	// 发送总数（拆分条数）
+	SendCostCount int
+
+	// 发送总数（提交条数）
+	SendCount int
+
+	// 提交失败数（拆分条数）
+	SubmitFailCostCount int
+
+	// 提交失败数（提交条数）
+	SubmitFailCount int
+
+	// 发送成功数（拆分条数）
+	SuccessCostCount int
+
+	// 发送成功数（提交条数）
+	SuccessCount int
+
+	// 状态未知数（拆分条数）
+	UnknownCostCount int
+
+	// 状态未知数（提交条数）
+	UnknownCount int
+}
+
+/*
 StatisticsDataInfo - 统计信息按天聚合
 */
 type StatisticsDataInfo struct {
@@ -87,42 +123,6 @@ type StatisticsDataInfo struct {
 
 	// UserId
 	UserId string
-}
-
-/*
-StatisticsData - 统计信息
-*/
-type StatisticsData struct {
-
-	// 发送失败数（拆分条数）
-	FailCostCount int
-
-	// 发送失败数（提交条数）
-	FailCount int
-
-	// 发送总数（拆分条数）
-	SendCostCount int
-
-	// 发送总数（提交条数）
-	SendCount int
-
-	// 提交失败数（拆分条数）
-	SubmitFailCostCount int
-
-	// 提交失败数（提交条数）
-	SubmitFailCount int
-
-	// 发送成功数（拆分条数）
-	SuccessCostCount int
-
-	// 发送成功数（提交条数）
-	SuccessCount int
-
-	// 状态未知数（拆分条数）
-	UnknownCostCount int
-
-	// 状态未知数（提交条数）
-	UnknownCount int
 }
 
 /*

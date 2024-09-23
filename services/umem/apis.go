@@ -1360,6 +1360,9 @@ type DescribeUMemUpgradePriceRequest struct {
 	// 代理id
 	ProxyId *string `required:"false"`
 
+	// 新增读写分离节点容量大小
+	ReplicaSize *int `required:"false"`
+
 	// 购买UMem大小,单位:GB
 	Size *int `required:"true"`
 
@@ -2546,6 +2549,86 @@ func (c *UMemClient) ModifyURedisGroupPassword(req *ModifyURedisGroupPasswordReq
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ModifyURedisGroupPassword", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// RegisterUMemDefragRequest is request schema for RegisterUMemDefrag action
+type RegisterUMemDefragRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 结束整点数值（分布式实例该参数无效）。
+	EndHour *int `required:"false"`
+
+	// 结束分钟数（分布式实例该参数无效）。
+	EndMin *int `required:"false"`
+
+	// 关闭时间戳
+	EndTime *int `required:"false"`
+
+	// 碎片整理阈值，范围为 100-200（分布式实例该参数无效）。
+	FragSize *int `required:"false"`
+
+	// 任务时间周期，单位为分钟。
+	FragTime *int `required:"false"`
+
+	// AND逻辑字段，表示 阈值和时间段都满足（分布式实例该参数无效）。
+	IsUnion *bool `required:"false"`
+
+	// 操作类型：“Once”： 表示单次执行， “Open”：表示开启策略“Close”:  表示关闭策略（分布式实例只支持Once）。
+	OperateType *string `required:"false"`
+
+	// 资源ID
+	ResourceId *string `required:"true"`
+
+	// 开始整点数值（分布式实例该参数无效）。
+	StartHour *int `required:"false"`
+
+	// 开始分钟数（分布式实例该参数无效）。
+	StartMin *int `required:"false"`
+
+	// 开始时间戳
+	StartTime *int `required:"false"`
+}
+
+// RegisterUMemDefragResponse is response schema for RegisterUMemDefrag action
+type RegisterUMemDefragResponse struct {
+	response.CommonBase
+}
+
+// NewRegisterUMemDefragRequest will create request of RegisterUMemDefrag action.
+func (c *UMemClient) NewRegisterUMemDefragRequest() *RegisterUMemDefragRequest {
+	req := &RegisterUMemDefragRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: RegisterUMemDefrag
+
+动态开关redis碎片整理选项
+*/
+func (c *UMemClient) RegisterUMemDefrag(req *RegisterUMemDefragRequest) (*RegisterUMemDefragResponse, error) {
+	var err error
+	var res RegisterUMemDefragResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RegisterUMemDefrag", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

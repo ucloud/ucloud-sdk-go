@@ -9,6 +9,104 @@ import (
 
 // UVMS API Schema
 
+// GetUVMSSendRecordRequest is request schema for GetUVMSSendRecord action
+type GetUVMSSendRecordRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 国际码，国内CN
+	BrevityCode *string `required:"false"`
+
+	// 被叫城市编码
+	CalledCityCode *string `required:"false"`
+
+	// 被叫运营商 cmcc中国移动，cucc中国联通,ctcc中国电信
+	CalledOperatorCode *string `required:"false"`
+
+	// 主叫城市编码
+	CallingCityCode *string `required:"false"`
+
+	// 结束时间-拨打时间，默认当前
+	EndTime *int `required:"false"`
+
+	// 排除国际码
+	ExcludeBrevityCode *string `required:"false"`
+
+	// 模糊搜索，支持 主叫号码和被叫号码
+	FuzzySearch *string `required:"false"`
+
+	// 每页数量，默认10
+	NumPerPage *int `required:"false"`
+
+	// call_start_time(拨打时间)/receive_time（回执时间）
+	OrderBy *string `required:"false"`
+
+	// asc\desc
+	OrderType *string `required:"false"`
+
+	// 页码，默认0
+	Page *int `required:"false"`
+
+	// 被叫号码，精确查询
+	PhoneNumber *string `required:"false"`
+
+	// 目标1验证码2通知3营销
+	Purpose *int `required:"false"`
+
+	// 开始时间-拨打时间，默认最近7天
+	StartTime *int `required:"false"`
+
+	// 任务编号
+	TaskNo *string `required:"false"`
+
+	// 目标ID
+	TemplateId *string `required:"false"`
+}
+
+// GetUVMSSendRecordResponse is response schema for GetUVMSSendRecord action
+type GetUVMSSendRecordResponse struct {
+	response.CommonBase
+
+	// 发送数据
+	Data []SendRecordItem
+
+	// 总数
+	Total int
+}
+
+// NewGetUVMSSendRecordRequest will create request of GetUVMSSendRecord action.
+func (c *UVMSClient) NewGetUVMSSendRecordRequest() *GetUVMSSendRecordRequest {
+	req := &GetUVMSSendRecordRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUVMSSendRecord
+
+获取语音发送记录
+*/
+func (c *UVMSClient) GetUVMSSendRecord(req *GetUVMSSendRecordRequest) (*GetUVMSSendRecordResponse, error) {
+	var err error
+	var res GetUVMSSendRecordResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUVMSSendRecord", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // SendUVMSMessageRequest is request schema for SendUVMSMessage action
 type SendUVMSMessageRequest struct {
 	request.CommonBase
