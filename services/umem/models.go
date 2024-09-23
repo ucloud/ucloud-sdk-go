@@ -39,6 +39,18 @@ type UDRedisSlowlogSet struct {
 }
 
 /*
+UMemSpaceAddressSet - DescribeUMemSpace
+*/
+type UMemSpaceAddressSet struct {
+
+	// UMem实例访问IP
+	IP string
+
+	// UMem实例访问Port
+	Port int
+}
+
+/*
 UMemSlaveDataSet - DescribeUMem
 */
 type UMemSlaveDataSet struct {
@@ -111,18 +123,6 @@ type UMemSlaveDataSet struct {
 
 	// 实例所在可用区，或者master redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	Zone string
-}
-
-/*
-UMemSpaceAddressSet - DescribeUMemSpace
-*/
-type UMemSpaceAddressSet struct {
-
-	// UMem实例访问IP
-	IP string
-
-	// UMem实例访问Port
-	Port int
 }
 
 /*
@@ -241,8 +241,14 @@ type UMemBlockInfo struct {
 	// 分片id
 	BlockId string
 
+	// 分片名称
+	BlockName string
+
 	// 分片端口
 	BlockPort int
+
+	// 分片读权重
+	BlockReadWeight int
 
 	// 容量单位GB
 	BlockSize int
@@ -253,8 +259,11 @@ type UMemBlockInfo struct {
 	// 分片维护的键槽结束值
 	BlockSlotEnd int
 
-	// 实例状态 Starting // 创建中 Creating // 初始化中 CreateFail // 创建失败 Fail // 创建失败 Deleting // 删除中 DeleteFail // 删除失败 Running // 运行 Resizing // 容量调整中 ResizeFail // 容量调整失败 Configing // 配置中 ConfigFail // 配置失败Restarting // 重启中 SetPasswordFail //设置密码失败
+	// 实例状态 Starting // 创建中 Creating // 初始化中 CreateFail // 创建失败 Fail // 创建失败 Deleting // 删除中 DeleteFail // 删除失败 Running // 运行 Resizing // 容量调整中 ResizeFail // 容量调整失败 Configing // 配置中 ConfigFail // 配置失败Restarting // 重启中 SetPasswordFail //设置密码失败UpgradeMemInit  //任务初始化
 	BlockState string
+
+	// 分片类型，master 或者 slave
+	BlockType string
 
 	// 使用量单位MB
 	BlockUsedSize int
