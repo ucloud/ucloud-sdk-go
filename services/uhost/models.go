@@ -42,21 +42,6 @@ type Collection struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
 DataDiskInfo - 数据盘信息
 */
 type DataDiskInfo struct {
@@ -93,15 +78,18 @@ type BootDiskInfo struct {
 }
 
 /*
-Performance - GPU的性能指标
+FeatureModes - 可以支持的模式类别
 */
-type Performance struct {
+type FeatureModes struct {
 
-	// 交互展示参数，可忽略
-	Rate int
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
 
-	// 值，单位是TFlops
-	Value float64
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
 }
 
 /*
@@ -114,6 +102,21 @@ type MachineSizes struct {
 
 	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
 	Gpu int
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	Name string
 }
 
 /*
@@ -141,21 +144,6 @@ type Features struct {
 }
 
 /*
-Disks - 磁盘信息
-*/
-type Disks struct {
-
-	// 系统盘信息
-	BootDisk []BootDiskInfo
-
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
-	Name string
-}
-
-/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -168,6 +156,18 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
 }
 
 /*
@@ -306,66 +306,15 @@ type IsolationGroup struct {
 }
 
 /*
-UHostIPSet - DescribeUHostInstance
+UHostKeyPair - 主机密钥信息
 */
-type UHostIPSet struct {
+type UHostKeyPair struct {
 
-	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
-	Bandwidth int
+	// 密钥对ID
+	KeyPairId string
 
-	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// 外网IP资源ID 。(内网IP无对应的资源ID)
-	IPId string
-
-	// IPv4/IPv6；
-	IPMode string
-
-	// 内网 Private 类型下，当前网卡的Mac。
-	Mac string
-
-	// 弹性网卡为默认网卡时，返回对应的 ID 值
-	NetworkInterfaceId string
-
-	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
-	VPCId string
-
-	// 当前EIP的权重。权重最大的为当前的出口IP。
-	Weight int
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
-UDSetUDHostAttribute - 私有专区对应的宿主机属性
-*/
-type UDSetUDHostAttribute struct {
-
-	// 是否绑定私有专区宿主机
-	HostBinding bool
-
-	// 私有专区宿主机
-	UDHostId string
-
-	// 私有专区
-	UDSetId string
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
 }
 
 /*
@@ -402,15 +351,66 @@ type UHostDiskSet struct {
 }
 
 /*
-UHostKeyPair - 主机密钥信息
+UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
-type UHostKeyPair struct {
+type UDSetUDHostAttribute struct {
 
-	// 密钥对ID
-	KeyPairId string
+	// 是否绑定私有专区宿主机
+	HostBinding bool
 
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
+	// 私有专区宿主机
+	UDHostId string
+
+	// 私有专区
+	UDSetId string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
+UHostIPSet - DescribeUHostInstance
+*/
+type UHostIPSet struct {
+
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
+	IPId string
+
+	// IPv4/IPv6；
+	IPMode string
+
+	// 内网 Private 类型下，当前网卡的Mac。
+	Mac string
+
+	// 弹性网卡为默认网卡时，返回对应的 ID 值
+	NetworkInterfaceId string
+
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
+	VPCId string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
 }
 
 /*
