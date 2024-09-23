@@ -238,15 +238,24 @@ type UHostDiskCustomBackup struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
+CreateUHostInstanceParamSecGroupId is request schema for complex param
 */
-type CreateUHostInstanceParamNetworkInterface struct {
+type CreateUHostInstanceParamSecGroupId struct {
 
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
 
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
+	UNI *bool `required:"false"`
 }
 
 /*
@@ -259,6 +268,18 @@ type CreateUHostInstanceParamVolumes struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	IsBoot *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
 }
 
 /*
@@ -289,27 +310,6 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *int `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
-	UNI *bool `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -2233,8 +2233,17 @@ type ResetUHostInstancePasswordRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// 修改密码结束后是否立即开机，默认为false， 如果设置为true，则修改密码成功后立即开机； 抢占式和后付费云主机暂不支持当前功能；
+	AutoStart *bool `required:"false"`
+
+	// KeypairId 密钥对ID，LoginMode为KeyPair时此项必须。
+	KeyPairId *string `required:"false"`
+
+	// 主机登陆模式。密码（默认选项）: Password，密钥 KeyPair。
+	LoginMode *string `required:"false"`
+
 	// UHost新密码（密码格式使用BASE64编码）
-	Password *string `required:"true"`
+	Password *string `required:"false"`
 
 	// UHost实例ID
 	UHostId *string `required:"true"`
@@ -2364,6 +2373,9 @@ type ResizeUHostInstanceRequest struct {
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
+
+	// 扩容结束后是否立即开机，默认为false，如果设置为true，则扩容成功后立即开机；抢占式和后付费云主机暂不支持当前功能；
+	AutoStart *bool `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
 	BootDiskSpace *int `required:"false" deprecated:"true"`

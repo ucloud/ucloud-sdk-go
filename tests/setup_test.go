@@ -66,7 +66,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
-	"github.com/ucloud/ucloud-sdk-go/services/usms"
+	"github.com/ucloud/ucloud-sdk-go/services/uvms"
 )
 
 func TestMain(m *testing.M) {
@@ -220,8 +220,8 @@ func testSetup() {
 	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphost.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("USMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return usms.NewClient(&cfg, &credential), nil
+	spec.AddFixture("UVMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uvms.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil
