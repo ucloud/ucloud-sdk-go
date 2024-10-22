@@ -53,6 +53,7 @@ type MDIPs struct {
 }
 
 type MDNetworkInterfaces struct {
+	Default  bool    `json:"default"`
 	Id       string  `json:"id"`
 	IPs      []MDIPs `json:"ips"`
 	Mac      string  `json:"mac"`
