@@ -28,8 +28,8 @@ type GetUVMSSendRecordRequest struct {
 	// 主叫城市编码
 	CallingCityCode *string `required:"false"`
 
-	// 结束时间-拨打时间，默认当前
-	EndTime *int `required:"false"`
+	// 结束时间-拨打时间，时间戳（秒），默认当前
+	EndTime *float64 `required:"false"`
 
 	// 排除国际码
 	ExcludeBrevityCode *string `required:"false"`
@@ -55,8 +55,8 @@ type GetUVMSSendRecordRequest struct {
 	// 目标1验证码2通知3营销
 	Purpose *int `required:"false"`
 
-	// 开始时间-拨打时间，默认最近7天
-	StartTime *int `required:"false"`
+	// 开始时间-拨打时间，时间戳（秒），默认最近7天
+	StartTime *float64 `required:"false"`
 
 	// 任务编号
 	TaskNo *string `required:"false"`

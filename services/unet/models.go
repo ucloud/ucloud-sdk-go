@@ -93,21 +93,6 @@ type EIPBinding struct {
 }
 
 /*
-ShareBandwidthSet - DescribeEIP
-*/
-type ShareBandwidthSet struct {
-
-	// 共享带宽带宽值
-	ShareBandwidth int
-
-	// 共享带宽ID
-	ShareBandwidthId string
-
-	// 共享带宽的资源名称
-	ShareBandwidthName string
-}
-
-/*
 UnetEIPResourceSet - DescribeEIP
 */
 type UnetEIPResourceSet struct {
@@ -135,6 +120,21 @@ type UnetEIPResourceSet struct {
 
 	// 资源绑定的虚拟网卡的类型。uni，虚拟网卡。
 	SubResourceType string
+}
+
+/*
+ShareBandwidthSet - DescribeEIP
+*/
+type ShareBandwidthSet struct {
+
+	// 共享带宽带宽值
+	ShareBandwidth int
+
+	// 共享带宽ID
+	ShareBandwidthId string
+
+	// 共享带宽的资源名称
+	ShareBandwidthName string
 }
 
 /*

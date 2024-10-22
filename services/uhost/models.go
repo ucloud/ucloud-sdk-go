@@ -42,6 +42,21 @@ type Collection struct {
 }
 
 /*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
 DataDiskInfo - 数据盘信息
 */
 type DataDiskInfo struct {
@@ -78,21 +93,6 @@ type BootDiskInfo struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
 MachineSizes - GPU、CPU和内存信息
 */
 type MachineSizes struct {
@@ -102,6 +102,18 @@ type MachineSizes struct {
 
 	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
 	Gpu int
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
 }
 
 /*
@@ -120,6 +132,18 @@ type Disks struct {
 }
 
 /*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
 GraphicsMemory - GPU的显存指标
 */
 type GraphicsMemory struct {
@@ -129,18 +153,6 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
 }
 
 /*
@@ -156,18 +168,6 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
-}
-
-/*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
 }
 
 /*
@@ -204,6 +204,21 @@ type AvailableInstanceTypes struct {
 
 	// 可用区信息
 	Zone string
+}
+
+/*
+BasePriceSet - 价格信息
+*/
+type BasePriceSet struct {
+
+	// 计费类型
+	ChargeType string
+
+	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）。
+	OriginalPrice float64
+
+	// 价格，单位: 元，保留小数点后两位有效数字
+	Price float64
 }
 
 /*
@@ -255,6 +270,9 @@ type UHostImageSet struct {
 
 	// 操作系统类型：Linux，Windows
 	OsType string
+
+	// 镜像的价格信息
+	PriceSet []BasePriceSet
 
 	// 主要安装软件
 	PrimarySoftware string
@@ -318,6 +336,45 @@ type UHostKeyPair struct {
 }
 
 /*
+UHostIPSet - DescribeUHostInstance
+*/
+type UHostIPSet struct {
+
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
+	IPId string
+
+	// IPv4/IPv6；
+	IPMode string
+
+	// 内网 Private 类型下，当前网卡的Mac。
+	Mac string
+
+	// 弹性网卡为默认网卡时，返回对应的 ID 值
+	NetworkInterfaceId string
+
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
+	VPCId string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
+}
+
+/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -372,45 +429,6 @@ type SpotAttribute struct {
 
 	// 回收时间
 	RecycleTime int
-}
-
-/*
-UHostIPSet - DescribeUHostInstance
-*/
-type UHostIPSet struct {
-
-	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// 外网IP资源ID 。(内网IP无对应的资源ID)
-	IPId string
-
-	// IPv4/IPv6；
-	IPMode string
-
-	// 内网 Private 类型下，当前网卡的Mac。
-	Mac string
-
-	// 弹性网卡为默认网卡时，返回对应的 ID 值
-	NetworkInterfaceId string
-
-	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
-	VPCId string
-
-	// 当前EIP的权重。权重最大的为当前的出口IP。
-	Weight int
 }
 
 /*
@@ -663,19 +681,4 @@ type UHostRefundPriceSet struct {
 
 	// UHost实例ID
 	UHostId string
-}
-
-/*
-BasePriceSet - 价格信息
-*/
-type BasePriceSet struct {
-
-	// 计费类型
-	ChargeType string
-
-	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）。
-	OriginalPrice float64
-
-	// 价格，单位: 元，保留小数点后两位有效数字
-	Price float64
 }
