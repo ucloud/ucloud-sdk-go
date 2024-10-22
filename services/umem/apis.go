@@ -1203,6 +1203,9 @@ type DescribeUMemPriceRequest struct {
 	// Year， Month， Dynamic 如果不指定，则一次性获取三种计费
 	ChargeType *string `required:"false"`
 
+	// 数据库类型，RWMode为读写分离
+	ClusterMode *string `required:"false"`
+
 	// 实例类型是否为性能增强型。默认为false，或者不填，true为性能增强型。
 	HighPerformance *bool `required:"false"`
 

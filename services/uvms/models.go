@@ -17,10 +17,10 @@ type SendRecordItem struct {
 	BrevityCode string
 
 	// 呼叫结束时间(毫秒时间戳)
-	CallEndTime int
+	CallEndTime float64
 
 	// 呼叫开始时间(毫秒时间戳)
-	CallStartTime int
+	CallStartTime float64
 
 	// 被叫所属城市码
 	CalledCityCode string
@@ -59,13 +59,13 @@ type SendRecordItem struct {
 	ReceiptResult int
 
 	// 回执时间
-	ReceiveTime int
+	ReceiveTime float64
 
 	// 主叫号码，如果是随机，可能为空
 	ShowNumber string
 
 	// 客户提交时间
-	SubmitTime int
+	SubmitTime float64
 
 	// 任务编号
 	TaskNo string
