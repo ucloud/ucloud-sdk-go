@@ -273,13 +273,16 @@ type CreateUMemSpaceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 备份ID，选择从该备份新建集群
+	BackupId *string `required:"false"`
+
 	// 分片个数
 	BlockCnt *int `required:"false"`
 
 	// Year , Month, Dynamic 默认: Month
 	ChargeType *string `required:"false"`
 
-	// 【待废弃】是否是cluster模式（参数为cluster创建redis cluster，其他参数或者不传该参数仍然创建老版本分布式）
+	// "RWMode"：表示创建读写分离版本;其他为创建普通版本
 	ClusterMode *string `required:"false"`
 
 	// 使用的代金券id
@@ -314,6 +317,9 @@ type CreateUMemSpaceRequest struct {
 
 	// 跨机房UDRedis，slave所在可用区（必须和Zone在同一Region，且不可相同）
 	SlaveZone *string `required:"false"`
+
+	// 集群ID，选择某个备份创建时，需要填写源集群ID
+	SpaceId *string `required:"false"`
 
 	// 子网ID
 	SubnetId *string `required:"false"`
@@ -557,7 +563,7 @@ type CreateURedisGroupRequest struct {
 	// 代金券ID
 	CouponId *string `required:"false"`
 
-	// 是否创建使用ipv6 资源， 默认为false， 或者不填， 创建ipv6为true
+	// 【即将下线,请勿使用】是否创建使用ipv6 资源， 默认为false， 或者不填， 创建ipv6为true
 	EnableIpV6 *bool `required:"false"`
 
 	// 是否开启高可用,enable或disable
@@ -1685,19 +1691,19 @@ func (c *UMemClient) DescribeURedisBackup(req *DescribeURedisBackupRequest) (*De
 type DescribeURedisBackupURLRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 备份ID
 	BackupId *string `required:"true"`
 
-	// 实例名称
+	// 实例ID
 	GroupId *string `required:"false"`
 
 	// 是否是跨机房URedis(默认false)
@@ -1714,7 +1720,7 @@ type DescribeURedisBackupURLResponse struct {
 	// 备份文件公网的地址
 	BackupPath string
 
-	// 备份文件公网的地址
+	// [即将下线,请使用BackupPath]
 	BackupURL string
 }
 
