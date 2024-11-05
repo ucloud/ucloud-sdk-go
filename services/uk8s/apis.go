@@ -105,6 +105,9 @@ type AddUK8SNodeGroupRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// 系统盘大小，单位GB。默认40。范围：[40, 500]。注意SSD本地盘无法调整。
+	BootDiskSize *int `required:"false"`
+
 	// 磁盘类型
 	BootDiskType *string `required:"false"`
 
@@ -143,6 +146,9 @@ type AddUK8SNodeGroupRequest struct {
 
 	// 节点池名字
 	NodeGroupName *string `required:"true"`
+
+	// 子网 ID。默认为集群创建时填写的子网ID，也可以填写集群同VPC内的子网ID。
+	SubnetId *string `required:"false"`
 
 	// 业务组
 	Tag *string `required:"false"`
@@ -423,15 +429,6 @@ func (c *UK8SClient) AddUK8SUHostNode(req *AddUK8SUHostNodeRequest) (*AddUK8SUHo
 }
 
 /*
-CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamKubeProxy struct {
-
-	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
-	Mode *string `required:"false"`
-}
-
-/*
 CreateUK8SClusterV2ParamMaster is request schema for complex param
 */
 type CreateUK8SClusterV2ParamMaster struct {
@@ -495,6 +492,15 @@ type CreateUK8SClusterV2ParamNodes struct {
 
 	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	Zone *string `required:"true"`
+}
+
+/*
+CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamKubeProxy struct {
+
+	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
+	Mode *string `required:"false"`
 }
 
 // CreateUK8SClusterV2Request is request schema for CreateUK8SClusterV2 action

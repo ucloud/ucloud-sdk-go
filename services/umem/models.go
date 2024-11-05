@@ -39,18 +39,6 @@ type UDRedisSlowlogSet struct {
 }
 
 /*
-UMemSpaceAddressSet - DescribeUMemSpace
-*/
-type UMemSpaceAddressSet struct {
-
-	// UMem实例访问IP
-	IP string
-
-	// UMem实例访问Port
-	Port int
-}
-
-/*
 UMemSlaveDataSet - DescribeUMem
 */
 type UMemSlaveDataSet struct {
@@ -123,6 +111,18 @@ type UMemSlaveDataSet struct {
 
 	// 实例所在可用区，或者master redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	Zone string
+}
+
+/*
+UMemSpaceAddressSet - DescribeUMemSpace
+*/
+type UMemSpaceAddressSet struct {
+
+	// UMem实例访问IP
+	IP string
+
+	// UMem实例访问Port
+	Port int
 }
 
 /*
@@ -526,13 +526,16 @@ type URedisGroupSet struct {
 	// 组ID
 	GroupId string
 
-	// 组名称
+	// [即将下线,请使用Name] 组名称
 	GroupName string
 
 	// 是否开启高可用,enable,disable
 	HighAvailability string
 
-	// 容量单位GB
+	// 是否是高性能Redis， true表示是； false表示否
+	IsHighPerformance bool
+
+	// [即将下线,请使用Size] 容量单位GB
 	MemorySize int
 
 	// 修改时间 (UNIX时间戳)
