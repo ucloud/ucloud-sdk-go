@@ -238,6 +238,36 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+UHostDisk is request schema for complex param
+*/
+type UHostDisk struct {
+
+	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > SNAPSHOT，快照 \\当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]],默认值:NONE
+	BackupType *string `required:"false"`
+
+	// 云盘代金券id。不适用于系统盘/本地盘。请通过DescribeCoupon接口查询，或登录用户中心查看
+	CouponId *string `required:"false"`
+
+	// 【功能仅部分可用区开放，详询技术支持】磁盘是否加密。加密：true, 不加密: false加密必须传入对应的的KmsKeyId,默认值false
+	Encrypted *bool `required:"false"`
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot *string `required:"true"`
+
+	// 【功能仅部分可用区开放，详询技术支持】kms key id。选择加密盘时必填。
+	KmsKeyId *string `required:"false"`
+
+	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Size *int `required:"true"`
+
+	// 从快照创建盘时所用快照id，目前仅支持数据盘
+	SnapshotId *string `required:"false"`
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Type *string `required:"true"`
+}
+
+/*
 CreateUHostInstanceParamVolumes is request schema for complex param
 */
 type CreateUHostInstanceParamVolumes struct {
@@ -268,36 +298,6 @@ type CreateUHostInstanceParamSecGroupId struct {
 
 	// 安全组优先级。取值范围[1, 5]
 	Priority *int `required:"false"`
-}
-
-/*
-UHostDisk is request schema for complex param
-*/
-type UHostDisk struct {
-
-	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > SNAPSHOT，快照 \\当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]],默认值:NONE
-	BackupType *string `required:"false"`
-
-	// 云盘代金券id。不适用于系统盘/本地盘。请通过DescribeCoupon接口查询，或登录用户中心查看
-	CouponId *string `required:"false"`
-
-	// 【功能仅部分可用区开放，详询技术支持】磁盘是否加密。加密：true, 不加密: false加密必须传入对应的的KmsKeyId,默认值false
-	Encrypted *bool `required:"false"`
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot *string `required:"true"`
-
-	// 【功能仅部分可用区开放，详询技术支持】kms key id。选择加密盘时必填。
-	KmsKeyId *string `required:"false"`
-
-	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	Size *int `required:"true"`
-
-	// 从快照创建盘时所用快照id，目前仅支持数据盘
-	SnapshotId *string `required:"false"`
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	Type *string `required:"true"`
 }
 
 /*
