@@ -477,6 +477,27 @@ type RequestInfo struct {
 }
 
 /*
+ClientIpStatisticsList - ClientIpStatisticsList
+*/
+type ClientIpStatisticsList struct {
+
+	// 流量单位字节
+	Flow int
+
+	// 流量占比
+	FlowPercent float64
+
+	// 客户端IP
+	IP string
+
+	// 请求数占比
+	RequestPercent float64
+
+	// 请求数
+	Requst int
+}
+
+/*
 RefererList - RefererList
 */
 type RefererList struct {
@@ -549,21 +570,6 @@ type BandwidthTrafficInfo struct {
 }
 
 /*
-CacheKeyInfo - 忽略参数缓存配置
-*/
-type CacheKeyInfo struct {
-
-	// 是否忽略
-	Ignore bool
-
-	// 路径模式，支持正则
-	PathPattern string
-
-	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
-	QueryString string
-}
-
-/*
 ReferConf - refer配置
 */
 type ReferConf struct {
@@ -579,39 +585,30 @@ type ReferConf struct {
 }
 
 /*
-OriginConf - 回源配置
+CacheKeyInfo - 忽略参数缓存配置
 */
-type OriginConf struct {
+type CacheKeyInfo struct {
 
-	// 1如果为false表示BackupOriginIp为空，表示没有备份源站，忽略BackupOriginIp，BackupOriginHost字段2如果为true表示BackupOriginIp.n必须至少有一个备份源站地址
-	BackupOriginEnable bool
+	// 是否忽略
+	Ignore bool
 
-	// 备份回源Http请求头部Host，默认是加速域名
-	BackupOriginHost string
+	// 路径模式，支持正则
+	PathPattern string
 
-	// 备份源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
-	BackupOriginIpList []string
+	// 自定义变量,以$符号开头，多个变量用加号(+)连接，$querystring表示所有变量
+	QueryString string
+}
 
-	// 主源响应的回源错误码（如：404|500），默认空字符串
-	OriginErrorCode string
+/*
+AccessControlConf - 访问控制配置参数
+*/
+type AccessControlConf struct {
 
-	// 回主源的回源失败数，默认1
-	OriginErrorNum int
+	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
+	IpBlackList []string
 
-	// 跟随301跳转  0=不跟随 1=跟随
-	OriginFollow301 int
-
-	// 回源Http请求头部Host，默认是加速域名
-	OriginHost string
-
-	// 源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
-	OriginIpList []string
-
-	// 回源端口
-	OriginPort int
-
-	// 源站协议http，http|https   默认http
-	OriginProtocol string
+	// refer配置
+	ReferConf ReferConf
 }
 
 /*
@@ -654,15 +651,39 @@ type AdvancedConf struct {
 }
 
 /*
-AccessControlConf - 访问控制配置参数
+OriginConf - 回源配置
 */
-type AccessControlConf struct {
+type OriginConf struct {
 
-	// ip黑名单，多个ip，可表示为：IpBlackList.0=1.1.1.1，IpBlackList.1=2.2.2.2
-	IpBlackList []string
+	// 1如果为false表示BackupOriginIp为空，表示没有备份源站，忽略BackupOriginIp，BackupOriginHost字段2如果为true表示BackupOriginIp.n必须至少有一个备份源站地址
+	BackupOriginEnable bool
 
-	// refer配置
-	ReferConf ReferConf
+	// 备份回源Http请求头部Host，默认是加速域名
+	BackupOriginHost string
+
+	// 备份源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
+	BackupOriginIpList []string
+
+	// 主源响应的回源错误码（如：404|500），默认空字符串
+	OriginErrorCode string
+
+	// 回主源的回源失败数，默认1
+	OriginErrorNum int
+
+	// 跟随301跳转  0=不跟随 1=跟随
+	OriginFollow301 int
+
+	// 回源Http请求头部Host，默认是加速域名
+	OriginHost string
+
+	// 源站ip即cdn服务器回源访问的ip地址。多个源站ip，可以这样表述，如：["1.1.1.1","2.2.2.2"]
+	OriginIpList []string
+
+	// 回源端口
+	OriginPort int
+
+	// 源站协议http，http|https   默认http
+	OriginProtocol string
 }
 
 /*
