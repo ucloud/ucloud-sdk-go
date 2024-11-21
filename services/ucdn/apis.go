@@ -195,56 +195,6 @@ func (c *UCDNClient) BatchRefreshNewUcdnDomainCache(req *BatchRefreshNewUcdnDoma
 	return &res, nil
 }
 
-// ControlUcdnDomainCacheAccessRequest is request schema for ControlUcdnDomainCacheAccess action
-type ControlUcdnDomainCacheAccessRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// forbid=封禁   unforbid=解封  其他值非法
-	Type *string `required:"true"`
-
-	// 待封禁的Url，一次封禁多个Url时最多一次30条，只能对表示文件的Url进行操作
-	UrlList []string `required:"true"`
-}
-
-// ControlUcdnDomainCacheAccessResponse is response schema for ControlUcdnDomainCacheAccess action
-type ControlUcdnDomainCacheAccessResponse struct {
-	response.CommonBase
-}
-
-// NewControlUcdnDomainCacheAccessRequest will create request of ControlUcdnDomainCacheAccess action.
-func (c *UCDNClient) NewControlUcdnDomainCacheAccessRequest() *ControlUcdnDomainCacheAccessRequest {
-	req := &ControlUcdnDomainCacheAccessRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: ControlUcdnDomainCacheAccess
-
-封禁解封缓存访问
-*/
-func (c *UCDNClient) ControlUcdnDomainCacheAccess(req *ControlUcdnDomainCacheAccessRequest) (*ControlUcdnDomainCacheAccessResponse, error) {
-	var err error
-	var res ControlUcdnDomainCacheAccessResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("ControlUcdnDomainCacheAccess", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // DeleteCertificateRequest is request schema for DeleteCertificate action
 type DeleteCertificateRequest struct {
 	request.CommonBase
@@ -496,6 +446,9 @@ type GetCertificateV2Request struct {
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
+
+	// 根据加速域名筛选对应的证书
+	CdnDomain *string `required:"false"`
 
 	// 长度，默认为全部，非负整数
 	Limit *int `required:"false"`
@@ -852,6 +805,74 @@ func (c *UCDNClient) GetNewUcdnDomainRequestNum(req *GetNewUcdnDomainRequestNumR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetNewUcdnDomainRequestNum", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetNewUcdnLogClientIpStatisticsRequest is request schema for GetNewUcdnLogClientIpStatistics action
+type GetNewUcdnLogClientIpStatisticsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 查询的日期，单位：Unix时间戳。只支持按天查询
+	BeginTime *int `required:"false"`
+
+	// 域名id，创建域名时生成的id
+	DomainId *string `required:"true"`
+
+	// 返回结果数量限制，返回最多100条
+	Limit *string `required:"false"`
+
+	// 0表示按照下载次数降序排列，1表示按流量降序排列，默认为0
+	OrderBy *int `required:"false"`
+
+	// 1表示按照1小时粒度，2表示按照一天的粒度 默认是天
+	Type *int `required:"false"`
+}
+
+// GetNewUcdnLogClientIpStatisticsResponse is response schema for GetNewUcdnLogClientIpStatistics action
+type GetNewUcdnLogClientIpStatisticsResponse struct {
+	response.CommonBase
+
+	// 操作名称
+	Action string
+
+	// 客户端ip数据集合。
+	ClientIpStatisticsList []ClientIpStatisticsList
+
+	// 返回码
+	RetCode int
+}
+
+// NewGetNewUcdnLogClientIpStatisticsRequest will create request of GetNewUcdnLogClientIpStatistics action.
+func (c *UCDNClient) NewGetNewUcdnLogClientIpStatisticsRequest() *GetNewUcdnLogClientIpStatisticsRequest {
+	req := &GetNewUcdnLogClientIpStatisticsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetNewUcdnLogClientIpStatistics
+
+获取日志客户端ip统计
+*/
+func (c *UCDNClient) GetNewUcdnLogClientIpStatistics(req *GetNewUcdnLogClientIpStatisticsRequest) (*GetNewUcdnLogClientIpStatisticsResponse, error) {
+	var err error
+	var res GetNewUcdnLogClientIpStatisticsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetNewUcdnLogClientIpStatistics", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2420,7 +2441,7 @@ type PrefetchNewUcdnDomainCacheRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// 预热URL列表，n从自然数0开始。UrlList.n字段必须以”http://域名/”开始。如刷新文件目录a下面img.png文件， 格式为http://abc.ucloud.cn/a/img.png。请正确提交需要刷新的域名
+	// 预热URL列表，n从自然数0开始。UrlList.n字段必须以”http://域名/”开始。如刷新文件目录a下面img.png文件， 格式为http://abc.ucloud.cn/a/img.png。请正确提交需要刷新的域名，一次性可提交1000条，最少每10S调用一次
 	UrlList []string `required:"true"`
 }
 
@@ -2603,6 +2624,65 @@ func (c *UCDNClient) SwitchUcdnChargeType(req *SwitchUcdnChargeTypeRequest) (*Sw
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("SwitchUcdnChargeType", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUcdnDomainHttpsConfigV2Request is request schema for UpdateUcdnDomainHttpsConfigV2 action
+type UpdateUcdnDomainHttpsConfigV2Request struct {
+	request.CommonBase
+
+	// 证书id(可能是ucdn的id，也可能是ussl的id)
+	CertId *int `required:"false"`
+
+	// 证书名称，开启加速必传
+	CertName *string `required:"false"`
+
+	// 证书类型 ucdn/ussl
+	CertType *string `required:"false"`
+
+	// 域名对应的资源Id
+	DomainId *string `required:"true"`
+
+	// 开启或关闭加速 enable或disable 当加速区域含国外的时候，此参数为必传
+	HttpsStatusAbroad *string `required:"false"`
+
+	// 开启或关闭加速 enable或disable  当加速区域含国内的时候，此参数为必传
+	HttpsStatusCn *string `required:"false"`
+}
+
+// UpdateUcdnDomainHttpsConfigV2Response is response schema for UpdateUcdnDomainHttpsConfigV2 action
+type UpdateUcdnDomainHttpsConfigV2Response struct {
+	response.CommonBase
+}
+
+// NewUpdateUcdnDomainHttpsConfigV2Request will create request of UpdateUcdnDomainHttpsConfigV2 action.
+func (c *UCDNClient) NewUpdateUcdnDomainHttpsConfigV2Request() *UpdateUcdnDomainHttpsConfigV2Request {
+	req := &UpdateUcdnDomainHttpsConfigV2Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUcdnDomainHttpsConfigV2
+
+https加速配置，国内，国外一起配置(兼容全站加速域名)
+*/
+func (c *UCDNClient) UpdateUcdnDomainHttpsConfigV2(req *UpdateUcdnDomainHttpsConfigV2Request) (*UpdateUcdnDomainHttpsConfigV2Response, error) {
+	var err error
+	var res UpdateUcdnDomainHttpsConfigV2Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUcdnDomainHttpsConfigV2", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
