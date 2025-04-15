@@ -904,7 +904,7 @@ CreateNetworkInterfaceParamPrioritySecGroup is request schema for complex param
 type CreateNetworkInterfaceParamPrioritySecGroup struct {
 
 	// 安全组优先级
-	Pripority *int `required:"false"`
+	Priority *int `required:"false"`
 
 	// 安全组 ID
 	SecGroupId *string `required:"false"`
@@ -3253,6 +3253,124 @@ func (c *VPCClient) DetachNetworkInterface(req *DetachNetworkInterfaceRequest) (
 	return &res, nil
 }
 
+// DisableUniEipDirectModeRequest is request schema for DisableUniEipDirectMode action
+type DisableUniEipDirectModeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 虚拟网卡ID
+	InterfaceId *string `required:"true"`
+
+	// VPC ID
+	VPCId *string `required:"true"`
+}
+
+// DisableUniEipDirectModeResponse is response schema for DisableUniEipDirectMode action
+type DisableUniEipDirectModeResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewDisableUniEipDirectModeRequest will create request of DisableUniEipDirectMode action.
+func (c *VPCClient) NewDisableUniEipDirectModeRequest() *DisableUniEipDirectModeRequest {
+	req := &DisableUniEipDirectModeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DisableUniEipDirectMode
+
+关闭虚拟网卡EIP直通功能
+*/
+func (c *VPCClient) DisableUniEipDirectMode(req *DisableUniEipDirectModeRequest) (*DisableUniEipDirectModeResponse, error) {
+	var err error
+	var res DisableUniEipDirectModeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DisableUniEipDirectMode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// EnableUniEipDirectModeRequest is request schema for EnableUniEipDirectMode action
+type EnableUniEipDirectModeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 虚拟网卡ID
+	InterfaceId *string `required:"true"`
+
+	// VPC ID
+	VPCId *string `required:"true"`
+}
+
+// EnableUniEipDirectModeResponse is response schema for EnableUniEipDirectMode action
+type EnableUniEipDirectModeResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewEnableUniEipDirectModeRequest will create request of EnableUniEipDirectMode action.
+func (c *VPCClient) NewEnableUniEipDirectModeRequest() *EnableUniEipDirectModeRequest {
+	req := &EnableUniEipDirectModeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: EnableUniEipDirectMode
+
+开启虚拟网卡EIP直通功能
+*/
+func (c *VPCClient) EnableUniEipDirectMode(req *EnableUniEipDirectModeRequest) (*EnableUniEipDirectModeResponse, error) {
+	var err error
+	var res EnableUniEipDirectModeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("EnableUniEipDirectMode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // EnableWhiteListRequest is request schema for EnableWhiteList action
 type EnableWhiteListRequest struct {
 	request.CommonBase
@@ -4078,6 +4196,65 @@ func (c *VPCClient) UpdateNetworkAclEntry(req *UpdateNetworkAclEntryRequest) (*U
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateNetworkAclEntry", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateNetworkInterfaceDefaultOutputRequest is request schema for UpdateNetworkInterfaceDefaultOutput action
+type UpdateNetworkInterfaceDefaultOutputRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 虚拟网卡Id
+	InterfaceId *string `required:"true"`
+
+	// 出口IP
+	Output *string `required:"false"`
+}
+
+// UpdateNetworkInterfaceDefaultOutputResponse is response schema for UpdateNetworkInterfaceDefaultOutput action
+type UpdateNetworkInterfaceDefaultOutputResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpdateNetworkInterfaceDefaultOutputRequest will create request of UpdateNetworkInterfaceDefaultOutput action.
+func (c *VPCClient) NewUpdateNetworkInterfaceDefaultOutputRequest() *UpdateNetworkInterfaceDefaultOutputRequest {
+	req := &UpdateNetworkInterfaceDefaultOutputRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateNetworkInterfaceDefaultOutput
+
+更新虚拟网卡默认出口(仅用于开启EIP网卡可见模式的虚拟网卡)
+*/
+func (c *VPCClient) UpdateNetworkInterfaceDefaultOutput(req *UpdateNetworkInterfaceDefaultOutputRequest) (*UpdateNetworkInterfaceDefaultOutputResponse, error) {
+	var err error
+	var res UpdateNetworkInterfaceDefaultOutputResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateNetworkInterfaceDefaultOutput", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
