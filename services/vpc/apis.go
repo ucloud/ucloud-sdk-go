@@ -898,6 +898,18 @@ func (c *VPCClient) CreateNetworkAclEntry(req *CreateNetworkAclEntryRequest) (*C
 	return &res, nil
 }
 
+/*
+CreateNetworkInterfaceParamPrioritySecGroup is request schema for complex param
+*/
+type CreateNetworkInterfaceParamPrioritySecGroup struct {
+
+	// 安全组优先级
+	Pripority *int `required:"false"`
+
+	// 安全组 ID
+	SecGroupId *string `required:"false"`
+}
+
 // CreateNetworkInterfaceRequest is request schema for CreateNetworkInterface action
 type CreateNetworkInterfaceRequest struct {
 	request.CommonBase
@@ -908,8 +920,14 @@ type CreateNetworkInterfaceRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
+	// 是否开启EIP直通，默认false
+	EipDirectMode *bool `required:"false"`
+
 	// 虚拟网卡名称，默认为 NetworkInterface
 	Name *string `required:"false"`
+
+	//
+	PrioritySecGroup []CreateNetworkInterfaceParamPrioritySecGroup `required:"false"`
 
 	// 指定内网IP。当前一个网卡仅支持绑定一个内网IP
 	PrivateIp []string `required:"false"`
@@ -919,6 +937,9 @@ type CreateNetworkInterfaceRequest struct {
 
 	// 防火墙GroupId，默认：Web推荐防火墙 可由DescribeSecurityGroupResponse中的GroupId取得
 	SecurityGroupId *string `required:"false"`
+
+	// 指定使用 安全组还是防火墙。为 0 时绑定防火墙，为1时绑定安全组
+	SecurityMode *int `required:"false"`
 
 	// 所属子网ID
 	SubnetId *string `required:"true"`
