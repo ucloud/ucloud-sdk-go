@@ -312,6 +312,12 @@ type CreateUMemSpaceRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
+	// 如果是通过回档创建，该实例ID不为空
+	RollbackSpaceId *string `required:"false"`
+
+	// 要回档的时间戳
+	RollbackTime *int `required:"false"`
+
 	// 内存大小, 单位:GB, 范围[1~1024]
 	Size *int `required:"true"`
 
@@ -1277,13 +1283,13 @@ func (c *UMemClient) DescribeUMemPrice(req *DescribeUMemPriceRequest) (*Describe
 type DescribeUMemSpaceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 返回数据长度, 默认为20
@@ -1325,7 +1331,7 @@ func (c *UMemClient) NewDescribeUMemSpaceRequest() *DescribeUMemSpaceRequest {
 /*
 API: DescribeUMemSpace
 
-获取UMem内存空间列表
+获取UMem内存空间列表（已废弃，建议是使用DescribeUMem接口）
 */
 func (c *UMemClient) DescribeUMemSpace(req *DescribeUMemSpaceRequest) (*DescribeUMemSpaceResponse, error) {
 	var err error
@@ -1875,7 +1881,7 @@ func (c *UMemClient) NewDescribeURedisGroupRequest() *DescribeURedisGroupRequest
 /*
 API: DescribeURedisGroup
 
-查询主备Redis
+查询主备Redis(已废弃，建议使用DescribeUMem)
 */
 func (c *UMemClient) DescribeURedisGroup(req *DescribeURedisGroupRequest) (*DescribeURedisGroupResponse, error) {
 	var err error
@@ -2701,6 +2707,71 @@ func (c *UMemClient) RemoveUDRedisData(req *RemoveUDRedisDataRequest) (*RemoveUD
 	return &res, nil
 }
 
+// ResizeUDRedisBlockSizeRequest is request schema for ResizeUDRedisBlockSize action
+type ResizeUDRedisBlockSizeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 分片id
+	BlockId *string `required:"true"`
+
+	// 分片容量（单位GB）4/8/12/16/20
+	BlockSize *int `required:"true"`
+
+	// 是否为性能增强型。默认为false，或者不填，true为性能增强型。
+	HighPerformance *bool `required:"false"`
+
+	// spaceid
+	SpaceId *string `required:"true"`
+
+	// 任务执行时间戳，时间戳需满足未来一天时间范围内。默认不传或者值为0时，即为立即执行
+	StartTime *int `required:"false"`
+}
+
+// ResizeUDRedisBlockSizeResponse is response schema for ResizeUDRedisBlockSize action
+type ResizeUDRedisBlockSizeResponse struct {
+	response.CommonBase
+}
+
+// NewResizeUDRedisBlockSizeRequest will create request of ResizeUDRedisBlockSize action.
+func (c *UMemClient) NewResizeUDRedisBlockSizeRequest() *ResizeUDRedisBlockSizeRequest {
+	req := &ResizeUDRedisBlockSizeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ResizeUDRedisBlockSize
+
+更改udredis分片容量
+*/
+func (c *UMemClient) ResizeUDRedisBlockSize(req *ResizeUDRedisBlockSizeRequest) (*ResizeUDRedisBlockSizeResponse, error) {
+	var err error
+	var res ResizeUDRedisBlockSizeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ResizeUDRedisBlockSize", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ResizeUDredisSpaceRequest is request schema for ResizeUDredisSpace action
 type ResizeUDredisSpaceRequest struct {
 	request.CommonBase
@@ -2798,7 +2869,7 @@ func (c *UMemClient) NewResizeUMemSpaceRequest() *ResizeUMemSpaceRequest {
 /*
 API: ResizeUMemSpace
 
-调整内存空间容量，只支持存量老分布式产品，不支持高性能分布式
+调整内存空间容量，只支持存量老分布式产品，不支持高性能分布式。（已废弃，不建议使用）
 */
 func (c *UMemClient) ResizeUMemSpace(req *ResizeUMemSpaceRequest) (*ResizeUMemSpaceResponse, error) {
 	var err error
