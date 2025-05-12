@@ -3,6 +3,21 @@
 package uhost
 
 /*
+CopyImageTaskInfo - 镜像复制的任务信息
+*/
+type CopyImageTaskInfo struct {
+
+	// 目标镜像Id
+	TargetImageId string
+
+	// 目标地域
+	TargetRegion string
+
+	// 目标镜像复制的任务Id
+	TaskId string
+}
+
+/*
 KeyPair - 密钥对信息
 */
 type KeyPair struct {
@@ -27,21 +42,6 @@ type KeyPair struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
 Collection - CPU和内存可支持的规格
 */
 type Collection struct {
@@ -54,6 +54,21 @@ type Collection struct {
 
 	// CPU和内存规格只能在列出来的CPU平台支持
 	MinimalCpuPlatform []string
+}
+
+/*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
 }
 
 /*
@@ -93,45 +108,6 @@ type BootDiskInfo struct {
 }
 
 /*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
-}
-
-/*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
-}
-
-/*
 Performance - GPU的性能指标
 */
 type Performance struct {
@@ -156,6 +132,18 @@ type MachineSizes struct {
 }
 
 /*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
 Disks - 磁盘信息
 */
 type Disks struct {
@@ -168,6 +156,33 @@ type Disks struct {
 
 	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
+CpuPlatforms - CPU平台信息
+*/
+type CpuPlatforms struct {
+
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
+
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
 }
 
 /*
@@ -286,6 +301,9 @@ type UHostImageSet struct {
 	// 支持的GPU机型
 	SupportedGPUTypes []string
 
+	// 业务组
+	Tag string
+
 	// 供应商（仅行业镜像将返回这个值）
 	Vendor string
 
@@ -321,6 +339,54 @@ type IsolationGroup struct {
 
 	// 每个可用区中的机器数量。参见数据结构SpreadInfo。
 	SpreadInfoSet []SpreadInfo
+}
+
+/*
+UHostIPSet - DescribeUHostInstance
+*/
+type UHostIPSet struct {
+
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
+	IPId string
+
+	// IPv4/IPv6；
+	IPMode string
+
+	// 内网 Private 类型下，当前网卡的Mac。
+	Mac string
+
+	// 弹性网卡为默认网卡时，返回对应的 ID 值
+	NetworkInterfaceId string
+
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
+	VPCId string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
 }
 
 /*
@@ -384,54 +450,6 @@ type UHostKeyPair struct {
 }
 
 /*
-UHostIPSet - DescribeUHostInstance
-*/
-type UHostIPSet struct {
-
-	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// 外网IP资源ID 。(内网IP无对应的资源ID)
-	IPId string
-
-	// IPv4/IPv6；
-	IPMode string
-
-	// 内网 Private 类型下，当前网卡的Mac。
-	Mac string
-
-	// 弹性网卡为默认网卡时，返回对应的 ID 值
-	NetworkInterfaceId string
-
-	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
-	VPCId string
-
-	// 当前EIP的权重。权重最大的为当前的出口IP。
-	Weight int
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
 UHostInstanceSet - DescribeUHostInstance
 */
 type UHostInstanceSet struct {
@@ -478,7 +496,7 @@ type UHostInstanceSet struct {
 	// GPU个数
 	GPU int
 
-	// GPU类型;枚举值["K80", "P40", "V100", "T4", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S"]
+	// GPU类型;枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","A100","A800"]
 	GpuType string
 
 	// true: 开启 hidden kvm 功能；false: 不是
@@ -529,6 +547,9 @@ type UHostInstanceSet struct {
 	// 网络增强。Normal: 无；Super： 网络增强1.0； Ultra: 网络增强2.0
 	NetCapability string
 
+	// Firewall:防火墙,SecGroup:安全组,Acl:acl
+	NetFeatureTag string
+
 	// 【建议不再使用】网络状态。 连接：Connected， 断开：NotConnected
 	NetworkState string
 
@@ -547,7 +568,7 @@ type UHostInstanceSet struct {
 	// 仅抢占式实例返回，LowSpeed为低速模式，PowerOff为关机模式
 	RestrictMode string
 
-	// true: 绑定了安全组的主机；false: 不是
+	// 【待废弃】true: 绑定了安全组的主机；false: 不是
 	SecGroupInstance bool
 
 	// 竞价实例信息
@@ -618,6 +639,18 @@ type UHostTagSet struct {
 
 	// 可用区
 	Zone string
+}
+
+/*
+DiskUpgradePriceDetail - 升级磁盘的详细价格
+*/
+type DiskUpgradePriceDetail struct {
+
+	// 快照的价格
+	Snapshot float64
+
+	// 磁盘的价格
+	UDisk float64
 }
 
 /*
