@@ -277,7 +277,7 @@ type ListUBillDetailRequest struct {
 	// 订单类型 (筛选项, 默认全部) 。枚举值：\\ > OT_BUY:新购 \\ > OT_RENEW:续费 \\ > OT_UPGRADE:升级 \\ > OT_DOWNGRADE:降级 \\ > OT_SUSPEND:结算 \\ > OT_ADDITIONAL:补单 \\ > OT_REFUND:删除 \\ > OT_POSTPAID_RENEW:过期 \\ > OT_POSTPAID_PAYMENT:后付费 \\ > OT_RECOVER:删除恢复
 	OrderType *string `required:"false"`
 
-	// 支付状态 (筛选项, 1:仅显示未支付订单; 2:仅显示已支付订单; 0:两者都显示)
+	// 支付状态 (筛选项, 1:仅显示未支付订单; 2:仅显示已支付订单; 0:两者都显示)	    当前月份 传递1或者0，会返回历史所有未支付账单；历史月份不支持查询未支付，请勿传递1
 	PaidState *int `required:"false"`
 
 	// 项目名称 (筛选项, 默认全部)
