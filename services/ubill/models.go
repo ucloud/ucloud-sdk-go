@@ -166,11 +166,17 @@ type BillDetailItem struct {
 	// 可用区
 	AzGroupCName string
 
+	// 业务组
+	BusinessGroup string
+
 	// 计费方式 (筛选项, 默认全部)。枚举值：\\ > Year:按年\\ > Month:按月 \\ > Day:按天 \\ > Dynamic:按时 \\ > Used:按量 \\ > Donate:赠送 \\ > Trial:试用 \\ > Post:后付费 \\ > Spot:抢占式
 	ChargeType string
 
 	// 创建时间（时间戳）
 	CreateTime int
+
+	// 结束时间（时间戳）
+	EndTime int
 
 	// 产品配置
 	ItemDetails []ItemDetail
@@ -181,6 +187,9 @@ type BillDetailItem struct {
 	// 订单类型 (筛选项, 默认全部) 。枚举值：\\ > OT_BUY:新购 \\ > OT_RENEW:续费 \\ > OT_UPGRADE:升级 \\ > OT_DOWNGRADE:降级 \\ > OT_SUSPEND:结算 \\ > OT_ADDITIONAL:补单 \\ > OT_REFUND:删除 \\ > OT_POSTPAID_RENEW:过期 \\ > OT_POSTPAID_PAYMENT:后付费 \\ > OT_RECOVER:删除恢复
 	OrderType string
 
+	// 项目id
+	ProjectId string
+
 	// 项目名称
 	ProjectName string
 
@@ -189,6 +198,9 @@ type BillDetailItem struct {
 
 	// 资源ID
 	ResourceId string
+
+	// 资源标签。字符串键值对的map：{"cs_label": "cs_label_value"}
+	ResourceLabel string
 
 	// 产品类型。枚举值：\\ > uhost:云主机 \\ > udisk:普通云硬盘 \\ > udb:云数据库 \\ > eip:弹性IP \\ > ufile:对象存储 \\ > fortress_host:堡垒机 \\ > ufs:文件存储 \\ > waf:WEB应用防火墙 \\ > ues:弹性搜索 \\ > udisk_ssd:SSD云硬盘 \\ > rssd:RSSD云硬盘
 	ResourceType string
