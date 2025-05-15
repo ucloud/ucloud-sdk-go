@@ -77,6 +77,98 @@ func (c *USMSClient) AddBackfill(req *AddBackfillRequest) (*AddBackfillResponse,
 	return &res, nil
 }
 
+// AddUSMSSignatureQualificationRequest is request schema for AddUSMSSignatureQualification action
+type AddUSMSSignatureQualificationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 资质属性，0-自用 1-他用
+	Attr *int `required:"true"`
+
+	// 公司证件文件FileId
+	CompanyCertificateFileId *string `required:"false"`
+
+	// 公司统一社会信用代码
+	CompanyCreditCode *string `required:"false"`
+
+	// 公司名称，长度限制100
+	CompanyName *string `required:"false"`
+
+	// 公司工作现场照片FileId
+	CompanyWorkScenePhotosFileId *string `required:"false"`
+
+	// 经办人手持身份证图片FileId
+	HandlerHandHeldImageFileId *string `required:"false"`
+
+	// 经办人身份证国徽面图片FileId
+	HandlerIDCardBackImageFileId *string `required:"false"`
+
+	// 经办人身份证人像面图片FileId
+	HandlerIDCardFrontImageFileId *string `required:"false"`
+
+	// 经办人身份证号码
+	HandlerIDNumber *string `required:"false"`
+
+	// 经办人姓名
+	HandlerName *string `required:"false"`
+
+	// 法人身份证号码
+	ManagerIDNumber *string `required:"false"`
+
+	// 法人姓名
+	ManagerName *string `required:"false"`
+
+	// 资质名称
+	Name *string `required:"true"`
+
+	// 状态：0-草稿，1-提交审核
+	Status *int `required:"true"`
+}
+
+// AddUSMSSignatureQualificationResponse is response schema for AddUSMSSignatureQualification action
+type AddUSMSSignatureQualificationResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+
+	// 资质Id
+	QualificationId string
+}
+
+// NewAddUSMSSignatureQualificationRequest will create request of AddUSMSSignatureQualification action.
+func (c *USMSClient) NewAddUSMSSignatureQualificationRequest() *AddUSMSSignatureQualificationRequest {
+	req := &AddUSMSSignatureQualificationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddUSMSSignatureQualification
+
+添加短信签名资质申请记录
+*/
+func (c *USMSClient) AddUSMSSignatureQualification(req *AddUSMSSignatureQualificationRequest) (*AddUSMSSignatureQualificationResponse, error) {
+	var err error
+	var res AddUSMSSignatureQualificationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddUSMSSignatureQualification", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUSMSSignatureRequest is request schema for CreateUSMSSignature action
 type CreateUSMSSignatureRequest struct {
 	request.CommonBase
@@ -91,13 +183,19 @@ type CreateUSMSSignatureRequest struct {
 	Description *string `required:"true"`
 
 	// 短信签名的资质证明文件，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB
-	File *string `required:"true"`
+	File *string `required:"false"`
 
 	// 国内/国际短信。true:国际短信，false:国内短信，若不传值则默认该值为false
 	International *bool `required:"false"`
 
 	// 短信签名授权委托文件，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB；当您是代理并使用第三方的签名时（也即SigPurpose为1-他用），该项为必填项；
 	ProxyFile *string `required:"false"`
+
+	// 资质ID
+	QualificationId *string `required:"false"`
+
+	// 短信签名对应的场景说明
+	SceneDesc *string `required:"false"`
 
 	// 签名内容
 	SigContent *string `required:"true"`
@@ -265,6 +363,56 @@ func (c *USMSClient) DeleteUSMSSignature(req *DeleteUSMSSignatureRequest) (*Dele
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteUSMSSignature", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUSMSSignatureQualificationRequest is request schema for DeleteUSMSSignatureQualification action
+type DeleteUSMSSignatureQualificationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 签名资质Id，支持以数组的方式，举例，以QualificationIds.0、QualificationIds.1...QualificationIds.N方式传入
+	QualificationIds []string `required:"true"`
+}
+
+// DeleteUSMSSignatureQualificationResponse is response schema for DeleteUSMSSignatureQualification action
+type DeleteUSMSSignatureQualificationResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+}
+
+// NewDeleteUSMSSignatureQualificationRequest will create request of DeleteUSMSSignatureQualification action.
+func (c *USMSClient) NewDeleteUSMSSignatureQualificationRequest() *DeleteUSMSSignatureQualificationRequest {
+	req := &DeleteUSMSSignatureQualificationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUSMSSignatureQualification
+
+删除短信签名资质申请记录
+*/
+func (c *USMSClient) DeleteUSMSSignatureQualification(req *DeleteUSMSSignatureQualificationRequest) (*DeleteUSMSSignatureQualificationResponse, error) {
+	var err error
+	var res DeleteUSMSSignatureQualificationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUSMSSignatureQualification", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -464,6 +612,80 @@ func (c *USMSClient) GetUSMSSendStatistics(req *GetUSMSSendStatisticsRequest) (*
 	return &res, nil
 }
 
+// GetUSMSSignatureQualificationRequest is request schema for GetUSMSSignatureQualification action
+type GetUSMSSignatureQualificationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 项目ID列表
+	InAccountIds []string `required:"false"`
+
+	// 每页个数
+	NumPerPage *int `required:"true"`
+
+	// 排序字段，QualificationId/CreateTime
+	OrderBy *string `required:"true"`
+
+	// 排序类型: desc、asc
+	OrderType *string `required:"true"`
+
+	// 页索引
+	Page *int `required:"true"`
+
+	// 签名资质属性: 0-自用，1-他用
+	QualificationAttr *int `required:"false"`
+
+	// 签名资质状态: 0-草稿 1-审核中 2-审核通过 3-审核未通过 4-人工禁用
+	Status *int `required:"false"`
+}
+
+// GetUSMSSignatureQualificationResponse is response schema for GetUSMSSignatureQualification action
+type GetUSMSSignatureQualificationResponse struct {
+	response.CommonBase
+
+	// 签名资质结果集合
+	Data []OutSignatureQualification
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+
+	// 签名资质总个数
+	Total int
+}
+
+// NewGetUSMSSignatureQualificationRequest will create request of GetUSMSSignatureQualification action.
+func (c *USMSClient) NewGetUSMSSignatureQualificationRequest() *GetUSMSSignatureQualificationRequest {
+	req := &GetUSMSSignatureQualificationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUSMSSignatureQualification
+
+获取短信签名资质申请记录列表
+*/
+func (c *USMSClient) GetUSMSSignatureQualification(req *GetUSMSSignatureQualificationRequest) (*GetUSMSSignatureQualificationResponse, error) {
+	var err error
+	var res GetUSMSSignatureQualificationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUSMSSignatureQualification", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // QueryUSMSSignatureRequest is request schema for QueryUSMSSignature action
 type QueryUSMSSignatureRequest struct {
 	request.CommonBase
@@ -513,6 +735,59 @@ func (c *USMSClient) QueryUSMSSignature(req *QueryUSMSSignatureRequest) (*QueryU
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("QueryUSMSSignature", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// QueryUSMSSignatureQualificationRequest is request schema for QueryUSMSSignatureQualification action
+type QueryUSMSSignatureQualificationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 签名资质Id
+	QualificationId *string `required:"true"`
+}
+
+// QueryUSMSSignatureQualificationResponse is response schema for QueryUSMSSignatureQualification action
+type QueryUSMSSignatureQualificationResponse struct {
+	response.CommonBase
+
+	// 签名资质详细信息
+	Data OutSignatureQualificationDetail
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+}
+
+// NewQueryUSMSSignatureQualificationRequest will create request of QueryUSMSSignatureQualification action.
+func (c *USMSClient) NewQueryUSMSSignatureQualificationRequest() *QueryUSMSSignatureQualificationRequest {
+	req := &QueryUSMSSignatureQualificationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryUSMSSignatureQualification
+
+获取短信签名资质申请记录详情
+*/
+func (c *USMSClient) QueryUSMSSignatureQualification(req *QueryUSMSSignatureQualificationRequest) (*QueryUSMSSignatureQualificationResponse, error) {
+	var err error
+	var res QueryUSMSSignatureQualificationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryUSMSSignatureQualification", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -728,6 +1003,9 @@ type UpdateUSMSSignatureRequest struct {
 	// 短信签名授权委托文件内容，需先进行base64编码格式转换，此处填写转换后的字符串。文件大小不超过4 MB；当您是代理并使用第三方的签名时（也即SigPurpose为1-他用），该项为必填项；格式和File类似。
 	ProxyFile *string `required:"false"`
 
+	// 短信签名对应的场景说明
+	SceneDesc *string `required:"false"`
+
 	// 新的短信签名内容；长度为2-12个字符, 可包含中文、数字和符号；无需填写【】或[]，系统会自动添加
 	SigContent *string `required:"true"`
 
@@ -773,6 +1051,101 @@ func (c *USMSClient) UpdateUSMSSignature(req *UpdateUSMSSignatureRequest) (*Upda
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateUSMSSignature", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUSMSSignatureQualificationRequest is request schema for UpdateUSMSSignatureQualification action
+type UpdateUSMSSignatureQualificationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 资质属性，0-自用 1-他用
+	Attr *int `required:"false"`
+
+	// 公司证件文件FileId
+	CompanyCertificateFileId *string `required:"false"`
+
+	// 公司统一社会信用代码
+	CompanyCreditCode *string `required:"false"`
+
+	// 公司名称，长度限制100
+	CompanyName *string `required:"false"`
+
+	// 公司工作现场照片FileId
+	CompanyWorkScenePhotosFileId *string `required:"false"`
+
+	// 经办人手持身份证图片FileId
+	HandlerHandHeldImageFileId *string `required:"false"`
+
+	// 经办人身份证国徽面图片FileId
+	HandlerIDCardBackImageFileId *string `required:"false"`
+
+	// 经办人身份证人像面图片FileId
+	HandlerIDCardFrontImageFileId *string `required:"false"`
+
+	// 经办人身份证号码
+	HandlerIDNumber *string `required:"false"`
+
+	// 经办人姓名
+	HandlerName *string `required:"false"`
+
+	// 法人身份证号码
+	ManagerIDNumber *string `required:"false"`
+
+	// 法人姓名
+	ManagerName *string `required:"false"`
+
+	// 资质名称
+	Name *string `required:"false"`
+
+	// 资质Id
+	QualificationId *string `required:"true"`
+
+	// 状态：0-草稿，1-提交审核
+	Status *int `required:"true"`
+}
+
+// UpdateUSMSSignatureQualificationResponse is response schema for UpdateUSMSSignatureQualification action
+type UpdateUSMSSignatureQualificationResponse struct {
+	response.CommonBase
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+
+	// 资质Id
+	QualificationId string
+}
+
+// NewUpdateUSMSSignatureQualificationRequest will create request of UpdateUSMSSignatureQualification action.
+func (c *USMSClient) NewUpdateUSMSSignatureQualificationRequest() *UpdateUSMSSignatureQualificationRequest {
+	req := &UpdateUSMSSignatureQualificationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUSMSSignatureQualification
+
+修改短信签名资质申请记录
+*/
+func (c *USMSClient) UpdateUSMSSignatureQualification(req *UpdateUSMSSignatureQualificationRequest) (*UpdateUSMSSignatureQualificationResponse, error) {
+	var err error
+	var res UpdateUSMSSignatureQualificationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUSMSSignatureQualification", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -835,6 +1208,68 @@ func (c *USMSClient) UpdateUSMSTemplate(req *UpdateUSMSTemplateRequest) (*Update
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateUSMSTemplate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UploadUSMSFileRequest is request schema for UploadUSMSFile action
+type UploadUSMSFileRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 文件内容，base64编码
+	FileContent *string `required:"true"`
+
+	// 文件名称，携带文件后缀
+	FileName *string `required:"true"`
+
+	// 文件类型，mime格式
+	FileType *string `required:"false"`
+
+	// 文件来源，0-签名资质
+	Source *int `required:"true"`
+}
+
+// UploadUSMSFileResponse is response schema for UploadUSMSFile action
+type UploadUSMSFileResponse struct {
+	response.CommonBase
+
+	// 文件FileId
+	FileId string
+
+	// 返回状态码描述，如果操作成功，默认返回为空
+	Message string
+}
+
+// NewUploadUSMSFileRequest will create request of UploadUSMSFile action.
+func (c *USMSClient) NewUploadUSMSFileRequest() *UploadUSMSFileRequest {
+	req := &UploadUSMSFileRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UploadUSMSFile
+
+上传文件
+*/
+func (c *USMSClient) UploadUSMSFile(req *UploadUSMSFileRequest) (*UploadUSMSFileResponse, error) {
+	var err error
+	var res UploadUSMSFileResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UploadUSMSFile", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
