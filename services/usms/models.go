@@ -42,6 +42,42 @@ type ReceiptPerSession struct {
 }
 
 /*
+StatisticsData - 统计信息
+*/
+type StatisticsData struct {
+
+	// 发送失败数（拆分条数）
+	FailCostCount int
+
+	// 发送失败数（提交条数）
+	FailCount int
+
+	// 发送总数（拆分条数）
+	SendCostCount int
+
+	// 发送总数（提交条数）
+	SendCount int
+
+	// 提交失败数（拆分条数）
+	SubmitFailCostCount int
+
+	// 提交失败数（提交条数）
+	SubmitFailCount int
+
+	// 发送成功数（拆分条数）
+	SuccessCostCount int
+
+	// 发送成功数（提交条数）
+	SuccessCount int
+
+	// 状态未知数（拆分条数）
+	UnknownCostCount int
+
+	// 状态未知数（提交条数）
+	UnknownCount int
+}
+
+/*
 StatisticsDataInfo - 统计信息按天聚合
 */
 type StatisticsDataInfo struct {
@@ -90,39 +126,51 @@ type StatisticsDataInfo struct {
 }
 
 /*
-StatisticsData - 统计信息
+OutSignatureQualification -
 */
-type StatisticsData struct {
+type OutSignatureQualification struct {
 
-	// 发送失败数（拆分条数）
-	FailCostCount int
+	// 项目Id
+	AccountId int
 
-	// 发送失败数（提交条数）
-	FailCount int
+	// 资质属性: 0-自用 1-他用
+	Attr int
 
-	// 发送总数（拆分条数）
-	SendCostCount int
+	// 公司名称
+	CompanyName string
 
-	// 发送总数（提交条数）
-	SendCount int
+	// 创建时间戳
+	CreateTime int
 
-	// 提交失败数（拆分条数）
-	SubmitFailCostCount int
+	// 审核未通过错误码
+	ErrCode int
 
-	// 提交失败数（提交条数）
-	SubmitFailCount int
+	// 审核未通过错误原因
+	ErrDesc string
 
-	// 发送成功数（拆分条数）
-	SuccessCostCount int
+	// 经办人姓名
+	HandlerName string
 
-	// 发送成功数（提交条数）
-	SuccessCount int
+	// 负责人姓名
+	ManagerName string
 
-	// 状态未知数（拆分条数）
-	UnknownCostCount int
+	// 修改时间戳
+	ModifyTime int
 
-	// 状态未知数（提交条数）
-	UnknownCount int
+	// 资质名称
+	Name string
+
+	// 资质Id
+	QualificationId string
+
+	// 审核完成时间戳
+	ReviewEndTime int
+
+	// 审核开始时间戳
+	ReviewStartTime int
+
+	// 状态:0-草稿 1-审核中 2-审核通过 3-审核未通过 4-人工禁用
+	Status int
 }
 
 /*
@@ -140,6 +188,78 @@ type OutSignature struct {
 	SigId string
 
 	// 签名状态。0-待审核 1-审核中 2-审核通过 3-审核未通过 4-被禁用
+	Status int
+}
+
+/*
+OutSignatureQualificationDetail -
+*/
+type OutSignatureQualificationDetail struct {
+
+	// 资质属性：0-自用，1-他用
+	Attr int
+
+	// 公司证件文件链接
+	CompanyCertificateFile string
+
+	// 统一社会信用代码
+	CompanyCreditCode string
+
+	// 公司名称
+	CompanyName string
+
+	// 工作现场照片链接
+	CompanyWorkScenePhotos string
+
+	// 创建时间戳
+	CreateTime int
+
+	// 审核未通过错误码
+	ErrCode int
+
+	// 审核未通过错误原因
+	ErrDesc string
+
+	// 经办人手持身份证图片链接
+	HandlerHandHeldImage string
+
+	// 经办人身份证国徽面图片链接
+	HandlerIDCardBackImage string
+
+	// 经办人身份证人像面图片链接
+	HandlerIDCardFrontImage string
+
+	// 经办人证件号码
+	HandlerIDNumber string
+
+	// 经办人姓名
+	HandlerName string
+
+	// 负责人证件号码
+	ManagerIDNumber string
+
+	// 负责人姓名
+	ManagerName string
+
+	// 修改时间戳
+	ModifyTime int
+
+	// 资质名称
+	Name string
+
+	// 授权委托书文件链接
+	PowerOfAttorney string
+
+	// 资质Id
+	QualificationId string
+
+	// 审核完成时间戳
+	ReviewEndTime int
+
+	// 审核开始时间戳
+	ReviewStartTime int
+
+	// 状态:0-草稿 1-审核中 2-审核通过 3-审核未通过 4-人工禁用
 	Status int
 }
 
