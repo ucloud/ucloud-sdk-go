@@ -519,6 +519,101 @@ type NetworkInterface struct {
 }
 
 /*
+SecGroupSimpleInfo - 安全组简略信息
+*/
+type SecGroupSimpleInfo struct {
+
+	// 安全组名称
+	Name string
+
+	// 安全组资源ID
+	SecGroupId string
+}
+
+/*
+ResourceSecgroupInfo - 资源的安全组信息
+*/
+type ResourceSecgroupInfo struct {
+
+	// 资源绑定安全组数量
+	Count int
+
+	// 资源ID
+	ResourceId string
+
+	// 详见SecGroupSimpleInfo
+	SecGroupInfo []SecGroupSimpleInfo
+}
+
+/*
+BindingSecGroupInfo -
+*/
+type BindingSecGroupInfo struct {
+
+	// 安全组名称
+	Name string
+
+	// 该资源与该安全组绑定的优先级
+	Priority int
+
+	// 安全组 ID
+	SecGroupId string
+
+	// 安全组所属 VPC
+	VPCId string
+}
+
+/*
+ResourceExInfo - 资源额外信息（for 安全组）
+*/
+type ResourceExInfo struct {
+
+	// 主机外网IP
+	EIP []string
+
+	// 主机内网IP
+	IP []string
+
+	// 资源名称
+	ResourceName string
+
+	// 父级资源ID
+	SuperResourceId string
+
+	// 父级资源名称
+	SuperResourceName string
+
+	// 弹性网卡信息
+	Uni []ResourceSecgroupInfo
+}
+
+/*
+ResourceSecgroupInfoEx - 资源绑定的安全组信息。ResourceSecgroupInfoEx 中如果资源是非网卡资源（如云主机）且绑定虚拟网卡，
+则该资源不会绑定安全组，安全组只会绑定到虚拟网卡上；故 Count 为 0，Uni 非空，
+Uni 为一个网卡数组，表示每个虚拟网卡绑定的安全组信息。
+*/
+type ResourceSecgroupInfoEx struct {
+
+	// 该资源绑定的安全组数量
+	Count int
+
+	// 资源额外信息
+	ExInfo ResourceExInfo
+
+	// 表示是否允许绑定安全组
+	PermitAssociate bool
+
+	// 资源 ID
+	ResourceId string
+
+	// 资源名称
+	ResourceName string
+
+	// 绑定安全组信息
+	SecGroupInfo []BindingSecGroupInfo
+}
+
+/*
 RouteRuleInfo - 路由规则信息
 */
 type RouteRuleInfo struct {
@@ -603,6 +698,102 @@ type RouteTableInfo struct {
 
 	// 路由表所属的VPC资源名称
 	VPCName string
+}
+
+/*
+SecGroupRuleInfo - 安全组规则信息
+*/
+type SecGroupRuleInfo struct {
+
+	// "Ingress/Egress"，入站规则/出站规则
+	Direction string
+
+	// 目标端口
+	DstPort string
+
+	// 地址
+	IPRange string
+
+	// 优先级
+	Priority int
+
+	// 协议类型
+	ProtocolType string
+
+	// 安全组规则备注
+	Remark string
+
+	// 匹配策略
+	RuleAction string
+
+	// 规则ID
+	RuleId string
+}
+
+/*
+SecGroupInfo - 安全组信息
+*/
+type SecGroupInfo struct {
+
+	// 用户 ID
+	Account int
+
+	// 创建的时间，格式为Unix Timestamp，如 1747030299
+	CreateTime int
+
+	// 安全组名称
+	Name string
+
+	// 备注
+	Remark string
+
+	// 安全组组中的规则列表，参见 SecGroupRuleInfo
+	Rule []SecGroupRuleInfo
+
+	// 安全组资源ID
+	SecGroupId string
+
+	// 业务组
+	Tag string
+
+	// 安全组类型，枚举值为： "user defined", 自定义创建安全组； "recommend web", 使用Web模板创建的安全组； "recommend non web", 使用非Web模板创建的安全组
+	Type string
+
+	// VPC资源ID
+	VPCId string
+}
+
+/*
+SecGroupResourceInfo - 安全组绑定资源信息
+*/
+type SecGroupResourceInfo struct {
+
+	// 名称
+	Name string
+
+	// 内网IP
+	PrivateIp string
+
+	// 资源ID
+	ResourceId string
+
+	// 资源类型。"unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计，“uni”，虚拟网卡。
+	ResourceType string
+
+	// 资源绑定的虚拟网卡的ID
+	SubResourceId string
+
+	// 绑定的虚拟网卡的名称
+	SubResourceName string
+
+	// 绑定的虚拟网卡的类型，“uni”，虚拟网卡
+	SubResourceType string
+
+	// 业务组
+	Tag string
+
+	// 可用区
+	Zone int
 }
 
 /*

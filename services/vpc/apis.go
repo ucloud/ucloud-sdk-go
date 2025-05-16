@@ -446,6 +446,112 @@ func (c *VPCClient) AssociateRouteTable(req *AssociateRouteTableRequest) (*Assoc
 	return &res, nil
 }
 
+// AssociateSecGroupRequest is request schema for AssociateSecGroup action
+type AssociateSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 包含安全组 ID 和优先级的 PrioritySecGroup 数组，该字段和资源 ID 只支持一个批量。不支持 .n 格式。Type 为 PrioritySecGroup JSON 格式数组。
+	PrioritySecGroup *string `required:"true"`
+
+	// 资源短 ID 数组，安全组参赛和该字段只支持一个批量。不支持 .n 格式。Type 为 string 数组。
+	ResourceId *string `required:"true"`
+}
+
+// AssociateSecGroupResponse is response schema for AssociateSecGroup action
+type AssociateSecGroupResponse struct {
+	response.CommonBase
+}
+
+// NewAssociateSecGroupRequest will create request of AssociateSecGroup action.
+func (c *VPCClient) NewAssociateSecGroupRequest() *AssociateSecGroupRequest {
+	req := &AssociateSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AssociateSecGroup
+
+绑定资源到安全组
+*/
+func (c *VPCClient) AssociateSecGroup(req *AssociateSecGroupRequest) (*AssociateSecGroupResponse, error) {
+	var err error
+	var res AssociateSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AssociateSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AssociateSecGroupDynamicRequest is request schema for AssociateSecGroupDynamic action
+type AssociateSecGroupDynamicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 资源短 ID 数组。支持数组模式。Type 为 string 数组。
+	ResourceId []string `required:"true"`
+
+	// 安全组ID
+	SecGroupId *string `required:"true"`
+}
+
+// AssociateSecGroupDynamicResponse is response schema for AssociateSecGroupDynamic action
+type AssociateSecGroupDynamicResponse struct {
+	response.CommonBase
+}
+
+// NewAssociateSecGroupDynamicRequest will create request of AssociateSecGroupDynamic action.
+func (c *VPCClient) NewAssociateSecGroupDynamicRequest() *AssociateSecGroupDynamicRequest {
+	req := &AssociateSecGroupDynamicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AssociateSecGroupDynamic
+
+绑定安全组，动态调整绑定优先级
+*/
+func (c *VPCClient) AssociateSecGroupDynamic(req *AssociateSecGroupDynamicRequest) (*AssociateSecGroupDynamicResponse, error) {
+	var err error
+	var res AssociateSecGroupDynamicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AssociateSecGroupDynamic", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // AttachNetworkInterfaceRequest is request schema for AttachNetworkInterface action
 type AttachNetworkInterfaceRequest struct {
 	request.CommonBase
@@ -1045,6 +1151,143 @@ func (c *VPCClient) CreateRouteTable(req *CreateRouteTableRequest) (*CreateRoute
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateRouteTable", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateSecGroupRequest is request schema for CreateSecGroup action
+type CreateSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 安全组名称，最长64个字符。
+	Name *string `required:"true"`
+
+	// 资源ID所属的VPC
+	VPCID *string `required:"true"`
+}
+
+// CreateSecGroupResponse is response schema for CreateSecGroup action
+type CreateSecGroupResponse struct {
+	response.CommonBase
+
+	// 安全组ID
+	SecGroupId string
+}
+
+// NewCreateSecGroupRequest will create request of CreateSecGroup action.
+func (c *VPCClient) NewCreateSecGroupRequest() *CreateSecGroupRequest {
+	req := &CreateSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateSecGroup
+
+创建安全组
+*/
+func (c *VPCClient) CreateSecGroup(req *CreateSecGroupRequest) (*CreateSecGroupResponse, error) {
+	var err error
+	var res CreateSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateSecGroupRuleParamRule is request schema for complex param
+*/
+type CreateSecGroupRuleParamRule struct {
+
+	// "Ingress/Egress"，入站规则/出站规则
+	Direction *string `required:"true"`
+
+	// 目的端口。逗号分隔，如 "80,443"、"443,2000-10000"
+	DstPort *string `required:"true"`
+
+	// IP 地址信息，逗号分隔。
+	IPRange *string `required:"true"`
+
+	// 规则优先级。范围为 1~200
+	Priority *int `required:"true"`
+
+	// 协议类型。"TCP","UDP","ICMP","ICMPv6","ALL"
+	ProtocolType *string `required:"true"`
+
+	// 规则备注
+	Remark *string `required:"true"`
+
+	// 规则行为。"Accept" 或 "Drop"
+	RuleAction *string `required:"true"`
+}
+
+// CreateSecGroupRuleRequest is request schema for CreateSecGroupRule action
+type CreateSecGroupRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	//
+	Rule []CreateSecGroupRuleParamRule `required:"false"`
+
+	// 需要添加规则的安全组资源ID。
+	SecGroupId *string `required:"true"`
+}
+
+// CreateSecGroupRuleResponse is response schema for CreateSecGroupRule action
+type CreateSecGroupRuleResponse struct {
+	response.CommonBase
+
+	// 规则 ID
+	RuleId []string
+}
+
+// NewCreateSecGroupRuleRequest will create request of CreateSecGroupRule action.
+func (c *VPCClient) NewCreateSecGroupRuleRequest() *CreateSecGroupRuleRequest {
+	req := &CreateSecGroupRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateSecGroupRule
+*/
+func (c *VPCClient) CreateSecGroupRule(req *CreateSecGroupRuleRequest) (*CreateSecGroupRuleResponse, error) {
+	var err error
+	var res CreateSecGroupRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateSecGroupRule", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1655,6 +1898,107 @@ func (c *VPCClient) DeleteRouteTable(req *DeleteRouteTableRequest) (*DeleteRoute
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteRouteTable", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteSecGroupRequest is request schema for DeleteSecGroup action
+type DeleteSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 安全组资源 Id 数组。不支持 .n 格式。Type 为 string 数组
+	SecGroupId *string `required:"true"`
+}
+
+// DeleteSecGroupResponse is response schema for DeleteSecGroup action
+type DeleteSecGroupResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteSecGroupRequest will create request of DeleteSecGroup action.
+func (c *VPCClient) NewDeleteSecGroupRequest() *DeleteSecGroupRequest {
+	req := &DeleteSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteSecGroup
+
+删除安全组
+*/
+func (c *VPCClient) DeleteSecGroup(req *DeleteSecGroupRequest) (*DeleteSecGroupResponse, error) {
+	var err error
+	var res DeleteSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteSecGroupRuleRequest is request schema for DeleteSecGroupRule action
+type DeleteSecGroupRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 安全组规则 ID 数组。不支持 .n 格式。Type 为 string 数组。
+	RuleId *string `required:"true"`
+
+	// 所属安全组 ID。
+	SecGroupId *string `required:"true"`
+}
+
+// DeleteSecGroupRuleResponse is response schema for DeleteSecGroupRule action
+type DeleteSecGroupRuleResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteSecGroupRuleRequest will create request of DeleteSecGroupRule action.
+func (c *VPCClient) NewDeleteSecGroupRuleRequest() *DeleteSecGroupRuleRequest {
+	req := &DeleteSecGroupRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteSecGroupRule
+*/
+func (c *VPCClient) DeleteSecGroupRule(req *DeleteSecGroupRuleRequest) (*DeleteSecGroupRuleResponse, error) {
+	var err error
+	var res DeleteSecGroupRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteSecGroupRule", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2532,6 +2876,74 @@ func (c *VPCClient) DescribeNetworkInterface(req *DescribeNetworkInterfaceReques
 	return &res, nil
 }
 
+// DescribeResourceSecGroupRequest is request schema for DescribeResourceSecGroup action
+type DescribeResourceSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 分页查询时的最大返回资源数量。
+	Limit *int `required:"false"`
+
+	// 分页查询时的偏移量。传入了 ResourceId 则不分页。
+	Offset *int `required:"false"`
+
+	// 资源 ID 数组，如果指定则不分页；否则分页获取该账号下的指定类型的资源。不支持 .n 格式。Type 为 string 数组。
+	ResourceId *string `required:"false"`
+
+	// 资源类型，如 uhost, uni
+	ResourceType *string `required:"false"`
+
+	// VPC ID。非必须，分页使用（分页时，也可不传）；ResourceId 非空时，忽略
+	VPCId *string `required:"false"`
+}
+
+// DescribeResourceSecGroupResponse is response schema for DescribeResourceSecGroup action
+type DescribeResourceSecGroupResponse struct {
+	response.CommonBase
+
+	// 资源绑定的安全组信息
+	DataSet []ResourceSecgroupInfoEx
+
+	// 资源总数量。传入 ResourceId 时，为传入资源中的有效资源数量。
+	TotalCount int
+}
+
+// NewDescribeResourceSecGroupRequest will create request of DescribeResourceSecGroup action.
+func (c *VPCClient) NewDescribeResourceSecGroupRequest() *DescribeResourceSecGroupRequest {
+	req := &DescribeResourceSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeResourceSecGroup
+
+查询资源绑定的安全组信息
+*/
+func (c *VPCClient) DescribeResourceSecGroup(req *DescribeResourceSecGroupRequest) (*DescribeResourceSecGroupResponse, error) {
+	var err error
+	var res DescribeResourceSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeResourceSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeRouteTableRequest is request schema for DescribeRouteTable action
 type DescribeRouteTableRequest struct {
 	request.CommonBase
@@ -2599,6 +3011,128 @@ func (c *VPCClient) DescribeRouteTable(req *DescribeRouteTableRequest) (*Describ
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeRouteTable", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeSecGroupRequest is request schema for DescribeSecGroup action
+type DescribeSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *int `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 分页查询数据长度。默认为20
+	Limit *int `required:"false"`
+
+	// 分页查询起始位置偏移量。默认为0
+	Offset *int `required:"false"`
+
+	// 安全组资源 ID 数组，传入则 Offset/Limit/BusinessId 失效。支持数组格式。Type 为 string 数组。
+	SecGroupId []string `required:"false"`
+
+	// 资源ID所属的 VPC ID
+	VPCId *string `required:"false"`
+}
+
+// DescribeSecGroupResponse is response schema for DescribeSecGroup action
+type DescribeSecGroupResponse struct {
+	response.CommonBase
+
+	// 详见SecGroupInfo
+	DataSet []SecGroupInfo
+}
+
+// NewDescribeSecGroupRequest will create request of DescribeSecGroup action.
+func (c *VPCClient) NewDescribeSecGroupRequest() *DescribeSecGroupRequest {
+	req := &DescribeSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeSecGroup
+*/
+func (c *VPCClient) DescribeSecGroup(req *DescribeSecGroupRequest) (*DescribeSecGroupResponse, error) {
+	var err error
+	var res DescribeSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeSecGroupResourceRequest is request schema for DescribeSecGroupResource action
+type DescribeSecGroupResourceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *int `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 分页查询长度。默认为20
+	Limit *int `required:"false"`
+
+	// 分页查询起始位置偏移量。默认为0
+	Offset *int `required:"false"`
+
+	// 安全组资源ID。
+	SecGroupId *string `required:"false"`
+}
+
+// DescribeSecGroupResourceResponse is response schema for DescribeSecGroupResource action
+type DescribeSecGroupResourceResponse struct {
+	response.CommonBase
+
+	// 详见SecGroupResourceInfo
+	DataSet []SecGroupResourceInfo
+
+	// 安全组绑定的资源总数
+	TotalCount int
+}
+
+// NewDescribeSecGroupResourceRequest will create request of DescribeSecGroupResource action.
+func (c *VPCClient) NewDescribeSecGroupResourceRequest() *DescribeSecGroupResourceRequest {
+	req := &DescribeSecGroupResourceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeSecGroupResource
+
+获取安全组绑资源信息
+*/
+func (c *VPCClient) DescribeSecGroupResource(req *DescribeSecGroupResourceRequest) (*DescribeSecGroupResourceResponse, error) {
+	var err error
+	var res DescribeSecGroupResourceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeSecGroupResource", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -3305,6 +3839,62 @@ func (c *VPCClient) DisableUniEipDirectMode(req *DisableUniEipDirectModeRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DisableUniEipDirectMode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DisassociateSecGroupRequest is request schema for DisassociateSecGroup action
+type DisassociateSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 是否强制解绑。默认为 false。为 true 表示强制解绑，用于删除资源前的解绑，因为开启安全组特性的资源至少绑定一个安全组，正常情况下是不允许解绑所有安全组。
+	Force *bool `required:"false"`
+
+	// 资源ID数组，为空表示解绑资源上所有安全组，安全组ID和资源ID至少传一个，且只能有一个批量。不支持 .n 格式。Type 为 string 数组。
+	ResourceId *string `required:"false"`
+
+	// 安全组ID数组，为空表示解绑安全组绑定的所以资源，安全组ID和资源ID至少传一个,且只能有一个批量。不支持 .n 格式。Type 为 string 数组。
+	SecGroupId *string `required:"false"`
+}
+
+// DisassociateSecGroupResponse is response schema for DisassociateSecGroup action
+type DisassociateSecGroupResponse struct {
+	response.CommonBase
+}
+
+// NewDisassociateSecGroupRequest will create request of DisassociateSecGroup action.
+func (c *VPCClient) NewDisassociateSecGroupRequest() *DisassociateSecGroupRequest {
+	req := &DisassociateSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DisassociateSecGroup
+
+解绑安全组和资源绑定关系
+*/
+func (c *VPCClient) DisassociateSecGroup(req *DisassociateSecGroupRequest) (*DisassociateSecGroupResponse, error) {
+	var err error
+	var res DisassociateSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DisassociateSecGroup", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -4314,6 +4904,211 @@ func (c *VPCClient) UpdateRouteTableAttribute(req *UpdateRouteTableAttributeRequ
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateRouteTableAttribute", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateSecGroupRequest is request schema for UpdateSecGroup action
+type UpdateSecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 安全组名称，默认为空，为空则不做修改。Name,Tag,Remark必须填写1个及以上
+	Name *string `required:"false"`
+
+	// 安全组备注，默认为空，为空则不做修改。Name,Tag,Remark必须填写1个及以上
+	Remark *string `required:"false"`
+
+	// 安全组资源ID数组。不支持 .n 格式。Type 为 string 数组。
+	SecGroupId *string `required:"true"`
+}
+
+// UpdateSecGroupResponse is response schema for UpdateSecGroup action
+type UpdateSecGroupResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateSecGroupRequest will create request of UpdateSecGroup action.
+func (c *VPCClient) NewUpdateSecGroupRequest() *UpdateSecGroupRequest {
+	req := &UpdateSecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateSecGroup
+
+更新安全组基本信息
+*/
+func (c *VPCClient) UpdateSecGroup(req *UpdateSecGroupRequest) (*UpdateSecGroupResponse, error) {
+	var err error
+	var res UpdateSecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateSecGroupAssociationParamNewPrioritySecGroup is request schema for complex param
+*/
+type UpdateSecGroupAssociationParamNewPrioritySecGroup struct {
+
+	// 新绑定安全组的绑定优先级。支持 NewPrioritySecGroup 为数组格式，即传对应数据的 JSON 格式数组。
+	Priority *int `required:"true"`
+
+	// 需新绑定的安全组ID
+	SecGroupId *string `required:"true"`
+}
+
+// UpdateSecGroupAssociationRequest is request schema for UpdateSecGroupAssociation action
+type UpdateSecGroupAssociationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	//
+	NewPrioritySecGroup []UpdateSecGroupAssociationParamNewPrioritySecGroup `required:"false"`
+
+	// 被替换的安全组ID。支持数组格式，即为 string 数组。
+	OldSecGroupId []string `required:"true"`
+
+	// 资源ID
+	ResourceId *string `required:"true"`
+}
+
+// UpdateSecGroupAssociationResponse is response schema for UpdateSecGroupAssociation action
+type UpdateSecGroupAssociationResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateSecGroupAssociationRequest will create request of UpdateSecGroupAssociation action.
+func (c *VPCClient) NewUpdateSecGroupAssociationRequest() *UpdateSecGroupAssociationRequest {
+	req := &UpdateSecGroupAssociationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateSecGroupAssociation
+
+仅对操作的安全组ID生效，其他已有的绑定关系不受影响。
+*/
+func (c *VPCClient) UpdateSecGroupAssociation(req *UpdateSecGroupAssociationRequest) (*UpdateSecGroupAssociationResponse, error) {
+	var err error
+	var res UpdateSecGroupAssociationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateSecGroupAssociation", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateSecGroupRuleParamRule is request schema for complex param
+*/
+type UpdateSecGroupRuleParamRule struct {
+
+	// "Ingress/Egress"，入站规则/出站规则
+	Direction *string `required:"true"`
+
+	// 目的端口。逗号分隔，如 "80,443"、"443,2000-10000"
+	DstPort *string `required:"true"`
+
+	// IP 地址信息，逗号分隔。
+	IPRange *string `required:"true"`
+
+	// 规则优先级。范围为 1~200
+	Priority *int `required:"true"`
+
+	// 协议类型。"TCP","UDP","ICMP","ICMPv6","ALL"
+	ProtocolType *string `required:"true"`
+
+	// 规则备注
+	Remark *string `required:"true"`
+
+	// 规则行为。"Accept" 或 "Drop"
+	RuleAction *string `required:"true"`
+
+	// 规则 ID
+	RuleId *string `required:"true"`
+}
+
+// UpdateSecGroupRuleRequest is request schema for UpdateSecGroupRule action
+type UpdateSecGroupRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	//
+	Rule []UpdateSecGroupRuleParamRule `required:"false"`
+
+	// 规则所属得安全组 ID。
+	SecGroupId *string `required:"true"`
+}
+
+// UpdateSecGroupRuleResponse is response schema for UpdateSecGroupRule action
+type UpdateSecGroupRuleResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateSecGroupRuleRequest will create request of UpdateSecGroupRule action.
+func (c *VPCClient) NewUpdateSecGroupRuleRequest() *UpdateSecGroupRuleRequest {
+	req := &UpdateSecGroupRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateSecGroupRule
+*/
+func (c *VPCClient) UpdateSecGroupRule(req *UpdateSecGroupRuleRequest) (*UpdateSecGroupRuleResponse, error) {
+	var err error
+	var res UpdateSecGroupRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateSecGroupRule", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
