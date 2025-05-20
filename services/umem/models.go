@@ -42,6 +42,18 @@ type UDRedisSlowlogSet struct {
 }
 
 /*
+UMemSpaceAddressSet - DescribeUMemSpace
+*/
+type UMemSpaceAddressSet struct {
+
+	// UMem实例访问IP
+	IP string
+
+	// UMem实例访问Port
+	Port int
+}
+
+/*
 UMemSlaveDataSet - DescribeUMem
 */
 type UMemSlaveDataSet struct {
@@ -114,18 +126,6 @@ type UMemSlaveDataSet struct {
 
 	// 实例所在可用区，或者master redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	Zone string
-}
-
-/*
-UMemSpaceAddressSet - DescribeUMemSpace
-*/
-type UMemSpaceAddressSet struct {
-
-	// UMem实例访问IP
-	IP string
-
-	// UMem实例访问Port
-	Port int
 }
 
 /*
@@ -228,6 +228,9 @@ type UMemBackupSet struct {
 
 	// 本次备份，分片的数量
 	BlockCount int
+
+	// 备份大小
+	BlockSize int
 
 	// 创建时间
 	CreateTime int

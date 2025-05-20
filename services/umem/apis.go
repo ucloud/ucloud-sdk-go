@@ -1011,13 +1011,13 @@ func (c *UMemClient) DescribeUMem(req *DescribeUMemRequest) (*DescribeUMemRespon
 type DescribeUMemBackupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 分页显示的条目数, 默认值为10
@@ -1036,6 +1036,9 @@ type DescribeUMemBackupResponse struct {
 
 	// 分布式redis 备份，数组的每个元素为每个分片的备份
 	DataSet []UMemBackupSet
+
+	// 备份总数
+	TotalCount int
 }
 
 // NewDescribeUMemBackupRequest will create request of DescribeUMemBackup action.
@@ -1635,20 +1638,23 @@ func (c *UMemClient) DescribeUMemcacheUpgradePrice(req *DescribeUMemcacheUpgrade
 type DescribeURedisBackupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 组的ID
-	GroupId *string `required:"false"`
+	GroupId *string `required:"true"`
 
 	// 分页显示的条目数, 默认值为10
 	Limit *int `required:"false"`
 
 	// 分页显示的起始偏移, 默认值为0
 	Offset *int `required:"false"`
+
+	// 跨机房URedis，slave所在可用区（必须和Zone在同一Region，且不可相同）
+	SlaveZone *string `required:"false"`
 }
 
 // DescribeURedisBackupResponse is response schema for DescribeURedisBackup action
