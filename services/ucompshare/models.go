@@ -3,54 +3,6 @@
 package ucompshare
 
 /*
-Bundle - 轻量应用云主机套餐
-*/
-type Bundle struct {
-
-	// 外网带宽。单位：Mbps。
-	Bandwidth int
-
-	// 套餐ID。
-	BundleId string
-
-	// CPU核数。
-	CPU int
-
-	// 内存大小。单位：MB。
-	Memory int
-
-	// 系统盘大小。单位：GB。
-	SysDiskSpace int
-
-	// 流量包大小。单位：GB。
-	TrafficPacket int
-}
-
-/*
-ULHostDiskSet - 轻量应用主机的磁盘信息
-*/
-type ULHostDiskSet struct {
-
-	// 磁盘Id
-	DiskId string
-
-	// 磁盘类型。如："CLOUD_RSSD"、"CLOUD_SSD"
-	DiskType string
-
-	// 磁盘盘符。系统盘："vda"
-	Drive string
-
-	// 是否为系统盘。是："True"；否："False"
-	IsBoot string
-
-	// 磁盘大小。单位：GB
-	Size int
-
-	// 磁盘类型。系统盘："Boot"；数据盘："Data"
-	Type string
-}
-
-/*
 UHostIPSet -
 */
 type UHostIPSet struct {
@@ -90,6 +42,270 @@ type UHostIPSet struct {
 }
 
 /*
+WithoutGpuSpec - 无卡云主机规格信息
+*/
+type WithoutGpuSpec struct {
+
+	// cpu
+	Cpu int
+
+	// gpu
+	Gpu int
+
+	// 内存
+	Memory int
+}
+
+/*
+UHostDiskSet -
+*/
+type UHostDiskSet struct {
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
+SoftwareAddr -
+*/
+type SoftwareAddr struct {
+
+	// 软件名称
+	Name string
+
+	// 软件地址
+	URL string
+}
+
+/*
+CompShareInstanceSet - 算力平台实例详情
+*/
+type CompShareInstanceSet struct {
+
+	// 是否自动续费，自动续费：“Yes”，不自动续费：“No”
+	AutoRenew string
+
+	// 虚拟CPU核数，单位: 个
+	CPU int
+
+	// 计费模式，枚举值为： Year，按年付费； Month，按月付费； Dynamic，按时付费；Postpay，按需付费
+	ChargeType string
+
+	// 用于镜像计费的Id
+	CompShareImageBillId string
+
+	// 镜像Id
+	CompShareImageId string
+
+	// 镜像名称
+	CompShareImageName string
+
+	// 镜像来源
+	CompShareImageOwnerAlias string
+
+	// 镜像价格
+	CompShareImagePrice float64
+
+	// 镜像状态
+	CompShareImageStatus string
+
+	// 镜像类型- System 系统镜像- App 应用镜像- Custom 自制镜像- Community 社区镜像
+	CompShareImageType string
+
+	// CPU架构。"x86_64"/"i386"等
+	CpuArch string
+
+	// CPU平台。如"Intel/Auto"、"Amd/Auto"等等
+	CpuPlatform string
+
+	// 创建时间
+	CreateTime int
+
+	// 详情见UHostDiskSet
+	DiskSet []UHostDiskSet
+
+	// 过期时间
+	ExpireTime int
+
+	// GPU个数
+	GPU int
+
+	// GPU类型。如: "4090"
+	GpuType string
+
+	// GPU显存信息
+	GraphicsMemory GraphicsMemory
+
+	// 详情见UHostIPSet
+	IPSet []UHostIPSet
+
+	// 主机价格
+	InstancePrice float64
+
+	// 实例类型。"UHost": 普通主机；"Container": 容器主机
+	InstanceType string
+
+	// 是否过期。Yes：已过期；No：未过期
+	IsExpire string
+
+	// 机型信息
+	MachineType string
+
+	// 内存大小，单位：MB
+	Memory int
+
+	// 实例名称
+	Name string
+
+	// 虚机镜像的名称
+	OsName string
+
+	// 虚机镜像操作系统类型。"Linux"\"Windows"
+	OsType string
+
+	// 主机密码。由Base64编码
+	Password string
+
+	// 实例备注
+	Remark string
+
+	// 软件地址
+	Softwares []SoftwareAddr
+
+	// SSH登录命令
+	SshLoginCommand string
+
+	// 实例状态，枚举值：\\ >初始化: Initializing; \\ >启动中: Starting; \\> 运行中: Running; \\> 关机中: Stopping; \\ >关机: Stopped \\ >安装失败: Install Fail; \\ >重启中: Rebooting; \\ >升级改配中: Resizing; \\ > 未知(空字符串，获取状态超时或出错)：
+	State string
+
+	// 此实例是否支持无卡开机
+	SupportWithoutGpuStart bool
+
+	// 实例业务组
+	Tag string
+
+	// 总的数据盘存储空间
+	TotalDiskSpace int
+
+	// 实例Id
+	UHostId string
+
+	// 无卡配置规格，详情见：WithoutGpuSpecInfo
+	WithoutGpuSpec WithoutGpuSpec
+
+	// 可用区
+	Zone string
+}
+
+/*
+Bundle - 轻量应用云主机套餐
+*/
+type Bundle struct {
+
+	// 外网带宽。单位：Mbps。
+	Bandwidth int
+
+	// 套餐ID。
+	BundleId string
+
+	// CPU核数。
+	CPU int
+
+	// 内存大小。单位：MB。
+	Memory int
+
+	// 系统盘大小。单位：GB。
+	SysDiskSpace int
+
+	// 流量包大小。单位：GB。
+	TrafficPacket int
+}
+
+/*
+ExclusiveUTPInfo - 流量包详情
+*/
+type ExclusiveUTPInfo struct {
+
+	// 当前周期剩余流量
+	AvailableSize int
+
+	// 创建时间
+	CreateTime int
+
+	// 当前周期超出限额的流量
+	ExcessSize int
+
+	// 上次重置时间
+	LastResetTime int
+
+	// 下次重置时间
+	NextResetTime int
+
+	// 当前周期总流量
+	TotalSize int
+
+	// 当前周期已使用流量
+	UsedSize int
+}
+
+/*
+ULHostDiskSet - 轻量应用主机的磁盘信息
+*/
+type ULHostDiskSet struct {
+
+	// 磁盘Id
+	DiskId string
+
+	// 磁盘类型。如："CLOUD_RSSD"、"CLOUD_SSD"
+	DiskType string
+
+	// 磁盘盘符。系统盘："vda"
+	Drive string
+
+	// 是否为系统盘。是："True"；否："False"
+	IsBoot string
+
+	// 磁盘大小。单位：GB
+	Size int
+
+	// 磁盘类型。系统盘："Boot"；数据盘："Data"
+	Type string
+}
+
+/*
 ULHostInstanceSet - 轻量应用云主机详情
 */
 type ULHostInstanceSet struct {
@@ -111,6 +327,9 @@ type ULHostInstanceSet struct {
 
 	// 磁盘信息
 	DiskSet []ULHostDiskSet
+
+	// 流量包详情信息
+	EIPExclusiveUTPInfo ExclusiveUTPInfo
 
 	// 过期时间。Unix时间戳
 	ExpireTime int
