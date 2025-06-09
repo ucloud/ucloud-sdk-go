@@ -114,11 +114,17 @@ type AddUSMSSignatureQualificationRequest struct {
 	// 经办人姓名
 	HandlerName *string `required:"false"`
 
+	// 经办人手机号
+	HandlerPhone *string `required:"true"`
+
 	// 法人身份证号码
 	ManagerIDNumber *string `required:"false"`
 
 	// 法人姓名
 	ManagerName *string `required:"false"`
+
+	// 法人手机号
+	ManagerPhone *string `required:"false"`
 
 	// 资质名称
 	Name *string `required:"true"`
@@ -1095,11 +1101,17 @@ type UpdateUSMSSignatureQualificationRequest struct {
 	// 经办人姓名
 	HandlerName *string `required:"false"`
 
+	// 经办人手机号
+	HandlerPhone *string `required:"false"`
+
 	// 法人身份证号码
 	ManagerIDNumber *string `required:"false"`
 
 	// 法人姓名
 	ManagerName *string `required:"false"`
+
+	// 法人手机号
+	ManagerPhone *string `required:"false"`
 
 	// 资质名称
 	Name *string `required:"false"`
