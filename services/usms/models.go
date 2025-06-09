@@ -192,7 +192,7 @@ type OutSignature struct {
 }
 
 /*
-OutSignatureQualificationDetail -
+OutSignatureQualificationDetail - 签名资质详情
 */
 type OutSignatureQualificationDetail struct {
 
@@ -235,11 +235,17 @@ type OutSignatureQualificationDetail struct {
 	// 经办人姓名
 	HandlerName string
 
+	// 经办人手机号
+	HandlerPhone string
+
 	// 负责人证件号码
 	ManagerIDNumber string
 
 	// 负责人姓名
 	ManagerName string
+
+	// 负责人手机号
+	ManagerPhone string
 
 	// 修改时间戳
 	ModifyTime int
