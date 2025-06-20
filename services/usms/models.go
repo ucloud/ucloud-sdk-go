@@ -174,6 +174,51 @@ type OutSignatureQualification struct {
 }
 
 /*
+TemplateStatisticsDataInfo - 模版统计信息按天聚合
+*/
+type TemplateStatisticsDataInfo struct {
+
+	// 国际/地区标识码
+	BrevityCode string
+
+	// 发送总数（拆分条数）
+	CostCount int
+
+	// 发送总数（提交条数）
+	Count int
+
+	// 发送失败数（拆分条数）
+	FailedCostCount int
+
+	// 发送失败数（提交条数）
+	FailedCount int
+
+	// 发送时间
+	SendDate string
+
+	// 提交失败数（拆分条数）
+	SubmitFailedCostCount int
+
+	// 提交失败数（提交条数）
+	SubmitFailedCount int
+
+	// 发送成功数（拆分条数）
+	SuccessCostCount int
+
+	// 发送成功数（提交条数）
+	SuccessCount int
+
+	// 短信模板ID
+	TemplateId string
+
+	// 状态未知数（拆分条数）
+	UnknownCostCount int
+
+	// 状态未知数（提交条数）
+	UnknownCount int
+}
+
+/*
 OutSignature - 短信签名
 */
 type OutSignature struct {
