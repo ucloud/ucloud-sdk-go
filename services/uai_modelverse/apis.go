@@ -9,43 +9,28 @@ import (
 
 // UAI_Modelverse API Schema
 
-// CreateMVAppRequest is request schema for CreateMVApp action
-type CreateMVAppRequest struct {
+// CreateUMInferAPIKeyRequest is request schema for CreateUMInferAPIKey action
+type CreateUMInferAPIKeyRequest struct {
 	request.CommonBase
 
-	// 应用描述
-	AppDes *string `required:"false"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
 
-	// 应用名称
-	AppName *string `required:"true"`
-
-	// 应用类型
-	AppType *int `required:"true"`
-
-	// 语言模型ID
-	LLMID *string `required:"true"`
-
-	// 模型采样温度 ，(0，100) 开区间，不能等于 0 或 100，默认值95
-	LLMTemperature *int `required:"false"`
-
-	// 模型采样温度（核取样）， (0，100) 开区间，不能等于 0 或 100，默认值70
-	LLMTopP *int `required:"false"`
+	// apikey名称
+	Name *string `required:"true"`
 }
 
-// CreateMVAppResponse is response schema for CreateMVApp action
-type CreateMVAppResponse struct {
+// CreateUMInferAPIKeyResponse is response schema for CreateUMInferAPIKey action
+type CreateUMInferAPIKeyResponse struct {
 	response.CommonBase
 
-	// 应用信息
-	AppInfo AppInfo
-
-	// Code非0时，描述错误信息
-	Msg string
+	// apikey
+	Data APIKey
 }
 
-// NewCreateMVAppRequest will create request of CreateMVApp action.
-func (c *UAI_ModelverseClient) NewCreateMVAppRequest() *CreateMVAppRequest {
-	req := &CreateMVAppRequest{}
+// NewCreateUMInferAPIKeyRequest will create request of CreateUMInferAPIKey action.
+func (c *UAI_ModelverseClient) NewCreateUMInferAPIKeyRequest() *CreateUMInferAPIKeyRequest {
+	req := &CreateUMInferAPIKeyRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -56,17 +41,17 @@ func (c *UAI_ModelverseClient) NewCreateMVAppRequest() *CreateMVAppRequest {
 }
 
 /*
-API: CreateMVApp
+API: CreateUMInferAPIKey
 
-提供参数创建应用
+创建apikey
 */
-func (c *UAI_ModelverseClient) CreateMVApp(req *CreateMVAppRequest) (*CreateMVAppResponse, error) {
+func (c *UAI_ModelverseClient) CreateUMInferAPIKey(req *CreateUMInferAPIKeyRequest) (*CreateUMInferAPIKeyResponse, error) {
 	var err error
-	var res CreateMVAppResponse
+	var res CreateUMInferAPIKeyResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("CreateMVApp", &reqCopier, &res)
+	err = c.Client.InvokeAction("CreateUMInferAPIKey", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -74,25 +59,28 @@ func (c *UAI_ModelverseClient) CreateMVApp(req *CreateMVAppRequest) (*CreateMVAp
 	return &res, nil
 }
 
-// DeleteMVAppRequest is request schema for DeleteMVApp action
-type DeleteMVAppRequest struct {
+// DeleteUMInferAPIKeyRequest is request schema for DeleteUMInferAPIKey action
+type DeleteUMInferAPIKeyRequest struct {
 	request.CommonBase
 
-	// 应用ID
-	AppID *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 要删除的apikey id
+	KeyId *string `required:"true"`
 }
 
-// DeleteMVAppResponse is response schema for DeleteMVApp action
-type DeleteMVAppResponse struct {
+// DeleteUMInferAPIKeyResponse is response schema for DeleteUMInferAPIKey action
+type DeleteUMInferAPIKeyResponse struct {
 	response.CommonBase
 
-	// Code非0时，描述错误信息
-	Msg string
+	// apikey 的资源ID
+	UminferID string
 }
 
-// NewDeleteMVAppRequest will create request of DeleteMVApp action.
-func (c *UAI_ModelverseClient) NewDeleteMVAppRequest() *DeleteMVAppRequest {
-	req := &DeleteMVAppRequest{}
+// NewDeleteUMInferAPIKeyRequest will create request of DeleteUMInferAPIKey action.
+func (c *UAI_ModelverseClient) NewDeleteUMInferAPIKeyRequest() *DeleteUMInferAPIKeyRequest {
+	req := &DeleteUMInferAPIKeyRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -103,17 +91,17 @@ func (c *UAI_ModelverseClient) NewDeleteMVAppRequest() *DeleteMVAppRequest {
 }
 
 /*
-API: DeleteMVApp
+API: DeleteUMInferAPIKey
 
-删除应用
+删除apikey
 */
-func (c *UAI_ModelverseClient) DeleteMVApp(req *DeleteMVAppRequest) (*DeleteMVAppResponse, error) {
+func (c *UAI_ModelverseClient) DeleteUMInferAPIKey(req *DeleteUMInferAPIKeyRequest) (*DeleteUMInferAPIKeyResponse, error) {
 	var err error
-	var res DeleteMVAppResponse
+	var res DeleteUMInferAPIKeyResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("DeleteMVApp", &reqCopier, &res)
+	err = c.Client.InvokeAction("DeleteUMInferAPIKey", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -121,28 +109,34 @@ func (c *UAI_ModelverseClient) DeleteMVApp(req *DeleteMVAppRequest) (*DeleteMVAp
 	return &res, nil
 }
 
-// QueryMVAppRequest is request schema for QueryMVApp action
-type QueryMVAppRequest struct {
+// GetUMInferAPIModelRequest is request schema for GetUMInferAPIModel action
+type GetUMInferAPIModelRequest struct {
 	request.CommonBase
 
-	// 应用ID (缺省则返回所有应用列表)
-	APPID *string `required:"false"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// apikey 的id
+	KeyId *string `required:"false"`
+
+	// 模型类型，1: 文本生成，2: 图片生成。默认 1
+	ModelType *int `required:"false"`
+
+	// 模型广场的id，用来跳转体验中心
+	SquareId *string `required:"false"`
 }
 
-// QueryMVAppResponse is response schema for QueryMVApp action
-type QueryMVAppResponse struct {
+// GetUMInferAPIModelResponse is response schema for GetUMInferAPIModel action
+type GetUMInferAPIModelResponse struct {
 	response.CommonBase
 
-	// 应用信息列表
-	AppInfo []AppInfo
-
-	// Code非0时，描述错误信息
-	Msg string
+	// 模型名称的字符串列表
+	Data []UMinferAPIModel
 }
 
-// NewQueryMVAppRequest will create request of QueryMVApp action.
-func (c *UAI_ModelverseClient) NewQueryMVAppRequest() *QueryMVAppRequest {
-	req := &QueryMVAppRequest{}
+// NewGetUMInferAPIModelRequest will create request of GetUMInferAPIModel action.
+func (c *UAI_ModelverseClient) NewGetUMInferAPIModelRequest() *GetUMInferAPIModelRequest {
+	req := &GetUMInferAPIModelRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -153,17 +147,17 @@ func (c *UAI_ModelverseClient) NewQueryMVAppRequest() *QueryMVAppRequest {
 }
 
 /*
-API: QueryMVApp
+API: GetUMInferAPIModel
 
-查询用户创建的应用信息
+获取该apikey能调用api的模型列表
 */
-func (c *UAI_ModelverseClient) QueryMVApp(req *QueryMVAppRequest) (*QueryMVAppResponse, error) {
+func (c *UAI_ModelverseClient) GetUMInferAPIModel(req *GetUMInferAPIModelRequest) (*GetUMInferAPIModelResponse, error) {
 	var err error
-	var res QueryMVAppResponse
+	var res GetUMInferAPIModelResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("QueryMVApp", &reqCopier, &res)
+	err = c.Client.InvokeAction("GetUMInferAPIModel", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -171,28 +165,37 @@ func (c *UAI_ModelverseClient) QueryMVApp(req *QueryMVAppRequest) (*QueryMVAppRe
 	return &res, nil
 }
 
-// QueryMVLLMListRequest is request schema for QueryMVLLMList action
-type QueryMVLLMListRequest struct {
+// GetUMInferServiceRequest is request schema for GetUMInferService action
+type GetUMInferServiceRequest struct {
 	request.CommonBase
 
-	// 语言模型ID (缺省则返回所有模型列表)
-	LLMID *string `required:"false"`
+	// limit
+	Limit *string `required:"false"`
+
+	// offset
+	Offset *string `required:"false"`
+
+	// 推理服务id
+	UminferID *string `required:"false"`
+
+	// 默认preDeploy,可获取DeepSeek Key
+	UminferType *string `required:"false"`
 }
 
-// QueryMVLLMListResponse is response schema for QueryMVLLMList action
-type QueryMVLLMListResponse struct {
+// GetUMInferServiceResponse is response schema for GetUMInferService action
+type GetUMInferServiceResponse struct {
 	response.CommonBase
 
-	// 语言模型列表
-	LLMInfoList []LLMInfo
+	// 推理服务数据
+	Data []UMInferServiceData
 
-	// 状态码描述
-	Msg string
+	// 模型数量
+	TotalCount int
 }
 
-// NewQueryMVLLMListRequest will create request of QueryMVLLMList action.
-func (c *UAI_ModelverseClient) NewQueryMVLLMListRequest() *QueryMVLLMListRequest {
-	req := &QueryMVLLMListRequest{}
+// NewGetUMInferServiceRequest will create request of GetUMInferService action.
+func (c *UAI_ModelverseClient) NewGetUMInferServiceRequest() *GetUMInferServiceRequest {
+	req := &GetUMInferServiceRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -203,17 +206,17 @@ func (c *UAI_ModelverseClient) NewQueryMVLLMListRequest() *QueryMVLLMListRequest
 }
 
 /*
-API: QueryMVLLMList
+API: GetUMInferService
 
-查询可用的语言模型列表
+获取模型服务
 */
-func (c *UAI_ModelverseClient) QueryMVLLMList(req *QueryMVLLMListRequest) (*QueryMVLLMListResponse, error) {
+func (c *UAI_ModelverseClient) GetUMInferService(req *GetUMInferServiceRequest) (*GetUMInferServiceResponse, error) {
 	var err error
-	var res QueryMVLLMListResponse
+	var res GetUMInferServiceResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("QueryMVLLMList", &reqCopier, &res)
+	err = c.Client.InvokeAction("GetUMInferService", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -221,117 +224,37 @@ func (c *UAI_ModelverseClient) QueryMVLLMList(req *QueryMVLLMListRequest) (*Quer
 	return &res, nil
 }
 
-// RunMVChatRequest is request schema for RunMVChat action
-type RunMVChatRequest struct {
+// GetUMInferTokenUsageRequest is request schema for GetUMInferTokenUsage action
+type GetUMInferTokenUsageRequest struct {
 	request.CommonBase
 
-	// 应用 ID
-	AppID *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
 
-	// 按时间从老到新传输对话列表集合，需要与Role一一对应Content为本条信息的具体内容
-	Content []string `required:"true"`
+	// 结束时间戳
+	EndTime *int `required:"true"`
 
-	// 按时间从老到新传输对话列表集合，需要与Content一一对应Role为本条信息作者的角色，枚举值为user 或 assistant- user 指用户角色输入的信息- assistant 指模型返回的信息
-	Role []string `required:"true"`
+	// apikey的id
+	KeyId *string `required:"true"`
 
-	// 会话 ID (不填写默认创建新会话)
-	SessionID *int `required:"false"`
+	// 模型名称
+	Model *string `required:"true"`
+
+	// 开始时间戳
+	StartTime *int `required:"true"`
 }
 
-// RunMVChatResponse is response schema for RunMVChat action
-type RunMVChatResponse struct {
+// GetUMInferTokenUsageResponse is response schema for GetUMInferTokenUsage action
+type GetUMInferTokenUsageResponse struct {
 	response.CommonBase
 
-	// 消息唯一标识
-	ID int
-
-	// 状态码描述
-	Msg string
-
-	// 回复内容
-	Response string
-
-	// 会话id
-	SessionID int
-
-	// 时间
-	Time int
+	// token使用详情
+	Data TokenUsage
 }
 
-// NewRunMVChatRequest will create request of RunMVChat action.
-func (c *UAI_ModelverseClient) NewRunMVChatRequest() *RunMVChatRequest {
-	req := &RunMVChatRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
-	return req
-}
-
-/*
-API: RunMVChat
-
-聊天接口
-*/
-func (c *UAI_ModelverseClient) RunMVChat(req *RunMVChatRequest) (*RunMVChatResponse, error) {
-	var err error
-	var res RunMVChatResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("RunMVChat", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// UpdateMVAppRequest is request schema for UpdateMVApp action
-type UpdateMVAppRequest struct {
-	request.CommonBase
-
-	// 应用描述
-	AppDes *string `required:"false"`
-
-	// 应用ID
-	AppID *string `required:"true"`
-
-	// 应用名称
-	AppName *string `required:"false"`
-
-	// 应用状态
-	AppState *int `required:"false"`
-
-	// 应用类型
-	AppType *int `required:"false"`
-
-	// 语言模型ID
-	LLMID *string `required:"false"`
-
-	// 模型采样温度，(0,100)开区间，默认值95
-	LLMTemperature *int `required:"false"`
-
-	// 模型采样温度（核取样），(0,100)开区间，默认值70
-	LLMTopP *int `required:"false"`
-}
-
-// UpdateMVAppResponse is response schema for UpdateMVApp action
-type UpdateMVAppResponse struct {
-	response.CommonBase
-
-	//
-	AppInfo AppInfo
-
-	// Code非0时，描述错误信息
-	Msg string
-}
-
-// NewUpdateMVAppRequest will create request of UpdateMVApp action.
-func (c *UAI_ModelverseClient) NewUpdateMVAppRequest() *UpdateMVAppRequest {
-	req := &UpdateMVAppRequest{}
+// NewGetUMInferTokenUsageRequest will create request of GetUMInferTokenUsage action.
+func (c *UAI_ModelverseClient) NewGetUMInferTokenUsageRequest() *GetUMInferTokenUsageRequest {
+	req := &GetUMInferTokenUsageRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -342,17 +265,251 @@ func (c *UAI_ModelverseClient) NewUpdateMVAppRequest() *UpdateMVAppRequest {
 }
 
 /*
-API: UpdateMVApp
+API: GetUMInferTokenUsage
 
-更新应用
+获取某个key下的某个模型的token使用量
 */
-func (c *UAI_ModelverseClient) UpdateMVApp(req *UpdateMVAppRequest) (*UpdateMVAppResponse, error) {
+func (c *UAI_ModelverseClient) GetUMInferTokenUsage(req *GetUMInferTokenUsageRequest) (*GetUMInferTokenUsageResponse, error) {
 	var err error
-	var res UpdateMVAppResponse
+	var res GetUMInferTokenUsageResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("UpdateMVApp", &reqCopier, &res)
+	err = c.Client.InvokeAction("GetUMInferTokenUsage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUFSquareModelRequest is request schema for ListUFSquareModel action
+type ListUFSquareModelRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 关键字
+	Keyword *string `required:"true"`
+
+	// 语言
+	Language *string `required:"true"`
+
+	// 每页数量
+	Limit *int `required:"true"`
+
+	// 上下文长度
+	MaxModelLen *string `required:"true"`
+
+	// 模型类型
+	ModelType *string `required:"true"`
+
+	// 偏移量
+	Offset *int `required:"true"`
+
+	// 排序顺序，默认倒序
+	Order *string `required:"true"`
+
+	// 排序字段
+	OrderBy *string `required:"true"`
+}
+
+// ListUFSquareModelResponse is response schema for ListUFSquareModel action
+type ListUFSquareModelResponse struct {
+	response.CommonBase
+
+	// 广场模型
+	SquareModels []SquareModel
+
+	// 总数
+	TotalCount string
+}
+
+// NewListUFSquareModelRequest will create request of ListUFSquareModel action.
+func (c *UAI_ModelverseClient) NewListUFSquareModelRequest() *ListUFSquareModelRequest {
+	req := &ListUFSquareModelRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUFSquareModel
+
+查询模型广场数据
+*/
+func (c *UAI_ModelverseClient) ListUFSquareModel(req *ListUFSquareModelRequest) (*ListUFSquareModelResponse, error) {
+	var err error
+	var res ListUFSquareModelResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUFSquareModel", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUFSquareModelLenRequest is request schema for ListUFSquareModelLen action
+type ListUFSquareModelLenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+}
+
+// ListUFSquareModelLenResponse is response schema for ListUFSquareModelLen action
+type ListUFSquareModelLenResponse struct {
+	response.CommonBase
+
+	// 模型上下文长度列表
+	MaxModelLens []int
+}
+
+// NewListUFSquareModelLenRequest will create request of ListUFSquareModelLen action.
+func (c *UAI_ModelverseClient) NewListUFSquareModelLenRequest() *ListUFSquareModelLenRequest {
+	req := &ListUFSquareModelLenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUFSquareModelLen
+
+获取模型广场上下文长度列表
+*/
+func (c *UAI_ModelverseClient) ListUFSquareModelLen(req *ListUFSquareModelLenRequest) (*ListUFSquareModelLenResponse, error) {
+	var err error
+	var res ListUFSquareModelLenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUFSquareModelLen", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUMInferAPIKeyRequest is request schema for ListUMInferAPIKey action
+type ListUMInferAPIKeyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// ListUMInferAPIKeyResponse is response schema for ListUMInferAPIKey action
+type ListUMInferAPIKeyResponse struct {
+	response.CommonBase
+
+	// apikey
+	Data APIKey
+}
+
+// NewListUMInferAPIKeyRequest will create request of ListUMInferAPIKey action.
+func (c *UAI_ModelverseClient) NewListUMInferAPIKeyRequest() *ListUMInferAPIKeyRequest {
+	req := &ListUMInferAPIKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUMInferAPIKey
+
+列表查询apikey
+*/
+func (c *UAI_ModelverseClient) ListUMInferAPIKey(req *ListUMInferAPIKeyRequest) (*ListUMInferAPIKeyResponse, error) {
+	var err error
+	var res ListUMInferAPIKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUMInferAPIKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUMInferAPIKeyRequest is request schema for UpdateUMInferAPIKey action
+type UpdateUMInferAPIKeyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// apikey的id
+	KeyId *string `required:"true"`
+
+	// 更新的名称
+	Name *string `required:"true"`
+}
+
+// UpdateUMInferAPIKeyResponse is response schema for UpdateUMInferAPIKey action
+type UpdateUMInferAPIKeyResponse struct {
+	response.CommonBase
+
+	// apikey 的id
+	UminferID string
+}
+
+// NewUpdateUMInferAPIKeyRequest will create request of UpdateUMInferAPIKey action.
+func (c *UAI_ModelverseClient) NewUpdateUMInferAPIKeyRequest() *UpdateUMInferAPIKeyRequest {
+	req := &UpdateUMInferAPIKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUMInferAPIKey
+
+更新apikey
+*/
+func (c *UAI_ModelverseClient) UpdateUMInferAPIKey(req *UpdateUMInferAPIKeyRequest) (*UpdateUMInferAPIKeyResponse, error) {
+	var err error
+	var res UpdateUMInferAPIKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUMInferAPIKey", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
