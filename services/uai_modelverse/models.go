@@ -3,58 +3,259 @@
 package uai_modelverse
 
 /*
-AppInfo - 应用信息
+APIKey - apikey
 */
-type AppInfo struct {
+type APIKey struct {
 
-	// 应用描述
-	AppDes string
+	// 渠道id
+	ChannelId string
 
-	// 应用ID
-	AppID string
+	// 创建时间
+	CreateTime string
 
-	// 应用名称
-	AppName string
+	// 过期时间的unix时间戳，-1 用不过期
+	ExpireTime int
 
-	// 应用状态
-	AppState int
+	// 授权的模型，英文逗号分隔，all表示所有模型都有权限
+	GrantedModels string
 
-	// 应用类型
-	AppType int
+	// 密钥值
+	Key string
 
-	// 应用创建时间
-	CreateTime int
+	// 资源ID
+	KeyId string
 
-	// 语言模型ID
-	LLMID string
+	// 名称
+	Name string
 
-	// 模型采样温度
-	LLMTemperature int
+	// 项目id
+	OrganizationId string
 
-	// 模型采样温度的另一种方法（核取样）
-	LLMTopP int
+	// 状态，1 正常
+	Status string
 
-	// 应用更新时间
-	UpdateTime int
+	// 公司id
+	TopOrganizationId string
 }
 
 /*
-LLMInfo - 语言模型列表
+Us3Config - US3配置
 */
-type LLMInfo struct {
+type Us3Config struct {
+
+	// us3公钥
+	AccessKeyID string
+
+	// us3 bucket 名称
+	S3Bucket string
+
+	// 文件夹路径
+	S3Path string
+
+	// us3bucket地址
+	S3Uri string
+
+	// us3私钥
+	SecretAccessKey string
+}
+
+/*
+PublicModel - 公共模型
+*/
+type PublicModel struct {
+
+	// 模型中文名
+	ChineseName string
+
+	// 创建时间
+	CreateAt int
 
 	// 模型描述
-	LLMDes string
+	Describe string
 
-	// 模型ID
-	LLMID string
+	// 模型id
+	Id string
 
-	// 模型名称
-	LLMName string
+	// 模型状态
+	ModelStatus string
 
-	// 模型token单价
-	LLMPrice float64
+	// 模型标签
+	ModelTags string
 
 	// 模型类型
-	LLMType int
+	ModelType string
+
+	// 模型名称
+	Name string
+
+	// 训练定价
+	TrainPrice float64
+
+	// 更新时间
+	UpdateAt int
+
+	// us3配置
+	Us3Config Us3Config
+}
+
+/*
+UMinferAPIModel - 可供api调用的model详情
+*/
+type UMinferAPIModel struct {
+
+	// 类型引用PublicModel，在此基础上增加一些字段
+	PublicModel PublicModel
+
+	// 使用OpenAI接口调用时，填入的 model值
+	ServedModelName string
+}
+
+/*
+UMInferServiceData - 获取推理服务结构体
+*/
+type UMInferServiceData struct {
+
+	// 算力单元
+	ComputingUnit int
+
+	// 创建时间
+	CreateTime int
+
+	// 描述
+	Describe string
+
+	// 模型认证key
+	Key string
+
+	// 模型id
+	ModelID string
+
+	// 模型名字
+	ModelName string
+
+	// 服务名字
+	Name string
+
+	// 实际启动的副本数
+	ReadyReplicas int
+
+	// 副本数
+	Replicas int
+
+	// 服务状态
+	Status string
+
+	// 服务的url
+	URL string
+
+	// 推理服务资源id
+	UminferID string
+
+	// 推理服务资源类型
+	UminferType string
+}
+
+/*
+TokenUsageTimestamp - 时间戳级别的token使用量
+*/
+type TokenUsageTimestamp struct {
+
+	// 数量
+	Count int
+
+	// 模型名称
+	Model string
+
+	// unix时间戳
+	Timestamp int
+
+	// 类型，in输入 out输出 total总  request_count 请求次数 image_generation 生图张数
+	Type string
+}
+
+/*
+TokenUsage - 某个apikey的某个模型的token使用情况
+*/
+type TokenUsage struct {
+
+	// 生图总张数
+	ImageGenerationNum string
+
+	// 输出总token
+	InTotal int
+
+	// 输出总token
+	OutTotal int
+
+	// 请求总次数
+	RequestTotal string
+
+	// 总token量
+	Total int
+
+	// 每个时间戳的token使用量
+	Usages TokenUsageTimestamp
+}
+
+/*
+Pricing - 定价策略
+*/
+type Pricing struct {
+
+	// 输出定价
+	Completion float64
+
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+}
+
+/*
+SquareModel - 广场模型
+*/
+type SquareModel struct {
+
+	// 创建时间
+	CreateAt int
+
+	// 详细描述
+	Describe string
+
+	// HuggingFace 更新时间
+	HfUpdateTime string
+
+	// 图标
+	Icon string
+
+	// 主键
+	Id string
+
+	// 语言
+	Language []string
+
+	// 模型长度
+	MaxModelLen string
+
+	// 模型类型
+	ModelType string
+
+	// 名称
+	Name string
+
+	// 定价策略
+	Pricing Pricing
+
+	// 简要描述
+	SimpleDescribe string
+
+	// 模型能力
+	SupportedCapabilities []string
+
+	// 更新时间
+	UpdateAt int
 }
