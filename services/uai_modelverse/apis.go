@@ -114,12 +114,12 @@ type GetUMInferAPIModelRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
+	// ProjectId *string `required:"true"`
 
 	// apikey 的id
 	KeyId *string `required:"false"`
 
-	// 模型类型，1: 文本生成，2: 图片生成。默认 1
+	// 模型类型，1: 文本生成，2: 图片生成。
 	ModelType *int `required:"false"`
 
 	// 模型广场的id，用来跳转体验中心
@@ -291,34 +291,34 @@ type ListUFSquareModelRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
+	// Region *string `required:"false"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
+	// Zone *string `required:"false"`
 
 	// 关键字
-	Keyword *string `required:"true"`
+	Keyword *string `required:"false"`
 
-	// 语言
-	Language *string `required:"true"`
+	// 语言，数组类型，可选值 ["chinese", "english"]
+	Language []string `required:"false"`
 
 	// 每页数量
-	Limit *int `required:"true"`
+	Limit *int `required:"false"`
 
-	// 上下文长度
-	MaxModelLen *string `required:"true"`
+	// 上下文长度，数组类型，可选值 [0,4096,16384,32768,131072,256000,262144,1048576]
+	MaxModelLen []int `required:"false"`
 
 	// 模型类型
-	ModelType *string `required:"true"`
+	ModelType *string `required:"false"`
 
 	// 偏移量
-	Offset *int `required:"true"`
+	Offset *int `required:"false"`
 
 	// 排序顺序，默认倒序
-	Order *string `required:"true"`
+	Order *string `required:"false"`
 
 	// 排序字段
-	OrderBy *string `required:"true"`
+	OrderBy *string `required:"false"`
 }
 
 // ListUFSquareModelResponse is response schema for ListUFSquareModel action
@@ -329,7 +329,7 @@ type ListUFSquareModelResponse struct {
 	SquareModels []SquareModel
 
 	// 总数
-	TotalCount string
+	TotalCount int
 }
 
 // NewListUFSquareModelRequest will create request of ListUFSquareModel action.
@@ -430,7 +430,7 @@ type ListUMInferAPIKeyResponse struct {
 	response.CommonBase
 
 	// apikey
-	Data APIKey
+	Data []APIKey
 }
 
 // NewListUMInferAPIKeyRequest will create request of ListUMInferAPIKey action.

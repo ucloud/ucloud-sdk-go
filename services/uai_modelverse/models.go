@@ -8,10 +8,10 @@ APIKey - apikey
 type APIKey struct {
 
 	// 渠道id
-	ChannelId string
+	ChannelId int
 
 	// 创建时间
-	CreateTime string
+	CreateTime int
 
 	// 过期时间的unix时间戳，-1 用不过期
 	ExpireTime int
@@ -29,73 +29,31 @@ type APIKey struct {
 	Name string
 
 	// 项目id
-	OrganizationId string
+	OrganizationId int
 
 	// 状态，1 正常
-	Status string
+	Status int
 
 	// 公司id
-	TopOrganizationId string
+	TopOrganizationId int
 }
 
 /*
-Us3Config - US3配置
+Pricing - 定价策略
 */
-type Us3Config struct {
+type Pricing struct {
 
-	// us3公钥
-	AccessKeyID string
+	// 输出定价
+	Completion float64
 
-	// us3 bucket 名称
-	S3Bucket string
+	// 币种
+	Currency string
 
-	// 文件夹路径
-	S3Path string
+	// 生图定价
+	Image float64
 
-	// us3bucket地址
-	S3Uri string
-
-	// us3私钥
-	SecretAccessKey string
-}
-
-/*
-PublicModel - 公共模型
-*/
-type PublicModel struct {
-
-	// 模型中文名
-	ChineseName string
-
-	// 创建时间
-	CreateAt int
-
-	// 模型描述
-	Describe string
-
-	// 模型id
-	Id string
-
-	// 模型状态
-	ModelStatus string
-
-	// 模型标签
-	ModelTags string
-
-	// 模型类型
-	ModelType string
-
-	// 模型名称
-	Name string
-
-	// 训练定价
-	TrainPrice float64
-
-	// 更新时间
-	UpdateAt int
-
-	// us3配置
-	Us3Config Us3Config
+	// 提示词定价
+	Prompt float64
 }
 
 /*
@@ -103,11 +61,32 @@ UMinferAPIModel - 可供api调用的model详情
 */
 type UMinferAPIModel struct {
 
-	// 类型引用PublicModel，在此基础上增加一些字段
-	PublicModel PublicModel
+	// 创建时间
+	CreateAt int
+
+	// 图标链接
+	Icon string
+
+	// id
+	Id string
+
+	// 语言
+	Language []string
+
+	// 名称
+	Name string
+
+	// 模型价格
+	Pricing Pricing
 
 	// 使用OpenAI接口调用时，填入的 model值
 	ServedModelName string
+
+	// 描述
+	SimpleDescribe string
+
+	// 更新时间
+	UpdateAt int
 }
 
 /*
@@ -179,7 +158,7 @@ TokenUsage - 某个apikey的某个模型的token使用情况
 type TokenUsage struct {
 
 	// 生图总张数
-	ImageGenerationNum string
+	ImageGenerationNum int
 
 	// 输出总token
 	InTotal int
@@ -188,31 +167,13 @@ type TokenUsage struct {
 	OutTotal int
 
 	// 请求总次数
-	RequestTotal string
+	RequestTotal int
 
 	// 总token量
 	Total int
 
 	// 每个时间戳的token使用量
-	Usages TokenUsageTimestamp
-}
-
-/*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
+	Usages []TokenUsageTimestamp
 }
 
 /*
@@ -227,7 +188,7 @@ type SquareModel struct {
 	Describe string
 
 	// HuggingFace 更新时间
-	HfUpdateTime string
+	HfUpdateTime int
 
 	// 图标
 	Icon string
@@ -239,7 +200,7 @@ type SquareModel struct {
 	Language []string
 
 	// 模型长度
-	MaxModelLen string
+	MaxModelLen int
 
 	// 模型类型
 	ModelType string
