@@ -1017,6 +1017,12 @@ type DescribeGlobalSSHInstanceRequest struct {
 
 	// 实例ID，资源唯一标识
 	InstanceId *string `required:"false"`
+
+	// 分页参数, 最大值
+	Limit *string `required:"false"`
+
+	// 分页参数，偏移值
+	Offset *string `required:"false"`
 }
 
 // DescribeGlobalSSHInstanceResponse is response schema for DescribeGlobalSSHInstance action
@@ -1025,6 +1031,9 @@ type DescribeGlobalSSHInstanceResponse struct {
 
 	// GlobalSSH实例列表，实例的属性参考GlobalSSHInfo模型
 	InstanceSet []GlobalSSHInfo
+
+	// 总数
+	TotalCount int
 }
 
 // NewDescribeGlobalSSHInstanceRequest will create request of DescribeGlobalSSHInstance action.
@@ -1557,6 +1566,68 @@ func (c *PathXClient) GetGlobalSSHPrice(req *GetGlobalSSHPriceRequest) (*GetGlob
 	return &res, nil
 }
 
+// GetGlobalSSHTrafficRequest is request schema for GetGlobalSSHTraffic action
+type GetGlobalSSHTrafficRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 查询起始时间，如1525017600
+	BeginTime *int `required:"true"`
+
+	// 查询结束时间，如1525103999
+	EndTime *int `required:"true"`
+
+	// 资源ID，如uga-as5daw
+	UGAId *string `required:"true"`
+}
+
+// GetGlobalSSHTrafficResponse is response schema for GetGlobalSSHTraffic action
+type GetGlobalSSHTrafficResponse struct {
+	response.CommonBase
+
+	// 流量统计数据
+	DataSet []TrafficDaily
+
+	// 最近3个月日流量统计数据
+	TrafficDailyRecently []TrafficDailyRecently
+
+	// 资源ID
+	UGAId string
+}
+
+// NewGetGlobalSSHTrafficRequest will create request of GetGlobalSSHTraffic action.
+func (c *PathXClient) NewGetGlobalSSHTrafficRequest() *GetGlobalSSHTrafficRequest {
+	req := &GetGlobalSSHTrafficRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetGlobalSSHTraffic
+
+获取GlobalSSH流量统计数据
+*/
+func (c *PathXClient) GetGlobalSSHTraffic(req *GetGlobalSSHTrafficRequest) (*GetGlobalSSHTrafficResponse, error) {
+	var err error
+	var res GetGlobalSSHTrafficResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetGlobalSSHTraffic", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetGlobalSSHUpdatePriceRequest is request schema for GetGlobalSSHUpdatePrice action
 type GetGlobalSSHUpdatePriceRequest struct {
 	request.CommonBase
@@ -1860,6 +1931,68 @@ func (c *PathXClient) GetUGA3UpdatePrice(req *GetUGA3UpdatePriceRequest) (*GetUG
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUGA3UpdatePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyGlobalSSHOriginInfoRequest is request schema for ModifyGlobalSSHOriginInfo action
+type ModifyGlobalSSHOriginInfoRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID,如org-xxxx。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 填写支持SSH访问IP的地区名称，如“洛杉矶”，“新加坡”，“香港”，“东京”，“华盛顿”，“法兰克福”。Area和AreaCode两者必填一个
+	Area *string `required:"false"`
+
+	// AreaCode, 区域航空港国际通用代码。Area和AreaCode两者必填一个
+	AreaCode *string `required:"false"`
+
+	// 资源ID:ugaa-xxxxxxx
+	InstanceId *string `required:"true"`
+
+	// Free,Basic,Enterprise,Ultimate
+	InstanceType *string `required:"true"`
+
+	// 被SSH访问的源站IP
+	RsIP *string `required:"true"`
+}
+
+// ModifyGlobalSSHOriginInfoResponse is response schema for ModifyGlobalSSHOriginInfo action
+type ModifyGlobalSSHOriginInfoResponse struct {
+	response.CommonBase
+
+	// 提示信息
+	Message string
+}
+
+// NewModifyGlobalSSHOriginInfoRequest will create request of ModifyGlobalSSHOriginInfo action.
+func (c *PathXClient) NewModifyGlobalSSHOriginInfoRequest() *ModifyGlobalSSHOriginInfoRequest {
+	req := &ModifyGlobalSSHOriginInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyGlobalSSHOriginInfo
+
+修改GlobalSSH 源站信息
+*/
+func (c *PathXClient) ModifyGlobalSSHOriginInfo(req *ModifyGlobalSSHOriginInfoRequest) (*ModifyGlobalSSHOriginInfoResponse, error) {
+	var err error
+	var res ModifyGlobalSSHOriginInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyGlobalSSHOriginInfo", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
