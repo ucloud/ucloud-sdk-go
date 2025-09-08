@@ -18,6 +18,18 @@ type GlobalSSHArea struct {
 }
 
 /*
+OutPublicIpInfo - 线路回源IP信息
+*/
+type OutPublicIpInfo struct {
+
+	// 线路回源节点机房代号
+	Area string
+
+	// 线路回源节点EIP
+	IP string
+}
+
+/*
 GlobalSSHInfo - GlobalSSH实例信息
 */
 type GlobalSSHInfo struct {
@@ -63,6 +75,9 @@ type GlobalSSHInfo struct {
 
 	// 枚举值：["Enterprise","Basic","Free","Welfare"], 分别代表企业版，基础版本，免费版本，较早的公测免费版
 	InstanceType string
+
+	// 线路出口IP地址
+	OutPublicIpList []OutPublicIpInfo
 
 	// 源站服务器监听的SSH端口，windows系统为RDP端口
 	Port int
@@ -246,18 +261,6 @@ type ForwardTask struct {
 }
 
 /*
-OutPublicIpInfo - 线路回源IP信息
-*/
-type OutPublicIpInfo struct {
-
-	// 线路回源节点机房代号
-	Area string
-
-	// 线路回源节点EIP
-	IP string
-}
-
-/*
 AccelerationAreaInfos - 加速大区信息
 */
 type AccelerationAreaInfos struct {
@@ -393,21 +396,6 @@ type UGAATask struct {
 }
 
 /*
-UGAL4Forwarder - UGA实例 4层转发器信息
-*/
-type UGAL4Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
-}
-
-/*
 UGAL7Forwarder - UGA实例 7层转发器信息
 */
 type UGAL7Forwarder struct {
@@ -426,6 +414,21 @@ type UGAL7Forwarder struct {
 
 	// 证书名称
 	SSLName string
+}
+
+/*
+UGAL4Forwarder - UGA实例 4层转发器信息
+*/
+type UGAL4Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
 }
 
 /*
@@ -585,6 +588,36 @@ type AlarmRuler struct {
 
 	// 告警触发周期（次数）
 	TriggerCount int
+}
+
+/*
+TrafficDailyRecently - 最近3个月日流量统计
+*/
+type TrafficDailyRecently struct {
+
+	// 日期
+	Day string
+
+	// 日流量(单位GB)
+	TrafficUnitGB string
+
+	// 日流量(单位MB)
+	TrafficUnitMB string
+}
+
+/*
+TrafficDaily -
+*/
+type TrafficDaily struct {
+
+	// Yes:已扣费, No:未扣费
+	BillingState string
+
+	// 日期
+	Date int
+
+	// 流量（单位GB）
+	Traffic int
 }
 
 /*
