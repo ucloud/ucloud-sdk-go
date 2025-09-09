@@ -49,9 +49,6 @@ type GlobalSSHInfo struct {
 	// 资源创建时间戳
 	CreateTime int
 
-	// 加速域名当前可用性检测结果 HashMap 结构 0表示可用, 1 表示有污染
-	DomainStatus string
-
 	// 是否过期
 	Expire bool
 
@@ -396,42 +393,6 @@ type UGAATask struct {
 }
 
 /*
-UGAL7Forwarder - UGA实例 7层转发器信息
-*/
-type UGAL7Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
-
-	// 证书ID
-	SSLId string
-
-	// 证书名称
-	SSLName string
-}
-
-/*
-UGAL4Forwarder - UGA实例 4层转发器信息
-*/
-type UGAL4Forwarder struct {
-
-	// 接入端口
-	Port int
-
-	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
-	Protocol string
-
-	// RSPort，源站监听端口
-	RSPort int
-}
-
-/*
 UPathSet - uga关联的upath信息
 */
 type UPathSet struct {
@@ -459,6 +420,42 @@ type UPathSet struct {
 
 	// UPath名字
 	UPathName string
+}
+
+/*
+UGAL4Forwarder - UGA实例 4层转发器信息
+*/
+type UGAL4Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+}
+
+/*
+UGAL7Forwarder - UGA实例 7层转发器信息
+*/
+type UGAL7Forwarder struct {
+
+	// 接入端口
+	Port int
+
+	// 转发协议，枚举值["TCP"，"UDP"，"HTTPHTTP"，"HTTPSHTTP"，"HTTPSHTTPS"]。TCP和UDP代表四层转发，其余为七层转发
+	Protocol string
+
+	// RSPort，源站监听端口
+	RSPort int
+
+	// 证书ID
+	SSLId string
+
+	// 证书名称
+	SSLName string
 }
 
 /*
@@ -591,21 +588,6 @@ type AlarmRuler struct {
 }
 
 /*
-TrafficDailyRecently - 最近3个月日流量统计
-*/
-type TrafficDailyRecently struct {
-
-	// 日期
-	Day string
-
-	// 日流量(单位GB)
-	TrafficUnitGB string
-
-	// 日流量(单位MB)
-	TrafficUnitMB string
-}
-
-/*
 TrafficDaily -
 */
 type TrafficDaily struct {
@@ -618,6 +600,21 @@ type TrafficDaily struct {
 
 	// 流量（单位GB）
 	Traffic int
+}
+
+/*
+TrafficDailyRecently - 最近3个月日流量统计
+*/
+type TrafficDailyRecently struct {
+
+	// 日期
+	Day string
+
+	// 日流量(单位GB)
+	TrafficUnitGB string
+
+	// 日流量(单位MB)
+	TrafficUnitMB string
 }
 
 /*
