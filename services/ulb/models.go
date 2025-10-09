@@ -54,6 +54,18 @@ type BackendSet struct {
 }
 
 /*
+FixedResponseConfigSet - 静态返回相关配置
+*/
+type FixedResponseConfigSet struct {
+
+	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
+	Content string
+
+	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
+	HttpCode int
+}
+
+/*
 ForwardTargetSet - 转发的后端服务节点
 */
 type ForwardTargetSet struct {
@@ -66,12 +78,87 @@ type ForwardTargetSet struct {
 }
 
 /*
-PathConfigSet - 路径相关配置
+ForwardConfigSet - 转发服务节点相关配置
 */
-type PathConfigSet struct {
+type ForwardConfigSet struct {
 
-	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
-	Values []string
+	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
+	Targets []ForwardTargetSet
+}
+
+/*
+InsertHeaderConfigSet - 插入 header 相关配置
+*/
+type InsertHeaderConfigSet struct {
+
+	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
+	Key string
+
+	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
+	Value string
+
+	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
+	ValueType string
+}
+
+/*
+RemoveHeaderConfigSet - 删除 header 相关配置
+*/
+type RemoveHeaderConfigSet struct {
+
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key string
+}
+
+/*
+CorsConfigSet - 跨域相关配置
+*/
+type CorsConfigSet struct {
+
+	// 是否允许携带凭证信息。取值：on：是。off：否。
+	AllowCredentials string
+
+	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	AllowHeaders []string
+
+	// 选择跨域访问时允许的 HTTP 方法。取值：GETPOSTPUTDELETEHEADOPTIONSPATCH
+	AllowMethods []string
+
+	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
+	AllowOrigin []string
+
+	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	ExposeHeaders []string
+
+	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
+	MaxAge int
+}
+
+/*
+RuleAction - 转发动作
+*/
+type RuleAction struct {
+
+	// 跨域相关配置，对应 type 值: "Cors"。具体结构详见 CorsConfigSet
+	CorsConfig CorsConfigSet
+
+	// 静态返回相关配置，对应 type 值: "FixedResponse"。具体结构详见 FixedResponseConfigSet
+	FixedResponseConfig FixedResponseConfigSet
+
+	// 转发服务节点相关配置，对应 type 值: "Forward"。具体结构详见 ForwardConfigSet
+	ForwardConfig ForwardConfigSet
+
+	// 插入 header 相关配置，对应 type 值: "InsertHeader"。具体结构详见 InsertHeaderConfigSet
+	InsertHeaderConfig InsertHeaderConfigSet
+
+	// 转发规则动作执行的顺序，取值为1~1000，按值从小到大执行动作。值不能为空，不能重复。Forward、FixedResponse 类型的动作不判断 Order，最后一个执行
+	Order int
+
+	// 删除 header 相关配置，对应 type 值: "RemoveHeader"。具体结构详见 RemoveHeaderConfigSet
+	RemoveHeaderConfig RemoveHeaderConfigSet
+
+	// 动作类型。限定枚举值：Forward、"InsertHeader"、"Cors"、"FixedResponse"、"RemoveHeader"
+	Type string
 }
 
 /*
@@ -87,12 +174,12 @@ type HostConfigSet struct {
 }
 
 /*
-ForwardConfigSet - 转发服务节点相关配置
+PathConfigSet - 路径相关配置
 */
-type ForwardConfigSet struct {
+type PathConfigSet struct {
 
-	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
-	Targets []ForwardTargetSet
+	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
+	Values []string
 }
 
 /*
@@ -107,51 +194,6 @@ type RuleCondition struct {
 	PathConfig PathConfigSet
 
 	// 匹配条件类型。限定枚举值：Host，Path
-	Type string
-}
-
-/*
-RuleAction - 转发动作
-*/
-type RuleAction struct {
-
-	// 转发服务节点相关配置。 具体结构详见 ForwardConfigSet
-	ForwardConfig ForwardConfigSet
-
-	// 动作类型。限定枚举值：Forward
-	Type string
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
-}
-
-/*
-HealthCheckConfigSet - 健康检查相关配置
-*/
-type HealthCheckConfigSet struct {
-
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
-	Domain string
-
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
-	Enabled bool
-
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
 	Type string
 }
 
@@ -231,6 +273,39 @@ type Target struct {
 }
 
 /*
+HealthCheckConfigSet - 健康检查相关配置
+*/
+type HealthCheckConfigSet struct {
+
+	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	Domain string
+
+	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	Enabled bool
+
+	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	Path string
+
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
+	Type string
+}
+
+/*
+StickinessConfigSet - 会话保持相关配置
+*/
+type StickinessConfigSet struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
+}
+
+/*
 Listener - 负载均衡监听器信息
 */
 type Listener struct {
@@ -291,33 +366,6 @@ type Listener struct {
 }
 
 /*
-IPInfo - 绑定的IP信息
-*/
-type IPInfo struct {
-
-	// 网络模式。 限定枚举值：Internet -> 互联网，Intranet -> 内联网
-	AddressType string
-
-	// 带宽值。单位M
-	Bandwidth int
-
-	// 带宽类型。限定枚举值：1 -> 共享带宽，0 -> 普通带宽类型
-	BandwidthType int
-
-	// IP地址
-	IP string
-
-	// IP协议版本
-	IPVersion string
-
-	// 唯一标识ID
-	Id string
-
-	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
-	OperatorName string
-}
-
-/*
 AccessLogConfigSet - （应用型专用）访问日志相关配置
 */
 type AccessLogConfigSet struct {
@@ -342,6 +390,33 @@ type FirewallSet struct {
 
 	// 防火墙名称
 	FirewallName string
+}
+
+/*
+IPInfo - 绑定的IP信息
+*/
+type IPInfo struct {
+
+	// 网络模式。 限定枚举值：Internet -> 互联网，Intranet -> 内联网
+	AddressType string
+
+	// 带宽值。单位M
+	Bandwidth int
+
+	// 带宽类型。限定枚举值：1 -> 共享带宽，0 -> 普通带宽类型
+	BandwidthType int
+
+	// IP地址
+	IP string
+
+	// IP协议版本
+	IPVersion string
+
+	// 唯一标识ID
+	Id string
+
+	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
+	OperatorName string
 }
 
 /*
@@ -544,16 +619,19 @@ type SSLInfo struct {
 	// SSL证书的创建时间
 	CreateTime int
 
-	// USSL证书平台的域名,只有当SSLSource为1时才出现
+	// SSL证书的扩展域名
+	DNSNames string
+
+	// SSL证书的域名
 	Domains string
 
 	// SSL证书的HASH值
 	HashValue string
 
-	// 证书过期时间,只有当SSLSource为1时才出现
+	// 证书过期时间
 	NotAfter int
 
-	// 证书颁发时间,只有当SSLSource为1时才出现
+	// 证书颁发时间
 	NotBefore int
 
 	// SSL绑定ULB和ALB的关系
@@ -762,6 +840,27 @@ type BindSecurityPolicy struct {
 }
 
 /*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -810,27 +909,6 @@ type ULBBackendSet struct {
 
 	// 后端RS权重（在加权轮询算法下有效）
 	Weight int
-}
-
-/*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
 }
 
 /*
