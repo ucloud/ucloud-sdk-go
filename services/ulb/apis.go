@@ -9,6 +9,62 @@ import (
 
 // ULB API Schema
 
+// AddSSLBindingRequest is request schema for AddSSLBinding action
+type AddSSLBindingRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 监听器的ID
+	ListenerId *string `required:"true"`
+
+	// 负载均衡实例的ID
+	LoadBalancerId *string `required:"true"`
+
+	// SSLId的数组
+	SSLIds []string `required:"true"`
+}
+
+// AddSSLBindingResponse is response schema for AddSSLBinding action
+type AddSSLBindingResponse struct {
+	response.CommonBase
+}
+
+// NewAddSSLBindingRequest will create request of AddSSLBinding action.
+func (c *ULBClient) NewAddSSLBindingRequest() *AddSSLBindingRequest {
+	req := &AddSSLBindingRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddSSLBinding
+
+ALB的监听器绑定SSL证书
+*/
+func (c *ULBClient) AddSSLBinding(req *AddSSLBindingRequest) (*AddSSLBindingResponse, error) {
+	var err error
+	var res AddSSLBindingResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddSSLBinding", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 /*
 AddTargetsParamTargets is request schema for complex param
 */
@@ -645,6 +701,93 @@ type CreateRuleParamRuleActionsForwardConfig struct {
 }
 
 /*
+CreateRuleParamRuleActionsInsertHeaderConfig is request schema for complex param
+*/
+type CreateRuleParamRuleActionsInsertHeaderConfig struct {
+
+	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
+	Key *string `required:"false"`
+
+	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
+	Value *string `required:"false"`
+
+	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
+	ValueType *string `required:"false"`
+}
+
+/*
+CreateRuleParamRuleActionsRemoveHeaderConfig is request schema for complex param
+*/
+type CreateRuleParamRuleActionsRemoveHeaderConfig struct {
+
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key *string `required:"false"`
+}
+
+/*
+CreateRuleParamRuleActionsCorsConfig is request schema for complex param
+*/
+type CreateRuleParamRuleActionsCorsConfig struct {
+
+	// 是否允许携带凭证信息。取值：on：是。off：否。
+	AllowCredentials *string `required:"false"`
+
+	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	AllowHeaders []string `required:"false"`
+
+	// 选择跨域访问时允许的 HTTP 方法。取值：GET。POST。PUT。DELETE。HEAD。OPTIONS。PATCH。
+	AllowMethods []string `required:"false"`
+
+	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
+	AllowOrigin []string `required:"false"`
+
+	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	ExposeHeaders []string `required:"false"`
+
+	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
+	MaxAge *int `required:"false"`
+}
+
+/*
+CreateRuleParamRuleActionsFixedResponseConfig is request schema for complex param
+*/
+type CreateRuleParamRuleActionsFixedResponseConfig struct {
+
+	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
+	Content *string `required:"false"`
+
+	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
+	HttpCode *int `required:"false"`
+}
+
+/*
+CreateRuleParamRuleActions is request schema for complex param
+*/
+type CreateRuleParamRuleActions struct {
+
+	//
+	CorsConfig *CreateRuleParamRuleActionsCorsConfig `required:"false"`
+
+	//
+	FixedResponseConfig *CreateRuleParamRuleActionsFixedResponseConfig `required:"false"`
+
+	//
+	ForwardConfig *CreateRuleParamRuleActionsForwardConfig `required:"false"`
+
+	//
+	InsertHeaderConfig *CreateRuleParamRuleActionsInsertHeaderConfig `required:"false"`
+
+	// 转发规则动作执行的顺序，取值为1~1000，按值从小到大执行动作。值不能为空，不能重复。Forward、FixedResponse 类型的动作不判断 Order，最后一个执行
+	Order *int `required:"false"`
+
+	//
+	RemoveHeaderConfig *CreateRuleParamRuleActionsRemoveHeaderConfig `required:"false"`
+
+	// 动作类型。限定枚举值："Forward"、"InsertHeader"、"Cors"、"FixedResponse"、"RemoveHeader"。只会处理 Type 对应的结构体。
+	Type *string `required:"true"`
+}
+
+/*
 CreateRuleParamRuleConditionsPathConfig is request schema for complex param
 */
 type CreateRuleParamRuleConditionsPathConfig struct {
@@ -663,18 +806,6 @@ type CreateRuleParamRuleConditionsHostConfig struct {
 
 	// 取值。暂时只支持数组长度为1；取值需符合相关匹配方式的条件；域名匹配时必填
 	Values []string `required:"false"`
-}
-
-/*
-CreateRuleParamRuleActions is request schema for complex param
-*/
-type CreateRuleParamRuleActions struct {
-
-	//
-	ForwardConfig *CreateRuleParamRuleActionsForwardConfig `required:"false"`
-
-	// 动作类型。限定枚举值："Forward"；RuleActions暂支持长度为1
-	Type *string `required:"true"`
 }
 
 /*
@@ -1388,6 +1519,62 @@ func (c *ULBClient) DeleteSSL(req *DeleteSSLRequest) (*DeleteSSLResponse, error)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteSSL", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteSSLBindingRequest is request schema for DeleteSSLBinding action
+type DeleteSSLBindingRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 监听器的ID
+	ListenerId *string `required:"true"`
+
+	// 负载均衡实例的ID
+	LoadBalancerId *string `required:"true"`
+
+	// SSLId的数组
+	SSLIds []string `required:"true"`
+}
+
+// DeleteSSLBindingResponse is response schema for DeleteSSLBinding action
+type DeleteSSLBindingResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteSSLBindingRequest will create request of DeleteSSLBinding action.
+func (c *ULBClient) NewDeleteSSLBindingRequest() *DeleteSSLBindingRequest {
+	req := &DeleteSSLBindingRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteSSLBinding
+
+删除监听器绑定的扩展证书
+*/
+func (c *ULBClient) DeleteSSLBinding(req *DeleteSSLBindingRequest) (*DeleteSSLBindingResponse, error) {
+	var err error
+	var res DeleteSSLBindingResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteSSLBinding", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2992,24 +3179,27 @@ func (c *ULBClient) UpdatePolicyGroupAttribute(req *UpdatePolicyGroupAttributeRe
 }
 
 /*
-UpdateRuleAttributeParamRuleActionsForwardConfigTargets is request schema for complex param
+UpdateRuleAttributeParamRuleActionsInsertHeaderConfig is request schema for complex param
 */
-type UpdateRuleAttributeParamRuleActionsForwardConfigTargets struct {
+type UpdateRuleAttributeParamRuleActionsInsertHeaderConfig struct {
 
-	// 转发的后端服务节点的标识ID。限定在监听器的服务节点池里；数组长度可以是0；转发服务节点配置的数组长度不为0时，Id必填
-	Id *string `required:"false"`
+	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
+	Key *string `required:"false"`
 
-	// 转发的后端服务节点的权重。仅监听器负载均衡算法是加权轮询是有效
-	Weight *int `required:"false"`
+	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
+	Value *string `required:"false"`
+
+	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
+	ValueType *string `required:"false"`
 }
 
 /*
-UpdateRuleAttributeParamRuleConditionsPathConfig is request schema for complex param
+UpdateRuleAttributeParamRuleActionsRemoveHeaderConfig is request schema for complex param
 */
-type UpdateRuleAttributeParamRuleConditionsPathConfig struct {
+type UpdateRuleAttributeParamRuleActionsRemoveHeaderConfig struct {
 
-	// 取值。暂时只支持数组长度为1；取值需符合相关条件；修改路径匹配时必填
-	Values []string `required:"false"`
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key *string `required:"false"`
 }
 
 /*
@@ -3025,12 +3215,12 @@ type UpdateRuleAttributeParamRuleConditionsHostConfig struct {
 }
 
 /*
-UpdateRuleAttributeParamRuleActionsForwardConfig is request schema for complex param
+UpdateRuleAttributeParamRuleConditionsPathConfig is request schema for complex param
 */
-type UpdateRuleAttributeParamRuleActionsForwardConfig struct {
+type UpdateRuleAttributeParamRuleConditionsPathConfig struct {
 
-	//
-	Targets []UpdateRuleAttributeParamRuleActionsForwardConfigTargets `required:"false"`
+	// 取值。暂时只支持数组长度为1；取值需符合相关条件；修改路径匹配时必填
+	Values []string `required:"false"`
 }
 
 /*
@@ -3049,12 +3239,84 @@ type UpdateRuleAttributeParamRuleConditions struct {
 }
 
 /*
+UpdateRuleAttributeParamRuleActionsCorsConfig is request schema for complex param
+*/
+type UpdateRuleAttributeParamRuleActionsCorsConfig struct {
+
+	// 是否允许携带凭证信息。取值：on：是。off：否。
+	AllowCredentials *string `required:"false"`
+
+	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	AllowHeaders []string `required:"false"`
+
+	// 选择跨域访问时允许的 HTTP 方法。取值：GET。POST。PUT。DELETE。HEAD。OPTIONS。PATCH。
+	AllowMethods []string `required:"false"`
+
+	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
+	AllowOrigin []string `required:"false"`
+
+	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	ExposeHeaders []string `required:"false"`
+
+	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
+	MaxAge *int `required:"false"`
+}
+
+/*
+UpdateRuleAttributeParamRuleActionsForwardConfigTargets is request schema for complex param
+*/
+type UpdateRuleAttributeParamRuleActionsForwardConfigTargets struct {
+
+	// 转发的后端服务节点的标识ID。限定在监听器的服务节点池里；数组长度可以是0；转发服务节点配置的数组长度不为0时，Id必填
+	Id *string `required:"false"`
+
+	// 转发的后端服务节点的权重。仅监听器负载均衡算法是加权轮询是有效
+	Weight *int `required:"false"`
+}
+
+/*
+UpdateRuleAttributeParamRuleActionsForwardConfig is request schema for complex param
+*/
+type UpdateRuleAttributeParamRuleActionsForwardConfig struct {
+
+	//
+	Targets []UpdateRuleAttributeParamRuleActionsForwardConfigTargets `required:"false"`
+}
+
+/*
+UpdateRuleAttributeParamRuleActionsFixedResponseConfig is request schema for complex param
+*/
+type UpdateRuleAttributeParamRuleActionsFixedResponseConfig struct {
+
+	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
+	Content *string `required:"false"`
+
+	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
+	HttpCode *int `required:"false"`
+}
+
+/*
 UpdateRuleAttributeParamRuleActions is request schema for complex param
 */
 type UpdateRuleAttributeParamRuleActions struct {
 
 	//
+	CorsConfig *UpdateRuleAttributeParamRuleActionsCorsConfig `required:"false"`
+
+	//
+	FixedResponseConfig *UpdateRuleAttributeParamRuleActionsFixedResponseConfig `required:"false"`
+
+	//
 	ForwardConfig *UpdateRuleAttributeParamRuleActionsForwardConfig `required:"false"`
+
+	//
+	InsertHeaderConfig *UpdateRuleAttributeParamRuleActionsInsertHeaderConfig `required:"false"`
+
+	// 转发规则动作执行的顺序，取值为1~1000，按值从小到大执行动作。值不能为空，不能重复。Forward、FixedResponse 类型的动作不判断 Order，最后一个执行
+	Order *int `required:"false"`
+
+	//
+	RemoveHeaderConfig *UpdateRuleAttributeParamRuleActionsRemoveHeaderConfig `required:"false"`
 
 	// 动作类型。限定枚举值："Forward"；RuleActions数组长度不为0时必填
 	Type *string `required:"false"`

@@ -66,7 +66,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
-	"github.com/ucloud/ucloud-sdk-go/services/upfs"
 )
 
 func TestMain(m *testing.M) {
@@ -216,9 +215,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UNet", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return unet.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UPFS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return upfs.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphost.NewClient(&cfg, &credential), nil
