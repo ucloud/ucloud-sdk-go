@@ -54,6 +54,87 @@ type BackendSet struct {
 }
 
 /*
+Certificate - （应用型专用）服务器证书信息
+*/
+type Certificate struct {
+
+	// 是否为默认证书
+	IsDefault bool
+
+	// 证书ID
+	SSLId string
+}
+
+/*
+HostConfigSet - 域名相关配置
+*/
+type HostConfigSet struct {
+
+	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
+	MatchMode string
+
+	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
+	Values []string
+}
+
+/*
+StickinessConfigSet - 会话保持相关配置
+*/
+type StickinessConfigSet struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
+}
+
+/*
+HealthCheckConfigSet - 健康检查相关配置
+*/
+type HealthCheckConfigSet struct {
+
+	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	Domain string
+
+	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	Enabled bool
+
+	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	Path string
+
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
+	Type string
+}
+
+/*
+CorsConfigSet - 跨域相关配置
+*/
+type CorsConfigSet struct {
+
+	// 是否允许携带凭证信息。取值：on：是。off：否。
+	AllowCredentials string
+
+	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	AllowHeaders []string
+
+	// 选择跨域访问时允许的 HTTP 方法。取值：GETPOSTPUTDELETEHEADOPTIONSPATCH
+	AllowMethods []string
+
+	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
+	AllowOrigin []string
+
+	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	ExposeHeaders []string
+
+	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
+	MaxAge int
+}
+
+/*
 FixedResponseConfigSet - 静态返回相关配置
 */
 type FixedResponseConfigSet struct {
@@ -111,30 +192,6 @@ type RemoveHeaderConfigSet struct {
 }
 
 /*
-CorsConfigSet - 跨域相关配置
-*/
-type CorsConfigSet struct {
-
-	// 是否允许携带凭证信息。取值：on：是。off：否。
-	AllowCredentials string
-
-	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
-	AllowHeaders []string
-
-	// 选择跨域访问时允许的 HTTP 方法。取值：GETPOSTPUTDELETEHEADOPTIONSPATCH
-	AllowMethods []string
-
-	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
-	AllowOrigin []string
-
-	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
-	ExposeHeaders []string
-
-	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
-	MaxAge int
-}
-
-/*
 RuleAction - 转发动作
 */
 type RuleAction struct {
@@ -159,18 +216,6 @@ type RuleAction struct {
 
 	// 动作类型。限定枚举值：Forward、"InsertHeader"、"Cors"、"FixedResponse"、"RemoveHeader"
 	Type string
-}
-
-/*
-HostConfigSet - 域名相关配置
-*/
-type HostConfigSet struct {
-
-	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
-	MatchMode string
-
-	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
-	Values []string
 }
 
 /*
@@ -219,18 +264,6 @@ type Rule struct {
 }
 
 /*
-Certificate - （应用型专用）服务器证书信息
-*/
-type Certificate struct {
-
-	// 是否为默认证书
-	IsDefault bool
-
-	// 证书ID
-	SSLId string
-}
-
-/*
 Target - 服务节点信息
 */
 type Target struct {
@@ -270,39 +303,6 @@ type Target struct {
 
 	// 服务节点的权重。仅在加权轮询算法时有效
 	Weight int
-}
-
-/*
-HealthCheckConfigSet - 健康检查相关配置
-*/
-type HealthCheckConfigSet struct {
-
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
-	Domain string
-
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
-	Enabled bool
-
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
-	Type string
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
 }
 
 /*
@@ -753,6 +753,114 @@ type TLSAndCiphers struct {
 }
 
 /*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
+}
+
+/*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
+ULBBackendSet - DescribeULB
+*/
+type ULBBackendSet struct {
+
+	// 后端资源实例的Id
+	BackendId string
+
+	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
+	Enabled int
+
+	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
+	IsBackup int
+
+	// 后端提供服务的端口
+	Port int
+
+	// 后端提供服务的内网IP
+	PrivateIP string
+
+	// 资源实例的资源Id
+	ResourceId string
+
+	// 资源实例的资源名称
+	ResourceName string
+
+	// 资源实例的类型
+	ResourceType string
+
+	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
+	Status int
+
+	// 资源绑定的虚拟网卡实例的资源Id
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡实例的资源名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡实例的类型
+	SubResourceType string
+
+	// 后端提供服务的资源所在的子网的ID
+	SubnetId string
+
+	// 后端服务器所在的VPC
+	VPCId string
+
+	// 后端RS权重（在加权轮询算法下有效）
+	Weight int
+}
+
+/*
 PolicyBackendSet - 内容转发下rs详细信息
 */
 type PolicyBackendSet struct {
@@ -816,99 +924,6 @@ type ULBPolicySet struct {
 
 	// 所属VServerId
 	VServerId string
-}
-
-/*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
-}
-
-/*
-ULBBackendSet - DescribeULB
-*/
-type ULBBackendSet struct {
-
-	// 后端资源实例的Id
-	BackendId string
-
-	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
-	Enabled int
-
-	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
-	IsBackup int
-
-	// 后端提供服务的端口
-	Port int
-
-	// 后端提供服务的内网IP
-	PrivateIP string
-
-	// 资源实例的资源Id
-	ResourceId string
-
-	// 资源实例的资源名称
-	ResourceName string
-
-	// 资源实例的类型
-	ResourceType string
-
-	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
-	Status int
-
-	// 资源绑定的虚拟网卡实例的资源Id
-	SubResourceId string
-
-	// 资源绑定的虚拟网卡实例的资源名称
-	SubResourceName string
-
-	// 资源绑定的虚拟网卡实例的类型
-	SubResourceType string
-
-	// 后端提供服务的资源所在的子网的ID
-	SubnetId string
-
-	// 后端服务器所在的VPC
-	VPCId string
-
-	// 后端RS权重（在加权轮询算法下有效）
-	Weight int
 }
 
 /*
@@ -984,21 +999,6 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
 }
 
 /*
