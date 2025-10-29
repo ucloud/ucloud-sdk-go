@@ -115,6 +115,12 @@ type NetworkInterfaceInfo struct {
 	// 是否是绑定实例的默认网卡 false:不是 true:是
 	Default bool
 
+	// 是否开启EIP直通模式
+	EipDirectMode bool
+
+	// EIP直通版本
+	EipDirectVersion int
+
 	// 默认网关
 	Gateway string
 
@@ -204,6 +210,21 @@ type InstanceNetworkInterface struct {
 }
 
 /*
+NatGatewaySubnetSet - natgw里面的子网信息
+*/
+type NatGatewaySubnetSet struct {
+
+	// 子网网段
+	Subnet string
+
+	// 子网名字
+	SubnetName string
+
+	// 子网id
+	SubnetworkId string
+}
+
+/*
 NatGWIPResInfo - IP信息
 */
 type NatGWIPResInfo struct {
@@ -234,21 +255,6 @@ type NatGatewayIPSet struct {
 
 	// 权重为100的为出口
 	Weight int
-}
-
-/*
-NatGatewaySubnetSet - natgw里面的子网信息
-*/
-type NatGatewaySubnetSet struct {
-
-	// 子网网段
-	Subnet string
-
-	// 子网名字
-	SubnetName string
-
-	// 子网id
-	SubnetworkId string
 }
 
 /*
@@ -435,30 +441,6 @@ type AclInfo struct {
 }
 
 /*
-UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
-*/
-type UNIQuotaInfo struct {
-
-	// 网卡拥有的内网IP数量
-	PrivateIpCount int
-
-	// 网卡内网IP配额
-	PrivateIpQuota int
-}
-
-/*
-UNIIpInfo - 虚拟网卡内网IP信息
-*/
-type UNIIpInfo struct {
-
-	// ip 地址
-	IpAddr []string
-
-	// ip类型 SecondaryIp/PrimaryIp
-	IpType string
-}
-
-/*
 NetworkInterface - 虚拟网卡信息
 */
 type NetworkInterface struct {
@@ -471,12 +453,6 @@ type NetworkInterface struct {
 
 	// 是否是绑定实例的默认网卡 false:不是 true:是
 	Default bool
-
-	// 虚拟网卡绑定的EIP ID信息
-	EIPIdSet []string
-
-	// 虚拟网卡绑定的防火墙ID信息
-	FirewallIdSet []string
 
 	// 默认网关
 	Gateway string
@@ -492,12 +468,6 @@ type NetworkInterface struct {
 
 	// 内网IP掩码
 	Netmask string
-
-	// 网卡的内网IP信息
-	PrivateIp []UNIIpInfo
-
-	// 网卡的内网IP配额信息
-	PrivateIpLimit UNIQuotaInfo
 
 	// 关联内网IP。当前一个网卡仅支持绑定一个内网IP
 	PrivateIpSet []string
@@ -546,24 +516,6 @@ type ResourceSecgroupInfo struct {
 }
 
 /*
-BindingSecGroupInfo -
-*/
-type BindingSecGroupInfo struct {
-
-	// 安全组名称
-	Name string
-
-	// 该资源与该安全组绑定的优先级
-	Priority int
-
-	// 安全组 ID
-	SecGroupId string
-
-	// 安全组所属 VPC
-	VPCId string
-}
-
-/*
 ResourceExInfo - 资源额外信息（for 安全组）
 */
 type ResourceExInfo struct {
@@ -585,6 +537,24 @@ type ResourceExInfo struct {
 
 	// 弹性网卡信息
 	Uni []ResourceSecgroupInfo
+}
+
+/*
+BindingSecGroupInfo -
+*/
+type BindingSecGroupInfo struct {
+
+	// 安全组名称
+	Name string
+
+	// 该资源与该安全组绑定的优先级
+	Priority int
+
+	// 安全组 ID
+	SecGroupId string
+
+	// 安全组所属 VPC
+	VPCId string
 }
 
 /*
@@ -714,6 +684,9 @@ type SecGroupRuleInfo struct {
 	// 地址
 	IPRange string
 
+	// IP 版本，如 "IPv4"。支持 IPv6 后废弃
+	IPVersion string
+
 	// 优先级
 	Priority int
 
@@ -837,6 +810,9 @@ type SubnetInfo struct {
 	// 可用IP数量
 	AvailableIPs int
 
+	// 可用IPv6数量
+	AvailableIPv6Count int
+
 	// 创建时间
 	CreateTime int
 
@@ -846,7 +822,7 @@ type SubnetInfo struct {
 	// 是否有natgw
 	HasNATGW bool
 
-	// 子网关联的IPv6网段
+	// IPv6网段
 	IPv6Network string
 
 	// 子网掩码
@@ -891,14 +867,26 @@ type SubnetResource struct {
 	// 资源ip
 	IP string
 
-	// 名称
+	// 资源的IPv6地址
+	IPv6Address string
+
+	// 资源名称
 	Name string
 
 	// 资源Id
 	ResourceId string
 
-	// 资源类型。对应的资源类型：UHOST，云主机；PHOST，物理云主机；ULB，负载均衡；UHADOOP_HOST，hadoop节点；UFORTRESS_HOST，堡垒机；UNATGW，NAT网关；UKAFKA，分布式消息系统；UMEM，内存存储；DOCKER，容器集群；UDB，数据库；UDW，数据仓库；VIP，内网VIP.
+	// 资源类型。对应的资源类型：UHOST，云主机；PHOST，物理云主机；ULB，负载均衡；UHADOOP_HOST，hadoop节点；UFORTRESS_HOST，堡垒机；UNATGW，NAT网关；UKAFKA，Kafka消息队列；UMEM，内存存储；DOCKER，容器集群；UDB，数据库；UDW，数据仓库；VIP，内网VIP.
 	ResourceType string
+
+	// 资源绑定的虚拟网卡的实例ID
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡的实例名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡的类型
+	SubResourceType string
 }
 
 /*
@@ -938,6 +926,21 @@ type VIPDetailSet struct {
 }
 
 /*
+IPv6NetworkInfo -
+*/
+type IPv6NetworkInfo struct {
+
+	// IPv6网段
+	IPv6Network string
+
+	// IPv6子网数量
+	IPv6SubnetCount int
+
+	// 类型
+	OperatorName string
+}
+
+/*
 VPCNetworkInfo - vpc地址空间信息
 */
 type VPCNetworkInfo struct {
@@ -959,6 +962,9 @@ type VPCInfo struct {
 
 	// VPC关联的IPv6网段
 	IPv6Network string
+
+	// VPC关联的IPv6网段信息
+	IPv6NetworkInfos []IPv6NetworkInfo
 
 	// VPC名称
 	Name string
