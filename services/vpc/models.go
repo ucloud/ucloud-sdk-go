@@ -3,45 +3,6 @@
 package vpc
 
 /*
-StatusInfo -
-*/
-type StatusInfo struct {
-
-	// IP分配失败原因
-	Message string
-
-	// 枚举值：Succeeded，Failed
-	StatusCode string
-}
-
-/*
-IpsInfo -
-*/
-type IpsInfo struct {
-
-	// 网关
-	Gateway string
-
-	// 内网IP地址
-	Ip string
-
-	// MAC地址
-	Mac string
-
-	// 掩码
-	Mask string
-
-	// IP分配结果，详见StatusInfo
-	Status StatusInfo
-
-	// 子网资源ID
-	SubnetId string
-
-	// VPC资源ID
-	VPCId string
-}
-
-/*
 IpInfo -
 */
 type IpInfo struct {
@@ -98,109 +59,7 @@ type AssociationInfo struct {
 	SubnetworkId string
 
 	// 所属的VPC ID
-	VpcId string `deprecated:"true"`
-}
-
-/*
-NetworkInterfaceInfo - 虚拟网卡信息
-*/
-type NetworkInterfaceInfo struct {
-
-	// 绑定实例资源ID
-	AttachInstanceId string
-
-	// 创建时间
-	CreateTime int
-
-	// 是否是绑定实例的默认网卡 false:不是 true:是
-	Default bool
-
-	// 默认网关
-	Gateway string
-
-	// 虚拟网卡资源ID
-	InterfaceId string
-
-	// 关联Mac
-	MacAddress string
-
-	// 虚拟网卡名称
-	Name string
-
-	// 内网IP掩码
-	Netmask string
-
-	// 关联内网IP。当前一个网卡仅支持绑定一个内网IP
-	PrivateIpSet []string
-
-	// 备注
-	Remark string
-
-	// 绑定状态
-	Status int
-
-	// 所属子网
-	SubnetId string
-
-	// 业务组
-	Tag string
-
-	// 所属VPC
-	VPCId string
-}
-
-/*
-InstanceNetworkInterface - 实例绑定的虚拟网卡信息
-*/
-type InstanceNetworkInterface struct {
-
-	// 绑定实例资源ID
-	AttachInstanceId string
-
-	// 创建时间
-	CreateTime int
-
-	// 是否是绑定实例的默认网卡 false:不是 true:是
-	Default bool
-
-	// 虚拟网卡绑定的EIP ID信息
-	EIPIdSet []string
-
-	// 虚拟网卡绑定的防火墙ID信息
-	FirewallIdSet []string
-
-	// 默认网关
-	Gateway string
-
-	// 虚拟网卡资源ID
-	InterfaceId string
-
-	// 关联Mac
-	MacAddress string
-
-	// 虚拟网卡名称
-	Name string
-
-	// 内网IP掩码
-	Netmask string
-
-	// 关联内网IP。当前一个网卡仅支持绑定一个内网IP
-	PrivateIpSet []string
-
-	// 备注
-	Remark string
-
-	// 绑定状态
-	Status int
-
-	// 所属子网
-	SubnetId string
-
-	// 业务组
-	Tag string
-
-	// 所属VPC
-	VPCId string
+	VpcId string
 }
 
 /*
@@ -265,9 +124,6 @@ type NatGatewayDataSet struct {
 	// 绑定的EIP 信息
 	IPSet []NatGatewayIPSet
 
-	// 枚举值，“enable”，默认出口规则使用了负载均衡；“disable”，默认出口规则未使用负载均衡。
-	IsSnatpoolEnabled string
-
 	// natgw id
 	NATGWId string
 
@@ -290,10 +146,7 @@ type NatGatewayDataSet struct {
 	VPCId string
 
 	// 所属VPC 信息
-	VPCInfo string `deprecated:"true"`
-
-	// VPC名称
-	VPCName string
+	VPCInfo string
 }
 
 /*
@@ -335,10 +188,7 @@ TargetResourceInfo - ACL规则应用目标资源信息。
 type TargetResourceInfo struct {
 
 	// 资源内网IP
-	PrivateIP string `deprecated:"true"`
-
-	// 资源内网IP
-	PrivateIp string
+	PrivateIP string
 
 	// 资源ID
 	ResourceId string
@@ -435,185 +285,6 @@ type AclInfo struct {
 }
 
 /*
-UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
-*/
-type UNIQuotaInfo struct {
-
-	// 网卡拥有的内网IP数量
-	PrivateIpCount int
-
-	// 网卡内网IP配额
-	PrivateIpQuota int
-}
-
-/*
-UNIIpInfo - 虚拟网卡内网IP信息
-*/
-type UNIIpInfo struct {
-
-	// ip 地址
-	IpAddr []string
-
-	// ip类型 SecondaryIp/PrimaryIp
-	IpType string
-}
-
-/*
-NetworkInterface - 虚拟网卡信息
-*/
-type NetworkInterface struct {
-
-	// 绑定实例资源ID
-	AttachInstanceId string
-
-	// 创建时间
-	CreateTime int
-
-	// 是否是绑定实例的默认网卡 false:不是 true:是
-	Default bool
-
-	// 虚拟网卡绑定的EIP ID信息
-	EIPIdSet []string
-
-	// 虚拟网卡绑定的防火墙ID信息
-	FirewallIdSet []string
-
-	// 默认网关
-	Gateway string
-
-	// 虚拟网卡资源ID
-	InterfaceId string
-
-	// 关联Mac
-	MacAddress string
-
-	// 虚拟网卡名称
-	Name string
-
-	// 内网IP掩码
-	Netmask string
-
-	// 网卡的内网IP信息
-	PrivateIp []UNIIpInfo
-
-	// 网卡的内网IP配额信息
-	PrivateIpLimit UNIQuotaInfo
-
-	// 关联内网IP。当前一个网卡仅支持绑定一个内网IP
-	PrivateIpSet []string
-
-	// 备注
-	Remark string
-
-	// 绑定状态
-	Status int
-
-	// 所属子网
-	SubnetId string
-
-	// 业务组
-	Tag string
-
-	// 所属VPC
-	VPCId string
-}
-
-/*
-SecGroupSimpleInfo - 安全组简略信息
-*/
-type SecGroupSimpleInfo struct {
-
-	// 安全组名称
-	Name string
-
-	// 安全组资源ID
-	SecGroupId string
-}
-
-/*
-ResourceSecgroupInfo - 资源的安全组信息
-*/
-type ResourceSecgroupInfo struct {
-
-	// 资源绑定安全组数量
-	Count int
-
-	// 资源ID
-	ResourceId string
-
-	// 详见SecGroupSimpleInfo
-	SecGroupInfo []SecGroupSimpleInfo
-}
-
-/*
-BindingSecGroupInfo -
-*/
-type BindingSecGroupInfo struct {
-
-	// 安全组名称
-	Name string
-
-	// 该资源与该安全组绑定的优先级
-	Priority int
-
-	// 安全组 ID
-	SecGroupId string
-
-	// 安全组所属 VPC
-	VPCId string
-}
-
-/*
-ResourceExInfo - 资源额外信息（for 安全组）
-*/
-type ResourceExInfo struct {
-
-	// 主机外网IP
-	EIP []string
-
-	// 主机内网IP
-	IP []string
-
-	// 资源名称
-	ResourceName string
-
-	// 父级资源ID
-	SuperResourceId string
-
-	// 父级资源名称
-	SuperResourceName string
-
-	// 弹性网卡信息
-	Uni []ResourceSecgroupInfo
-}
-
-/*
-ResourceSecgroupInfoEx - 资源绑定的安全组信息。ResourceSecgroupInfoEx 中如果资源是非网卡资源（如云主机）且绑定虚拟网卡，
-则该资源不会绑定安全组，安全组只会绑定到虚拟网卡上；故 Count 为 0，Uni 非空，
-Uni 为一个网卡数组，表示每个虚拟网卡绑定的安全组信息。
-*/
-type ResourceSecgroupInfoEx struct {
-
-	// 该资源绑定的安全组数量
-	Count int
-
-	// 资源额外信息
-	ExInfo ResourceExInfo
-
-	// 表示是否允许绑定安全组
-	PermitAssociate bool
-
-	// 资源 ID
-	ResourceId string
-
-	// 资源名称
-	ResourceName string
-
-	// 绑定安全组信息
-	SecGroupInfo []BindingSecGroupInfo
-}
-
-/*
 RouteRuleInfo - 路由规则信息
 */
 type RouteRuleInfo struct {
@@ -626,9 +297,6 @@ type RouteRuleInfo struct {
 
 	// 保留字段，暂未使用
 	DstPort int
-
-	// 实例类型，枚举值：UHOST，云主机；UNI，虚拟网卡；PHOST，物理云主机
-	InstanceType string
 
 	// 路由下一跳资源ID
 	NexthopId string
@@ -687,9 +355,6 @@ type RouteTableInfo struct {
 	// 绑定该路由表的子网数量
 	SubnetCount int
 
-	// 绑定该路由表的子网
-	SubnetIds []string
-
 	// 路由表所属业务组
 	Tag string
 
@@ -701,138 +366,14 @@ type RouteTableInfo struct {
 }
 
 /*
-SecGroupRuleInfo - 安全组规则信息
+VPCSubnetInfoSet - 子网信息
 */
-type SecGroupRuleInfo struct {
+type VPCSubnetInfoSet struct {
+	// 名称 【已废弃】
+	Name string `deprecated:"true"`
 
-	// "Ingress/Egress"，入站规则/出站规则
-	Direction string
-
-	// 目标端口
-	DstPort string
-
-	// 地址
-	IPRange string
-
-	// 优先级
-	Priority int
-
-	// 协议类型
-	ProtocolType string
-
-	// 安全组规则备注
-	Remark string
-
-	// 匹配策略
-	RuleAction string
-
-	// 规则ID
-	RuleId string
-}
-
-/*
-SecGroupInfo - 安全组信息
-*/
-type SecGroupInfo struct {
-
-	// 用户 ID
-	Account int
-
-	// 创建的时间，格式为Unix Timestamp，如 1747030299
-	CreateTime int
-
-	// 安全组名称
-	Name string
-
-	// 备注
-	Remark string
-
-	// 安全组组中的规则列表，参见 SecGroupRuleInfo
-	Rule []SecGroupRuleInfo
-
-	// 安全组资源ID
-	SecGroupId string
-
-	// 业务组
-	Tag string
-
-	// 安全组类型，枚举值为： "user defined", 自定义创建安全组； "recommend web", 使用Web模板创建的安全组； "recommend non web", 使用非Web模板创建的安全组
-	Type string
-
-	// VPC资源ID
-	VPCId string
-}
-
-/*
-SecGroupResourceInfo - 安全组绑定资源信息
-*/
-type SecGroupResourceInfo struct {
-
-	// 名称
-	Name string
-
-	// 内网IP
-	PrivateIp string
-
-	// 资源ID
-	ResourceId string
-
-	// 资源类型。"unatgw"，NAT网关； "uhost"，云主机； "upm"，物理云主机； "hadoophost"，hadoop节点； "fortresshost"，堡垒机； "udhost"，私有专区主机；"udockhost"，容器；"dbaudit"，数据库审计，“uni”，虚拟网卡。
-	ResourceType string
-
-	// 资源绑定的虚拟网卡的ID
-	SubResourceId string
-
-	// 绑定的虚拟网卡的名称
-	SubResourceName string
-
-	// 绑定的虚拟网卡的类型，“uni”，虚拟网卡
-	SubResourceType string
-
-	// 业务组
-	Tag string
-
-	// 可用区
-	Zone int
-}
-
-/*
-SnatDnatRuleInfo -
-*/
-type SnatDnatRuleInfo struct {
-
-	// EIP的IP地址
-	EIP string
-
-	// 映射所使用的NAT网关资源ID
-	NATGWId string
-
-	// 内网IP地址
-	PrivateIp string
-}
-
-/*
-NATGWSnatRule - Nat网关的Snat规则
-*/
-type NATGWSnatRule struct {
-
-	// snat规则名称
-	Name string
-
-	// EIP地址，如106.76.xx.xx
-	SnatIp string
-
-	// 资源的内网IP地址
-	SourceIp string
-
-	// SourceIp所属的子网id
-	SubnetworkId string
-}
-
-/*
-SubnetInfo - 子网信息
-*/
-type SubnetInfo struct {
+	// 虚拟路由 id【已废弃】
+	VRouterId string `deprecated:"true"`
 
 	// 可用IP数量
 	AvailableIPs int
@@ -884,9 +425,9 @@ type SubnetInfo struct {
 }
 
 /*
-SubnetResource - 子网下资源
+ResourceInfo - 子网下资源
 */
-type SubnetResource struct {
+type ResourceInfo struct {
 
 	// 资源ip
 	IP string
@@ -954,47 +495,41 @@ VPCInfo - VPC信息
 */
 type VPCInfo struct {
 
-	// 创建时间
+	//
 	CreateTime int
 
 	// VPC关联的IPv6网段
 	IPv6Network string
 
-	// VPC名称
+	//
 	Name string
 
-	// VPC网段
+	//
 	Network []string
 
-	// vpc地址空间信息，详见VPCNetworkInfo
+	//
 	NetworkInfo []VPCNetworkInfo
 
 	// VPC关联的IPv6网段所属运营商
 	OperatorName string
 
-	// 子网数
+	//
 	SubnetCount int
 
-	// 业务组
+	//
 	Tag string
 
-	// 更新时间
+	//
 	UpdateTime int
 
-	// VPC资源ID
+	// VPCId
 	VPCId string
-
-	// DefaultVPC 默认VPC，DefinedVPC，自定义VPC
-	VPCType string
 }
 
 /*
 VPCIntercomInfo -
 */
 type VPCIntercomInfo struct {
-
-	// 项目Id（数字）
-	AccountId int
 
 	// 所属地域
 	DstRegion string
@@ -1013,9 +548,6 @@ type VPCIntercomInfo struct {
 
 	// VPCId
 	VPCId string
-
-	// vpc类型（1表示托管VPC，0表示公有云VPC）
-	VPCType int
 }
 
 /*
@@ -1082,30 +614,6 @@ type GetAvailableResourceForPolicyDataSet struct {
 }
 
 /*
-GetAvailableResourceForSnatRuleDataSet -
-*/
-type GetAvailableResourceForSnatRuleDataSet struct {
-
-	// 资源内网IP
-	PrivateIP string
-
-	// 资源ID
-	ResourceId string
-
-	// 资源名称
-	ResourceName string
-
-	// 资源类型
-	ResourceType string
-
-	// 资源所属VPC的ID
-	SubnetworkId string
-
-	// 资源所属子网的ID
-	VPCId string
-}
-
-/*
 GetAvailableResourceForWhiteListDataSet - GetAvailableResourceForWhiteList
 */
 type GetAvailableResourceForWhiteListDataSet struct {
@@ -1123,19 +631,13 @@ type GetAvailableResourceForWhiteListDataSet struct {
 	ResourceType string
 
 	// 资源绑定的虚拟网卡的实例ID
-	SubResouceId string `deprecated:"true"`
+	SubResouceId string
 
 	// 资源绑定的虚拟网卡的实例类型
-	SubResouceType string `deprecated:"true"`
-
-	// 资源绑定的虚拟网卡的实例ID
-	SubResourceId string
+	SubResouceType string
 
 	// 资源绑定的虚拟网卡的实例名称
 	SubResourceName string
-
-	// 资源绑定的虚拟网卡的实例类型
-	SubResourceType string
 
 	// 资源所属子网Id
 	SubnetworkId string
