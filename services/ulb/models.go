@@ -54,6 +54,30 @@ type BackendSet struct {
 }
 
 /*
+InsertHeaderConfigSet - 插入 header 相关配置
+*/
+type InsertHeaderConfigSet struct {
+
+	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
+	Key string
+
+	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
+	Value string
+
+	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
+	ValueType string
+}
+
+/*
+RemoveHeaderConfigSet - 删除 header 相关配置
+*/
+type RemoveHeaderConfigSet struct {
+
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key string
+}
+
+/*
 CorsConfigSet - 跨域相关配置
 */
 type CorsConfigSet struct {
@@ -108,30 +132,6 @@ type ForwardConfigSet struct {
 
 	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
 	Targets []ForwardTargetSet
-}
-
-/*
-InsertHeaderConfigSet - 插入 header 相关配置
-*/
-type InsertHeaderConfigSet struct {
-
-	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
-	Key string
-
-	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
-	Value string
-
-	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
-	ValueType string
-}
-
-/*
-RemoveHeaderConfigSet - 删除 header 相关配置
-*/
-type RemoveHeaderConfigSet struct {
-
-	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
-	Key string
 }
 
 /*
@@ -219,6 +219,51 @@ type Rule struct {
 }
 
 /*
+HealthCheckConfigSet - 健康检查相关配置
+*/
+type HealthCheckConfigSet struct {
+
+	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	Domain string
+
+	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	Enabled bool
+
+	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	Path string
+
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
+	Type string
+}
+
+/*
+StickinessConfigSet - 会话保持相关配置
+*/
+type StickinessConfigSet struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
+}
+
+/*
+Certificate - （应用型专用）服务器证书信息
+*/
+type Certificate struct {
+
+	// 是否为默认证书
+	IsDefault bool
+
+	// 证书ID
+	SSLId string
+}
+
+/*
 Target - 服务节点信息
 */
 type Target struct {
@@ -258,51 +303,6 @@ type Target struct {
 
 	// 服务节点的权重。仅在加权轮询算法时有效
 	Weight int
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
-}
-
-/*
-Certificate - （应用型专用）服务器证书信息
-*/
-type Certificate struct {
-
-	// 是否为默认证书
-	IsDefault bool
-
-	// 证书ID
-	SSLId string
-}
-
-/*
-HealthCheckConfigSet - 健康检查相关配置
-*/
-type HealthCheckConfigSet struct {
-
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
-	Domain string
-
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
-	Enabled bool
-
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
-	Type string
 }
 
 /*
@@ -366,21 +366,6 @@ type Listener struct {
 }
 
 /*
-AccessLogConfigSet - （应用型专用）访问日志相关配置
-*/
-type AccessLogConfigSet struct {
-
-	// （应用型专用）是否开启访问日志记录功能
-	Enabled bool
-
-	// （应用型专用）用于存储访问日志的bucket
-	US3BucketName string
-
-	// （应用型专用）上传访问日志到bucket所需的token
-	US3TokenId string
-}
-
-/*
 IPInfo - 绑定的IP信息
 */
 type IPInfo struct {
@@ -405,6 +390,39 @@ type IPInfo struct {
 
 	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
 	OperatorName string
+}
+
+/*
+AccessLogConfigSet - （应用型专用）访问日志相关配置
+*/
+type AccessLogConfigSet struct {
+
+	// （应用型专用）是否开启访问日志记录功能
+	Enabled bool
+
+	// （应用型专用）用于存储访问日志的bucket
+	US3BucketName string
+
+	// （应用型专用）上传访问日志到bucket所需的token
+	US3TokenId string
+}
+
+/*
+SecGroupInfo - 安全组详细信息
+*/
+type SecGroupInfo struct {
+
+	// 安全组名称
+	Name string
+
+	// 优先级
+	Priority int
+
+	// 安全组id
+	SecgroupId string
+
+	// 安全组所属vpc id
+	VPCId string
 }
 
 /*
@@ -459,6 +477,9 @@ type LoadBalancer struct {
 
 	// 负载均衡实例的备注信息
 	Remark string
+
+	// 安全组信息
+	SecGroup SecGroupInfo
 
 	// 应用型实例的代理IP或网络型FULLNAT模式下snat所用的IP
 	SnatIPs []string
@@ -753,129 +774,6 @@ type TLSAndCiphers struct {
 }
 
 /*
-PolicyBackendSet - 内容转发下rs详细信息
-*/
-type PolicyBackendSet struct {
-
-	// 所添加的后端资源在ULB中的对象ID，（为ULB系统中使用，与资源自身ID无关
-	BackendId string
-
-	// 后端资源的对象ID
-	ObjectId string
-
-	// 所添加的后端资源服务端口
-	Port int
-
-	// 后端资源的内网IP
-	PrivateIP string
-
-	// 后端资源的实例名称
-	ResourceName string
-
-	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube；UNI -> 虚拟网卡
-	ResourceType string
-
-	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源ID
-	SubResourceId string
-
-	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源名称
-	SubResourceName string
-
-	// "UNI"或者为空
-	SubResourceType string
-}
-
-/*
-ULBPolicySet - 内容转发详细列表
-*/
-type ULBPolicySet struct {
-
-	// 内容转发下rs的详细信息，参考PolicyBackendSet
-	BackendSet []PolicyBackendSet
-
-	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
-	DomainMatchMode string
-
-	// 内容转发匹配字段;默认内容转发类型下为空。
-	Match string
-
-	// 内容转发Id，默认内容转发类型下为空。
-	PolicyId string
-
-	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
-	PolicyPriority int
-
-	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
-	PolicyType string
-
-	// 默认内容转发类型下返回当前rs总数
-	TotalCount int
-
-	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
-	Type string
-
-	// 所属VServerId
-	VServerId string
-}
-
-/*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -924,6 +822,129 @@ type ULBBackendSet struct {
 
 	// 后端RS权重（在加权轮询算法下有效）
 	Weight int
+}
+
+/*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
+PolicyBackendSet - 内容转发下rs详细信息
+*/
+type PolicyBackendSet struct {
+
+	// 所添加的后端资源在ULB中的对象ID，（为ULB系统中使用，与资源自身ID无关
+	BackendId string
+
+	// 后端资源的对象ID
+	ObjectId string
+
+	// 所添加的后端资源服务端口
+	Port int
+
+	// 后端资源的内网IP
+	PrivateIP string
+
+	// 后端资源的实例名称
+	ResourceName string
+
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube；UNI -> 虚拟网卡
+	ResourceType string
+
+	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源ID
+	SubResourceId string
+
+	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源名称
+	SubResourceName string
+
+	// "UNI"或者为空
+	SubResourceType string
+}
+
+/*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
+}
+
+/*
+ULBPolicySet - 内容转发详细列表
+*/
+type ULBPolicySet struct {
+
+	// 内容转发下rs的详细信息，参考PolicyBackendSet
+	BackendSet []PolicyBackendSet
+
+	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode string
+
+	// 内容转发匹配字段;默认内容转发类型下为空。
+	Match string
+
+	// 内容转发Id，默认内容转发类型下为空。
+	PolicyId string
+
+	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
+	PolicyPriority int
+
+	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
+	PolicyType string
+
+	// 默认内容转发类型下返回当前rs总数
+	TotalCount int
+
+	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
+	Type string
+
+	// 所属VServerId
+	VServerId string
 }
 
 /*
