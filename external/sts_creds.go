@@ -6,30 +6,18 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-
-	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
-	"github.com/ucloud/ucloud-sdk-go/ucloud/metadata"
 )
-
-const internalBaseUrl = "http://api.service.ucloud.cn"
 
 type AssumeRoleRequest struct {
 	RoleName string
 }
 
 func LoadSTSConfig(req AssumeRoleRequest) (ConfigProvider, error) {
-	httpClient := http.NewHttpClient()
-	client := &metadata.DefaultClient{}
-	err := client.SetHttpClient(&httpClient)
+	client, err := createMetadataClient()
 	if err != nil {
 		return nil, err
 	}
 	return loadSTSConfig(req, client)
-}
-
-type metadataProvider interface {
-	SendRequest(string) (string, error)
-	SetHttpClient(http.Client) error
 }
 
 type assumeRoleData struct {
@@ -50,31 +38,31 @@ type assumeRoleResponse struct {
 }
 
 func loadSTSConfig(req AssumeRoleRequest, client metadataProvider) (ConfigProvider, error) {
-	path := "/meta-data/v1/uam/security-credentials"
+	// Build API path for V1
+	path := stsV1BasePath
 	if len(req.RoleName) != 0 {
 		path += "/" + req.RoleName
 	}
 
+	// Request STS credentials
 	resp, err := client.SendRequest(path)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to send STS V1 request")
 	}
 
+	// Parse response
 	var roleResp assumeRoleResponse
 	if err := json.NewDecoder(strings.NewReader(resp)).Decode(&roleResp); err != nil {
 		return nil, errors.Errorf("failed to decode sts credential, %s", err)
 	}
 
-	region, err := client.SendRequest("/meta-data/latest/region")
+	// Fetch region and zone from metadata
+	region, zone, err := fetchRegionAndZone(client)
 	if err != nil {
 		return nil, err
 	}
 
-	zone, err := client.SendRequest("/meta-data/latest/availability-zone")
-	if err != nil {
-		return nil, err
-	}
-
+	// Build STS config
 	roleData := roleResp.Data
 	stsConfig := &config{
 		CanExpire:     true,

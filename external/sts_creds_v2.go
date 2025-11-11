@@ -8,7 +8,6 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/metadata"
 )
 
@@ -34,13 +33,10 @@ type AssumeRoleV2Request struct {
 
 // LoadSTSConfigV2 loads STS V2 configuration from UCloud metadata service
 func LoadSTSConfigV2(req AssumeRoleV2Request) (ConfigProvider, error) {
-	client := &metadata.DefaultClient{}
-	httpClient := http.NewHttpClient()
-	err := client.SetHttpClient(&httpClient)
+	client, err := createMetadataClient()
 	if err != nil {
 		return nil, err
 	}
-
 	return loadSTSConfigV2(req, client)
 }
 
@@ -83,7 +79,7 @@ type assumeRoleV2Response struct {
 
 func loadSTSConfigV2(req AssumeRoleV2Request, client *metadata.DefaultClient) (ConfigProvider, error) {
 	// Build API path for V2
-	path := "/meta-data/v2/iam/security-credentials"
+	path := stsV2BasePath
 	if len(req.RoleName) != 0 {
 		path += "/" + req.RoleName
 	}
@@ -126,15 +122,10 @@ func loadSTSConfigV2(req AssumeRoleV2Request, client *metadata.DefaultClient) (C
 		return nil, errors.Errorf("STS V2 API returned error: RetCode=%d, Message=%s", roleResp.RetCode, roleResp.Message)
 	}
 
-	// Get region and zone from metadata (V2 paths)
-	region, err := client.SendRequest("/meta-data/latest/region")
+	// Fetch region and zone from metadata
+	region, zone, err := fetchRegionAndZone(client)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get region from metadata")
-	}
-
-	zone, err := client.SendRequest("/meta-data/latest/availability-zone")
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get zone from metadata")
+		return nil, err
 	}
 
 	// Parse expiration time (ISO 8601 format)
@@ -154,8 +145,8 @@ func loadSTSConfigV2(req AssumeRoleV2Request, client *metadata.DefaultClient) (C
 		PrivateKey:    roleData.AccessKeySecret, // AccessKeySecret maps to PrivateKey
 		SecurityToken: roleData.SecurityToken,
 		ProjectId:     roleData.ProjectID,
-		Region:        strings.TrimSpace(region),
-		Zone:          strings.TrimSpace(zone),
+		Region:        region,
+		Zone:          zone,
 		BaseUrl:       internalBaseUrl,
 	}
 
