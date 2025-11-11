@@ -65,6 +65,26 @@ func (client DefaultClient) SendRequest(path string) (string, error) {
 	return string(resp.GetBody()), nil
 }
 
+// SendRequestWithHeaders sends a request with custom headers to metadata server
+// This method is useful for metadata APIs that require additional headers (e.g., STS V2)
+func (client DefaultClient) SendRequestWithHeaders(path string, headers map[string]string) (string, error) {
+	req := http.NewHttpRequest()
+	_ = req.SetMethod("GET")
+	_ = req.SetURL(fmt.Sprintf("%s%s", globalEndpoint, path))
+
+	// Set custom headers
+	for key, value := range headers {
+		req.SetHeader(key, value)
+	}
+
+	resp, err := client.httpClient.Send(req)
+	if err != nil {
+		return "", err
+	}
+
+	return string(resp.GetBody()), nil
+}
+
 // SetHttpClient will setup a http client
 func (client *DefaultClient) SetHttpClient(httpClient http.Client) error {
 	client.httpClient = httpClient
