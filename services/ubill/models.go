@@ -3,24 +3,24 @@
 package ubill
 
 /*
-ResourceTag -
-*/
-type ResourceTag struct {
-
-	//
-	KeyId string
-
-	//
-	Value string
-}
-
-/*
 OrderDetail -
 */
 type OrderDetail struct {
 
 	//
 	ProductName string
+
+	//
+	Value string
+}
+
+/*
+ResourceTag -
+*/
+type ResourceTag struct {
+
+	//
+	KeyId string
 
 	//
 	Value string
@@ -120,18 +120,6 @@ type AccountInfo struct {
 }
 
 /*
-ResourceExtendInfo - 资源标识
-*/
-type ResourceExtendInfo struct {
-
-	// 资源标识健
-	KeyId string
-
-	// 资源标识值
-	Value string
-}
-
-/*
 ItemDetail - 产品配置
 */
 type ItemDetail struct {
@@ -140,6 +128,18 @@ type ItemDetail struct {
 	ProductName string
 
 	// 产品小类规格
+	Value string
+}
+
+/*
+ResourceExtendInfo - 资源标识
+*/
+type ResourceExtendInfo struct {
+
+	// 资源标识健
+	KeyId string
+
+	// 资源标识值
 	Value string
 }
 
@@ -202,7 +202,7 @@ type BillDetailItem struct {
 	// 资源标签。字符串键值对的map：{"cs_label": "cs_label_value"}
 	ResourceLabel string
 
-	// 产品类型。枚举值：\\ > uhost:云主机 \\ > udisk:普通云硬盘 \\ > udb:云数据库 \\ > eip:弹性IP \\ > ufile:对象存储 \\ > fortress_host:堡垒机 \\ > ufs:文件存储 \\ > waf:WEB应用防火墙 \\ > ues:弹性搜索 \\ > udisk_ssd:SSD云硬盘 \\ > rssd:RSSD云硬盘
+	// 产品类型 (筛选项, 默认全部),支持多筛选，多筛选请在请求参数中添加多个字段。枚举值：\\ > uhost:云主机 \\ > udisk:普通云硬盘 \\ > udisk_ssd:SSD云硬盘 \\ > rssd:RSSD云硬盘 \\ > snapshot:云快照 \\ > uimage:云主机镜像 \\ > isolation_group:硬件隔离组 \\ > udisk_system_disk:云硬盘系统盘 \\ > phost:裸金属云主机 \\ > udset:资源池 \\ > udhost:专区宿主 \\ > rack:托管云机位 \\ > hybrid_rack:托管云机柜 \\ > hybrid_machine:托管云物理机 \\ > userver:金翼物理机 \\ > hybrid_host:托管云物理云主机 \\ > hybrid_vip_service:启明VIP服务 \\ > hybrid_public_net:外网-IP段 \\ > hybrid_public_bw:外网-带宽 \\ > rack_bw:网络 \\ > ulink:内网-云互通 \\ > hybrid_others:耗材 \\ > uconnect:专线 \\ > hybrid_switch:交换机 \\ > hybrid_port:交换机端口 \\ > shared_bandwidth:共享带宽 \\ > eip:弹性IP \\ > traffic:流量 \\ > bandwidth:带宽包 \\ > vpn:VPN网关 \\ > firewall:防火墙 \\ > vip:内网IP \\ > UAnycastClean:Anycast全球清洗防护包 \\ > AnycastEIP:AnycastEIP \\ > ulb:负载均衡 \\ > vlb:专享型ULB \\ > ssl:证书管理 \\ > subnet:子网 \\ > natgw:NAT网关 \\ > vpc:虚拟私有网络 \\ > acl:访问控制列表 \\ > udpn:高速通道 \\ > vpngw:VPN网关 \\ > remotevpngw:客户网关 \\ > vpn_tunnel:隧道 \\ > udee:域名要素引擎 \\ > ugaa:全球动态加速 \\ > upath:线路管理 \\ > Roma:罗马 \\ > ufs:文件存储 \\ > ufile:对象存储 \\ > udataark:数据方舟 \\ > uarchive:归档存储 \\ > ucdn:云分发 \\ > uodn:开放式分发节点 \\ > uodn2:边缘分发节点 \\ > umem:云内存存储 \\ > umemcache:单机版memcache \\ > uredis:主备版redis \\ > udb:云数据库 \\ > mongodb:MongoDB \\ > sqlserver:SQLServer \\ > postgresql:PostgreSQL \\ > utsdb:时序数据库 \\ > uddb:分布式数据库 \\ > tidb:分布式NewSQL数据库 \\ > Hadoop:托管Hadoop集群 \\ > HadoopHost:托管Hadoop集群节点 \\ > udw:云数据仓库 \\ > ues:弹性搜索 \\ > uscheduler:调度系统 \\ > ukafka:Kafka消息队列 \\ > usql_end:数据湖分析 \\ > UFlink:Flink实时计算 \\ > ukafka_host:Kafka消息队列节点 \\ > UKafkaSinker:Kafka连接器 \\ > message_queue:消息队列 \\ > UAPIGateway:API网关 \\ > ucs:通用计算 \\ > docker_uhost:节点 \\ > uiot:UIoT-Core \\ > uai_service:AI在线服务 \\ > uai_training:AI训练服务 \\ > UAI-Censor:AI内容审核 \\ > uvideo:云点播 \\ > ulive:云直播 \\ > umedia:媒体工厂 \\ > VideoSDK:视频工具 \\ > UKMS:密钥管理服务 \\ > SDefense:高防 \\ > ADS-HD:华东高防 \\ > ADS-abroad:海外高防 \\ > uclean:清洗 \\ > waf:WEB应用防火墙 \\ > uws:WEB漏洞扫描 \\ > uhids:主机入侵检测 \\ > uencrypt:加密服务 \\ > fortress_host:堡垒机 \\ > db_audit:数据库审计 \\ > usa:云安全中心 \\ > udbcp:等保咨询 \\ > usms:短信包 \\ > udnr:域名注册服务 \\ > hegui:备案 \\ > ussl:SSL证书唯一标识 \\ > umarket:应用市场 \\ > urtc:实时音视频 \\ > umr:MapReduce \\ > utss:UCloud技术支持服务 \\ > store_box:店铺盒子 \\ > ukv:容量型KV存储 \\ > ucloudperation:云合作 \\ > umon_network:网络质量监控 \\ > uaccess_box:UBox \\ > UOPS:运维服务 \\ > TeuProduct:非标-企业 \\ > TeuHumanResource:服务-企业 \\ > UBI:数据可视化分析 \\ > First_tier_Bandwidth:ODN一线城市带宽 \\ > Second_tier_Bandwidth:ODN二线城市带宽 \\ > ODN-EDU-BW:ODN教育网带宽 \\ > uodn_docker_resource:ODN容器 \\ > UAI-Solution:AI解决方案 \\ > USNAPSHOT:磁盘快照服务 \\ > ServiceFee:一次性收费 \\ > UCloudAntiDDoS-NorthChinaBGP:高防-华北BGP \\ > Cube:容器实例 \\ > UHybrid-EBN:混合云-企业网 \\ > UHybrid-VBS:混合云-虚拟边界交换机 \\ > UHybrid-EBNBandwidth:混合云-企业网带宽 \\ > UCGS:云游戏 \\ > USDP:智能大数据平台 \\ > UIoT-Stack:物联网平台系统套件 \\ > uiotedgebox:物联网边缘盒子 \\ > UClickhouse:云数据库仓库UClickHouse \\ > UDNS:云解析 \\ > UFS-SMB:SMB文件系统 \\ > EPC:云极高性能计算节点 \\ > EPCCluster:高性能计算集群 \\ > Instance:海外站云主机 \\ > UGA3:全球动态加速 \\ > uhybrid_xzone:混合云-金翼XZone \\ > udts:数据传输服务 \\ > uk8s_service:容器云 \\ > UIW:无间盾反欺诈系统 \\ > ISMS:视频短信 \\ > PLiveUPRO:Polyv云直播U享版 \\ > UNVS:号码认证 \\ > UVMS:语音消息服务 \\ > UGame:云游戏 \\ > UHive:UHive \\ > UDoris:UDoris \\ > USLK:短链工具 \\ > UPCA:UPCA \\ > URCM:富信消息 \\ > HTTPDNS:HTTP DNS \\ > UAdsSp:DDOS防御服务包 \\ > UPhone-eip:云手机（eip） \\ > UPhone-share-bandwidth:云手机（共享带宽） \\ > UCloud Phone Server:云手机服务器 \\ > UMongoDBMember:云数据库 MongoDB UDB 集群内节点成员 \\ > UPhone-NetworkResource:云手机（网络资源） \\ > UOL:海外直播加速 \\ > UDBProxy:云数据库读写分离中间件 \\ > UDBProxyMember:云数据库读写分离中间件集群内成员 \\ > UPgSQL:UDB For PgSQL \\ > UMongoDB:UMongoDB \\ > UPresto:UPresto \\ > UDBC:UDBC \\ > CAAS:CAAS \\ > UPhone:云手机 \\ > NVAS:混合云-网络增值服务 \\ > UNPP:号码隐私保护 \\ > UNPP:企业名片 \\ > UMongoDBVirtualMember:云数据库 MongoDB UDB集群内虚拟节点 \\ > CF-antiddos:CF高防服务 \\ > UAM:优信 \\ > UAIModelFactory:人工智能模型工厂 \\ > UGNBW:云联网带宽包 \\ > UDAS:数据库自治服务 \\ > URM:资源迁移 \\ > UDTS-DI:数据传输服务-数据集成 \\ > ALB:应用型负载均衡 \\ > UTrafficPack:共享流量包 \\ > ULHost:轻量应用云主机 \\ > UWSCBandwith:UWAN智联-接入带宽包 \\ > MySQLBackup:MySQL 备份服务 \\ > SkyMirror:天镜 \\ > UCustomImage:自定义镜像 \\ > UDTS-DIS:数据传输服务-数据集成子任务 \\ > utm:流量镜像 \\ > NLB:网络型负载均衡 \\ > ALS:ALB监听器 \\ > NLS:NLB监听器 \\ > ARS:ALB服务节点 \\ > NRS:NLB服务节点 \\ > UAIM:卡片消息 \\ > UWSC:UWAN智联 \\ > LBIP:负载均衡内网IP \\ > ULogstash:Logstash服务 \\ > UWCE:UWAN智联-CE客户网关 \\ > UWSC-Tunnel:UWAN智联-VPN隧道 \\ > UNDT:网络拨测 \\ > UHBW:托管带宽包 \\ > UHNet:托管网络 \\ > UH-VRrouter:托管虚拟路由器 \\ > XC:楼内线 \\ > UModelVerse:模型服务平台 \\ > ULogstash-Node:Logstash Node服务 \\ > CloudWatch:云监控 \\ > UGN:云联网 \\ > epsrv:终端节点服务 \\ > ep:终端节点 \\ > uwcpe:CPE智能网关 \\ > uwcpetunnel:CPE隧道 \\ > USCS:安全定制服务 \\ > UAAA:应用仓库加速 \\ > ULogService:日志服务 \\ > UXZONE-GPU:金翼GPU \\ > UReach:优睿达 \\ > UPLVR:专线虚拟路由器 \\ > maxir:云数据仓库MAXIR \\ > maxirvector:云数据仓库MAXIR向量版 \\ > UPFS:文件存储UPFS \\ > UMarketplace:云市场 \\ > IPRP:IP资源池 \\ > ExclusiveHosts:包销宿主机 \\ > RedisReplicate:Redis 从库 \\ > SecurityCenter:云安全中心 \\ > PrivateLink:私有链接 \\ > UMongoDBBackup:MongoDB备份服务 \\ > TiDBCluster:分布式数据库 TiDB Cluster \\ > MAXIRDPS:MAXIR DPS \\ > Label:标签 \\ > NVAS:混合云网络增值服务 \\ > UIBUDS:互联网事业部开发服务 \\ > KafkaGroup:Kafka消费组 \\ > RLM:实时无损监控告警 \\ > USG:安全组 \\ > CF-antiddos:CF高防服务 \\ > UClickhouseNode:云数据仓库UClickhouse节点 \\ > HPCExpress:盘柜直达服务 \\ > UDI:数据智能 \\ > UMountPoint:文件系统挂载点 \\ > UPrometheus:托管Prometheus服务 \\ > AnycastCleanPromotion:全球清洗促销 \\ > USMC:服务器迁移中心 \\ > UK8SPod:UK8SPod 类型资源 \\ > UAS:弹性伸缩 \\ > Manul:统一存储 \\ > UDas:分部式应用服务 \\ > USecLog:安全日志审计 \\ > UKafkaSinkerNode:Kafka连接器节点 \\ > IPv6Address:IPv6地址 \\ > UFlink-Node:Flink实时计算节点 \\ > UContract:电子合同 \\ > NAT64:IPv6转换 \\ > OBJ_TYPE_UDDBAC:UDDB分析节点 \\ > OBJ_TYPE_SYS_UDISK_SSD:SSD云硬盘系统盘 \\ > utoken:令牌服务 \\ > UATP:API测试平台 \\ > udb_region:跨可用区高可用数据库 \\ > compshareImage:算力镜像 \\ > commImage:算力社区镜像 \\ > MAXIR AI:知识洞察 \\ > UCNest:算力云巢 \\ > IPV6 Gateway:IPV6公网网关 \\ > UCNest ExIP:算力云巢外网IP \\ > IPV6 Address:IPV6地址 \\ > UDBProxy RoGroup for MySQL:数据库代理只读组 \\ > SSD Essential:经济型SSD云盘 \\ > RSSD Essential:经济型RSSD云盘 \\ > RocketMQ Message Queue Node:消息队列节点 \\ > Runc Instance:Runc 实例 \\ > Runc Image:Runc 镜像 \\ > UCDC:专属云平台服务 \\ > Other:其他
 	ResourceType string
 
 	// 产品类型代码
