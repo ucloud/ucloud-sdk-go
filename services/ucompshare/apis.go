@@ -9,116 +9,6 @@ import (
 
 // UCompShare API Schema
 
-/*
-CreateCompShareInstanceParamDisks is request schema for complex param
-*/
-type CreateCompShareInstanceParamDisks struct {
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot *bool `required:"true"`
-
-	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	Size *int `required:"true"`
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	Type *string `required:"true"`
-}
-
-// CreateCompShareInstanceRequest is request schema for CreateCompShareInstance action
-type CreateCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 虚拟CPU核数。可选参数：1-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
-	CPU *int `required:"true"`
-
-	// 计费模式。枚举值为: \\ > Month，按月付费；\\ > Day，按天付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\ > Spot计费为抢占式实例(内测阶段) \\ 默认为月付
-	ChargeType *string `required:"false"`
-
-	// 镜像ID
-	CompShareImageId *string `required:"true"`
-
-	//
-	Disks []CreateCompShareInstanceParamDisks `required:"false"`
-
-	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
-	GPU *int `required:"true"`
-
-	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","A100"]，MachineType为G时必填
-	GpuType *string `required:"true"`
-
-	// 主机登陆模式。密码（默认选项）: Password
-	LoginMode *string `required:"false"`
-
-	// 云主机机型（V2.0），在本字段和字段UHostType中，仅需要其中1个字段即可。枚举值["N", "C", "G", "O", "OS", "OM", "OPRO", "OMAX", "O.BM", "O.EPC"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
-	MachineType *string `required:"true"`
-
-	// 内存大小。单位：MB。范围 ：[1024, 262144]，取值为1024的倍数（可选范围参考控制台）。默认值：8192
-	Memory *int `required:"true"`
-
-	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake", "Intel/CascadelakeR", "Intel/IceLake", "Amd/Epyc2", "Amd/Auto","Ampere/Auto","Ampere/Altra"],默认值是"Intel/Auto"。
-	MinimalCpuPlatform *string `required:"false"`
-
-	// 实例名称
-	Name *string `required:"false"`
-
-	// UHost密码。请遵照[[api:uhost-api:specification|字段规范]]设定密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64UGFzc3dvcmQx。
-	Password *string `required:"false"`
-
-	// 购买时长。默认:值 1。按小时购买（Dynamic/Postpay）时无需此参数。 月付时，此参数传0，代表购买至月末。
-	Quantity *int `required:"false"`
-
-	// 防火墙Id
-	SecurityGroupId *string `required:"false"`
-}
-
-// CreateCompShareInstanceResponse is response schema for CreateCompShareInstance action
-type CreateCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// UHost实例Id集合
-	UHostIds []string
-}
-
-// NewCreateCompShareInstanceRequest will create request of CreateCompShareInstance action.
-func (c *UCompShareClient) NewCreateCompShareInstanceRequest() *CreateCompShareInstanceRequest {
-	req := &CreateCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
-	return req
-}
-
-/*
-API: CreateCompShareInstance
-
-创建轻量级算力平台主机资源
-*/
-func (c *UCompShareClient) CreateCompShareInstance(req *CreateCompShareInstanceRequest) (*CreateCompShareInstanceResponse, error) {
-	var err error
-	var res CreateCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("CreateCompShareInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // CreateULHostInstanceRequest is request schema for CreateULHostInstance action
 type CreateULHostInstanceRequest struct {
 	request.CommonBase
@@ -195,74 +85,6 @@ func (c *UCompShareClient) CreateULHostInstance(req *CreateULHostInstanceRequest
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateULHostInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// DescribeCompShareInstanceRequest is request schema for DescribeCompShareInstance action
-type DescribeCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"false"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
-
-	// 返回数据长度，默认为20，最大100
-	Limit *int `required:"false"`
-
-	// 列表起始位置偏移量，默认为0
-	Offset *int `required:"false"`
-
-	// 【数组】UHost主机的资源ID，例如UHostIds.0代表希望获取信息 的主机1，UHostIds.1代表主机2。 如果不传入，则返回当前Region 所有符合条件的UHost实例。
-	UHostIds []string `required:"false"`
-
-	// 无卡GPU
-	WithoutGpu *bool `required:"false"`
-}
-
-// DescribeCompShareInstanceResponse is response schema for DescribeCompShareInstance action
-type DescribeCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// UHostInstance总数
-	TotalCount int
-
-	// 云主机实例列表，每项参数可见下面 UHostInstanceSet
-	UHostSet []CompShareInstanceSet
-}
-
-// NewDescribeCompShareInstanceRequest will create request of DescribeCompShareInstance action.
-func (c *UCompShareClient) NewDescribeCompShareInstanceRequest() *DescribeCompShareInstanceRequest {
-	req := &DescribeCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: DescribeCompShareInstance
-
-获取用户所有地域下主机资源信息列表
-*/
-func (c *UCompShareClient) DescribeCompShareInstance(req *DescribeCompShareInstanceRequest) (*DescribeCompShareInstanceResponse, error) {
-	var err error
-	var res DescribeCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("DescribeCompShareInstance", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -416,7 +238,7 @@ type GetULHostInstancePriceResponse struct {
 	// 错误信息
 	Message string
 
-	//
+	// 价格
 	PriceSet []ULHostPriceSet
 }
 
@@ -472,7 +294,7 @@ type GetULHostRenewPriceRequest struct {
 type GetULHostRenewPriceResponse struct {
 	response.CommonBase
 
-	//
+	// 价格
 	PriceSet []ULHostPriceSet
 }
 
@@ -622,62 +444,6 @@ func (c *UCompShareClient) PoweroffULHostInstance(req *PoweroffULHostInstanceReq
 	return &res, nil
 }
 
-// RebootCompShareInstanceRequest is request schema for RebootCompShareInstance action
-type RebootCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 实例Id
-	UHostId *string `required:"true"`
-}
-
-// RebootCompShareInstanceResponse is response schema for RebootCompShareInstance action
-type RebootCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// 实例Id
-	UHostId string
-}
-
-// NewRebootCompShareInstanceRequest will create request of RebootCompShareInstance action.
-func (c *UCompShareClient) NewRebootCompShareInstanceRequest() *RebootCompShareInstanceRequest {
-	req := &RebootCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: RebootCompShareInstance
-
-重启轻量算力平台实例
-*/
-func (c *UCompShareClient) RebootCompShareInstance(req *RebootCompShareInstanceRequest) (*RebootCompShareInstanceResponse, error) {
-	var err error
-	var res RebootCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("RebootCompShareInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // RebootULHostInstanceRequest is request schema for RebootULHostInstance action
 type RebootULHostInstanceRequest struct {
 	request.CommonBase
@@ -731,68 +497,6 @@ func (c *UCompShareClient) RebootULHostInstance(req *RebootULHostInstanceRequest
 	return &res, nil
 }
 
-// ReinstallCompShareInstanceRequest is request schema for ReinstallCompShareInstance action
-type ReinstallCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 镜像Id
-	CompShareImageId *string `required:"true"`
-
-	// 实例的新密码
-	Password *string `required:"false"`
-
-	// 实例Id
-	UHostId *string `required:"true"`
-}
-
-// ReinstallCompShareInstanceResponse is response schema for ReinstallCompShareInstance action
-type ReinstallCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// 实例Id
-	UHostId string
-}
-
-// NewReinstallCompShareInstanceRequest will create request of ReinstallCompShareInstance action.
-func (c *UCompShareClient) NewReinstallCompShareInstanceRequest() *ReinstallCompShareInstanceRequest {
-	req := &ReinstallCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: ReinstallCompShareInstance
-
-重装算力平台实例
-*/
-func (c *UCompShareClient) ReinstallCompShareInstance(req *ReinstallCompShareInstanceRequest) (*ReinstallCompShareInstanceResponse, error) {
-	var err error
-	var res ReinstallCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("ReinstallCompShareInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // ReinstallULHostInstanceRequest is request schema for ReinstallULHostInstance action
 type ReinstallULHostInstanceRequest struct {
 	request.CommonBase
@@ -806,7 +510,7 @@ type ReinstallULHostInstanceRequest struct {
 	// 镜像Id。暂不支持使用自定义镜像重装
 	ImageId *string `required:"true"`
 
-	// 登陆密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64UGFzc3dvcmQx
+	// 登陆密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64 UGFzc3dvcmQx
 	Password *string `required:"true"`
 
 	// 实例Id
@@ -848,65 +552,6 @@ func (c *UCompShareClient) ReinstallULHostInstance(req *ReinstallULHostInstanceR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ReinstallULHostInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// ResetCompShareInstancePasswordRequest is request schema for ResetCompShareInstancePassword action
-type ResetCompShareInstancePasswordRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 新密码。需经Base64编码
-	Password *string `required:"true"`
-
-	// 实例Id
-	UHostId *string `required:"true"`
-}
-
-// ResetCompShareInstancePasswordResponse is response schema for ResetCompShareInstancePassword action
-type ResetCompShareInstancePasswordResponse struct {
-	response.CommonBase
-
-	// 实例Id
-	UHostId string
-}
-
-// NewResetCompShareInstancePasswordRequest will create request of ResetCompShareInstancePassword action.
-func (c *UCompShareClient) NewResetCompShareInstancePasswordRequest() *ResetCompShareInstancePasswordRequest {
-	req := &ResetCompShareInstancePasswordRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: ResetCompShareInstancePassword
-
-重置算力平台实例密码
-*/
-func (c *UCompShareClient) ResetCompShareInstancePassword(req *ResetCompShareInstancePasswordRequest) (*ResetCompShareInstancePasswordResponse, error) {
-	var err error
-	var res ResetCompShareInstancePasswordResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("ResetCompShareInstancePassword", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -970,62 +615,6 @@ func (c *UCompShareClient) ResetULHostInstancePassword(req *ResetULHostInstanceP
 	return &res, nil
 }
 
-// StartCompShareInstanceRequest is request schema for StartCompShareInstance action
-type StartCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 实例Id
-	UHostId *string `required:"true"`
-}
-
-// StartCompShareInstanceResponse is response schema for StartCompShareInstance action
-type StartCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// 实例Id
-	UHostId string
-}
-
-// NewStartCompShareInstanceRequest will create request of StartCompShareInstance action.
-func (c *UCompShareClient) NewStartCompShareInstanceRequest() *StartCompShareInstanceRequest {
-	req := &StartCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: StartCompShareInstance
-
-启动算力平台实例
-*/
-func (c *UCompShareClient) StartCompShareInstance(req *StartCompShareInstanceRequest) (*StartCompShareInstanceResponse, error) {
-	var err error
-	var res StartCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("StartCompShareInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // StartULHostInstanceRequest is request schema for StartULHostInstance action
 type StartULHostInstanceRequest struct {
 	request.CommonBase
@@ -1079,62 +668,6 @@ func (c *UCompShareClient) StartULHostInstance(req *StartULHostInstanceRequest) 
 	return &res, nil
 }
 
-// StopCompShareInstanceRequest is request schema for StopCompShareInstance action
-type StopCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 实例Id
-	UHostId *string `required:"true"`
-}
-
-// StopCompShareInstanceResponse is response schema for StopCompShareInstance action
-type StopCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// 实例Id
-	UHostId string
-}
-
-// NewStopCompShareInstanceRequest will create request of StopCompShareInstance action.
-func (c *UCompShareClient) NewStopCompShareInstanceRequest() *StopCompShareInstanceRequest {
-	req := &StopCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: StopCompShareInstance
-
-关闭算力平台实例
-*/
-func (c *UCompShareClient) StopCompShareInstance(req *StopCompShareInstanceRequest) (*StopCompShareInstanceResponse, error) {
-	var err error
-	var res StopCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("StopCompShareInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // StopULHostInstanceRequest is request schema for StopULHostInstance action
 type StopULHostInstanceRequest struct {
 	request.CommonBase
@@ -1181,62 +714,6 @@ func (c *UCompShareClient) StopULHostInstance(req *StopULHostInstanceRequest) (*
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("StopULHostInstance", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// TerminateCompShareInstanceRequest is request schema for TerminateCompShareInstance action
-type TerminateCompShareInstanceRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-	// 虚机资源id
-	UHostId *string `required:"true"`
-}
-
-// TerminateCompShareInstanceResponse is response schema for TerminateCompShareInstance action
-type TerminateCompShareInstanceResponse struct {
-	response.CommonBase
-
-	// 虚机资源id
-	UHostId string
-}
-
-// NewTerminateCompShareInstanceRequest will create request of TerminateCompShareInstance action.
-func (c *UCompShareClient) NewTerminateCompShareInstanceRequest() *TerminateCompShareInstanceRequest {
-	req := &TerminateCompShareInstanceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: TerminateCompShareInstance
-
-删除轻量算力共享平台虚机实例
-*/
-func (c *UCompShareClient) TerminateCompShareInstance(req *TerminateCompShareInstanceRequest) (*TerminateCompShareInstanceResponse, error) {
-	var err error
-	var res TerminateCompShareInstanceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("TerminateCompShareInstance", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
