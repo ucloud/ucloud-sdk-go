@@ -202,6 +202,237 @@ func (c *UCompShareClient) CreateULHostInstance(req *CreateULHostInstanceRequest
 	return &res, nil
 }
 
+/*
+DescribeCommunityImagesParamSortCondition is request schema for complex param
+*/
+type DescribeCommunityImagesParamSortCondition struct {
+
+	// 是否升序排列
+	ASC *string `required:"false"`
+
+	// 排序条件。- Favor：按热度排序，获取热点镜像；- PubTime：按发布时间排序，获取最新社区镜像；- Price 按价格排序；- CreatedCount 按使用量排序；默认："PubTime"
+	Field *string `required:"false"`
+}
+
+// DescribeCommunityImagesRequest is request schema for DescribeCommunityImages action
+type DescribeCommunityImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 搜索指定作者发布的镜像
+	Author *string `required:"false"`
+
+	// 镜像Id。支持指定镜像Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *string `required:"false"`
+
+	// 镜像名称。模糊搜索
+	Name *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	//
+	SortCondition *DescribeCommunityImagesParamSortCondition `required:"false"`
+
+	// 按标签名称搜索，精确匹配
+	Tag *string `required:"false"`
+}
+
+// DescribeCommunityImagesResponse is response schema for DescribeCommunityImages action
+type DescribeCommunityImagesResponse struct {
+	response.CommonBase
+
+	// 镜像详情列表
+	ImageSet []CompShareImage
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeCommunityImagesRequest will create request of DescribeCommunityImages action.
+func (c *UCompShareClient) NewDescribeCommunityImagesRequest() *DescribeCommunityImagesRequest {
+	req := &DescribeCommunityImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCommunityImages
+
+获取社区镜像列表
+*/
+func (c *UCompShareClient) DescribeCommunityImages(req *DescribeCommunityImagesRequest) (*DescribeCommunityImagesResponse, error) {
+	var err error
+	var res DescribeCommunityImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCommunityImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareCustomImagesRequest is request schema for DescribeCompShareCustomImages action
+type DescribeCompShareCustomImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 指定镜像Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// DescribeCompShareCustomImagesResponse is response schema for DescribeCompShareCustomImages action
+type DescribeCompShareCustomImagesResponse struct {
+	response.CommonBase
+
+	// 镜像详情信息
+	ImageSet []CompShareImage
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeCompShareCustomImagesRequest will create request of DescribeCompShareCustomImages action.
+func (c *UCompShareClient) NewDescribeCompShareCustomImagesRequest() *DescribeCompShareCustomImagesRequest {
+	req := &DescribeCompShareCustomImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareCustomImages
+
+获取自制镜像列表
+*/
+func (c *UCompShareClient) DescribeCompShareCustomImages(req *DescribeCompShareCustomImagesRequest) (*DescribeCompShareCustomImagesResponse, error) {
+	var err error
+	var res DescribeCompShareCustomImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareCustomImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareImagesRequest is request schema for DescribeCompShareImages action
+type DescribeCompShareImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 镜像作者昵称
+	Author *string `required:"false"`
+
+	// 镜像Id。支持指定Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 镜像类型。枚举值- System 平台镜像- App 应用镜像默认：System
+	ImageType *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 镜像名称。支持模糊搜索
+	Name *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// 镜像标签
+	Tag *string `required:"false"`
+}
+
+// DescribeCompShareImagesResponse is response schema for DescribeCompShareImages action
+type DescribeCompShareImagesResponse struct {
+	response.CommonBase
+
+	// 镜像详情列表
+	ImageSet []CompShareImage
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeCompShareImagesRequest will create request of DescribeCompShareImages action.
+func (c *UCompShareClient) NewDescribeCompShareImagesRequest() *DescribeCompShareImagesRequest {
+	req := &DescribeCompShareImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareImages
+
+可获取平台、应用镜像信息
+*/
+func (c *UCompShareClient) DescribeCompShareImages(req *DescribeCompShareImagesRequest) (*DescribeCompShareImagesResponse, error) {
+	var err error
+	var res DescribeCompShareImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeCompShareInstanceRequest is request schema for DescribeCompShareInstance action
 type DescribeCompShareInstanceRequest struct {
 	request.CommonBase
@@ -416,7 +647,7 @@ type GetULHostInstancePriceResponse struct {
 	// 错误信息
 	Message string
 
-	//
+	// 价格
 	PriceSet []ULHostPriceSet
 }
 
@@ -472,7 +703,7 @@ type GetULHostRenewPriceRequest struct {
 type GetULHostRenewPriceResponse struct {
 	response.CommonBase
 
-	//
+	// 价格
 	PriceSet []ULHostPriceSet
 }
 
@@ -806,7 +1037,7 @@ type ReinstallULHostInstanceRequest struct {
 	// 镜像Id。暂不支持使用自定义镜像重装
 	ImageId *string `required:"true"`
 
-	// 登陆密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64UGFzc3dvcmQx
+	// 登陆密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64 UGFzc3dvcmQx
 	Password *string `required:"true"`
 
 	// 实例Id
