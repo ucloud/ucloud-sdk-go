@@ -3,6 +3,168 @@
 package ucompshare
 
 /*
+Projects - 项目详情
+*/
+type Projects struct {
+
+	// 账号Id
+	AccountId string
+
+	// 账号昵称
+	AccountName string
+}
+
+/*
+Software -
+*/
+type Software struct {
+
+	// 【array of string】应用列表
+	Applications []string
+
+	// CUDA版本
+	CUDAVersion string
+
+	// 框架名称
+	Framework string
+
+	// 框架版本
+	FrameworkVersion string
+}
+
+/*
+CompShareImage - 算力共享平台镜像详情
+*/
+type CompShareImage struct {
+
+	// 镜像作者认证信息
+	AuthInfo int
+
+	// 镜像作者昵称
+	Author string
+
+	// 镜像Id
+	CompShareImageId string
+
+	// 是否为容器镜像。- True 容器镜像- False 虚机镜像
+	Container string
+
+	// 镜像封面URL
+	Cover string
+
+	// 创建时间戳
+	CreateTime string
+
+	// 镜像引用创建计数
+	CreatedCount string
+
+	// 镜像描述信息
+	Description string
+
+	// 镜像制作失败错误原因
+	FailedReason string
+
+	// 镜像收藏计数
+	FavoritesCount string
+
+	// 镜像来源。- Official 平台镜像；- Community 社区镜像
+	ImageOwnerAlias string
+
+	// 镜像类型。- System 平台提供的公共镜像；- App 平台提供的应用镜像；- Custom 自制镜像；- Community 社区镜像
+	ImageType string
+
+	// 来源是否为官方镜像【仅自制镜像信息返回该字段】
+	IsOfficial bool
+
+	// 镜像名称
+	Name string
+
+	// 镜像所属账号信息
+	Owner Projects
+
+	// 镜像价格。单位：元
+	Price float64
+
+	// 发布时间戳
+	PubTime string
+
+	// 镜像详细描述。仅指定镜像Id查询时返回
+	Readme string
+
+	// 镜像大小。单位MB
+	Size int
+
+	// 镜像软件信息
+	Softwares Software
+
+	// 镜像状态。- Making 制作中；- Available 可用；- UnAvailable 不可用；- Reviewing 审核中;- Offline 已下线
+	Status string
+
+	// 【array of string】镜像标签
+	Tags []string
+
+	// 可见性。0：私密镜像；1：公开至镜像社区
+	Visibility int
+}
+
+/*
+DiskPriceInfo - 磁盘价格信息列表
+*/
+type DiskPriceInfo struct {
+
+	// 计费类型
+	ChargeType string
+
+	// 是否为系统盘
+	IsBoot bool
+
+	// 磁盘价格
+	Price float64
+}
+
+/*
+SoftwareAddr -
+*/
+type SoftwareAddr struct {
+
+	// 软件名称
+	Name string
+
+	// 软件地址
+	URL string
+}
+
+/*
+UHostDiskSet -
+*/
+type UHostDiskSet struct {
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
 UHostIPSet -
 */
 type UHostIPSet struct {
@@ -57,36 +219,6 @@ type WithoutGpuSpec struct {
 }
 
 /*
-UHostDiskSet -
-*/
-type UHostDiskSet struct {
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
 GraphicsMemory - GPU的显存指标
 */
 type GraphicsMemory struct {
@@ -99,15 +231,33 @@ type GraphicsMemory struct {
 }
 
 /*
-SoftwareAddr -
+GpuMonitorInfo - GPU卡监控信息
 */
-type SoftwareAddr struct {
+type GpuMonitorInfo struct {
 
-	// 软件名称
-	Name string
+	// GPU卡名称
+	GPU string
 
-	// 软件地址
-	URL string
+	// GPU卡使用率
+	GpuUsageRate string
+
+	// GPU显存使用率
+	MemoryUsageRate string
+}
+
+/*
+MonitorMessage - 监控信息
+*/
+type MonitorMessage struct {
+
+	// CPU使用率
+	CpuUsageRate string
+
+	// GPU卡监控信息
+	GpuInfo []GpuMonitorInfo
+
+	// 内存使用率
+	MemUsageRate string
 }
 
 /*
@@ -154,6 +304,9 @@ type CompShareInstanceSet struct {
 	// 创建时间
 	CreateTime int
 
+	// 磁盘价格信息，详见:DiskPriceInfo
+	DiskPriceInfo []DiskPriceInfo
+
 	// 详情见UHostDiskSet
 	DiskSet []UHostDiskSet
 
@@ -187,6 +340,9 @@ type CompShareInstanceSet struct {
 	// 内存大小，单位：MB
 	Memory int
 
+	// 监控信息，详见：MonitorMessage
+	MonitorMessages MonitorMessage
+
 	// 实例名称
 	Name string
 
@@ -198,6 +354,12 @@ type CompShareInstanceSet struct {
 
 	// 主机密码。由Base64编码
 	Password string
+
+	// 后付费关机计费信息列表，详见：详见:DiskPriceInfo
+	PostPayPowerOffBillingResource []DiskPriceInfo
+
+	// 释放时间（关机时候返回）
+	ReleaseTime int
 
 	// 实例备注
 	Remark string
@@ -211,6 +373,12 @@ type CompShareInstanceSet struct {
 	// 实例状态，枚举值：\\ >初始化: Initializing; \\ >启动中: Starting; \\> 运行中: Running; \\> 关机中: Stopping; \\ >关机: Stopped \\ >安装失败: Install Fail; \\ >重启中: Rebooting; \\ >升级改配中: Resizing; \\ > 未知(空字符串，获取状态超时或出错)：
 	State string
 
+	// 计划关机时间
+	StopSchedulerTime int
+
+	// 定时关机时间
+	StopTime int
+
 	// 此实例是否支持无卡开机
 	SupportWithoutGpuStart bool
 
@@ -222,6 +390,9 @@ type CompShareInstanceSet struct {
 
 	// 实例Id
 	UHostId string
+
+	// 虚机状态更新时间
+	UpdateTime int
 
 	// 无卡配置规格，详情见：WithoutGpuSpecInfo
 	WithoutGpuSpec WithoutGpuSpec
