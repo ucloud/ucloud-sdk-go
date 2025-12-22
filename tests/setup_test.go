@@ -55,18 +55,34 @@ import (
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
+	"github.com/ucloud/ucloud-sdk-go/services/iam"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
+	"github.com/ucloud/ucloud-sdk-go/services/sts"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
-	"github.com/ucloud/ucloud-sdk-go/services/ubox"
+	"github.com/ucloud/ucloud-sdk-go/services/uads"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
+	"github.com/ucloud/ucloud-sdk-go/services/ucompshare"
+	"github.com/ucloud/ucloud-sdk-go/services/udbproxy"
+	"github.com/ucloud/ucloud-sdk-go/services/uddb"
+	"github.com/ucloud/ucloud-sdk-go/services/udi"
+	"github.com/ucloud/ucloud-sdk-go/services/udns"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/ufs"
+	"github.com/ucloud/ucloud-sdk-go/services/ugn"
+	"github.com/ucloud/ucloud-sdk-go/services/uhub"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/ulighthost"
-	"github.com/ucloud/ucloud-sdk-go/services/umedia"
+	"github.com/ucloud/ucloud-sdk-go/services/umongodb"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
+	"github.com/ucloud/ucloud-sdk-go/services/upfs"
+	"github.com/ucloud/ucloud-sdk-go/services/upgsql"
+	"github.com/ucloud/ucloud-sdk-go/services/uphone"
+	"github.com/ucloud/ucloud-sdk-go/services/uslk"
+	"github.com/ucloud/ucloud-sdk-go/services/usms"
+	"github.com/ucloud/ucloud-sdk-go/services/utsdb"
+	"github.com/ucloud/ucloud-sdk-go/services/uvms"
 )
 
 func TestMain(m *testing.M) {
@@ -148,6 +164,9 @@ func testSetup() {
 	spec.AddFixture("Cube", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return cube.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("IAM", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return iam.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("IPSecVPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ipsecvpn.NewClient(&cfg, &credential), nil
 	}))
@@ -157,11 +176,17 @@ func testSetup() {
 	spec.AddFixture("PathX", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return pathx.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("STS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return sts.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("StepFlow", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return stepflow.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("TiDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return tidb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UADS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uads.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UAccount", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uaccount.NewClient(&cfg, &credential), nil
@@ -169,14 +194,26 @@ func testSetup() {
 	spec.AddFixture("UBill", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ubill.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UBox", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ubox.NewClient(&cfg, &credential), nil
-	}))
 	spec.AddFixture("UCDN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucdn.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("UCompShare", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ucompshare.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDBProxy", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udbproxy.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uddb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDI", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udi.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UDNS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return udns.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UDPN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udpn.NewClient(&cfg, &credential), nil
@@ -196,8 +233,14 @@ func testSetup() {
 	spec.AddFixture("UFile", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ufile.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("UGN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ugn.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("UHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uhost.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UHub", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uhub.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UK8S", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uk8s.NewClient(&cfg, &credential), nil
@@ -208,11 +251,11 @@ func testSetup() {
 	spec.AddFixture("ULightHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ulighthost.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UMedia", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return umedia.NewClient(&cfg, &credential), nil
-	}))
 	spec.AddFixture("UMem", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return umem.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UMongoDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return umongodb.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UNVS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return unvs.NewClient(&cfg, &credential), nil
@@ -220,8 +263,29 @@ func testSetup() {
 	spec.AddFixture("UNet", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return unet.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("UPFS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return upfs.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphost.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UPgSQL", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return upgsql.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UPhone", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uphone.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("USLK", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uslk.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("USMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return usms.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UTSDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return utsdb.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UVMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uvms.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil

@@ -99,7 +99,7 @@ type CloneUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	// 快照服务备份策略。普通云盘，SSD云盘，RSSD云盘套餐选择：“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链，默认采用基础版套餐开通；ESSD云盘，ERSSD云盘套餐：“Lite”：精简版，默认采用精简版套餐开通。
 	BackupMode *string `required:"false"`
 
 	// Year , Month, Dynamic，Postpay，Trial 默认: Month
@@ -132,7 +132,7 @@ type CloneUDiskRequest struct {
 	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
-	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
+	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]
 	Size *int `required:"false"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -200,7 +200,7 @@ type CloneUDiskSnapshotRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	// 快照服务备份策略。普通云盘，SSD云盘，RSSD云盘套餐选择：“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链，默认采用基础版套餐开通；ESSD云盘，ERSSD云盘套餐：“Lite”：精简版，默认采用精简版套餐开通
 	BackupMode *string `required:"false"`
 
 	// Year , Month, Dynamic，Postpay 默认: Dynamic
@@ -233,7 +233,7 @@ type CloneUDiskSnapshotRequest struct {
 	// RDMA集群id。指定RSSD云盘克隆到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
-	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
+	// 新克隆UDisk的大小,单位:GB。指定Size须大于等于源盘Size，小于源盘Size或者不指定该参数均按源盘Size克隆新盘。普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"false"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -405,7 +405,7 @@ type CreateAttachUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	// 快照服务备份策略。普通云盘，SSD云盘，RSSD云盘套餐选择：“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链，默认采用基础版套餐开通；ESSD云盘，ERSSD云盘套餐：“Lite”：精简版，默认采用精简版套餐开通。
 	BackupMode *string `required:"false"`
 
 	// Year , Month, Dynamic, Postpay, Trial 。 Size小于等于2000时，默认为Dynamic；Size大于2000时，默认为Month。
@@ -420,7 +420,7 @@ type CreateAttachUDiskRequest struct {
 	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
 	Day *int `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），ESSDDataDisk（经济型SSD数据盘），RSSDDataDisk（RSSD数据盘），ERSSDDataDisk（经济型 RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// Host实例ID。当创建云盘类型为RSSDDataDisk时，根据传入的HostId，创建与虚机在同一PodId下的云盘。
@@ -441,7 +441,7 @@ type CreateAttachUDiskRequest struct {
 	// 购买时长 默认: 1
 	Quantity *int `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"true"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -521,7 +521,7 @@ type CreateUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	// 快照服务备份策略。普通云盘，SSD云盘，RSSD云盘套餐选择：“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链，默认采用基础版套餐开通；ESSD云盘，ERSSD云盘套餐：“Lite”：精简版，默认采用精简版套餐开通。
 	BackupMode *string `required:"false"`
 
 	// Year , Month, Dynamic, Postpay, Trial 。默认为Dynamic。
@@ -536,7 +536,7 @@ type CreateUDiskRequest struct {
 	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
 	Day *int `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk（RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），ESSDDataDisk（经济型SSD数据盘），RSSDDataDisk（RSSD数据盘），ERSSDDataDisk（经济型 RSSD数据盘），EfficiencyDataDisk（高效数据盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
@@ -544,6 +544,9 @@ type CreateUDiskRequest struct {
 
 	// BackupMode为Custom时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48
 	Journal *int `required:"false"`
+
+	// 用户标签
+	Labels *string `required:"false"`
 
 	// 实例名称
 	Name *string `required:"true"`
@@ -554,7 +557,7 @@ type CreateUDiskRequest struct {
 	// RDMA集群id。DiskType为RSSDDataDisk可填，指定云盘创建到对应的RDMA集群。
 	RdmaClusterId *string `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"true"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -861,7 +864,7 @@ type DescribeUDiskRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
-	// ProtocolVersion字段为1时，需结合IsBoot确定具体磁盘类型:普通数据盘：DiskType:"CLOUD_NORMAL",IsBoot:"False"；普通系统盘：DiskType:"CLOUD_NORMAL",IsBoot:"True"；SSD数据盘：DiskType:"CLOUD_SSD",IsBoot:"False"；SSD系统盘：DiskType:"CLOUD_SSD",IsBoot:"True"；RSSD数据盘：DiskType:"CLOUD_RSSD",IsBoot:"False"；RSSD系统盘：DiskType:"CLOUD_RSSD",IsBoot:"True"；高效数据盘：DiskType:"CLOUD_EFFICIENCY",IsBoot:"False"；高效系统盘：DiskType:"CLOUD_EFFICIENCY",IsBoot:"True"；为空拉取所有。ProtocolVersion字段为0或没有该字段时，可设为以下几个值:普通数据盘：DataDisk；普通系统盘：SystemDisk；SSD数据盘：SSDDataDisk；SSD系统盘：SSDSystemDisk；RSSD数据盘：RSSDDataDisk；RSSD系统盘：RSSDSystemDisk：高效数据盘：EfficiencyDataDisk；高效系统盘：EfficiencySystemDisk；为空拉取所有。
+	// ProtocolVersion字段为1时，需结合IsBoot确定具体磁盘类型:普通数据盘：DiskType:"CLOUD_NORMAL",IsBoot:"False"；普通系统盘：DiskType:"CLOUD_NORMAL",IsBoot:"True"；SSD数据盘：DiskType:"CLOUD_SSD",IsBoot:"False"；SSD系统盘：DiskType:"CLOUD_SSD",IsBoot:"True"；经济型SSD数据盘：DiskType:"CLOUD_ESSD",IsBoot:"False"；经济型SSD系统盘：DiskType:"CLOUD_ESSD",IsBoot:"True"；RSSD数据盘：DiskType:"CLOUD_RSSD",IsBoot:"False"；RSSD系统盘：DiskType:"CLOUD_RSSD",IsBoot:"True"；经济型RSSD数据盘：DiskType:"CLOUD_ERSSD",IsBoot:"False"；经济型RSSD系统盘：DiskType:"CLOUD_ERSSD",IsBoot:"True"；高效数据盘：DiskType:"CLOUD_EFFICIENCY",IsBoot:"False"；高效系统盘：DiskType:"CLOUD_EFFICIENCY",IsBoot:"True"；为空拉取所有。ProtocolVersion字段为0或没有该字段时，可设为以下几个值:普通数据盘：DataDisk；普通系统盘：SystemDisk；SSD数据盘：SSDDataDisk；SSD系统盘：SSDSystemDisk；经济型SSD数据盘：ESSDDataDisk；经济型SSD系统盘：ESSDSystemDisk；RSSD数据盘：RSSDDataDisk；RSSD系统盘：RSSDSystemDisk；经济型RSSD数据盘：ERSSDDataDisk；经济型RSSD系统盘：ERSSDSystemDisk；高效数据盘：EfficiencyDataDisk；高效系统盘：EfficiencySystemDisk；为空拉取所有。
 	DiskType *string `required:"false"`
 
 	// 根据传入的HostId，返回与该主机关联的云盘信息。
@@ -902,6 +905,9 @@ type DescribeUDiskRequest struct {
 
 	// UDisk Id(留空返回全部)
 	UDiskId *string `required:"false"`
+
+	// 云盘实例名称
+	UDiskName *string `required:"false"`
 
 	// 根据传入的UHostIdForAttachment，筛选出能被挂载在该主机上的云盘【本字段即将废弃，建议使用HostIdForAttachment】
 	UHostIdForAttachment *string `required:"false"`
@@ -962,7 +968,7 @@ type DescribeUDiskPriceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	// 快照服务备份策略。普通云盘，SSD云盘，RSSD云盘套餐选择：“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链，默认采用基础版套餐开通；ESSD云盘，ERSSD云盘套餐：“Lite”：精简版，默认采用精简版套餐开通。
 	BackupMode *string `required:"false"`
 
 	// Year , Month, Dynamic，Postpay，Trial 默认: Month
@@ -971,7 +977,7 @@ type DescribeUDiskPriceRequest struct {
 	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
 	Day *int `required:"false"`
 
-	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），RSSDDataDisk(RSSD数据盘)，EfficiencyDataDisk（高效数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），RSSDSystemDisk(RSSD系统盘)，EfficiencySystemDisk（高效系统盘），默认值（DataDisk）
+	// UDisk 类型: DataDisk（普通数据盘），SSDDataDisk（SSD数据盘），ESSDDataDisk（经济型SSD数据盘），RSSDDataDisk(RSSD数据盘)，ERSSDDataDisk(经济型RSSD数据盘)，EfficiencyDataDisk（高效数据盘），SystemDisk（普通系统盘），SSDSystemDisk（SSD系统盘），ESSDSystemDisk（经济型SSD系统盘），RSSDSystemDisk(RSSD系统盘)，ERSSDSystemDisk(经济型RSSD系统盘)，EfficiencySystemDisk（高效系统盘），默认值（DataDisk）
 	DiskType *string `required:"false"`
 
 	// BackupMode为Custom时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96
@@ -989,7 +995,7 @@ type DescribeUDiskPriceRequest struct {
 	// 购买UDisk的时长，默认值为1
 	Quantity *int `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘：范围[1~4000]；RSSD数据盘：范围[1~32000]；RSSD系统盘：范围[1~4000]；高效数据盘：范围[1~32000]；高效系统盘：范围[1~500]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘、经济型SSD系统盘：范围[1~4000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；RSSD系统盘、经济型RSSD系统盘：范围[1~4000]；高效数据盘：范围[1~32000]；高效系统盘：范围[1~500]。
 	Size *int `required:"true"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No
@@ -1119,7 +1125,7 @@ type DescribeUDiskUpgradePriceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 快照服务备份策略。默认采用基础版套餐开通，“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链
+	// 快照服务备份策略。普通云盘，SSD云盘，RSSD云盘套餐选择：“Base”：基础版，“ Ultimate”：旗舰版，“ Custom”：自定义备份链，默认采用基础版套餐开通；ESSD云盘，ERSSD云盘套餐：“Lite”：精简版，默认采用精简版套餐开通。
 	BackupMode *string `required:"false"`
 
 	// BackupMode为Custom时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30
@@ -1137,7 +1143,7 @@ type DescribeUDiskUpgradePriceRequest struct {
 	// 【已废弃】云主机机型（V2.0），枚举值["N", "C", "G", "O", "OM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`
 
-	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘：范围[1~4000]；RSSD数据盘：范围[1~32000]；RSSD系统盘：范围[1~4000]；高效数据盘：范围[1~32000]；高效系统盘：范围[1~500]。
+	// 购买UDisk大小,单位:GB,普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；普通系统盘：范围[1~8000]；SSD系统盘、经济型SSD系统盘：范围[1~4000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；RSSD系统盘、经济型RSSD系统盘：范围[1~4000]；高效数据盘：范围[1~32000]；高效系统盘：范围[1~500]。
 	Size *int `required:"true"`
 
 	// 是否开启快照服务（开启快照服务，可免费开启数据方舟）。Yes：开启，No：不开启，默认值：No。仅支持查询开启快照服务的价格。
@@ -1450,13 +1456,13 @@ func (c *UDiskClient) RenameUDisk(req *RenameUDiskRequest) (*RenameUDiskResponse
 type ResizeUDiskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 使用的代金券id
@@ -1465,7 +1471,7 @@ type ResizeUDiskRequest struct {
 	// 云主机机型（V2.0），枚举值["N", "C", "G", "O", "OM"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	MachineType *string `required:"false"`
 
-	// 调整后大小, 单位:GB,普通数据盘：范围[1~8000]；SSD数据盘：范围[1~8000]；RSSD数据盘：范围[1~32000]。
+	// 调整后大小, 单位:GB,普通数据盘：范围[1~8000]；SSD数据盘、经济型SSD数据盘：范围[1~8000]；RSSD数据盘、经济型RSSD数据盘：范围[1~32000]；高效数据盘：范围[1~32000]。
 	Size *int `required:"true"`
 
 	// UDisk Id
