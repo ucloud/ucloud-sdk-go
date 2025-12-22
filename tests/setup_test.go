@@ -64,7 +64,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/ufs"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
-	"github.com/ucloud/ucloud-sdk-go/services/ulighthost"
 	"github.com/ucloud/ucloud-sdk-go/services/umedia"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
 )
@@ -204,9 +203,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("ULB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ulb.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("ULightHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ulighthost.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UMedia", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return umedia.NewClient(&cfg, &credential), nil
