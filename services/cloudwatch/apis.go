@@ -13,13 +13,13 @@ import (
 type BindAlertStrategyRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
 	// 告警策略id数组
 	AlertStrategyIDs []int `required:"true"`
 
-	// 产品类型名称
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductKey *string `required:"true"`
 
 	// 资源数组
@@ -63,6 +63,125 @@ func (c *CloudWatchClient) BindAlertStrategy(req *BindAlertStrategyRequest) (*Bi
 }
 
 /*
+CreateAlertStrategyParamRuleSet is request schema for complex param
+*/
+type CreateAlertStrategyParamRuleSet struct {
+
+	// 告警等级。枚举值：P0,P1,P2,P3
+	Level *string `required:"false"`
+
+	// 规则指标ID。参考该类型产品下返回的指标列表GetProductMetrics
+	MetricID *int `required:"false"`
+
+	// 沉默周期(告警周期选择为连续时必填)
+	SendInterval *int `required:"false"`
+
+	// 触发周期。枚举值continuous - 连续exponent - 指数single - 不重复
+	SendPeriodType *string `required:"false"`
+
+	// 告警状态。枚举值0 - 关闭1 - 开启
+	Status *int `required:"false"`
+
+	// 阈值比较方式。 枚举值：1：>= 2：<= 3：> 4：< 5：== 6：!=
+	ThresholdCompare *int `required:"false"`
+
+	// 触发阈值
+	ThresholdValue *int `required:"false"`
+
+	// 触发次数
+	TriggerCount *int `required:"false"`
+}
+
+// CreateAlertStrategyRequest is request schema for CreateAlertStrategy action
+type CreateAlertStrategyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 当通知渠道=回调webhook时，需要设置回调语言。枚举值：cn - 中文en - 英文
+	CallbackLanguage *string `required:"false"`
+
+	// 回调URL地址
+	CallbackUrls []string `required:"false"`
+
+	// 条件设置方式1 - 手动配置 2 - 选择模版
+	ConfigMode *int `required:"true"`
+
+	// 告警策略名称。最大长度255个字符
+	Name *string `required:"true"`
+
+	// 通知渠道。枚举值：sms - 短信email - 邮件webhook - 回调
+	NotifyChannelDs []string `required:"false"`
+
+	// 通知人组id
+	NotifyGroupIDs []int `required:"false"`
+
+	// 通知类型。枚举值： group - 通知组 user - 通知人
+	NotifyType *string `required:"false"`
+
+	// 通知人id
+	NotifyUserIDs []int `required:"false"`
+
+	// 绑定资源类型1 - 资源组 2 - 资源
+	ObjectType *int `required:"true"`
+
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
+	ProductKey *string `required:"true"`
+
+	// 绑定资源组，对应绑定资源类型ObjectType=1
+	ResourceGroupIDs []int `required:"false"`
+
+	// 绑定资源，对应绑定资源类型ObjectType=2
+	Resources []string `required:"false"`
+
+	//
+	RuleSet []CreateAlertStrategyParamRuleSet `required:"false"`
+
+	// 模板id.对应ConfigMode=2时候需要填写
+	TemplateId *int `required:"false"`
+}
+
+// CreateAlertStrategyResponse is response schema for CreateAlertStrategy action
+type CreateAlertStrategyResponse struct {
+	response.CommonBase
+
+	// 创建告警策略返回对象
+	Data AlertStrategyId
+}
+
+// NewCreateAlertStrategyRequest will create request of CreateAlertStrategy action.
+func (c *CloudWatchClient) NewCreateAlertStrategyRequest() *CreateAlertStrategyRequest {
+	req := &CreateAlertStrategyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateAlertStrategy
+
+创建告警策略
+*/
+func (c *CloudWatchClient) CreateAlertStrategy(req *CreateAlertStrategyRequest) (*CreateAlertStrategyResponse, error) {
+	var err error
+	var res CreateAlertStrategyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateAlertStrategy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
 CreateAlertStrategyTemplateParamRuleSet is request schema for complex param
 */
 type CreateAlertStrategyTemplateParamRuleSet struct {
@@ -82,7 +201,7 @@ type CreateAlertStrategyTemplateParamRuleSet struct {
 	// 告警状态。枚举值：0-关闭 1-开启
 	Status *int `required:"true"`
 
-	// 阈值比较方式。枚举值比较方式: 1->=2-<= 3-> 4-< 5-== 6-!=
+	// 阈值比较方式。枚举值: 1：>= 2：<= 3：> 4：< 5：== 6：!=
 	ThresholdCompare *int `required:"true"`
 
 	// 触发阈值
@@ -102,7 +221,7 @@ type CreateAlertStrategyTemplateRequest struct {
 	// 告警模板名称。最大长度64个字符
 	Name *string `required:"true"`
 
-	// 产品类型。参考ListMonitorProduct获取监控对象类型列表
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductKey *string `required:"true"`
 
 	// 备注
@@ -185,7 +304,7 @@ func (c *CloudWatchClient) NewDeleteAlertStrategyTemplateRequest() *DeleteAlertS
 /*
 API: DeleteAlertStrategyTemplate
 
-删除告警策略模板
+删除告警条件模板
 */
 func (c *CloudWatchClient) DeleteAlertStrategyTemplate(req *DeleteAlertStrategyTemplateRequest) (*DeleteAlertStrategyTemplateResponse, error) {
 	var err error
@@ -201,11 +320,64 @@ func (c *CloudWatchClient) DeleteAlertStrategyTemplate(req *DeleteAlertStrategyT
 	return &res, nil
 }
 
+// EnableAlertStrategyRequest is request schema for EnableAlertStrategy action
+type EnableAlertStrategyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 告警策略id
+	AlertStrategyID *int `required:"true"`
+
+	// 启用状态0 停用 1 启用
+	Status *int `required:"true"`
+}
+
+// EnableAlertStrategyResponse is response schema for EnableAlertStrategy action
+type EnableAlertStrategyResponse struct {
+	response.CommonBase
+
+	// 返回数据
+	Data AlertStrategyId
+}
+
+// NewEnableAlertStrategyRequest will create request of EnableAlertStrategy action.
+func (c *CloudWatchClient) NewEnableAlertStrategyRequest() *EnableAlertStrategyRequest {
+	req := &EnableAlertStrategyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: EnableAlertStrategy
+
+是否启用告警策略
+*/
+func (c *CloudWatchClient) EnableAlertStrategy(req *EnableAlertStrategyRequest) (*EnableAlertStrategyResponse, error) {
+	var err error
+	var res EnableAlertStrategyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("EnableAlertStrategy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetProductMetricsRequest is request schema for GetProductMetrics action
 type GetProductMetricsRequest struct {
 	request.CommonBase
 
-	// 云产品key 例如 uhost
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductKey *string `required:"true"`
 }
 
@@ -253,13 +425,13 @@ ListAlertRecordParamFilter is request schema for complex param
 */
 type ListAlertRecordParamFilter struct {
 
-	// 告警级别，根据告警级别精确搜索对应的告警记录
+	// 告警级别，根据告警级别精确搜索对应的告警记录，枚举值:P0,P1,P2,P3
 	Levels []string `required:"false"`
 
-	// 产品类型，根据产品类型精确搜索对应的告警记录
+	// 产品ID，根据产品类型精确搜索对应的告警记录，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductTypes []int `required:"false"`
 
-	// 告警状态，根据告警状态精确搜索对应的告警记录
+	// 告警状态，根据告警状态精确搜索对应的告警记录，枚举值：firing-告警中，resolved-已恢复
 	Status []string `required:"false"`
 }
 
@@ -267,10 +439,10 @@ type ListAlertRecordParamFilter struct {
 type ListAlertRecordRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// 结束时间，查询告警记录结束时间(查询开始时间和结束时间不能超过一个月)
+	// 结束时间，查询告警记录结束时间(查询开始时间和结束时间不能超过一个月)，值为10位数时间戳
 	EndAt *int `required:"true"`
 
 	//
@@ -285,10 +457,10 @@ type ListAlertRecordRequest struct {
 	// 数据偏移量 (默认0)
 	Offset *int `required:"false"`
 
-	// 排序(默认根据告警发生时间倒序)
+	// 排序(默认根据告警发生时间倒序)，枚举值：asc-升序，desc-降序
 	OrderType *string `required:"false"`
 
-	// 开始时间，查询告警记录开始时间(不支持查询距当前时间一年前的数据)
+	// 开始时间，查询告警记录开始时间，不支持查询距当前时间一年前的数据)，值为10位数时间戳
 	StartAt *int `required:"true"`
 }
 
@@ -339,10 +511,13 @@ ListAlertStrategyParamFilter is request schema for complex param
 */
 type ListAlertStrategyParamFilter struct {
 
-	// 产品类型，根据产品类型精确搜索对应的告警策略
+	// 告警策略id，根据策略id获取告警策略列表
+	AlertStrategyIDs []int `required:"false"`
+
+	// 产品ID，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductTypes []int `required:"false"`
 
-	// 告警策略状态，根据告警策略状态精确搜索对应的告警策略
+	// 告警策略状态，根据告警策略状态精确搜索对应的告警策略，枚举值：0-停用，1-启用
 	Status []int `required:"false"`
 }
 
@@ -350,7 +525,7 @@ type ListAlertStrategyParamFilter struct {
 type ListAlertStrategyRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
 	//
@@ -364,6 +539,9 @@ type ListAlertStrategyRequest struct {
 
 	// 数据偏移量 (默认0)
 	Offset *int `required:"false"`
+
+	// 资源id集合,根据资源id返回绑定的告警策略列表
+	Resources []string `required:"false"`
 }
 
 // ListAlertStrategyResponse is response schema for ListAlertStrategy action
@@ -407,6 +585,77 @@ func (c *CloudWatchClient) ListAlertStrategy(req *ListAlertStrategyRequest) (*Li
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListAlertStrategy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+ListAlertStrategyTemplateParamFilter is request schema for complex param
+*/
+type ListAlertStrategyTemplateParamFilter struct {
+
+	// 模板id集合，根据模板id获取告警条件模板列表
+	TemplateIDs []int `required:"false"`
+}
+
+// ListAlertStrategyTemplateRequest is request schema for ListAlertStrategyTemplate action
+type ListAlertStrategyTemplateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	//
+	Filter *ListAlertStrategyTemplateParamFilter `required:"false"`
+
+	// 查询返回数量，默认值300，最大值：300。
+	Limit *int `required:"false"`
+
+	// 数据偏移量 (默认0)
+	Offset *int `required:"false"`
+}
+
+// ListAlertStrategyTemplateResponse is response schema for ListAlertStrategyTemplate action
+type ListAlertStrategyTemplateResponse struct {
+	response.CommonBase
+
+	// 条件模板列表
+	Data []ListAlertTemplate
+
+	// 错误信息
+	Message string
+
+	// 条件模板总条数
+	TotalCount int
+}
+
+// NewListAlertStrategyTemplateRequest will create request of ListAlertStrategyTemplate action.
+func (c *CloudWatchClient) NewListAlertStrategyTemplateRequest() *ListAlertStrategyTemplateRequest {
+	req := &ListAlertStrategyTemplateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListAlertStrategyTemplate
+
+条件模板列表
+*/
+func (c *CloudWatchClient) ListAlertStrategyTemplate(req *ListAlertStrategyTemplateRequest) (*ListAlertStrategyTemplateResponse, error) {
+	var err error
+	var res ListAlertStrategyTemplateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListAlertStrategyTemplate", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -464,6 +713,62 @@ func (c *CloudWatchClient) ListMonitorProduct(req *ListMonitorProductRequest) (*
 	return &res, nil
 }
 
+// ModifyAlertStrategyRemarkRequest is request schema for ModifyAlertStrategyRemark action
+type ModifyAlertStrategyRemarkRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 策略id
+	AlertStrategyID *int `required:"true"`
+
+	// 策略名称
+	Name *string `required:"true"`
+
+	// 策略备注
+	Remark *string `required:"false"`
+}
+
+// ModifyAlertStrategyRemarkResponse is response schema for ModifyAlertStrategyRemark action
+type ModifyAlertStrategyRemarkResponse struct {
+	response.CommonBase
+
+	// 返回数据
+	Data AlertStrategyId
+}
+
+// NewModifyAlertStrategyRemarkRequest will create request of ModifyAlertStrategyRemark action.
+func (c *CloudWatchClient) NewModifyAlertStrategyRemarkRequest() *ModifyAlertStrategyRemarkRequest {
+	req := &ModifyAlertStrategyRemarkRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyAlertStrategyRemark
+
+修改告警策略备注
+*/
+func (c *CloudWatchClient) ModifyAlertStrategyRemark(req *ModifyAlertStrategyRemarkRequest) (*ModifyAlertStrategyRemarkResponse, error) {
+	var err error
+	var res ModifyAlertStrategyRemarkResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyAlertStrategyRemark", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 /*
 QueryMetricDataSetParamMetricInfosTagList is request schema for complex param
 */
@@ -495,28 +800,28 @@ type QueryMetricDataSetParamMetricInfos struct {
 type QueryMetricDataSetRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域。 全局产品可不传，其他类型必传。
+	// [公共参数] 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 计算方式，枚举值如下：raw:原始值,max:最大值,min:最小值,avg:平均值,sum:求和
 	CalcMethod *string `required:"true"`
 
-	// 截止时间
+	// 截止时间，值为10位数时间戳
 	EndTime *int `required:"true"`
 
 	//
 	MetricInfos []QueryMetricDataSetParamMetricInfos `required:"false"`
 
-	// 周期即：数据查询时，后端上报数据点的频率，选择不同的自定义时间范围，对应的周期不同：0<时间范围<=1h——周期：1分钟/5分钟1h<时间范围<=3h——周期：1分钟/5分钟/1小时3h<时间范围<=24h——周期：5分钟/1小时1天<时间范围<=30天——周期：1小时/6小时/24小时需将周期转化为单位为秒的数值，传入参数
+	// 周期，单位为秒，即：数据查询时，返回数据点的时间间隔。不同的查询时间范围，对应的周期不同：0<时间范围<=1h——周期：1分钟/5分钟，对应的枚举值为60、300；1h<时间范围<=12h——周期：1分钟/5分钟/1小时，对应的枚举值为60、300、3600；12h<时间范围<=24h——周期：5分钟/1小时，对应的枚举值为300、3600；1天<时间范围<=30天——周期：1小时/6小时/24小时，对应的枚举值为3600、21600、86400
 	Period *int `required:"true"`
 
-	// 资源类型
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductKey *string `required:"true"`
 
-	// 开始时间
+	// 开始时间，值为10位数时间戳
 	StartTime *int `required:"true"`
 }
 
@@ -569,10 +874,10 @@ func (c *CloudWatchClient) QueryMetricDataSet(req *QueryMetricDataSetRequest) (*
 type QueryMetricDataSummaryRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	// [公共参数] 地域，全局产品可以不传，其他必传
+	// [公共参数] 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 当前页数据尺寸
@@ -584,7 +889,7 @@ type QueryMetricDataSummaryRequest struct {
 	// 跳过的数量
 	Offset *int `required:"true"`
 
-	// 产品类型
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductKey *string `required:"true"`
 
 	// 指定要查询的资源ID列表
@@ -649,7 +954,7 @@ type UnBindAlertStrategyRequest struct {
 	// 告警策略数组
 	AlertStrategyIDs []int `required:"true"`
 
-	// 产品类型名称
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
 	ProductKey *string `required:"true"`
 
 	// 资源数组
@@ -685,6 +990,220 @@ func (c *CloudWatchClient) UnBindAlertStrategy(req *UnBindAlertStrategyRequest) 
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UnBindAlertStrategy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateAlertStrategyParamRuleSet is request schema for complex param
+*/
+type UpdateAlertStrategyParamRuleSet struct {
+
+	// 告警等级。枚举值：P0,P1,P2,P3
+	Level *string `required:"false"`
+
+	// 规则指标ID。参考该类型产品下返回的指标列表GetProductMetrics
+	MetricID *int `required:"false"`
+
+	// 沉默周期(告警周期选择为连续时必填)
+	SendInterval *int `required:"false"`
+
+	// 触发周期。枚举值：continuous连续 exponent 指数 single 不重复
+	SendPeriodType *string `required:"false"`
+
+	// 告警状态。枚举值：0-关闭 1-开启
+	Status *int `required:"false"`
+
+	// 阈值比较方式。 枚举值：1：>= 2：<= 3：> 4：< 5：== 6：!=
+	ThresholdCompare *int `required:"false"`
+
+	// 触发阈值
+	ThresholdValue *int `required:"false"`
+
+	// 触发次数
+	TriggerCount *int `required:"false"`
+}
+
+// UpdateAlertStrategyRequest is request schema for UpdateAlertStrategy action
+type UpdateAlertStrategyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 告警策略id
+	AlertStrategyID *string `required:"true"`
+
+	// 通知渠道回调webhook 回调语言 中文cn 英文en
+	CallbackLanguage *string `required:"false"`
+
+	// 回调url
+	CallbackUrls []string `required:"false"`
+
+	// 条件设置方式 1. 手动配置 2.选择模版
+	ConfigMode *int `required:"true"`
+
+	// 告警策略名称。最大长度255个字符
+	Name *string `required:"true"`
+
+	// 通知渠道 短信sms 邮件email 回调webhook
+	NotifyChannelDs []string `required:"false"`
+
+	// 通知人组id
+	NotifyGroupIDs []int `required:"false"`
+
+	// 通知类型 通知组 group 通知人 user
+	NotifyType *string `required:"false"`
+
+	// 通知人id
+	NotifyUserIDs []int `required:"false"`
+
+	// 绑定资源类型 1 资源组 2 资源
+	ObjectType *int `required:"true"`
+
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
+	ProductKey *string `required:"true"`
+
+	// 绑定资源组，对应绑定资源类型ObjectType=1
+	ResourceGroupIDs []int `required:"false"`
+
+	// 绑定资源，对应绑定资源类型ObjectType=2
+	Resources []string `required:"false"`
+
+	//
+	RuleSet []UpdateAlertStrategyParamRuleSet `required:"false"`
+
+	// 模板id.对应ConfigMode=2
+	TemplateId *int `required:"false"`
+}
+
+// UpdateAlertStrategyResponse is response schema for UpdateAlertStrategy action
+type UpdateAlertStrategyResponse struct {
+	response.CommonBase
+
+	// 更新告警策略返回对象
+	Data AlertStrategyId
+}
+
+// NewUpdateAlertStrategyRequest will create request of UpdateAlertStrategy action.
+func (c *CloudWatchClient) NewUpdateAlertStrategyRequest() *UpdateAlertStrategyRequest {
+	req := &UpdateAlertStrategyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateAlertStrategy
+
+更新告警策略
+*/
+func (c *CloudWatchClient) UpdateAlertStrategy(req *UpdateAlertStrategyRequest) (*UpdateAlertStrategyResponse, error) {
+	var err error
+	var res UpdateAlertStrategyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateAlertStrategy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateAlertStrategyTemplateParamRuleSet is request schema for complex param
+*/
+type UpdateAlertStrategyTemplateParamRuleSet struct {
+
+	// 告警等级。枚举值：P0,P1,P2,P3
+	Level *string `required:"true"`
+
+	// 规则指标ID。参考该类型产品下返回的指标列表GetProductMetrics
+	MetricID *int `required:"true"`
+
+	// 沉默周期(告警周期选择为连续时必填)
+	SendInterval *int `required:"false"`
+
+	// 触发周期。枚举值：continuous连续 exponent 指数 single 不重复
+	SendPeriodType *string `required:"true"`
+
+	// 告警状态。枚举值：0-关闭 1-开启
+	Status *int `required:"true"`
+
+	// 阈值比较方式。枚举值比较方式: 1->=2-<= 3-> 4-< 5-== 6-!=
+	ThresholdCompare *int `required:"true"`
+
+	// 触发阈值
+	ThresholdValue *int `required:"true"`
+
+	// 触发次数
+	TriggerCount *int `required:"true"`
+}
+
+// UpdateAlertStrategyTemplateRequest is request schema for UpdateAlertStrategyTemplate action
+type UpdateAlertStrategyTemplateRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 告警模板名称。最大长度64个字符
+	Name *string `required:"true"`
+
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
+	ProductKey *string `required:"true"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	//
+	RuleSet []UpdateAlertStrategyTemplateParamRuleSet `required:"false"`
+
+	// 条件模板ID
+	TemplateID *int `required:"true"`
+}
+
+// UpdateAlertStrategyTemplateResponse is response schema for UpdateAlertStrategyTemplate action
+type UpdateAlertStrategyTemplateResponse struct {
+	response.CommonBase
+
+	// 更新条件模板ID
+	Data AlertTemplate
+}
+
+// NewUpdateAlertStrategyTemplateRequest will create request of UpdateAlertStrategyTemplate action.
+func (c *CloudWatchClient) NewUpdateAlertStrategyTemplateRequest() *UpdateAlertStrategyTemplateRequest {
+	req := &UpdateAlertStrategyTemplateRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateAlertStrategyTemplate
+
+编辑条件模板
+*/
+func (c *CloudWatchClient) UpdateAlertStrategyTemplate(req *UpdateAlertStrategyTemplateRequest) (*UpdateAlertStrategyTemplateResponse, error) {
+	var err error
+	var res UpdateAlertStrategyTemplateResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateAlertStrategyTemplate", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

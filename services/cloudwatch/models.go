@@ -3,6 +3,15 @@
 package cloudwatch
 
 /*
+AlertStrategyId - 告警策略id
+*/
+type AlertStrategyId struct {
+
+	// 告警策略id
+	AlertStrategyID int
+}
+
+/*
 AlertTemplate - 告警模板对象
 */
 type AlertTemplate struct {
@@ -75,24 +84,6 @@ type MetricUnit struct {
 }
 
 /*
-MetricUnitConfig - 指标单位配置
-*/
-type MetricUnitConfig struct {
-
-	// 转换因子
-	ConversionFactor int
-
-	// 转换规则
-	ConversionRules []ConversionRule
-
-	// 指标中文名列表
-	UnitCnNames []string
-
-	// 指标英文名列表
-	UnitEnNames []string
-}
-
-/*
 Metirc - 指标
 */
 type Metirc struct {
@@ -144,6 +135,24 @@ type Metirc struct {
 }
 
 /*
+MetricUnitConfig - 指标单位配置
+*/
+type MetricUnitConfig struct {
+
+	// 转换因子
+	ConversionFactor int
+
+	// 转换规则
+	ConversionRules []ConversionRule
+
+	// 指标中文名列表
+	UnitCnNames []string
+
+	// 指标英文名列表
+	UnitEnNames []string
+}
+
+/*
 GetProductMetricsRespData - 产品指标查询结果
 */
 type GetProductMetricsRespData struct {
@@ -162,6 +171,9 @@ type GetProductMetricsRespData struct {
 AlertRecord - 告警记录模型
 */
 type AlertRecord struct {
+
+	// 产品相关的额外属性
+	ContentAttr string
 
 	// 告警恢复时间
 	EndAt int
@@ -215,10 +227,10 @@ type AlertRecord struct {
 	Tag []string
 
 	// 比较符
-	ThresholdCompare string
+	ThresholdCompare int
 
 	// 告警阈值
-	ThresholdValue string
+	ThresholdValue int
 
 	// 指标单位名称
 	UnitName string
@@ -232,10 +244,10 @@ AlertRule - 告警规则
 */
 type AlertRule struct {
 
-	// 告警等级
+	// 告警等级。枚举值：P0,P1,P2,P3
 	Level string
 
-	// 指标ID
+	// 规则指标ID。参考该类型产品下返回的指标列表GetProductMetrics
 	MetricID int
 
 	// 指标名称
@@ -247,20 +259,26 @@ type AlertRule struct {
 	// 发送间隔
 	SendInterval int
 
-	// 触发周期
+	// 触发周期。枚举值：continuous连续 exponent 指数 single 不重复
 	SendPeriodType string
 
-	// 告警状态
+	// 告警状态。枚举值：0-关闭 1-开启
 	Status int
 
-	// 阈值比较方式
+	// 阈值比较方式枚举值比较方式:1->=2-<=3->4-<5-==6-!=
 	ThresholdCompare int
 
-	// 阈值
+	// 触发阈值
 	ThresholdValue float64
 
 	// 触发次数
 	TriggerCount int
+
+	// 单位id
+	UnitID int
+
+	// 单位名称
+	UnitName string
 }
 
 /*
@@ -327,6 +345,33 @@ type AlertStrategy struct {
 }
 
 /*
+ListAlertTemplate -
+*/
+type ListAlertTemplate struct {
+
+	// 公司id
+	CompanyID int
+
+	// 告警模板名称
+	Name string
+
+	// 产品类型(字符型)。参考ListMonitorProduct获取监控对象类型列表
+	ProductKey string
+
+	// 产品类型(数值型)。参考ListMonitorProduct获取监控对象类型列表
+	ProductType int
+
+	// 条件模板备注
+	Remark string
+
+	// 告警条件规则
+	RuleSet []AlertRule
+
+	// 模板Id
+	TemplateID int
+}
+
+/*
 Product - 云产品
 */
 type Product struct {
@@ -377,7 +422,7 @@ MetricSample - 指标样本点模型
 type MetricSample struct {
 
 	// 时间戳
-	Timestamp float64
+	Timestamp int
 
 	// 样本值
 	Value float64
