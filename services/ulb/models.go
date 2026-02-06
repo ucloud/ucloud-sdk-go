@@ -54,110 +54,62 @@ type BackendSet struct {
 }
 
 /*
-CorsConfigSet - 跨域相关配置
+Target - 服务节点信息
 */
-type CorsConfigSet struct {
+type Target struct {
 
-	// 是否允许携带凭证信息。取值：on：是。off：否。
-	AllowCredentials string
+	// 服务节点是否启用
+	Enabled bool
 
-	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
-	AllowHeaders []string
-
-	// 选择跨域访问时允许的 HTTP 方法。取值：GETPOSTPUTDELETEHEADOPTIONSPATCH
-	AllowMethods []string
-
-	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
-	AllowOrigin []string
-
-	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
-	ExposeHeaders []string
-
-	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
-	MaxAge int
-}
-
-/*
-FixedResponseConfigSet - 静态返回相关配置
-*/
-type FixedResponseConfigSet struct {
-
-	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
-	Content string
-
-	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
-	HttpCode int
-}
-
-/*
-ForwardTargetSet - 转发的后端服务节点
-*/
-type ForwardTargetSet struct {
-
-	// 服务节点的标识ID
+	// 服务节点的标识ID。为ALB/NLB中使用，与资源自身ID无关，可用于UpdateTargetsAttribute/RemoveTargets
 	Id string
 
-	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
+	// 服务节点是否为备节点
+	IsBackup bool
+
+	// 服务节点的端口
+	Port int
+
+	// 服务节点的IP
+	ResourceIP string
+
+	// 服务节点的资源ID
+	ResourceId string
+
+	// 服务节点的资源名称
+	ResourceName string
+
+	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
+	ResourceType string
+
+	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
+	State string
+
+	// 服务节点的子网资源ID
+	SubnetId string
+
+	// 服务节点的VPC资源ID
+	VPCId string
+
+	// 服务节点的权重。仅在加权轮询算法时有效
 	Weight int
 }
 
 /*
-ForwardConfigSet - 转发服务节点相关配置
+HealthCheckConfigSet - 健康检查相关配置
 */
-type ForwardConfigSet struct {
+type HealthCheckConfigSet struct {
 
-	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
-	Targets []ForwardTargetSet
-}
+	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	Domain string
 
-/*
-InsertHeaderConfigSet - 插入 header 相关配置
-*/
-type InsertHeaderConfigSet struct {
+	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	Enabled bool
 
-	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
-	Key string
+	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	Path string
 
-	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
-	Value string
-
-	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
-	ValueType string
-}
-
-/*
-RemoveHeaderConfigSet - 删除 header 相关配置
-*/
-type RemoveHeaderConfigSet struct {
-
-	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
-	Key string
-}
-
-/*
-RuleAction - 转发动作
-*/
-type RuleAction struct {
-
-	// 跨域相关配置，对应 type 值: "Cors"。具体结构详见 CorsConfigSet
-	CorsConfig CorsConfigSet
-
-	// 静态返回相关配置，对应 type 值: "FixedResponse"。具体结构详见 FixedResponseConfigSet
-	FixedResponseConfig FixedResponseConfigSet
-
-	// 转发服务节点相关配置，对应 type 值: "Forward"。具体结构详见 ForwardConfigSet
-	ForwardConfig ForwardConfigSet
-
-	// 插入 header 相关配置，对应 type 值: "InsertHeader"。具体结构详见 InsertHeaderConfigSet
-	InsertHeaderConfig InsertHeaderConfigSet
-
-	// 转发规则动作执行的顺序，取值为1~1000，按值从小到大执行动作。值不能为空，不能重复。Forward、FixedResponse 类型的动作不判断 Order，最后一个执行
-	Order int
-
-	// 删除 header 相关配置，对应 type 值: "RemoveHeader"。具体结构详见 RemoveHeaderConfigSet
-	RemoveHeaderConfig RemoveHeaderConfigSet
-
-	// 动作类型。限定枚举值：Forward、"InsertHeader"、"Cors"、"FixedResponse"、"RemoveHeader"
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
 	Type string
 }
 
@@ -198,6 +150,126 @@ type RuleCondition struct {
 }
 
 /*
+InsertHeaderConfigSet - 插入 header 相关配置
+*/
+type InsertHeaderConfigSet struct {
+
+	// 插入的 header 字段名称，长度为 1~40 个字符，支持大小写字母 a~z、数字、下划线（_）和短划线（-）。头字段名称不能重复用于InsertHeader中。header 字段不能使用以下(此处判断大小写不敏感)x-real-ip、x-forwarded-for、x-forwarded-proto、x-forwarded-srcport、ucloud-alb-trace、connection、upgrade、content-length、transfer-encoding、keep-alive、te、host、cookie、remoteip、authority
+	Key string
+
+	// 插入的 header 字段内容。ValueType 取值为 SystemDefined 时取值如下：ClientSrcPort：客户端端口。ClientSrcIp：客户端 IP 地址。Protocol：客户端请求的协议（HTTP 或 HTTPS)。RuleID：客户端请求命中的转发规则ID。ALBID：ALB ID。ALBPort：ALB 端口。ValueType 取值为 UserDefined 时：可以自定义头字段内容，限制长度为 1~128 个字符，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。ValueType 取值为 ReferenceHeader 时：可以引用请求头字段中的某一个字段，限制长度限制为 1~128 个字符，支持小写字母 a~z、数字、短划线（-）和下划线（_）。
+	Value string
+
+	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
+	ValueType string
+}
+
+/*
+ForwardTargetSet - 转发的后端服务节点
+*/
+type ForwardTargetSet struct {
+
+	// 服务节点的标识ID
+	Id string
+
+	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
+	Weight int
+}
+
+/*
+ForwardConfigSet - 转发服务节点相关配置
+*/
+type ForwardConfigSet struct {
+
+	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
+	Targets []ForwardTargetSet
+}
+
+/*
+Certificate - （应用型专用）服务器证书信息
+*/
+type Certificate struct {
+
+	// 是否为默认证书
+	IsDefault bool
+
+	// 证书ID
+	SSLId string
+}
+
+/*
+RemoveHeaderConfigSet - 删除 header 相关配置
+*/
+type RemoveHeaderConfigSet struct {
+
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key string
+}
+
+/*
+CorsConfigSet - 跨域相关配置
+*/
+type CorsConfigSet struct {
+
+	// 是否允许携带凭证信息。取值：on：是。off：否。
+	AllowCredentials string
+
+	// 允许跨域的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	AllowHeaders []string
+
+	// 选择跨域访问时允许的 HTTP 方法。取值：GETPOSTPUTDELETEHEADOPTIONSPATCH
+	AllowMethods []string
+
+	// 允许的访问来源列表。支持只配置一个元素*，或配置一个或多个值。单个值必须以http://或者https://开头，后边加一个正确的域名或一级泛域名。（例：http://*.test.abc.example.com）单个值可以不加端口，也可以指定端口，端口范围：1~65535。最多支持5个值
+	AllowOrigin []string
+
+	// 允许暴露的 Header 列表。支持配置为*或配置一个或多个 value 值。单个 value 值只允许包含大小写字母、数字，不能以下划线（_）和短划线（-）开头或结尾，最大长度限制为 32 个字符。最多支持20个值
+	ExposeHeaders []string
+
+	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
+	MaxAge int
+}
+
+/*
+FixedResponseConfigSet - 静态返回相关配置
+*/
+type FixedResponseConfigSet struct {
+
+	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
+	Content string
+
+	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
+	HttpCode int
+}
+
+/*
+RuleAction - 转发动作
+*/
+type RuleAction struct {
+
+	// 跨域相关配置，对应 type 值: "Cors"。具体结构详见 CorsConfigSet
+	CorsConfig CorsConfigSet
+
+	// 静态返回相关配置，对应 type 值: "FixedResponse"。具体结构详见 FixedResponseConfigSet
+	FixedResponseConfig FixedResponseConfigSet
+
+	// 转发服务节点相关配置，对应 type 值: "Forward"。具体结构详见 ForwardConfigSet
+	ForwardConfig ForwardConfigSet
+
+	// 插入 header 相关配置，对应 type 值: "InsertHeader"。具体结构详见 InsertHeaderConfigSet
+	InsertHeaderConfig InsertHeaderConfigSet
+
+	// 转发规则动作执行的顺序，取值为1~1000，按值从小到大执行动作。值不能为空，不能重复。Forward、FixedResponse 类型的动作不判断 Order，最后一个执行
+	Order int
+
+	// 删除 header 相关配置，对应 type 值: "RemoveHeader"。具体结构详见 RemoveHeaderConfigSet
+	RemoveHeaderConfig RemoveHeaderConfigSet
+
+	// 动作类型。限定枚举值：Forward、"InsertHeader"、"Cors"、"FixedResponse"、"RemoveHeader"
+	Type string
+}
+
+/*
 Rule - （应用型专用）转发规则信息
 */
 type Rule struct {
@@ -231,78 +303,6 @@ type StickinessConfigSet struct {
 
 	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
 	Type string
-}
-
-/*
-Certificate - （应用型专用）服务器证书信息
-*/
-type Certificate struct {
-
-	// 是否为默认证书
-	IsDefault bool
-
-	// 证书ID
-	SSLId string
-}
-
-/*
-HealthCheckConfigSet - 健康检查相关配置
-*/
-type HealthCheckConfigSet struct {
-
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
-	Domain string
-
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
-	Enabled bool
-
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
-	Type string
-}
-
-/*
-Target - 服务节点信息
-*/
-type Target struct {
-
-	// 服务节点是否启用
-	Enabled bool
-
-	// 服务节点的标识ID。为ALB/NLB中使用，与资源自身ID无关，可用于UpdateTargetsAttribute/RemoveTargets
-	Id string
-
-	// 服务节点是否为备节点
-	IsBackup bool
-
-	// 服务节点的端口
-	Port int
-
-	// 服务节点的IP
-	ResourceIP string
-
-	// 服务节点的资源ID
-	ResourceId string
-
-	// 服务节点的资源名称
-	ResourceName string
-
-	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
-	ResourceType string
-
-	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
-	State string
-
-	// 服务节点的子网资源ID
-	SubnetId string
-
-	// 服务节点的VPC资源ID
-	VPCId string
-
-	// 服务节点的权重。仅在加权轮询算法时有效
-	Weight int
 }
 
 /*
@@ -366,39 +366,6 @@ type Listener struct {
 }
 
 /*
-SecGroupInfo - 安全组详细信息
-*/
-type SecGroupInfo struct {
-
-	// 安全组名称
-	Name string
-
-	// 优先级
-	Priority int
-
-	// 安全组id
-	SecgroupId string
-
-	// 安全组所属vpc id
-	VPCId string
-}
-
-/*
-AccessLogConfigSet - （应用型专用）访问日志相关配置
-*/
-type AccessLogConfigSet struct {
-
-	// （应用型专用）是否开启访问日志记录功能
-	Enabled bool
-
-	// （应用型专用）用于存储访问日志的bucket
-	US3BucketName string
-
-	// （应用型专用）上传访问日志到bucket所需的token
-	US3TokenId string
-}
-
-/*
 IPInfo - 绑定的IP信息
 */
 type IPInfo struct {
@@ -435,6 +402,39 @@ type FirewallSet struct {
 
 	// 防火墙名称
 	FirewallName string
+}
+
+/*
+AccessLogConfigSet - （应用型专用）访问日志相关配置
+*/
+type AccessLogConfigSet struct {
+
+	// （应用型专用）是否开启访问日志记录功能
+	Enabled bool
+
+	// （应用型专用）用于存储访问日志的bucket
+	US3BucketName string
+
+	// （应用型专用）上传访问日志到bucket所需的token
+	US3TokenId string
+}
+
+/*
+SecGroupInfo - 安全组详细信息
+*/
+type SecGroupInfo struct {
+
+	// 安全组名称
+	Name string
+
+	// 优先级
+	Priority int
+
+	// 安全组id
+	SecgroupId string
+
+	// 安全组所属vpc id
+	VPCId string
 }
 
 /*
@@ -498,57 +498,6 @@ type LoadBalancer struct {
 
 	// 负载均衡实例所属的VPC资源ID
 	VPCId string
-}
-
-/*
-UlbPolicyBackendSet - DescribePolicyGroup
-*/
-type UlbPolicyBackendSet struct {
-
-	// 后端资源实例的ID
-	BackendId string
-
-	// 后端资源实例的服务端口
-	Port int
-
-	// 后端资源实例的内网IP
-	PrivateIP string
-}
-
-/*
-UlbPolicySet - DescribePolicyGroup
-*/
-type UlbPolicySet struct {
-
-	// 内容转发策略组ID所应用的后端资源列表，具体结构见 UlbPolicyBackendSet
-	BackendSet []UlbPolicyBackendSet
-
-	// 内容转发匹配字段
-	Match string
-
-	// 内容转发策略组ID
-	PolicyId string
-
-	// 内容转发匹配字段的类型，当前只支持按域名转发。枚举值为： Domain，按域名转发
-	Type string
-
-	// 内容转发策略组ID应用的VServer实例的ID
-	VServerId string
-}
-
-/*
-UlbPolicyGroupSet - DescribePolicyGroup
-*/
-type UlbPolicyGroupSet struct {
-
-	// 内容转发策略组ID
-	GroupId string
-
-	// 内容转发策略组名称
-	GroupName string
-
-	// 内容转发策略组详细信息，具体结构见 UlbPolicySet
-	PolicySet []UlbPolicySet
 }
 
 /*
@@ -774,72 +723,6 @@ type TLSAndCiphers struct {
 }
 
 /*
-PolicyBackendSet - 内容转发下rs详细信息
-*/
-type PolicyBackendSet struct {
-
-	// 所添加的后端资源在ULB中的对象ID，（为ULB系统中使用，与资源自身ID无关
-	BackendId string
-
-	// 后端资源的对象ID
-	ObjectId string
-
-	// 所添加的后端资源服务端口
-	Port int
-
-	// 后端资源的内网IP
-	PrivateIP string
-
-	// 后端资源的实例名称
-	ResourceName string
-
-	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube；UNI -> 虚拟网卡
-	ResourceType string
-
-	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源ID
-	SubResourceId string
-
-	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源名称
-	SubResourceName string
-
-	// "UNI"或者为空
-	SubResourceType string
-}
-
-/*
-ULBPolicySet - 内容转发详细列表
-*/
-type ULBPolicySet struct {
-
-	// 内容转发下rs的详细信息，参考PolicyBackendSet
-	BackendSet []PolicyBackendSet
-
-	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
-	DomainMatchMode string
-
-	// 内容转发匹配字段;默认内容转发类型下为空。
-	Match string
-
-	// 内容转发Id，默认内容转发类型下为空。
-	PolicyId string
-
-	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
-	PolicyPriority int
-
-	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
-	PolicyType string
-
-	// 默认内容转发类型下返回当前rs总数
-	TotalCount int
-
-	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
-	Type string
-
-	// 所属VServerId
-	VServerId string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -891,6 +774,60 @@ type ULBBackendSet struct {
 }
 
 /*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
+}
+
+/*
+PolicyBackendSet - 内容转发下rs详细信息
+*/
+type PolicyBackendSet struct {
+
+	// 所添加的后端资源在ULB中的对象ID，（为ULB系统中使用，与资源自身ID无关
+	BackendId string
+
+	// 后端资源的对象ID
+	ObjectId string
+
+	// 所添加的后端资源服务端口
+	Port int
+
+	// 后端资源的内网IP
+	PrivateIP string
+
+	// 后端资源的实例名称
+	ResourceName string
+
+	// 所添加的后端资源的类型，枚举值：UHost -> 云主机；UPM -> 物理云主机； UDHost -> 私有专区主机；UDocker -> 容器；UHybrid->混合云主机；CUBE->Cube；UNI -> 虚拟网卡
+	ResourceType string
+
+	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源ID
+	SubResourceId string
+
+	// 如果资源绑定了弹性网卡，则展示弹性网卡的资源名称
+	SubResourceName string
+
+	// "UNI"或者为空
+	SubResourceType string
+}
+
+/*
 ULBIPSet - DescribeULB
 */
 type ULBIPSet struct {
@@ -912,39 +849,36 @@ type ULBIPSet struct {
 }
 
 /*
-LoggerSet - ulb日志信息
+ULBPolicySet - 内容转发详细列表
 */
-type LoggerSet struct {
+type ULBPolicySet struct {
 
-	// ulb日志上传的bucket
-	BucketName string
+	// 内容转发下rs的详细信息，参考PolicyBackendSet
+	BackendSet []PolicyBackendSet
 
-	// 上传到bucket使用的token的tokenid
-	TokenID string
+	// 内容转发规则中域名的匹配方式。枚举值：Regular，正则；Wildcard，泛域名
+	DomainMatchMode string
 
-	// bucket的token名称
-	TokenName string
-}
+	// 内容转发匹配字段;默认内容转发类型下为空。
+	Match string
 
-/*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
+	// 内容转发Id，默认内容转发类型下为空。
+	PolicyId string
 
-	// 加密套件
-	SSLCiphers []string
+	// 内容转发优先级，范围[1,9999]，数字越大优先级越高。默认内容转发规则下为0。
+	PolicyPriority int
 
-	// 安全策略组ID
-	SecurityPolicyId string
+	// 内容类型，枚举值：Custom -> 客户自定义；Default -> 默认内容转发
+	PolicyType string
 
-	// 安全策略组名称
-	SecurityPolicyName string
+	// 默认内容转发类型下返回当前rs总数
+	TotalCount int
 
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
+	// 内容转发匹配字段的类型，枚举值：Domain -> 域名；Path -> 路径； 默认内容转发类型下为空
+	Type string
 
-	// TLS最低版本
-	TLSVersion string
+	// 所属VServerId
+	VServerId string
 }
 
 /*
@@ -1023,6 +957,21 @@ type ULBVServerSet struct {
 }
 
 /*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
+}
+
+/*
 ULBSet - DescribeULB
 */
 type ULBSet struct {
@@ -1042,7 +991,7 @@ type ULBSet struct {
 	// ULB是否开启日志功能。0，关闭；1，开启
 	EnableLog int
 
-	// ULB的到期时间，格式为Unix Timestamp
+	//
 	ExpireTime int `deprecated:"true"`
 
 	// 防火墙信息，具体结构见下方 FirewallSet
@@ -1069,7 +1018,7 @@ type ULBSet struct {
 	// 负载均衡的备注
 	Remark string
 
-	// ULB的详细信息列表（废弃）
+	//
 	Resource []string `deprecated:"true"`
 
 	// ULB后向代理IP，仅当有代理IP时返回否
