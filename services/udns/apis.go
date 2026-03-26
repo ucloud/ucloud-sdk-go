@@ -347,8 +347,17 @@ type DescribeUDNSRecordRequest struct {
 	// 数据偏移量, 默认为0
 	Offset *int `required:"false"`
 
+	// 模糊查询记录
+	Query *string `required:"false"`
+
 	// 域名记录资源ID
 	RecordIds []string `required:"false"`
+
+	// 排序方式，支持asc desc
+	SortDir *string `required:"false"`
+
+	// 排序字段，只支持host update_time
+	SortKey *string `required:"false"`
 }
 
 // DescribeUDNSRecordResponse is response schema for DescribeUDNSRecord action
@@ -532,6 +541,9 @@ type ModifyUDNSRecordRequest struct {
 
 	// TTL值，单位为秒
 	TTL *int `required:"false"`
+
+	// 记录类型。枚举值，“A”,"CNAME","MX","AAAA","SRV","PTR","TXT"。
+	Type *string `required:"false"`
 
 	// 数值组，支持逗号分割。格式为：Value|权重|Enable，其中权重支持1-10，Enable为枚举值（1为启用，0为禁用）。输入格式示例：192.168.1.1|1|1,192.168.1.2|10|0。
 	Value *string `required:"false"`

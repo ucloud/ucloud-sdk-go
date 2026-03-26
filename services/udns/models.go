@@ -76,6 +76,9 @@ type ZoneInfo struct {
 	// 创建时间
 	CreateTime int
 
+	// UDNS私有域名 Zone ID
+	DNSZoneId string
+
 	// 域名名称
 	DNSZoneName string
 
