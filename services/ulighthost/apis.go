@@ -433,6 +433,59 @@ func (c *ULightHostClient) GetULHostInstancePrice(req *GetULHostInstancePriceReq
 	return &res, nil
 }
 
+// GetULHostOpenClawChannelQRCodeRequest is request schema for GetULHostOpenClawChannelQRCode action
+type GetULHostOpenClawChannelQRCodeRequest struct {
+	request.CommonBase
+
+	// OpenClaw渠道，如qqbot，wechat，wecom，feishu，dingtalk
+	ClawChannel *string `required:"false"`
+}
+
+// GetULHostOpenClawChannelQRCodeResponse is response schema for GetULHostOpenClawChannelQRCode action
+type GetULHostOpenClawChannelQRCodeResponse struct {
+	response.CommonBase
+
+	// 二维码，用于后续轮询
+	QRCode string
+
+	// 二维码图片，以base64编码
+	QRCodePNG string
+
+	// 二维码地址
+	QRCodeURL string
+}
+
+// NewGetULHostOpenClawChannelQRCodeRequest will create request of GetULHostOpenClawChannelQRCode action.
+func (c *ULightHostClient) NewGetULHostOpenClawChannelQRCodeRequest() *GetULHostOpenClawChannelQRCodeRequest {
+	req := &GetULHostOpenClawChannelQRCodeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetULHostOpenClawChannelQRCode
+
+获取轻量云主机OpenClaw渠道二维码
+*/
+func (c *ULightHostClient) GetULHostOpenClawChannelQRCode(req *GetULHostOpenClawChannelQRCodeRequest) (*GetULHostOpenClawChannelQRCodeResponse, error) {
+	var err error
+	var res GetULHostOpenClawChannelQRCodeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetULHostOpenClawChannelQRCode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetULHostRenewPriceRequest is request schema for GetULHostRenewPrice action
 type GetULHostRenewPriceRequest struct {
 	request.CommonBase
@@ -933,6 +986,62 @@ func (c *ULightHostClient) TerminateULHostInstance(req *TerminateULHostInstanceR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("TerminateULHostInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateULHostOpenClawGatewayRequest is request schema for UpdateULHostOpenClawGateway action
+type UpdateULHostOpenClawGatewayRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// OpenClaw网关动作，如start，stop，restart，reset_config，reset_webui
+	ClawGatewayAction *string `required:"true"`
+
+	// 指定OpenClaw网关端口，可在ClawGatewayAction=reset_webui时携带
+	GatewayPort *int `required:"false"`
+
+	// ULHost实例ID
+	ULHostId *string `required:"true"`
+}
+
+// UpdateULHostOpenClawGatewayResponse is response schema for UpdateULHostOpenClawGateway action
+type UpdateULHostOpenClawGatewayResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateULHostOpenClawGatewayRequest will create request of UpdateULHostOpenClawGateway action.
+func (c *ULightHostClient) NewUpdateULHostOpenClawGatewayRequest() *UpdateULHostOpenClawGatewayRequest {
+	req := &UpdateULHostOpenClawGatewayRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateULHostOpenClawGateway
+
+更新轻量云主机OpenClaw网关
+*/
+func (c *ULightHostClient) UpdateULHostOpenClawGateway(req *UpdateULHostOpenClawGatewayRequest) (*UpdateULHostOpenClawGatewayResponse, error) {
+	var err error
+	var res UpdateULHostOpenClawGatewayResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateULHostOpenClawGateway", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

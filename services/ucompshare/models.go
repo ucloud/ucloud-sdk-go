@@ -3,6 +3,318 @@
 package ucompshare
 
 /*
+BootDiskInfo - 系统盘信息
+*/
+type BootDiskInfo struct {
+
+	// 磁盘可支持的服务
+	Features []string
+
+	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
+	InstantResize bool
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+DataDiskInfo - 数据盘信息
+*/
+type DataDiskInfo struct {
+
+	// 数据盘可支持的服务
+	Features []string
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
+
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	Name string
+}
+
+/*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
+CpuPlatforms - CPU平台信息
+*/
+type CpuPlatforms struct {
+
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
+
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
+}
+
+/*
+AvailableInstanceTypes - https://ushare.ucloudadmin.com/pages/viewpage.action?pageId=104662646
+*/
+type AvailableInstanceTypes struct {
+
+	// 支持的CPU平台，并且按照Intel、AMD和Ampere分类返回
+	CpuPlatforms CpuPlatforms
+
+	// 磁盘信息。磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。其中云盘主要包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。MinimalSize为磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。MaximalSize为磁盘最大值。InstantResize表示系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。Features为磁盘可支持的服务：数据方舟|DATAARK，快照服务|SNAPSHOT，加密盘|Encrypted。
+	Disks []Disks
+
+	// 虚机可支持的特性。目前支持的特性网络增强|NetCapability、热升级|Hotplug。网络增强分为关闭|Normal、网络增强1.0|Super和网络增强2.0|Ultra。Name为可支持的特性名称，Modes为可以提供的模式类别等，RelatedToImageFeature为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。MinimalCpuPlatform表示这个特性必须是列出来的CPU平台及以上的CPU才支持。
+	Features []Features
+
+	// GPU的显存指标，value为值，单位是GB。
+	GraphicsMemory GraphicsMemory
+
+	// 实例类型，枚举值["uhost", "spot"]
+	InstanceType string
+
+	// 区分是否是GPU机型：GPU机型|GPU，非GPU机型|Normal。
+	MachineClass string
+
+	// GPU、CPU和内存信息。Gpu为GPU可支持的规格，Cpu和Memory分别为CPU和内存可支持的规格。如果非GPU机型，GPU为0。MinimalCpuPlatform代表含义这个CPU和内存规格只能在列出来的CPU平台支持。
+	MachineSizes []MachineSizes
+
+	// 机型名称：快杰O型|O 、快杰共享型|OM 、快杰内存型|OMEM 、 快杰PRO型|OPRO、通用N型|N、高主频C型|C和GPU G型|G等
+	Name string
+
+	// 父机型
+	ParentType string
+
+	// GPU的性能指标，value为值，单位是TFlops。
+	Performance Performance
+
+	// 机型状态：可售|Normal 、 公测|Beta、售罄|Soldout、隐藏|Hidden
+	Status string
+
+	// 可用区信息
+	Zone string
+}
+
+/*
+Projects - 项目详情
+*/
+type Projects struct {
+
+	// 账号Id
+	AccountId string
+
+	// 账号昵称
+	AccountName string
+}
+
+/*
+Software -
+*/
+type Software struct {
+
+	// 【array of string】应用列表
+	Applications []string
+
+	// CUDA版本
+	CUDAVersion string
+
+	// 框架名称
+	Framework string
+
+	// 框架版本
+	FrameworkVersion string
+}
+
+/*
+CompShareImage - 算力共享平台镜像详情
+*/
+type CompShareImage struct {
+
+	// 镜像作者认证信息
+	AuthInfo int
+
+	// 镜像作者昵称
+	Author string
+
+	// 是否支持自启动 default:false
+	AutoStart bool
+
+	// 镜像Id
+	CompShareImageId string
+
+	// 是否为容器镜像。- True 容器镜像- False 虚机镜像
+	Container string
+
+	// 镜像封面URL
+	Cover string
+
+	// 创建时间戳
+	CreateTime int
+
+	// 镜像引用创建计数
+	CreatedCount int
+
+	// 镜像描述信息
+	Description string
+
+	// 镜像制作失败错误原因
+	FailedReason string
+
+	// 镜像收藏计数
+	FavoritesCount int
+
+	// 镜像组id
+	GroupId string
+
+	// 是否镜像收费  default: false
+	ImageCharge bool
+
+	// 镜像来源。- Official 平台镜像；- Community 社区镜像
+	ImageOwnerAlias string
+
+	// 镜像类型。- System 平台提供的公共镜像；- App 平台提供的应用镜像；- Custom 自制镜像；- Community 社区镜像
+	ImageType string
+
+	// 镜像使用时长
+	ImageUseTime int
+
+	// 来源是否为官方镜像【仅自制镜像信息返回该字段】
+	IsOfficial bool
+
+	// 镜像名称
+	Name string
+
+	// 镜像所属账号信息
+	Owner Projects
+
+	// 镜像价格。单位：元
+	Price float64
+
+	// 发布时间戳
+	PubTime int
+
+	// 镜像详细描述。仅指定镜像Id查询时返回
+	Readme string
+
+	// 镜像大小。单位MB
+	Size int
+
+	// 镜像软件信息
+	Softwares Software
+
+	// 自制镜像来源机型
+	SourceGpuType string
+
+	// 镜像状态。- Making 制作中；- Available 可用；- UnAvailable 不可用；- Reviewing 审核中;- Offline 已下线
+	Status string
+
+	// 【array of string】镜像标签
+	Tags []string
+
+	// 版本描述
+	VersionDesc string
+
+	// 版本名称
+	VersionName string
+
+	// 可见性。0：私密镜像；1：公开至镜像社区
+	Visibility int
+}
+
+/*
 UHostIPSet -
 */
 type UHostIPSet struct {
@@ -42,6 +354,48 @@ type UHostIPSet struct {
 }
 
 /*
+GpuMonitorInfo - GPU卡监控信息
+*/
+type GpuMonitorInfo struct {
+
+	// GPU卡名称
+	GPU string
+
+	// GPU卡使用率
+	GpuUsageRate string
+
+	// GPU显存使用率
+	MemoryUsageRate string
+}
+
+/*
+MonitorMessage - 监控信息
+*/
+type MonitorMessage struct {
+
+	// CPU使用率
+	CpuUsageRate string
+
+	// GPU卡监控信息
+	GpuInfo []GpuMonitorInfo
+
+	// 内存使用率
+	MemUsageRate string
+}
+
+/*
+SoftwareAddr -
+*/
+type SoftwareAddr struct {
+
+	// 软件名称
+	Name string
+
+	// 软件地址
+	URL string
+}
+
+/*
 WithoutGpuSpec - 无卡云主机规格信息
 */
 type WithoutGpuSpec struct {
@@ -60,6 +414,9 @@ type WithoutGpuSpec struct {
 UHostDiskSet -
 */
 type UHostDiskSet struct {
+
+	//
+	BackupType string `deprecated:"true"`
 
 	// 磁盘ID
 	DiskId string
@@ -87,27 +444,18 @@ type UHostDiskSet struct {
 }
 
 /*
-GraphicsMemory - GPU的显存指标
+DiskPriceInfo - 磁盘价格信息列表
 */
-type GraphicsMemory struct {
+type DiskPriceInfo struct {
 
-	// 交互展示参数，可忽略
-	Rate int
+	// 计费类型
+	ChargeType string
 
-	// 值，单位是GB
-	Value int
-}
+	// 是否为系统盘
+	IsBoot bool
 
-/*
-SoftwareAddr -
-*/
-type SoftwareAddr struct {
-
-	// 软件名称
-	Name string
-
-	// 软件地址
-	URL string
+	// 磁盘价格
+	Price float64
 }
 
 /*
@@ -154,6 +502,12 @@ type CompShareInstanceSet struct {
 	// 创建时间
 	CreateTime int
 
+	// 主机折扣类型  1:夜间折扣 2:节日折扣
+	DiscountType int
+
+	// 磁盘价格信息，详见:DiskPriceInfo
+	DiskPriceInfo []DiskPriceInfo
+
 	// 详情见UHostDiskSet
 	DiskSet []UHostDiskSet
 
@@ -168,6 +522,12 @@ type CompShareInstanceSet struct {
 
 	// GPU显存信息
 	GraphicsMemory GraphicsMemory
+
+	//
+	HostIp string `deprecated:"true"`
+
+	//
+	HugepageCfg string `deprecated:"true"`
 
 	// 详情见UHostIPSet
 	IPSet []UHostIPSet
@@ -187,6 +547,9 @@ type CompShareInstanceSet struct {
 	// 内存大小，单位：MB
 	Memory int
 
+	// 监控信息，详见：MonitorMessage
+	MonitorMessages MonitorMessage
+
 	// 实例名称
 	Name string
 
@@ -199,8 +562,29 @@ type CompShareInstanceSet struct {
 	// 主机密码。由Base64编码
 	Password string
 
+	//
+	PodId string `deprecated:"true"`
+
+	// 后付费关机计费信息列表，详见：详见:DiskPriceInfo
+	PostPayPowerOffBillingResource []DiskPriceInfo
+
+	//
+	PostPayShutdown bool `deprecated:"true"`
+
+	//
+	QemuFullVersion string `deprecated:"true"`
+
+	//
+	QemuVersion string `deprecated:"true"`
+
+	// 释放时间（关机时候返回）
+	ReleaseTime int
+
 	// 实例备注
 	Remark string
+
+	//
+	SetId int `deprecated:"true"`
 
 	// 软件地址
 	Softwares []SoftwareAddr
@@ -208,8 +592,17 @@ type CompShareInstanceSet struct {
 	// SSH登录命令
 	SshLoginCommand string
 
+	// 主机启动时间
+	StartTime int
+
 	// 实例状态，枚举值：\\ >初始化: Initializing; \\ >启动中: Starting; \\> 运行中: Running; \\> 关机中: Stopping; \\ >关机: Stopped \\ >安装失败: Install Fail; \\ >重启中: Rebooting; \\ >升级改配中: Resizing; \\ > 未知(空字符串，获取状态超时或出错)：
 	State string
+
+	// 计划关机时间
+	StopSchedulerTime int
+
+	// 定时关机时间
+	StopTime int
 
 	// 此实例是否支持无卡开机
 	SupportWithoutGpuStart bool
@@ -223,11 +616,281 @@ type CompShareInstanceSet struct {
 	// 实例Id
 	UHostId string
 
+	//
+	UUID string `deprecated:"true"`
+
+	// 虚机状态更新时间
+	UpdateTime int
+
 	// 无卡配置规格，详情见：WithoutGpuSpecInfo
 	WithoutGpuSpec WithoutGpuSpec
 
 	// 可用区
 	Zone string
+}
+
+/*
+SoftwarePort - 应用端口信息
+*/
+type SoftwarePort struct {
+
+	// 端口号。范围: [1, 65535]
+	Port int
+
+	// 应用名称
+	Software string
+}
+
+/*
+SupportZone - compshare支持的可用区信息列表
+*/
+type SupportZone struct {
+
+	// 可用区显示名称
+	Describe string
+
+	// 地域名称
+	Region string
+
+	// 地域ID
+	RegionId int
+
+	// 可用区名称
+	Zone string
+
+	// 可用区ID
+	ZoneId int
+}
+
+/*
+ModelRepositoryModel - 模型库模型信息
+*/
+type ModelRepositoryModel struct {
+
+	// 创建时间
+	CreateTime int
+
+	// 模型名称
+	Name string
+
+	// 模型路径
+	Path string
+
+	// 模型大小
+	Size string
+
+	// 模型标签
+	Tag string
+}
+
+/*
+CompshareImageGroup - 镜像组信息
+*/
+type CompshareImageGroup struct {
+
+	// 引用创建次数
+	CreatedCount int
+
+	// 镜像数据
+	Data []CompShareImage
+
+	// 收藏数
+	FavoritesCount int
+
+	// 版本组ID
+	GroupId string
+
+	// 镜像描述
+	ImageDesc string
+
+	// 镜像名称
+	ImageName string
+
+	// 镜像使用时长 , 单位：小时
+	ImageUseTime int
+
+	// 是否被收藏
+	IsFavorite bool
+
+	// 推荐数
+	RecommendCount int
+
+	// 镜像组状态 Available 可用；UnAvailable 不可用
+	Status string
+}
+
+/*
+ResourceTagItem - 资源标识
+*/
+type ResourceTagItem struct {
+
+	// 标识名称
+	KeyId string
+
+	// 标识信息
+	Value string
+}
+
+/*
+OrderDetailItem - 配置详情
+*/
+type OrderDetailItem struct {
+
+	// 产品名
+	ProductName string
+
+	// 配置
+	Value string
+}
+
+/*
+OrderInfo - 订单信息
+*/
+type OrderInfo struct {
+
+	// 订单金额
+	Amount string
+
+	// 优惠券金额
+	AmountCoupon string
+
+	// 赠金
+	AmountFree string
+
+	// 真实金额
+	AmountReal string
+
+	// 付费方式
+	ChargeType string
+
+	// 购买数量
+	Count int
+
+	// 创建时间
+	CreateTime int
+
+	// 订单结束时间
+	EndTime int
+
+	// 配置详情
+	OrderDetail []OrderDetailItem
+
+	// 原配置详情
+	OrderDetailOld []OrderDetailItem
+
+	// 订单号
+	OrderNo string
+
+	// 订单状态
+	OrderState string
+
+	// 订单类型
+	OrderType string
+
+	// 折扣率
+	OriginalPrice string
+
+	// 项目名称
+	ProjectName string
+
+	// 购买量
+	Quantity string
+
+	// 可用区
+	RegionId string
+
+	// 资源ID
+	ResourceId string
+
+	// 资源标识
+	ResourceTag []ResourceTagItem
+
+	// 产品类型
+	ResourceType string
+
+	// 抢占式折扣，仅抢占式才展示
+	SpotDiscount string
+
+	// 订单起始时间
+	StartTime int
+
+	// 交易号
+	TradeNo string
+
+	// 更新时间
+	UpdateTime int
+}
+
+/*
+UnpaidOrderDetail - 未支付订单详情
+*/
+type UnpaidOrderDetail struct {
+
+	// 计费对象的资源ID
+	BillItemId string
+
+	// 配置大小
+	Multiple int
+
+	// 产品子类
+	ProductId int
+
+	// 资源有效期
+	PurchaseValue int
+}
+
+/*
+UnpaidOrderInfo - 未支付订单信息
+*/
+type UnpaidOrderInfo struct {
+
+	// 金额
+	Amount int
+
+	// 付费方式
+	ChargeType string
+
+	// 创建时间
+	CreateTime int
+
+	// 订单结束时间
+	EndTime int
+
+	// 配置详情
+	OrderDetail []UnpaidOrderDetail
+
+	// 订单号
+	OrderNo string
+
+	// 订单状态
+	OrderState string
+
+	// 订单类型
+	OrderType string
+
+	// 折扣率
+	OriginalPrice string
+
+	// 购买量
+	Quantity string
+
+	// 可用区
+	RegionId string
+
+	// 资源短ID
+	ResourceId string
+
+	// 产品类型
+	ResourceType string
+
+	// 订单起始时间
+	StartTime int
+
+	// 交易号
+	TradeNo string
+
+	// 更新时间
+	UpdateTime int
 }
 
 /*
@@ -252,6 +915,66 @@ type Bundle struct {
 
 	// 流量包大小。单位：GB。
 	TrafficPacket int
+}
+
+/*
+ULHostImageSet - DescribeULHostImage
+*/
+type ULHostImageSet struct {
+
+	// 创建时间，格式为Unix时间戳
+	CreateTime int
+
+	// 用于控制台显示的名称
+	DisplayName string
+
+	// 特殊状态标识，目前包含NetEnhnced（网络增强1.0）, NetEnhanced_Ultra（网络增强2.0）, NetEnhanced_Extreme（网络增强3.0）, HotPlug(热升级), GPU（GPU镜像）,CloudInit, IPv6（支持IPv6网络）,RssdAttachable（支持RSSD云盘）,Vgpu_AMD（支持AMD的vgpu）,Vgpu_NVIDIA（支持NVIDIA的vgpu）,Aarch64_Type（支持arm64架构）
+	Features []string
+
+	// 镜像描述
+	ImageDescription string
+
+	// 镜像ID
+	ImageId string
+
+	// 应用镜像图标url
+	ImageLogoLink string
+
+	// 镜像名称
+	ImageName string
+
+	// 镜像大小
+	ImageSize int
+
+	// 镜像类型 标准镜像：Base， 行业镜像：Business，自定义镜像：Custom
+	ImageType string
+
+	// 集成软件名称（仅行业镜像将返回这个值）
+	IntegratedSoftware string
+
+	// 系统EOL的时间，格式：YYYY/MM/DD
+	MaintainEol string
+
+	// 默认值为空'''。当CentOS 7.3/7.4/7.5等镜像会标记为“Broadwell”
+	MinimalCPU string
+
+	// 操作系统名称
+	OsName string
+
+	// 操作系统类型：Linux，Windows
+	OsType string
+
+	// 场景分类，目前包含Featured（精选），PreInstalledDrivers（预装驱动），AIPainting（AI绘画），AIModels（AI模型），HPC（高性能计算）
+	SceneCategories []string
+
+	// 镜像状态， 可用：Available，制作中：Making， 不可用：Unavailable，复制中：Copying
+	State string
+
+	// 业务组
+	Tag string
+
+	// 可用区，参见 [可用区列表](../summary/regionlist.html)
+	Zone string
 }
 
 /*
@@ -369,6 +1092,129 @@ type ULHostInstanceSet struct {
 }
 
 /*
+DiskUpgradePriceDetail -
+*/
+type DiskUpgradePriceDetail struct {
+
+	// 快照价格
+	Snapshot float64
+
+	// 磁盘价格
+	UDisk float64
+}
+
+/*
+CompSharePriceDetail - 算力平台实例询价详情
+*/
+type CompSharePriceDetail struct {
+
+	// 计费类型
+	ChargeType string
+
+	// 镜像价格/Gpu/小时
+	CompShareImage float64
+
+	// 磁盘价格
+	Disks float64
+
+	// 实例价格
+	Instance float64
+
+	// 主机折扣类型  1:夜间折扣 2:节日折扣
+	InstanceDiscountType int
+
+	// 列表价
+	ListPrice string
+
+	// 原价
+	OriginalPrice float64
+}
+
+/*
+UHostRefundPriceSet - 删除退费详情
+*/
+type UHostRefundPriceSet struct {
+
+	// 实例操作结果的错误码。0为成功
+	Code int
+
+	// 当 Code 非 0 时提供详细的描述信息
+	ErrMessage string
+
+	// 实例的删除退费金额
+	RefundPrice float64
+
+	// UHost实例ID
+	UHostId string
+}
+
+/*
+CompShareTeamDetailInfo - 团队信息
+*/
+type CompShareTeamDetailInfo struct {
+
+	// 管理者公司Id
+	CompanyId int
+
+	// 删除状态 0: 未删除 1: 已删除
+	Deleted int
+
+	// 团队简介
+	Description string
+
+	// 团队Id
+	Id int
+
+	// 团队名称
+	Name string
+}
+
+/*
+TeamRelation - 团队关系信息
+*/
+type TeamRelation struct {
+
+	// 已分配金额
+	AllocateAmount int
+
+	// 余额
+	AvailableAmount int
+
+	// 邀请时间
+	CreateTime int
+
+	// 备注名称
+	RemarkName string
+
+	// 邀请状态：Pending（待同意）、Joined（已加入）、Rejected（拒绝）、Canceled（取消）
+	Status string
+
+	// 团队ID
+	TeamId int
+
+	// 团队名称
+	TeamName string
+
+	// 成员公司Id
+	UserCompanyId int
+
+	// 虚拟账号公司Id
+	VirtualCompanyId int
+}
+
+/*
+OpenClawModelInfo - OpenClaw 模型信息
+*/
+type OpenClawModelInfo struct {
+
+	// 模型Id
+	Id string
+
+	// 模型名称
+	Name string
+}
+
+/*
 ULHostPriceSet - 轻量应用主机价格详情
 */
 type ULHostPriceSet struct {
@@ -381,4 +1227,100 @@ type ULHostPriceSet struct {
 
 	// 价格
 	Price float64
+}
+
+/*
+CompShareTeamInfo - 团队列表信息Detail
+*/
+type CompShareTeamInfo struct {
+
+	// 管理者公司Id
+	CompanyId int
+
+	// 团队简介
+	Description string
+
+	// 团队Id
+	Id int
+
+	// 成员数量
+	MemberCount int
+
+	// 团队名称
+	Name string
+}
+
+/*
+CompShareTeamInviteInfo - 邀请成员信息
+*/
+type CompShareTeamInviteInfo struct {
+
+	// 邀请时间
+	CreateTime int
+
+	// 备注名称
+	RemarkName string
+
+	// 邀请状态：Pending（待同意）、Joined（已加入）、Rejected（拒绝）、Canceled（取消）
+	Status string
+
+	// 团队ID
+	TeamId int
+
+	// 团队名称
+	TeamName string
+
+	// 成员公司Id
+	UserCompanyId int
+
+	// 虚拟账号公司Id
+	VirtualCompanyId int
+}
+
+/*
+CompShareTeamJoinedInfo - 加入成员信息
+*/
+type CompShareTeamJoinedInfo struct {
+
+	// 邀请时间
+	CreateTime int
+
+	// 当前是否为个人账号
+	IsPersonalAccount bool
+
+	// 备注名称
+	RemarkName string
+
+	// 邀请状态：Pending（待同意）、Joined（已加入）、Rejected（拒绝）、Canceled（取消）
+	Status string
+
+	// 团队ID
+	TeamId int
+
+	// 团队名称
+	TeamName string
+
+	// 成员公司Id
+	UserCompanyId int
+
+	// 虚拟账号公司Id
+	VirtualCompanyId int
+}
+
+/*
+CompShareTeamOperateLogInfo - 算力团队操作日志信息
+*/
+type CompShareTeamOperateLogInfo struct {
+
+	// 操作内容
+	Content string
+
+	// 操作日志的创建时间
+	CreateTime int
+
+	// 操作类型
+	OperateType string
+
+	// 操作状态
+	Status string
 }

@@ -9,6 +9,394 @@ import (
 
 // UCompShare API Schema
 
+// AttachCompshareDiskRequest is request schema for AttachCompshareDisk action
+type AttachCompshareDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 是否允许跨pod挂载（Yes：允许跨pod挂载，No：不允许跨pod挂载，不填默认No）
+	EnableCrossPodAttach *string `required:"false"`
+
+	// 需要挂载的UDisk实例ID.
+	UDiskId *string `required:"true"`
+
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"false"`
+}
+
+// AttachCompshareDiskResponse is response schema for AttachCompshareDisk action
+type AttachCompshareDiskResponse struct {
+	response.CommonBase
+}
+
+// NewAttachCompshareDiskRequest will create request of AttachCompshareDisk action.
+func (c *UCompShareClient) NewAttachCompshareDiskRequest() *AttachCompshareDiskRequest {
+	req := &AttachCompshareDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachCompshareDisk
+
+将一个可用的UDisk挂载到某台主机上
+*/
+func (c *UCompShareClient) AttachCompshareDisk(req *AttachCompshareDiskRequest) (*AttachCompshareDiskResponse, error) {
+	var err error
+	var res AttachCompshareDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachCompshareDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AttachUS3Request is request schema for AttachUS3 action
+type AttachUS3Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 实例Id
+	UHostId *string `required:"true"`
+}
+
+// AttachUS3Response is response schema for AttachUS3 action
+type AttachUS3Response struct {
+	response.CommonBase
+}
+
+// NewAttachUS3Request will create request of AttachUS3 action.
+func (c *UCompShareClient) NewAttachUS3Request() *AttachUS3Request {
+	req := &AttachUS3Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachUS3
+
+挂载us3
+*/
+func (c *UCompShareClient) AttachUS3(req *AttachUS3Request) (*AttachUS3Response, error) {
+	var err error
+	var res AttachUS3Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachUS3", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CheckCompShareNetOptimizerRequest is request schema for CheckCompShareNetOptimizer action
+type CheckCompShareNetOptimizerRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+}
+
+// CheckCompShareNetOptimizerResponse is response schema for CheckCompShareNetOptimizer action
+type CheckCompShareNetOptimizerResponse struct {
+	response.CommonBase
+
+	// 是否已开通
+	Optimized bool
+}
+
+// NewCheckCompShareNetOptimizerRequest will create request of CheckCompShareNetOptimizer action.
+func (c *UCompShareClient) NewCheckCompShareNetOptimizerRequest() *CheckCompShareNetOptimizerRequest {
+	req := &CheckCompShareNetOptimizerRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CheckCompShareNetOptimizer
+
+检查算力平台账号是否开通访问加速
+*/
+func (c *UCompShareClient) CheckCompShareNetOptimizer(req *CheckCompShareNetOptimizerRequest) (*CheckCompShareNetOptimizerResponse, error) {
+	var err error
+	var res CheckCompShareNetOptimizerResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CheckCompShareNetOptimizer", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CheckULHostResourceCapacityRequest is request schema for CheckULHostResourceCapacity action
+type CheckULHostResourceCapacityRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 套餐ID。如："ulh.c1m1s40b30t800"
+	BundleId *string `required:"true"`
+
+	// 计费模式。枚举值： \\ > Year，按年付费； \\ > Month，按月付费；\\ > ThirtyDay，30天期付费，跨境电商相关套餐使用此计费方式；默认：Month
+	ChargeType *string `required:"false"`
+
+	// 主机代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
+	CouponId *string `required:"false"`
+
+	// 镜像ID。 请通过 [DescribeImage](describe_image.html)获取
+	ImageId *string `required:"true"`
+
+	// 轻量应用主机名称。默认：套餐ID。请遵照[[api:uhost-api:specification|字段规范]]设定实例名称。
+	Name *string `required:"false"`
+
+	// 购买时长。默认：1。不支持购买到月末
+	Quantity *int `required:"false"`
+
+	// 防火墙ID，默认：Web推荐防火墙。如何查询SecurityGroupId请参见 [DescribeFirewall](api/unet-api/describe_firewall.html)。
+	SecurityGroupId *string `required:"false"`
+
+	// 子网 ID。默认为当前地域的默认子网。
+	SubnetId *string `required:"false"`
+
+	// VPC ID。默认为当前地域的默认VPC。
+	VPCId *string `required:"false"`
+}
+
+// CheckULHostResourceCapacityResponse is response schema for CheckULHostResourceCapacity action
+type CheckULHostResourceCapacityResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 资源是否充足
+	ResourceEnough bool
+}
+
+// NewCheckULHostResourceCapacityRequest will create request of CheckULHostResourceCapacity action.
+func (c *UCompShareClient) NewCheckULHostResourceCapacityRequest() *CheckULHostResourceCapacityRequest {
+	req := &CheckULHostResourceCapacityRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CheckULHostResourceCapacity
+
+检查轻量应用云主机资源余量
+*/
+func (c *UCompShareClient) CheckULHostResourceCapacity(req *CheckULHostResourceCapacityRequest) (*CheckULHostResourceCapacityResponse, error) {
+	var err error
+	var res CheckULHostResourceCapacityResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CheckULHostResourceCapacity", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CopyCompShareCustomImageRequest is request schema for CopyCompShareCustomImage action
+type CopyCompShareCustomImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+
+	// 目标镜像名称
+	TargetImageName *string `required:"false"`
+}
+
+// CopyCompShareCustomImageResponse is response schema for CopyCompShareCustomImage action
+type CopyCompShareCustomImageResponse struct {
+	response.CommonBase
+
+	// 复制后的镜像Id
+	NewCompShareImageId string
+}
+
+// NewCopyCompShareCustomImageRequest will create request of CopyCompShareCustomImage action.
+func (c *UCompShareClient) NewCopyCompShareCustomImageRequest() *CopyCompShareCustomImageRequest {
+	req := &CopyCompShareCustomImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CopyCompShareCustomImage
+
+复制算力平台镜像
+*/
+func (c *UCompShareClient) CopyCompShareCustomImage(req *CopyCompShareCustomImageRequest) (*CopyCompShareCustomImageResponse, error) {
+	var err error
+	var res CopyCompShareCustomImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CopyCompShareCustomImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateCompShareCustomImageParamSoftwares is request schema for complex param
+*/
+type CreateCompShareCustomImageParamSoftwares struct {
+
+	// 【array of string】镜像的应用列表
+	Application []string `required:"false"`
+
+	// 镜像CUDA版本
+	CUDAVersion *string `required:"false"`
+
+	// 镜像框架名称
+	Framework *string `required:"false"`
+
+	// 镜像框架版本
+	FrameworkVersion *string `required:"false"`
+}
+
+// CreateCompShareCustomImageRequest is request schema for CreateCompShareCustomImage action
+type CreateCompShareCustomImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 镜像描述信息
+	Description *string `required:"false"`
+
+	// 镜像名称。不允许与账号下其他镜像名称重复
+	Name *string `required:"true"`
+
+	//
+	Softwares *CreateCompShareCustomImageParamSoftwares `required:"false"`
+
+	// 实例Id
+	UHostId *string `required:"true"`
+}
+
+// CreateCompShareCustomImageResponse is response schema for CreateCompShareCustomImage action
+type CreateCompShareCustomImageResponse struct {
+	response.CommonBase
+
+	// 镜像Id
+	CompShareImageId string
+}
+
+// NewCreateCompShareCustomImageRequest will create request of CreateCompShareCustomImage action.
+func (c *UCompShareClient) NewCreateCompShareCustomImageRequest() *CreateCompShareCustomImageRequest {
+	req := &CreateCompShareCustomImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateCompShareCustomImage
+
+制作算力平台实例自制镜像
+*/
+func (c *UCompShareClient) CreateCompShareCustomImage(req *CreateCompShareCustomImageRequest) (*CreateCompShareCustomImageResponse, error) {
+	var err error
+	var res CreateCompShareCustomImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCompShareCustomImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 /*
 CreateCompShareInstanceParamDisks is request schema for complex param
 */
@@ -49,6 +437,9 @@ type CreateCompShareInstanceRequest struct {
 	//
 	Disks []CreateCompShareInstanceParamDisks `required:"false"`
 
+	// 是否挂载云存储（仅容器实例支持此操作）
+	EnableUS3 *bool `required:"false"`
+
 	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
 	GPU *int `required:"true"`
 
@@ -64,7 +455,7 @@ type CreateCompShareInstanceRequest struct {
 	// 内存大小。单位：MB。范围 ：[1024, 262144]，取值为1024的倍数（可选范围参考控制台）。默认值：8192
 	Memory *int `required:"true"`
 
-	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake", "Intel/CascadelakeR", "Intel/IceLake", "Amd/Epyc2", "Amd/Auto","Ampere/Auto","Ampere/Altra"],默认值是"Intel/Auto"。
+	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake", "Intel/CascadelakeR", "Intel/IceLake", "Amd/Epyc2", "Amd/Auto","Ampere/Auto","Ampere/Altra", "Auto"],默认值是"Intel/Auto", "Auto" 自动分配Amd或者Intel cpu平台。
 	MinimalCpuPlatform *string `required:"false"`
 
 	// 实例名称
@@ -119,6 +510,136 @@ func (c *UCompShareClient) CreateCompShareInstance(req *CreateCompShareInstanceR
 	return &res, nil
 }
 
+// CreateCompShareTeamRequest is request schema for CreateCompShareTeam action
+type CreateCompShareTeamRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 团队简介
+	Description *string `required:"false"`
+
+	// 团队名称
+	Name *string `required:"true"`
+}
+
+// CreateCompShareTeamResponse is response schema for CreateCompShareTeam action
+type CreateCompShareTeamResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewCreateCompShareTeamRequest will create request of CreateCompShareTeam action.
+func (c *UCompShareClient) NewCreateCompShareTeamRequest() *CreateCompShareTeamRequest {
+	req := &CreateCompShareTeamRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateCompShareTeam
+
+创建团队
+*/
+func (c *UCompShareClient) CreateCompShareTeam(req *CreateCompShareTeamRequest) (*CreateCompShareTeamResponse, error) {
+	var err error
+	var res CreateCompShareTeamResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCompShareTeam", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateCompShareTeamRelationParamUserInfo is request schema for complex param
+*/
+type CreateCompShareTeamRelationParamUserInfo struct {
+
+	// 被邀请成员的备注名称
+	RemarkName *string `required:"false"`
+
+	// 被邀请成员的公司Id
+	UserCompanyId *int `required:"true"`
+}
+
+// CreateCompShareTeamRelationRequest is request schema for CreateCompShareTeamRelation action
+type CreateCompShareTeamRelationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 团队Id
+	TeamId *int `required:"true"`
+
+	//
+	UserInfo []CreateCompShareTeamRelationParamUserInfo `required:"false"`
+}
+
+// CreateCompShareTeamRelationResponse is response schema for CreateCompShareTeamRelation action
+type CreateCompShareTeamRelationResponse struct {
+	response.CommonBase
+
+	// 错误信息Map：key：被邀请成员的公司Id ，value ：报错信息ErrorInfo（object），ErrorInfo.Message 报错信息，ErrorInfo.Code 报错Code
+	ErrorMap string
+}
+
+// NewCreateCompShareTeamRelationRequest will create request of CreateCompShareTeamRelation action.
+func (c *UCompShareClient) NewCreateCompShareTeamRelationRequest() *CreateCompShareTeamRelationRequest {
+	req := &CreateCompShareTeamRelationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateCompShareTeamRelation
+
+发送团队邀请
+*/
+func (c *UCompShareClient) CreateCompShareTeamRelation(req *CreateCompShareTeamRelationRequest) (*CreateCompShareTeamRelationResponse, error) {
+	var err error
+	var res CreateCompShareTeamRelationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCompShareTeamRelation", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateULHostInstanceRequest is request schema for CreateULHostInstance action
 type CreateULHostInstanceRequest struct {
 	request.CommonBase
@@ -132,7 +653,7 @@ type CreateULHostInstanceRequest struct {
 	// 套餐ID。如："ulh.c1m1s40b30t800"
 	BundleId *string `required:"true"`
 
-	// 计费模式。枚举值： \\ > Year，按年付费； \\ > Month，按月付费；默认：Month
+	// 计费模式。枚举值： \\ > Year，按年付费； \\ > Month，按月付费；\\ > ThirtyDay，30天期付费，跨境电商相关套餐使用此计费方式；默认：Month
 	ChargeType *string `required:"false"`
 
 	// 主机代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
@@ -195,6 +716,634 @@ func (c *UCompShareClient) CreateULHostInstance(req *CreateULHostInstanceRequest
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateULHostInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCompShareStopSchedulerRequest is request schema for DeleteCompShareStopScheduler action
+type DeleteCompShareStopSchedulerRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"true"`
+}
+
+// DeleteCompShareStopSchedulerResponse is response schema for DeleteCompShareStopScheduler action
+type DeleteCompShareStopSchedulerResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteCompShareStopSchedulerRequest will create request of DeleteCompShareStopScheduler action.
+func (c *UCompShareClient) NewDeleteCompShareStopSchedulerRequest() *DeleteCompShareStopSchedulerRequest {
+	req := &DeleteCompShareStopSchedulerRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCompShareStopScheduler
+
+删除实例定时关机任务
+*/
+func (c *UCompShareClient) DeleteCompShareStopScheduler(req *DeleteCompShareStopSchedulerRequest) (*DeleteCompShareStopSchedulerResponse, error) {
+	var err error
+	var res DeleteCompShareStopSchedulerResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCompShareStopScheduler", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCompShareTeamRequest is request schema for DeleteCompShareTeam action
+type DeleteCompShareTeamRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 团队Id
+	TeamId *int `required:"true"`
+}
+
+// DeleteCompShareTeamResponse is response schema for DeleteCompShareTeam action
+type DeleteCompShareTeamResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewDeleteCompShareTeamRequest will create request of DeleteCompShareTeam action.
+func (c *UCompShareClient) NewDeleteCompShareTeamRequest() *DeleteCompShareTeamRequest {
+	req := &DeleteCompShareTeamRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCompShareTeam
+
+删除团队
+*/
+func (c *UCompShareClient) DeleteCompShareTeam(req *DeleteCompShareTeamRequest) (*DeleteCompShareTeamResponse, error) {
+	var err error
+	var res DeleteCompShareTeamResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCompShareTeam", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCompshareDiskRequest is request schema for DeleteCompshareDisk action
+type DeleteCompshareDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 项目id
+	OrganizationID *int `required:"true"`
+
+	// 公司id
+	TopOrganizationID *int `required:"true"`
+
+	// 磁盘ID
+	UDiskId *string `required:"true"`
+
+	// 主机ID
+	UHostId *string `required:"false"`
+}
+
+// DeleteCompshareDiskResponse is response schema for DeleteCompshareDisk action
+type DeleteCompshareDiskResponse struct {
+	response.CommonBase
+
+	// 已删除磁盘id
+	UDiskId string
+}
+
+// NewDeleteCompshareDiskRequest will create request of DeleteCompshareDisk action.
+func (c *UCompShareClient) NewDeleteCompshareDiskRequest() *DeleteCompshareDiskRequest {
+	req := &DeleteCompshareDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCompshareDisk
+
+卸载并删除算力磁盘
+*/
+func (c *UCompShareClient) DeleteCompshareDisk(req *DeleteCompshareDiskRequest) (*DeleteCompshareDiskResponse, error) {
+	var err error
+	var res DeleteCompshareDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCompshareDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeAvailableCompShareInstanceTypesRequest is request schema for DescribeAvailableCompShareInstanceTypes action
+type DescribeAvailableCompShareInstanceTypesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 指定机型列表
+	MachineTypes []string `required:"false"`
+}
+
+// DescribeAvailableCompShareInstanceTypesResponse is response schema for DescribeAvailableCompShareInstanceTypes action
+type DescribeAvailableCompShareInstanceTypesResponse struct {
+	response.CommonBase
+
+	// AvailableInstanceTypes
+	AvailableInstanceTypes []AvailableInstanceTypes
+
+	// 当前区域是否可售
+	Status string
+}
+
+// NewDescribeAvailableCompShareInstanceTypesRequest will create request of DescribeAvailableCompShareInstanceTypes action.
+func (c *UCompShareClient) NewDescribeAvailableCompShareInstanceTypesRequest() *DescribeAvailableCompShareInstanceTypesRequest {
+	req := &DescribeAvailableCompShareInstanceTypesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeAvailableCompShareInstanceTypes
+
+获取某个地域下可售/售罄的所有机型信息
+*/
+func (c *UCompShareClient) DescribeAvailableCompShareInstanceTypes(req *DescribeAvailableCompShareInstanceTypesRequest) (*DescribeAvailableCompShareInstanceTypesResponse, error) {
+	var err error
+	var res DescribeAvailableCompShareInstanceTypesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeAvailableCompShareInstanceTypes", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+DescribeCommunityImagesParamSortCondition is request schema for complex param
+*/
+type DescribeCommunityImagesParamSortCondition struct {
+
+	// 是否升序排列
+	ASC *string `required:"false"`
+
+	// 排序条件。- Favor：按热度排序，获取热点镜像；- PubTime：按发布时间排序，获取最新社区镜像；- Price 按价格排序；- CreatedCount 按使用量排序；默认："PubTime"
+	Field *string `required:"false"`
+}
+
+// DescribeCommunityImagesRequest is request schema for DescribeCommunityImages action
+type DescribeCommunityImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 搜索指定作者发布的镜像
+	Author *string `required:"false"`
+
+	// 镜像Id。支持指定镜像Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *string `required:"false"`
+
+	// 镜像名称。模糊搜索
+	Name *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	//
+	SortCondition *DescribeCommunityImagesParamSortCondition `required:"false"`
+
+	// 按标签名称搜索，精确匹配
+	Tag *string `required:"false"`
+}
+
+// DescribeCommunityImagesResponse is response schema for DescribeCommunityImages action
+type DescribeCommunityImagesResponse struct {
+	response.CommonBase
+
+	// 镜像详情列表
+	ImageSet []CompShareImage
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeCommunityImagesRequest will create request of DescribeCommunityImages action.
+func (c *UCompShareClient) NewDescribeCommunityImagesRequest() *DescribeCommunityImagesRequest {
+	req := &DescribeCommunityImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCommunityImages
+
+获取社区镜像列表
+*/
+func (c *UCompShareClient) DescribeCommunityImages(req *DescribeCommunityImagesRequest) (*DescribeCommunityImagesResponse, error) {
+	var err error
+	var res DescribeCommunityImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCommunityImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareCustomImagesRequest is request schema for DescribeCompShareCustomImages action
+type DescribeCompShareCustomImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 指定镜像Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// DescribeCompShareCustomImagesResponse is response schema for DescribeCompShareCustomImages action
+type DescribeCompShareCustomImagesResponse struct {
+	response.CommonBase
+
+	// 镜像详情信息
+	ImageSet []CompShareImage
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeCompShareCustomImagesRequest will create request of DescribeCompShareCustomImages action.
+func (c *UCompShareClient) NewDescribeCompShareCustomImagesRequest() *DescribeCompShareCustomImagesRequest {
+	req := &DescribeCompShareCustomImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareCustomImages
+
+获取自制镜像列表
+*/
+func (c *UCompShareClient) DescribeCompShareCustomImages(req *DescribeCompShareCustomImagesRequest) (*DescribeCompShareCustomImagesResponse, error) {
+	var err error
+	var res DescribeCompShareCustomImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareCustomImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareGpuInventoryRequest is request schema for DescribeCompShareGpuInventory action
+type DescribeCompShareGpuInventoryRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+}
+
+// DescribeCompShareGpuInventoryResponse is response schema for DescribeCompShareGpuInventory action
+type DescribeCompShareGpuInventoryResponse struct {
+	response.CommonBase
+
+	// 返回为嵌套map：，key为池子名称 （Exclusive：独占，Spot ：抢占） value : 库存余量信息map {key 可用区ID，value：GPU卡余量map （key：GPU机型，value：余量GPU卡数量），举例：{"Exclusive":{10027:{"2080":10}}}}
+	GpuInventoryByZone string
+
+	// 不支持抢占的GPU机型
+	SpotUnsupportedGpuTypes []string
+
+	// 缓存更新时间（5min更新一次）
+	UpdateTime int
+}
+
+// NewDescribeCompShareGpuInventoryRequest will create request of DescribeCompShareGpuInventory action.
+func (c *UCompShareClient) NewDescribeCompShareGpuInventoryRequest() *DescribeCompShareGpuInventoryRequest {
+	req := &DescribeCompShareGpuInventoryRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareGpuInventory
+
+查询GPU卡余量库存
+*/
+func (c *UCompShareClient) DescribeCompShareGpuInventory(req *DescribeCompShareGpuInventoryRequest) (*DescribeCompShareGpuInventoryResponse, error) {
+	var err error
+	var res DescribeCompShareGpuInventoryResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareGpuInventory", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareImageShareAccountsRequest is request schema for DescribeCompShareImageShareAccounts action
+type DescribeCompShareImageShareAccountsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+}
+
+// DescribeCompShareImageShareAccountsResponse is response schema for DescribeCompShareImageShareAccounts action
+type DescribeCompShareImageShareAccountsResponse struct {
+	response.CommonBase
+
+	// 被共享的账号列表
+	AccountSet []Projects
+}
+
+// NewDescribeCompShareImageShareAccountsRequest will create request of DescribeCompShareImageShareAccounts action.
+func (c *UCompShareClient) NewDescribeCompShareImageShareAccountsRequest() *DescribeCompShareImageShareAccountsRequest {
+	req := &DescribeCompShareImageShareAccountsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareImageShareAccounts
+
+获取镜像共享的账号列表
+*/
+func (c *UCompShareClient) DescribeCompShareImageShareAccounts(req *DescribeCompShareImageShareAccountsRequest) (*DescribeCompShareImageShareAccountsResponse, error) {
+	var err error
+	var res DescribeCompShareImageShareAccountsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareImageShareAccounts", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareImageTagsRequest is request schema for DescribeCompShareImageTags action
+type DescribeCompShareImageTagsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+}
+
+// DescribeCompShareImageTagsResponse is response schema for DescribeCompShareImageTags action
+type DescribeCompShareImageTagsResponse struct {
+	response.CommonBase
+
+	// 【Array of string】镜像标签列表
+	Tags []string
+}
+
+// NewDescribeCompShareImageTagsRequest will create request of DescribeCompShareImageTags action.
+func (c *UCompShareClient) NewDescribeCompShareImageTagsRequest() *DescribeCompShareImageTagsRequest {
+	req := &DescribeCompShareImageTagsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareImageTags
+
+获取镜像标签列表
+*/
+func (c *UCompShareClient) DescribeCompShareImageTags(req *DescribeCompShareImageTagsRequest) (*DescribeCompShareImageTagsResponse, error) {
+	var err error
+	var res DescribeCompShareImageTagsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareImageTags", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareImagesRequest is request schema for DescribeCompShareImages action
+type DescribeCompShareImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 镜像作者昵称
+	Author *string `required:"false"`
+
+	// 镜像Id。支持指定Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 镜像类型。枚举值- System 平台镜像- App 应用镜像默认：System
+	ImageType *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 镜像名称。支持模糊搜索
+	Name *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// 镜像标签
+	Tag *string `required:"false"`
+}
+
+// DescribeCompShareImagesResponse is response schema for DescribeCompShareImages action
+type DescribeCompShareImagesResponse struct {
+	response.CommonBase
+
+	// 镜像详情列表
+	ImageSet []CompShareImage
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeCompShareImagesRequest will create request of DescribeCompShareImages action.
+func (c *UCompShareClient) NewDescribeCompShareImagesRequest() *DescribeCompShareImagesRequest {
+	req := &DescribeCompShareImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareImages
+
+可获取平台、应用镜像信息
+*/
+func (c *UCompShareClient) DescribeCompShareImages(req *DescribeCompShareImagesRequest) (*DescribeCompShareImagesResponse, error) {
+	var err error
+	var res DescribeCompShareImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareImages", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -270,6 +1419,752 @@ func (c *UCompShareClient) DescribeCompShareInstance(req *DescribeCompShareInsta
 	return &res, nil
 }
 
+// DescribeCompShareMachineTypeFamiliesRequest is request schema for DescribeCompShareMachineTypeFamilies action
+type DescribeCompShareMachineTypeFamiliesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。因为子账号要iam鉴权而填写
+	// ProjectId *string `required:"true"`
+
+}
+
+// DescribeCompShareMachineTypeFamiliesResponse is response schema for DescribeCompShareMachineTypeFamilies action
+type DescribeCompShareMachineTypeFamiliesResponse struct {
+	response.CommonBase
+
+	// 机型配置列表
+	MachineTypes []string
+}
+
+// NewDescribeCompShareMachineTypeFamiliesRequest will create request of DescribeCompShareMachineTypeFamilies action.
+func (c *UCompShareClient) NewDescribeCompShareMachineTypeFamiliesRequest() *DescribeCompShareMachineTypeFamiliesRequest {
+	req := &DescribeCompShareMachineTypeFamiliesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareMachineTypeFamilies
+
+获取实例规格族列表（所有机型的信息）
+*/
+func (c *UCompShareClient) DescribeCompShareMachineTypeFamilies(req *DescribeCompShareMachineTypeFamiliesRequest) (*DescribeCompShareMachineTypeFamiliesResponse, error) {
+	var err error
+	var res DescribeCompShareMachineTypeFamiliesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareMachineTypeFamilies", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareSharingImagesRequest is request schema for DescribeCompShareSharingImages action
+type DescribeCompShareSharingImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// DescribeCompShareSharingImagesResponse is response schema for DescribeCompShareSharingImages action
+type DescribeCompShareSharingImagesResponse struct {
+	response.CommonBase
+
+	// 共享镜像列表
+	ImageSet []CompShareImage
+
+	// 总数
+	TotalCount int
+}
+
+// NewDescribeCompShareSharingImagesRequest will create request of DescribeCompShareSharingImages action.
+func (c *UCompShareClient) NewDescribeCompShareSharingImagesRequest() *DescribeCompShareSharingImagesRequest {
+	req := &DescribeCompShareSharingImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareSharingImages
+
+获取算力平台共享镜像列表
+*/
+func (c *UCompShareClient) DescribeCompShareSharingImages(req *DescribeCompShareSharingImagesRequest) (*DescribeCompShareSharingImagesResponse, error) {
+	var err error
+	var res DescribeCompShareSharingImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareSharingImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareSoftwarePortRequest is request schema for DescribeCompShareSoftwarePort action
+type DescribeCompShareSoftwarePortRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+}
+
+// DescribeCompShareSoftwarePortResponse is response schema for DescribeCompShareSoftwarePort action
+type DescribeCompShareSoftwarePortResponse struct {
+	response.CommonBase
+
+	// 应用端口信息
+	SoftwarePort []SoftwarePort
+}
+
+// NewDescribeCompShareSoftwarePortRequest will create request of DescribeCompShareSoftwarePort action.
+func (c *UCompShareClient) NewDescribeCompShareSoftwarePortRequest() *DescribeCompShareSoftwarePortRequest {
+	req := &DescribeCompShareSoftwarePortRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareSoftwarePort
+
+获取算力平台应用及端口号列表
+*/
+func (c *UCompShareClient) DescribeCompShareSoftwarePort(req *DescribeCompShareSoftwarePortRequest) (*DescribeCompShareSoftwarePortResponse, error) {
+	var err error
+	var res DescribeCompShareSoftwarePortResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareSoftwarePort", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCompShareSupportZoneRequest is request schema for DescribeCompShareSupportZone action
+type DescribeCompShareSupportZoneRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+}
+
+// DescribeCompShareSupportZoneResponse is response schema for DescribeCompShareSupportZone action
+type DescribeCompShareSupportZoneResponse struct {
+	response.CommonBase
+
+	// 可用区信息列表
+	ZoneInfo []SupportZone
+}
+
+// NewDescribeCompShareSupportZoneRequest will create request of DescribeCompShareSupportZone action.
+func (c *UCompShareClient) NewDescribeCompShareSupportZoneRequest() *DescribeCompShareSupportZoneRequest {
+	req := &DescribeCompShareSupportZoneRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCompShareSupportZone
+
+获取支持的可用区信息列表
+*/
+func (c *UCompShareClient) DescribeCompShareSupportZone(req *DescribeCompShareSupportZoneRequest) (*DescribeCompShareSupportZoneResponse, error) {
+	var err error
+	var res DescribeCompShareSupportZoneResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCompShareSupportZone", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeModelRepositoryModelsRequest is request schema for DescribeModelRepositoryModels action
+type DescribeModelRepositoryModelsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 模型名称
+	Name *string `required:"false"`
+
+	// 模型标签列表, 标签之间英文逗号:"," 相连接
+	Tags *string `required:"false"`
+}
+
+// DescribeModelRepositoryModelsResponse is response schema for DescribeModelRepositoryModels action
+type DescribeModelRepositoryModelsResponse struct {
+	response.CommonBase
+
+	// 模型信息列表
+	Models []ModelRepositoryModel
+}
+
+// NewDescribeModelRepositoryModelsRequest will create request of DescribeModelRepositoryModels action.
+func (c *UCompShareClient) NewDescribeModelRepositoryModelsRequest() *DescribeModelRepositoryModelsRequest {
+	req := &DescribeModelRepositoryModelsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeModelRepositoryModels
+
+模型仓库模型列表
+*/
+func (c *UCompShareClient) DescribeModelRepositoryModels(req *DescribeModelRepositoryModelsRequest) (*DescribeModelRepositoryModelsResponse, error) {
+	var err error
+	var res DescribeModelRepositoryModelsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeModelRepositoryModels", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeModelRepositoryTagsRequest is request schema for DescribeModelRepositoryTags action
+type DescribeModelRepositoryTagsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+}
+
+// DescribeModelRepositoryTagsResponse is response schema for DescribeModelRepositoryTags action
+type DescribeModelRepositoryTagsResponse struct {
+	response.CommonBase
+
+	// 标签列表
+	Tags []string
+}
+
+// NewDescribeModelRepositoryTagsRequest will create request of DescribeModelRepositoryTags action.
+func (c *UCompShareClient) NewDescribeModelRepositoryTagsRequest() *DescribeModelRepositoryTagsRequest {
+	req := &DescribeModelRepositoryTagsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeModelRepositoryTags
+
+模型仓库标签列表
+*/
+func (c *UCompShareClient) DescribeModelRepositoryTags(req *DescribeModelRepositoryTagsRequest) (*DescribeModelRepositoryTagsResponse, error) {
+	var err error
+	var res DescribeModelRepositoryTagsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeModelRepositoryTags", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeSelfCommunityImagesRequest is request schema for DescribeSelfCommunityImages action
+type DescribeSelfCommunityImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 镜像ID
+	CompShareImageId *string `required:"false"`
+
+	// 版本组ID
+	GroupId *string `required:"false"`
+}
+
+// DescribeSelfCommunityImagesResponse is response schema for DescribeSelfCommunityImages action
+type DescribeSelfCommunityImagesResponse struct {
+	response.CommonBase
+
+	// 仅计算当前ImageSetGroup中已发布的镜像信息，若某个Group中不存在已上线，则不统计
+	AvailableTotalCount int
+
+	// 镜像列表
+	ImageSetGroup []CompshareImageGroup
+
+	// 镜像总数
+	TotalCount int
+}
+
+// NewDescribeSelfCommunityImagesRequest will create request of DescribeSelfCommunityImages action.
+func (c *UCompShareClient) NewDescribeSelfCommunityImagesRequest() *DescribeSelfCommunityImagesRequest {
+	req := &DescribeSelfCommunityImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeSelfCommunityImages
+
+个人中心社区镜像查询
+*/
+func (c *UCompShareClient) DescribeSelfCommunityImages(req *DescribeSelfCommunityImagesRequest) (*DescribeSelfCommunityImagesResponse, error) {
+	var err error
+	var res DescribeSelfCommunityImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeSelfCommunityImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeTeamMemberOrderRequest is request schema for DescribeTeamMemberOrder action
+type DescribeTeamMemberOrderRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	// 付费方式
+	ChargeTypes []string `required:"false"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 返回数据长度，默认为25，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// 排序参数
+	OrderBy *string `required:"false"`
+
+	// 排序方式
+	OrderDir *string `required:"false"`
+
+	// 订单号
+	OrderNos []string `required:"false"`
+
+	// 订单状态
+	OrderStates []string `required:"false"`
+
+	// 订单类型
+	OrderTypes []string `required:"false"`
+
+	// 可用区
+	Regions []int `required:"false"`
+
+	// 资源ID
+	ResourceIds []string `required:"false"`
+
+	// 产品类型
+	ResourceTypes []int `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+
+	// 团队虚拟账号ID
+	VirtualCompanyId *int `required:"true"`
+}
+
+// DescribeTeamMemberOrderResponse is response schema for DescribeTeamMemberOrder action
+type DescribeTeamMemberOrderResponse struct {
+	response.CommonBase
+
+	// 分页大小
+	Limit int
+
+	// 分页偏移
+	Offset int
+
+	// 订单详细信息
+	OrderInfos []OrderInfo
+
+	// 总条数
+	Total int
+}
+
+// NewDescribeTeamMemberOrderRequest will create request of DescribeTeamMemberOrder action.
+func (c *UCompShareClient) NewDescribeTeamMemberOrderRequest() *DescribeTeamMemberOrderRequest {
+	req := &DescribeTeamMemberOrderRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeTeamMemberOrder
+
+获取团队订单
+*/
+func (c *UCompShareClient) DescribeTeamMemberOrder(req *DescribeTeamMemberOrderRequest) (*DescribeTeamMemberOrderResponse, error) {
+	var err error
+	var res DescribeTeamMemberOrderResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeTeamMemberOrder", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeTeamMemberOrderCountRequest is request schema for DescribeTeamMemberOrderCount action
+type DescribeTeamMemberOrderCountRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	// 付费方式
+	ChargeTypes *string `required:"false"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 订单状态
+	OrderStates *string `required:"false"`
+
+	// 订单类型
+	OrderTypes *string `required:"false"`
+
+	// 可用区
+	Regions *string `required:"false"`
+
+	// 产品类型
+	ResourceTypes *string `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+
+	// 团队虚拟账号ID
+	VirtualCompanyId *int `required:"true"`
+}
+
+// DescribeTeamMemberOrderCountResponse is response schema for DescribeTeamMemberOrderCount action
+type DescribeTeamMemberOrderCountResponse struct {
+	response.CommonBase
+
+	// 订单总金额
+	Amount string
+
+	// 代金券
+	AmountCoupon string
+
+	// 赠送金额
+	AmountFree string
+
+	// 真实金额
+	AmountReal string
+
+	// 订单数量
+	TotalCount int
+}
+
+// NewDescribeTeamMemberOrderCountRequest will create request of DescribeTeamMemberOrderCount action.
+func (c *UCompShareClient) NewDescribeTeamMemberOrderCountRequest() *DescribeTeamMemberOrderCountRequest {
+	req := &DescribeTeamMemberOrderCountRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeTeamMemberOrderCount
+
+获取团队成员订单总览
+*/
+func (c *UCompShareClient) DescribeTeamMemberOrderCount(req *DescribeTeamMemberOrderCountRequest) (*DescribeTeamMemberOrderCountResponse, error) {
+	var err error
+	var res DescribeTeamMemberOrderCountResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeTeamMemberOrderCount", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeTeamMemberUnpaidOrderRequest is request schema for DescribeTeamMemberUnpaidOrder action
+type DescribeTeamMemberUnpaidOrderRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	// 付费方式
+	ChargeTypes []string `required:"false"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 返回数据长度，默认为25，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// 排序参数
+	OrderBy *string `required:"false"`
+
+	// 排序方式
+	OrderDir *string `required:"false"`
+
+	// 订单号
+	OrderNos []string `required:"false"`
+
+	// 订单状态
+	OrderStates []string `required:"false"`
+
+	// 订单类型
+	OrderTypes []string `required:"false"`
+
+	// 可用区
+	Regions []int `required:"false"`
+
+	// 资源ID
+	ResourceIds []string `required:"false"`
+
+	// 产品类型
+	ResourceTypes []int `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+
+	// 团队虚拟账号ID
+	VirtualCompanyId *int `required:"true"`
+}
+
+// DescribeTeamMemberUnpaidOrderResponse is response schema for DescribeTeamMemberUnpaidOrder action
+type DescribeTeamMemberUnpaidOrderResponse struct {
+	response.CommonBase
+
+	// 分页大小
+	Limit int
+
+	// 分页偏移
+	Offset int
+
+	// 订单详细信息
+	OrderInfos []UnpaidOrderInfo
+
+	// 总条数
+	Total int
+}
+
+// NewDescribeTeamMemberUnpaidOrderRequest will create request of DescribeTeamMemberUnpaidOrder action.
+func (c *UCompShareClient) NewDescribeTeamMemberUnpaidOrderRequest() *DescribeTeamMemberUnpaidOrderRequest {
+	req := &DescribeTeamMemberUnpaidOrderRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeTeamMemberUnpaidOrder
+
+获取团队队员未支付订单
+*/
+func (c *UCompShareClient) DescribeTeamMemberUnpaidOrder(req *DescribeTeamMemberUnpaidOrderRequest) (*DescribeTeamMemberUnpaidOrderResponse, error) {
+	var err error
+	var res DescribeTeamMemberUnpaidOrderResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeTeamMemberUnpaidOrder", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeTeamMemberUnpaidOrderCountRequest is request schema for DescribeTeamMemberUnpaidOrderCount action
+type DescribeTeamMemberUnpaidOrderCountRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	// 付费方式
+	ChargeTypes []string `required:"false"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 订单状态
+	OrderStates []string `required:"false"`
+
+	// 订单类型
+	OrderTypes []string `required:"false"`
+
+	// 组织ID
+	OrganizationId *int `required:"false"`
+
+	// 可用区
+	Regions []int `required:"false"`
+
+	// 资源ID
+	ResourceIds *string `required:"false"`
+
+	// 产品类型
+	ResourceTypes *int `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+
+	// 交易流水号
+	TransactionNos []string `required:"false"`
+
+	// 虚拟账号公司ID
+	VirtualCompanyId *int `required:"true"`
+}
+
+// DescribeTeamMemberUnpaidOrderCountResponse is response schema for DescribeTeamMemberUnpaidOrderCount action
+type DescribeTeamMemberUnpaidOrderCountResponse struct {
+	response.CommonBase
+
+	// 欠费订单总金额
+	Amount string
+
+	// 欠费订单数
+	TotalCount int
+}
+
+// NewDescribeTeamMemberUnpaidOrderCountRequest will create request of DescribeTeamMemberUnpaidOrderCount action.
+func (c *UCompShareClient) NewDescribeTeamMemberUnpaidOrderCountRequest() *DescribeTeamMemberUnpaidOrderCountRequest {
+	req := &DescribeTeamMemberUnpaidOrderCountRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeTeamMemberUnpaidOrderCount
+
+获取团队成员未支付订单总览
+*/
+func (c *UCompShareClient) DescribeTeamMemberUnpaidOrderCount(req *DescribeTeamMemberUnpaidOrderCountRequest) (*DescribeTeamMemberUnpaidOrderCountResponse, error) {
+	var err error
+	var res DescribeTeamMemberUnpaidOrderCountResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeTeamMemberUnpaidOrderCount", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeULHostBundlesRequest is request schema for DescribeULHostBundles action
 type DescribeULHostBundlesRequest struct {
 	request.CommonBase
@@ -317,6 +2212,86 @@ func (c *UCompShareClient) DescribeULHostBundles(req *DescribeULHostBundlesReque
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeULHostBundles", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeULHostImageRequest is request schema for DescribeULHostImage action
+type DescribeULHostImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 镜像Id
+	ImageId *string `required:"false"`
+
+	// 镜像Id列表
+	ImageIds []string `required:"false"`
+
+	// 镜像类型。标准镜像：Base，应用镜像：App， 自定义镜像：Custom，默认返回所有类型
+	ImageType *string `required:"false"`
+
+	// 返回数据长度，默认为20
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// 操作系统类型：Linux， Windows 默认返回所有类型
+	OsType *string `required:"false"`
+
+	// 使用场景，当ImageType为"App"时生效。- Normal 常规专区- CrossBorder 跨境专区默认返回所有
+	Scene *string `required:"false"`
+
+	// 业务组Id。默认：Default
+	Tag *string `required:"false"`
+}
+
+// DescribeULHostImageResponse is response schema for DescribeULHostImage action
+type DescribeULHostImageResponse struct {
+	response.CommonBase
+
+	// 镜像列表详见 UHostImageSet
+	ImageSet []ULHostImageSet
+
+	// 满足条件的镜像总数
+	TotalCount int
+}
+
+// NewDescribeULHostImageRequest will create request of DescribeULHostImage action.
+func (c *UCompShareClient) NewDescribeULHostImageRequest() *DescribeULHostImageRequest {
+	req := &DescribeULHostImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeULHostImage
+
+获取指定数据中心镜像列表
+*/
+func (c *UCompShareClient) DescribeULHostImage(req *DescribeULHostImageRequest) (*DescribeULHostImageResponse, error) {
+	var err error
+	var res DescribeULHostImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeULHostImage", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -386,6 +2361,942 @@ func (c *UCompShareClient) DescribeULHostInstance(req *DescribeULHostInstanceReq
 	return &res, nil
 }
 
+/*
+DescribeUserCommunityImagesParamSortCondition is request schema for complex param
+*/
+type DescribeUserCommunityImagesParamSortCondition struct {
+
+	// 是否升序排列
+	ASC *string `required:"false"`
+
+	// 排序条件。- Favor：按热度排序，获取热点镜像；- PubTime：按发布时间排序，获取最新社区镜像；- Price 按价格排序；- CreatedCount 按使用量排序；- ImageUseTime 镜像使用时长排序- FavoritesCount 收藏数排序默认："PubTime"
+	Field *string `required:"false"`
+}
+
+// DescribeUserCommunityImagesRequest is request schema for DescribeUserCommunityImages action
+type DescribeUserCommunityImagesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 搜索指定作者发布的镜像
+	Author *string `required:"false"`
+
+	// 镜像Id。支持指定镜像Id查询
+	CompShareImageId *string `required:"false"`
+
+	// 模糊搜索，支持 镜像名称、作者名称
+	FuzzySearch *string `required:"false"`
+
+	// 是否只筛选免费镜像
+	IsFree *bool `required:"false"`
+
+	// 是否只筛选官方镜像
+	IsOfficial *bool `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *string `required:"false"`
+
+	// 镜像名称。模糊搜索
+	Name *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	//
+	SortCondition *DescribeUserCommunityImagesParamSortCondition `required:"false"`
+
+	// 按标签名称搜索，精确匹配
+	Tag *string `required:"false"`
+}
+
+// DescribeUserCommunityImagesResponse is response schema for DescribeUserCommunityImages action
+type DescribeUserCommunityImagesResponse struct {
+	response.CommonBase
+
+	// 版本组可用数量
+	AvailableTotalCount int
+
+	// 镜像详情列表
+	ImageSetGroup []CompshareImageGroup
+
+	// 总数量
+	TotalCount int
+}
+
+// NewDescribeUserCommunityImagesRequest will create request of DescribeUserCommunityImages action.
+func (c *UCompShareClient) NewDescribeUserCommunityImagesRequest() *DescribeUserCommunityImagesRequest {
+	req := &DescribeUserCommunityImagesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUserCommunityImages
+
+获取社区镜像列表(登录状态)
+*/
+func (c *UCompShareClient) DescribeUserCommunityImages(req *DescribeUserCommunityImagesRequest) (*DescribeUserCommunityImagesResponse, error) {
+	var err error
+	var res DescribeUserCommunityImagesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUserCommunityImages", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DetachCompshareDiskRequest is request schema for DetachCompshareDisk action
+type DetachCompshareDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 需要卸载的UDisk实例ID
+	UDiskId *string `required:"true"`
+
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"false"`
+}
+
+// DetachCompshareDiskResponse is response schema for DetachCompshareDisk action
+type DetachCompshareDiskResponse struct {
+	response.CommonBase
+}
+
+// NewDetachCompshareDiskRequest will create request of DetachCompshareDisk action.
+func (c *UCompShareClient) NewDetachCompshareDiskRequest() *DetachCompshareDiskRequest {
+	req := &DetachCompshareDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachCompshareDisk
+
+卸载某个已经挂载在指定UHost实例上的UDisk
+*/
+func (c *UCompShareClient) DetachCompshareDisk(req *DetachCompshareDiskRequest) (*DetachCompshareDiskResponse, error) {
+	var err error
+	var res DetachCompshareDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachCompshareDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DownloadTeamOrderRequest is request schema for DownloadTeamOrder action
+type DownloadTeamOrderRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"false"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"false"`
+
+	// 订单状态
+	OrderStates []string `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+
+	// 团队虚拟账号ID
+	VirtualCompanyId *int `required:"false"`
+}
+
+// DownloadTeamOrderResponse is response schema for DownloadTeamOrder action
+type DownloadTeamOrderResponse struct {
+	response.CommonBase
+
+	// 总金额
+	Amount string
+
+	// 代金券
+	AmountCoupon string
+
+	// 赠金
+	AmountFree string
+
+	// 现金
+	AmountReal string
+
+	// 计费方式
+	ChargeType string
+
+	// 创建时间
+	CreateTime int
+
+	// 结束时间
+	EndTime int
+
+	// 订单号
+	OrderNo string
+
+	// 订单类型
+	OrderType string
+
+	// 成员备注
+	RemarkName string
+
+	// 资源ID
+	ResourceId string
+
+	// 产品类型
+	ResourceType string
+
+	// 开始时间
+	StartTime int
+
+	// 成员ID
+	VirtualCompanyId int
+}
+
+// NewDownloadTeamOrderRequest will create request of DownloadTeamOrder action.
+func (c *UCompShareClient) NewDownloadTeamOrderRequest() *DownloadTeamOrderRequest {
+	req := &DownloadTeamOrderRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DownloadTeamOrder
+
+下载团队订单
+*/
+func (c *UCompShareClient) DownloadTeamOrder(req *DownloadTeamOrderRequest) (*DownloadTeamOrderResponse, error) {
+	var err error
+	var res DownloadTeamOrderResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DownloadTeamOrder", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCompShareAttachedDiskUpgradePriceRequest is request schema for GetCompShareAttachedDiskUpgradePrice action
+type GetCompShareAttachedDiskUpgradePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 磁盘Id
+	DiskId *string `required:"true"`
+
+	// 目标大小。单位：GB
+	DiskSpace *string `required:"true"`
+
+	// 实例Id
+	UHostId *string `required:"true"`
+}
+
+// GetCompShareAttachedDiskUpgradePriceResponse is response schema for GetCompShareAttachedDiskUpgradePrice action
+type GetCompShareAttachedDiskUpgradePriceResponse struct {
+	response.CommonBase
+
+	// 列表价
+	ListPrice float64
+
+	// 列表价详情
+	ListPriceDetail DiskUpgradePriceDetail
+
+	// 原价
+	OriginalPrice float64
+
+	// 原价详情
+	OriginalPriceDetail DiskUpgradePriceDetail
+
+	// 升级价格
+	Price float64
+
+	// 价格详情
+	PriceDetail DiskUpgradePriceDetail
+}
+
+// NewGetCompShareAttachedDiskUpgradePriceRequest will create request of GetCompShareAttachedDiskUpgradePrice action.
+func (c *UCompShareClient) NewGetCompShareAttachedDiskUpgradePriceRequest() *GetCompShareAttachedDiskUpgradePriceRequest {
+	req := &GetCompShareAttachedDiskUpgradePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareAttachedDiskUpgradePrice
+
+获取算力平台实例磁盘升级价格
+*/
+func (c *UCompShareClient) GetCompShareAttachedDiskUpgradePrice(req *GetCompShareAttachedDiskUpgradePriceRequest) (*GetCompShareAttachedDiskUpgradePriceResponse, error) {
+	var err error
+	var res GetCompShareAttachedDiskUpgradePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareAttachedDiskUpgradePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCompShareImageCreateProgressRequest is request schema for GetCompShareImageCreateProgress action
+type GetCompShareImageCreateProgressRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+}
+
+// GetCompShareImageCreateProgressResponse is response schema for GetCompShareImageCreateProgress action
+type GetCompShareImageCreateProgressResponse struct {
+	response.CommonBase
+
+	// 处理进度 0 ~ 100
+	Process float64
+
+	// 预估剩余总时间 单位秒
+	RemainingDuration string
+
+	// 预估处理总时间 单位秒
+	TotalDuration string
+}
+
+// NewGetCompShareImageCreateProgressRequest will create request of GetCompShareImageCreateProgress action.
+func (c *UCompShareClient) NewGetCompShareImageCreateProgressRequest() *GetCompShareImageCreateProgressRequest {
+	req := &GetCompShareImageCreateProgressRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareImageCreateProgress
+
+获取算力平台镜像制作进度
+*/
+func (c *UCompShareClient) GetCompShareImageCreateProgress(req *GetCompShareImageCreateProgressRequest) (*GetCompShareImageCreateProgressResponse, error) {
+	var err error
+	var res GetCompShareImageCreateProgressResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareImageCreateProgress", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCompShareInstanceMonitorRequest is request schema for GetCompShareInstanceMonitor action
+type GetCompShareInstanceMonitorRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 【数组】UHost主机的资源ID，例如UHostIds.0代表希望获取信息 的主机1，UHostIds.1代表主机2。 如果不传入，则返回当前Region 所有符合条件的UHost实例。
+	UHostIds []string `required:"false"`
+}
+
+// GetCompShareInstanceMonitorResponse is response schema for GetCompShareInstanceMonitor action
+type GetCompShareInstanceMonitorResponse struct {
+	response.CommonBase
+}
+
+// NewGetCompShareInstanceMonitorRequest will create request of GetCompShareInstanceMonitor action.
+func (c *UCompShareClient) NewGetCompShareInstanceMonitorRequest() *GetCompShareInstanceMonitorRequest {
+	req := &GetCompShareInstanceMonitorRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareInstanceMonitor
+
+获取实例监控指标
+*/
+func (c *UCompShareClient) GetCompShareInstanceMonitor(req *GetCompShareInstanceMonitorRequest) (*GetCompShareInstanceMonitorResponse, error) {
+	var err error
+	var res GetCompShareInstanceMonitorResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareInstanceMonitor", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+GetCompShareInstancePriceParamDisks is request schema for complex param
+*/
+type GetCompShareInstancePriceParamDisks struct {
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot *bool `required:"false"`
+
+	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Size *int `required:"false"`
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Type *string `required:"false"`
+}
+
+// GetCompShareInstancePriceRequest is request schema for GetCompShareInstancePrice action
+type GetCompShareInstancePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时付费；\\ Day，按天付费\\ 如果不传某个枚举值，默认返回月付价格
+	ChargeType *string `required:"false"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"false"`
+
+	// CPU核数。可选范围参照控制台。默认值: 16
+	Cpu *string `required:"false"`
+
+	//
+	Disks []GetCompShareInstancePriceParamDisks `required:"false"`
+
+	// GPU卡核心数。默认值：1
+	Gpu *string `required:"false"`
+
+	// GpuType。枚举值：["4090"]
+	GpuType *string `required:"false"`
+
+	// 内存大小。单位：MB。取值为1024的倍数（可选范围参照好控制台）。默认值：32768
+	Memory *string `required:"false"`
+}
+
+// GetCompShareInstancePriceResponse is response schema for GetCompShareInstancePrice action
+type GetCompShareInstancePriceResponse struct {
+	response.CommonBase
+
+	// 列表价详情列表
+	ListPriceDetail []CompSharePriceDetail
+
+	// 原价详情列表
+	OriginalPriceDetail []CompSharePriceDetail
+
+	// 价格详情列表
+	PriceDetail []CompSharePriceDetail
+}
+
+// NewGetCompShareInstancePriceRequest will create request of GetCompShareInstancePrice action.
+func (c *UCompShareClient) NewGetCompShareInstancePriceRequest() *GetCompShareInstancePriceRequest {
+	req := &GetCompShareInstancePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareInstancePrice
+
+获取算力平台实例价格
+*/
+func (c *UCompShareClient) GetCompShareInstancePrice(req *GetCompShareInstancePriceRequest) (*GetCompShareInstancePriceResponse, error) {
+	var err error
+	var res GetCompShareInstancePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareInstancePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCompShareInstanceUpgradePriceRequest is request schema for GetCompShareInstanceUpgradePrice action
+type GetCompShareInstanceUpgradePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"false"`
+
+	// 目标Cpu核心数。默认原配置
+	Cpu *int `required:"false"`
+
+	// 目标Gpu卡数。默认原配置
+	Gpu *int `required:"false"`
+
+	// 目标内存大小。单位：MB。默认原配置
+	Memory *int `required:"false"`
+
+	// UHost Id
+	UHostId *string `required:"true"`
+}
+
+// GetCompShareInstanceUpgradePriceResponse is response schema for GetCompShareInstanceUpgradePrice action
+type GetCompShareInstanceUpgradePriceResponse struct {
+	response.CommonBase
+
+	// 列表价
+	ListPrice float64
+
+	// 原价
+	OriginalPrice float64
+
+	// 价格
+	Price float64
+}
+
+// NewGetCompShareInstanceUpgradePriceRequest will create request of GetCompShareInstanceUpgradePrice action.
+func (c *UCompShareClient) NewGetCompShareInstanceUpgradePriceRequest() *GetCompShareInstanceUpgradePriceRequest {
+	req := &GetCompShareInstanceUpgradePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareInstanceUpgradePrice
+
+获取算力平台实例升降级价格
+*/
+func (c *UCompShareClient) GetCompShareInstanceUpgradePrice(req *GetCompShareInstanceUpgradePriceRequest) (*GetCompShareInstanceUpgradePriceResponse, error) {
+	var err error
+	var res GetCompShareInstanceUpgradePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareInstanceUpgradePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+GetCompShareInstanceUserPriceParamDisks is request schema for complex param
+*/
+type GetCompShareInstanceUserPriceParamDisks struct {
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot *bool `required:"false"`
+
+	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Size *int `required:"false"`
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Type *string `required:"false"`
+}
+
+// GetCompShareInstanceUserPriceRequest is request schema for GetCompShareInstanceUserPrice action
+type GetCompShareInstanceUserPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时付费；\\ Day，按天付费\\ 如果不传某个枚举值，默认返回月付价格
+	ChargeType *string `required:"false"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"false"`
+
+	// CPU核数。可选范围参照控制台。默认值: 16
+	Cpu *string `required:"false"`
+
+	//
+	Disks []GetCompShareInstanceUserPriceParamDisks `required:"false"`
+
+	// GPU卡核心数。默认值：1
+	Gpu *string `required:"false"`
+
+	// GpuType。枚举值：["4090"]
+	GpuType *string `required:"false"`
+
+	// 内存大小。单位：MB。取值为1024的倍数（可选范围参照好控制台）。默认值：32768
+	Memory *string `required:"false"`
+}
+
+// GetCompShareInstanceUserPriceResponse is response schema for GetCompShareInstanceUserPrice action
+type GetCompShareInstanceUserPriceResponse struct {
+	response.CommonBase
+
+	// 列表价详情列表
+	ListPriceDetail []CompSharePriceDetail
+
+	// 原价详情列表
+	OriginalPriceDetail []CompSharePriceDetail
+
+	// 价格详情列表
+	PriceDetail []CompSharePriceDetail
+}
+
+// NewGetCompShareInstanceUserPriceRequest will create request of GetCompShareInstanceUserPrice action.
+func (c *UCompShareClient) NewGetCompShareInstanceUserPriceRequest() *GetCompShareInstanceUserPriceRequest {
+	req := &GetCompShareInstanceUserPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareInstanceUserPrice
+
+获取算力平台实例用户价格
+*/
+func (c *UCompShareClient) GetCompShareInstanceUserPrice(req *GetCompShareInstanceUserPriceRequest) (*GetCompShareInstanceUserPriceResponse, error) {
+	var err error
+	var res GetCompShareInstanceUserPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareInstanceUserPrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCompShareRefundPriceRequest is request schema for GetCompShareRefundPrice action
+type GetCompShareRefundPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 【数组】UHost实例ID。参见 [DescribeUHostInstance](describe_uhost_instance.html)
+	UHostIds []string `required:"true"`
+}
+
+// GetCompShareRefundPriceResponse is response schema for GetCompShareRefundPrice action
+type GetCompShareRefundPriceResponse struct {
+	response.CommonBase
+
+	// 主机删除扣除费用详情
+	RefundPriceSet []UHostRefundPriceSet
+}
+
+// NewGetCompShareRefundPriceRequest will create request of GetCompShareRefundPrice action.
+func (c *UCompShareClient) NewGetCompShareRefundPriceRequest() *GetCompShareRefundPriceRequest {
+	req := &GetCompShareRefundPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareRefundPrice
+
+获取算力平台实例删除扣除费用。包括主机、磁盘等资源的费用
+*/
+func (c *UCompShareClient) GetCompShareRefundPrice(req *GetCompShareRefundPriceRequest) (*GetCompShareRefundPriceResponse, error) {
+	var err error
+	var res GetCompShareRefundPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareRefundPrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetCompShareTeamInfoRequest is request schema for GetCompShareTeamInfo action
+type GetCompShareTeamInfoRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 团队Id
+	TeamId *int `required:"true"`
+}
+
+// GetCompShareTeamInfoResponse is response schema for GetCompShareTeamInfo action
+type GetCompShareTeamInfoResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 团队信息
+	Team CompShareTeamDetailInfo
+
+	// 团队关系数组
+	TeamRelation []TeamRelation
+}
+
+// NewGetCompShareTeamInfoRequest will create request of GetCompShareTeamInfo action.
+func (c *UCompShareClient) NewGetCompShareTeamInfoRequest() *GetCompShareTeamInfoRequest {
+	req := &GetCompShareTeamInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetCompShareTeamInfo
+
+获取团队详细信息
+*/
+func (c *UCompShareClient) GetCompShareTeamInfo(req *GetCompShareTeamInfoRequest) (*GetCompShareTeamInfoResponse, error) {
+	var err error
+	var res GetCompShareTeamInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetCompShareTeamInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetOpenClawModelListRequest is request schema for GetOpenClawModelList action
+type GetOpenClawModelListRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+}
+
+// GetOpenClawModelListResponse is response schema for GetOpenClawModelList action
+type GetOpenClawModelListResponse struct {
+	response.CommonBase
+
+	// 模型列表
+	Models OpenClawModelInfo
+}
+
+// NewGetOpenClawModelListRequest will create request of GetOpenClawModelList action.
+func (c *UCompShareClient) NewGetOpenClawModelListRequest() *GetOpenClawModelListRequest {
+	req := &GetOpenClawModelListRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetOpenClawModelList
+
+获取OpenClaw模型列表
+*/
+func (c *UCompShareClient) GetOpenClawModelList(req *GetOpenClawModelListRequest) (*GetOpenClawModelListResponse, error) {
+	var err error
+	var res GetOpenClawModelListResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetOpenClawModelList", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetSoftwareURLRequest is request schema for GetSoftwareURL action
+type GetSoftwareURLRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 应用名称
+	Software *string `required:"true"`
+
+	// 实例Id
+	UHostId *string `required:"true"`
+}
+
+// GetSoftwareURLResponse is response schema for GetSoftwareURL action
+type GetSoftwareURLResponse struct {
+	response.CommonBase
+
+	// 应用的URL
+	URL string
+}
+
+// NewGetSoftwareURLRequest will create request of GetSoftwareURL action.
+func (c *UCompShareClient) NewGetSoftwareURLRequest() *GetSoftwareURLRequest {
+	req := &GetSoftwareURLRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetSoftwareURL
+
+获取算力平台实例应用URL
+*/
+func (c *UCompShareClient) GetSoftwareURL(req *GetSoftwareURLRequest) (*GetSoftwareURLResponse, error) {
+	var err error
+	var res GetSoftwareURLResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetSoftwareURL", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetULHostInstancePriceRequest is request schema for GetULHostInstancePrice action
 type GetULHostInstancePriceRequest struct {
 	request.CommonBase
@@ -416,7 +3327,7 @@ type GetULHostInstancePriceResponse struct {
 	// 错误信息
 	Message string
 
-	//
+	// 价格
 	PriceSet []ULHostPriceSet
 }
 
@@ -472,7 +3383,7 @@ type GetULHostRenewPriceRequest struct {
 type GetULHostRenewPriceResponse struct {
 	response.CommonBase
 
-	//
+	// 价格
 	PriceSet []ULHostPriceSet
 }
 
@@ -500,6 +3411,429 @@ func (c *UCompShareClient) GetULHostRenewPrice(req *GetULHostRenewPriceRequest) 
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetULHostRenewPrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListCompShareTeamRequest is request schema for ListCompShareTeam action
+type ListCompShareTeamRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+}
+
+// ListCompShareTeamResponse is response schema for ListCompShareTeam action
+type ListCompShareTeamResponse struct {
+	response.CommonBase
+
+	// 团队信息数组
+	Teams []CompShareTeamInfo
+}
+
+// NewListCompShareTeamRequest will create request of ListCompShareTeam action.
+func (c *UCompShareClient) NewListCompShareTeamRequest() *ListCompShareTeamRequest {
+	req := &ListCompShareTeamRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListCompShareTeam
+
+获取团队列表
+*/
+func (c *UCompShareClient) ListCompShareTeam(req *ListCompShareTeamRequest) (*ListCompShareTeamResponse, error) {
+	var err error
+	var res ListCompShareTeamResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListCompShareTeam", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListCompShareTeamInviteRequest is request schema for ListCompShareTeamInvite action
+type ListCompShareTeamInviteRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"false"`
+}
+
+// ListCompShareTeamInviteResponse is response schema for ListCompShareTeamInvite action
+type ListCompShareTeamInviteResponse struct {
+	response.CommonBase
+
+	// 成员信息列表
+	Invites []CompShareTeamInviteInfo
+
+	// 错误信息
+	Message string
+}
+
+// NewListCompShareTeamInviteRequest will create request of ListCompShareTeamInvite action.
+func (c *UCompShareClient) NewListCompShareTeamInviteRequest() *ListCompShareTeamInviteRequest {
+	req := &ListCompShareTeamInviteRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListCompShareTeamInvite
+
+获取邀请成员的列表
+*/
+func (c *UCompShareClient) ListCompShareTeamInvite(req *ListCompShareTeamInviteRequest) (*ListCompShareTeamInviteResponse, error) {
+	var err error
+	var res ListCompShareTeamInviteResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListCompShareTeamInvite", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListCompShareTeamJoinedRequest is request schema for ListCompShareTeamJoined action
+type ListCompShareTeamJoinedRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 邀请状态：Pending（待同意）、Joined（已加入）、Rejected（拒绝）、Canceled（取消）
+	Status *string `required:"false"`
+}
+
+// ListCompShareTeamJoinedResponse is response schema for ListCompShareTeamJoined action
+type ListCompShareTeamJoinedResponse struct {
+	response.CommonBase
+
+	// 加入团队信息数组
+	JoinedTeams []CompShareTeamJoinedInfo
+}
+
+// NewListCompShareTeamJoinedRequest will create request of ListCompShareTeamJoined action.
+func (c *UCompShareClient) NewListCompShareTeamJoinedRequest() *ListCompShareTeamJoinedRequest {
+	req := &ListCompShareTeamJoinedRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListCompShareTeamJoined
+
+获取加入团队信息列表
+*/
+func (c *UCompShareClient) ListCompShareTeamJoined(req *ListCompShareTeamJoinedRequest) (*ListCompShareTeamJoinedResponse, error) {
+	var err error
+	var res ListCompShareTeamJoinedResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListCompShareTeamJoined", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListCompShareTeamOperateLogRequest is request schema for ListCompShareTeamOperateLog action
+type ListCompShareTeamOperateLogRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 返回数据长度，默认为25，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// 操作类型，详细参考返回值
+	OperateType []string `required:"false"`
+
+	// 排序方式：true表示按创建时间升序，false表示降序（默认）
+	OrderByASC *bool `required:"false"`
+
+	// 操作状态，详细参考返回值
+	Status []string `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+}
+
+// ListCompShareTeamOperateLogResponse is response schema for ListCompShareTeamOperateLog action
+type ListCompShareTeamOperateLogResponse struct {
+	response.CommonBase
+
+	// 团队操作日志列表
+	Logs []CompShareTeamOperateLogInfo
+
+	// 操作类型枚举列表
+	OperateTypeList []string
+
+	// 状态枚举列表
+	StatusList []string
+
+	// 总条目数
+	Total int
+}
+
+// NewListCompShareTeamOperateLogRequest will create request of ListCompShareTeamOperateLog action.
+func (c *UCompShareClient) NewListCompShareTeamOperateLogRequest() *ListCompShareTeamOperateLogRequest {
+	req := &ListCompShareTeamOperateLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListCompShareTeamOperateLog
+
+获取团队操作日志列表
+*/
+func (c *UCompShareClient) ListCompShareTeamOperateLog(req *ListCompShareTeamOperateLogRequest) (*ListCompShareTeamOperateLogResponse, error) {
+	var err error
+	var res ListCompShareTeamOperateLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListCompShareTeamOperateLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListMemberProductTypeRequest is request schema for ListMemberProductType action
+type ListMemberProductTypeRequest struct {
+	request.CommonBase
+
+	// 起始时间，需使用时间戳
+	BeginTime *int `required:"true"`
+
+	// 结束时间，需使用时间戳，结束时间需大于起始时间
+	EndTime *int `required:"true"`
+
+	// 订单状态
+	OrderStates []string `required:"false"`
+
+	// 团队ID
+	TeamId *int `required:"true"`
+
+	// 成员虚拟ID
+	VirtualCompanyId *int `required:"false"`
+}
+
+// ListMemberProductTypeResponse is response schema for ListMemberProductType action
+type ListMemberProductTypeResponse struct {
+	response.CommonBase
+
+	// 产品类型列表
+	ProductTypeList []string
+}
+
+// NewListMemberProductTypeRequest will create request of ListMemberProductType action.
+func (c *UCompShareClient) NewListMemberProductTypeRequest() *ListMemberProductTypeRequest {
+	req := &ListMemberProductTypeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListMemberProductType
+
+获取成员订单产品类型
+*/
+func (c *UCompShareClient) ListMemberProductType(req *ListMemberProductTypeRequest) (*ListMemberProductTypeResponse, error) {
+	var err error
+	var res ListMemberProductTypeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListMemberProductType", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyCompShareImageShareAccountRequest is request schema for ModifyCompShareImageShareAccount action
+type ModifyCompShareImageShareAccountRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 添加被共享的账号Id，每次最多10个。与RemoveAccounts.N不能同时为空
+	AddAccounts []int `required:"false"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+
+	// 移除被共享的账号Id，每次最多10个。与AddAccounts.N不能同时为空
+	RemoveAccounts []int `required:"false"`
+}
+
+// ModifyCompShareImageShareAccountResponse is response schema for ModifyCompShareImageShareAccount action
+type ModifyCompShareImageShareAccountResponse struct {
+	response.CommonBase
+
+	// 无效的账号Id列表
+	InvalidAccounts []int
+}
+
+// NewModifyCompShareImageShareAccountRequest will create request of ModifyCompShareImageShareAccount action.
+func (c *UCompShareClient) NewModifyCompShareImageShareAccountRequest() *ModifyCompShareImageShareAccountRequest {
+	req := &ModifyCompShareImageShareAccountRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyCompShareImageShareAccount
+
+管理镜像的共享账号列表
+*/
+func (c *UCompShareClient) ModifyCompShareImageShareAccount(req *ModifyCompShareImageShareAccountRequest) (*ModifyCompShareImageShareAccountResponse, error) {
+	var err error
+	var res ModifyCompShareImageShareAccountResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyCompShareImageShareAccount", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ModifyCompShareInstanceNameRequest is request schema for ModifyCompShareInstanceName action
+type ModifyCompShareInstanceNameRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 名称
+	Name *string `required:"true"`
+
+	// 实例Id
+	UHostId *string `required:"true"`
+}
+
+// ModifyCompShareInstanceNameResponse is response schema for ModifyCompShareInstanceName action
+type ModifyCompShareInstanceNameResponse struct {
+	response.CommonBase
+
+	// 实例Id
+	UHostId string
+}
+
+// NewModifyCompShareInstanceNameRequest will create request of ModifyCompShareInstanceName action.
+func (c *UCompShareClient) NewModifyCompShareInstanceNameRequest() *ModifyCompShareInstanceNameRequest {
+	req := &ModifyCompShareInstanceNameRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyCompShareInstanceName
+
+修改算力平台实例名称
+*/
+func (c *UCompShareClient) ModifyCompShareInstanceName(req *ModifyCompShareInstanceNameRequest) (*ModifyCompShareInstanceNameResponse, error) {
+	var err error
+	var res ModifyCompShareInstanceNameResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyCompShareInstanceName", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -615,6 +3949,101 @@ func (c *UCompShareClient) PoweroffULHostInstance(req *PoweroffULHostInstanceReq
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("PoweroffULHostInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+PublishCompShareImageParamSoftwares is request schema for complex param
+*/
+type PublishCompShareImageParamSoftwares struct {
+
+	// 镜像应用列表
+	Applications []string `required:"false"`
+
+	// 镜像CUDA版本
+	CUDAVersion *string `required:"false"`
+
+	// 镜像框架名称
+	Framework *string `required:"false"`
+
+	// 镜像框架版本
+	FrameworkVersion *string `required:"false"`
+}
+
+// PublishCompShareImageRequest is request schema for PublishCompShareImage action
+type PublishCompShareImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 是否支持自启动 false: 不支持 true:支持
+	AutoStart *string `required:"false"`
+
+	// 发布社区镜像名称
+	CommunityImageName *string `required:"false"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+
+	// 封面。base64编码的图片
+	Cover *string `required:"false"`
+
+	// 镜像描述信息
+	Description *string `required:"false"`
+
+	// 镜像价格。单位：元，支持00.00
+	Price *float64 `required:"true"`
+
+	// 镜像详情描述【富文本】
+	Readme *string `required:"false"`
+
+	//
+	Softwares *PublishCompShareImageParamSoftwares `required:"false"`
+
+	// 【array of string】镜像标签。最多支持3个标签
+	Tags []string `required:"false"`
+}
+
+// PublishCompShareImageResponse is response schema for PublishCompShareImage action
+type PublishCompShareImageResponse struct {
+	response.CommonBase
+}
+
+// NewPublishCompShareImageRequest will create request of PublishCompShareImage action.
+func (c *UCompShareClient) NewPublishCompShareImageRequest() *PublishCompShareImageRequest {
+	req := &PublishCompShareImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: PublishCompShareImage
+
+将自制镜像发布到镜像社区
+*/
+func (c *UCompShareClient) PublishCompShareImage(req *PublishCompShareImageRequest) (*PublishCompShareImageResponse, error) {
+	var err error
+	var res PublishCompShareImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("PublishCompShareImage", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -806,7 +4235,7 @@ type ReinstallULHostInstanceRequest struct {
 	// 镜像Id。暂不支持使用自定义镜像重装
 	ImageId *string `required:"true"`
 
-	// 登陆密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64UGFzc3dvcmQx
+	// 登陆密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64 UGFzc3dvcmQx
 	Password *string `required:"true"`
 
 	// 实例Id
@@ -963,6 +4392,201 @@ func (c *UCompShareClient) ResetULHostInstancePassword(req *ResetULHostInstanceP
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ResetULHostInstancePassword", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ResizeCompShareDiskRequest is request schema for ResizeCompShareDisk action
+type ResizeCompShareDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 大小
+	Size *int `required:"true"`
+
+	// 磁盘id
+	UDiskId *string `required:"true"`
+}
+
+// ResizeCompShareDiskResponse is response schema for ResizeCompShareDisk action
+type ResizeCompShareDiskResponse struct {
+	response.CommonBase
+
+	// 磁盘id
+	UDiskId string
+}
+
+// NewResizeCompShareDiskRequest will create request of ResizeCompShareDisk action.
+func (c *UCompShareClient) NewResizeCompShareDiskRequest() *ResizeCompShareDiskRequest {
+	req := &ResizeCompShareDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ResizeCompShareDisk
+
+修改磁盘
+*/
+func (c *UCompShareClient) ResizeCompShareDisk(req *ResizeCompShareDiskRequest) (*ResizeCompShareDiskResponse, error) {
+	var err error
+	var res ResizeCompShareDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ResizeCompShareDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ResizeCompShareInstanceRequest is request schema for ResizeCompShareInstance action
+type ResizeCompShareInstanceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 目标Cpu核心数
+	Cpu *int `required:"false"`
+
+	// 磁盘Id
+	DiskId *string `required:"false"`
+
+	// 目标磁盘大小
+	DiskSpace *string `required:"false"`
+
+	// 目标Gpu卡数
+	Gpu *int `required:"false"`
+
+	// 目标内存大小
+	Memory *int `required:"false"`
+
+	// 实例Id
+	UHostId *string `required:"true"`
+}
+
+// ResizeCompShareInstanceResponse is response schema for ResizeCompShareInstance action
+type ResizeCompShareInstanceResponse struct {
+	response.CommonBase
+
+	// 实例Id
+	UHostId string
+}
+
+// NewResizeCompShareInstanceRequest will create request of ResizeCompShareInstance action.
+func (c *UCompShareClient) NewResizeCompShareInstanceRequest() *ResizeCompShareInstanceRequest {
+	req := &ResizeCompShareInstanceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ResizeCompShareInstance
+
+修改算力平台实例配置
+*/
+func (c *UCompShareClient) ResizeCompShareInstance(req *ResizeCompShareInstanceRequest) (*ResizeCompShareInstanceResponse, error) {
+	var err error
+	var res ResizeCompShareInstanceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ResizeCompShareInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// SetCompShareTeamRelationRequest is request schema for SetCompShareTeamRelation action
+type SetCompShareTeamRelationRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 备注名称
+	RemarkName *string `required:"false"`
+
+	// 发送邀请操作：Agree（同意）、Reject（拒绝）、Cancel（取消）、UpdateRemarkName（更改备注）
+	Status *string `required:"true"`
+
+	// 团队Id
+	TeamId *string `required:"true"`
+
+	// 取消邀请的成员公司Id
+	UserCompanyId *string `required:"false"`
+}
+
+// SetCompShareTeamRelationResponse is response schema for SetCompShareTeamRelation action
+type SetCompShareTeamRelationResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewSetCompShareTeamRelationRequest will create request of SetCompShareTeamRelation action.
+func (c *UCompShareClient) NewSetCompShareTeamRelationRequest() *SetCompShareTeamRelationRequest {
+	req := &SetCompShareTeamRelationRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: SetCompShareTeamRelation
+
+设置邀请信息
+*/
+func (c *UCompShareClient) SetCompShareTeamRelation(req *SetCompShareTeamRelationRequest) (*SetCompShareTeamRelationResponse, error) {
+	var err error
+	var res SetCompShareTeamRelationResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SetCompShareTeamRelation", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1188,6 +4812,59 @@ func (c *UCompShareClient) StopULHostInstance(req *StopULHostInstanceRequest) (*
 	return &res, nil
 }
 
+// TerminateCompShareCustomImageRequest is request schema for TerminateCompShareCustomImage action
+type TerminateCompShareCustomImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+}
+
+// TerminateCompShareCustomImageResponse is response schema for TerminateCompShareCustomImage action
+type TerminateCompShareCustomImageResponse struct {
+	response.CommonBase
+}
+
+// NewTerminateCompShareCustomImageRequest will create request of TerminateCompShareCustomImage action.
+func (c *UCompShareClient) NewTerminateCompShareCustomImageRequest() *TerminateCompShareCustomImageRequest {
+	req := &TerminateCompShareCustomImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: TerminateCompShareCustomImage
+
+删除算力平台自制镜像
+*/
+func (c *UCompShareClient) TerminateCompShareCustomImage(req *TerminateCompShareCustomImageRequest) (*TerminateCompShareCustomImageResponse, error) {
+	var err error
+	var res TerminateCompShareCustomImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("TerminateCompShareCustomImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // TerminateCompShareInstanceRequest is request schema for TerminateCompShareInstance action
 type TerminateCompShareInstanceRequest struct {
 	request.CommonBase
@@ -1296,6 +4973,195 @@ func (c *UCompShareClient) TerminateULHostInstance(req *TerminateULHostInstanceR
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("TerminateULHostInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCompShareImageRequest is request schema for UpdateCompShareImage action
+type UpdateCompShareImageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 镜像Id
+	CompShareImageId *string `required:"true"`
+
+	// 镜像封面图。Base64编码后的字符串
+	Cover *string `required:"false"`
+
+	// 镜像描述信息
+	Description *string `required:"false"`
+
+	// 镜像框架信息
+	Framework *string `required:"false"`
+
+	// 镜像详情描述信息，支持富文本
+	Readme *string `required:"false"`
+
+	// 镜像软件信息
+	Softwares *string `required:"false"`
+
+	// 镜像标签列表，最多支持3个标签
+	Tags []string `required:"false"`
+
+	// 可见性 0：私密；1：公开
+	Visibility *int `required:"false"`
+}
+
+// UpdateCompShareImageResponse is response schema for UpdateCompShareImage action
+type UpdateCompShareImageResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateCompShareImageRequest will create request of UpdateCompShareImage action.
+func (c *UCompShareClient) NewUpdateCompShareImageRequest() *UpdateCompShareImageRequest {
+	req := &UpdateCompShareImageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCompShareImage
+
+编辑算力平台自制镜像信息
+*/
+func (c *UCompShareClient) UpdateCompShareImage(req *UpdateCompShareImageRequest) (*UpdateCompShareImageResponse, error) {
+	var err error
+	var res UpdateCompShareImageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCompShareImage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCompShareStopSchedulerRequest is request schema for UpdateCompShareStopScheduler action
+type UpdateCompShareStopSchedulerRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 定时关机时间
+	StopTime *int `required:"true"`
+
+	// UHost实例ID。【UHostId和HostId必须选填一个，本字段即将废弃，建议使用HostId】
+	UHostId *string `required:"true"`
+}
+
+// UpdateCompShareStopSchedulerResponse is response schema for UpdateCompShareStopScheduler action
+type UpdateCompShareStopSchedulerResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateCompShareStopSchedulerRequest will create request of UpdateCompShareStopScheduler action.
+func (c *UCompShareClient) NewUpdateCompShareStopSchedulerRequest() *UpdateCompShareStopSchedulerRequest {
+	req := &UpdateCompShareStopSchedulerRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCompShareStopScheduler
+
+更新实例定时关机时间，若不存在则新建此定时任务
+*/
+func (c *UCompShareClient) UpdateCompShareStopScheduler(req *UpdateCompShareStopSchedulerRequest) (*UpdateCompShareStopSchedulerResponse, error) {
+	var err error
+	var res UpdateCompShareStopSchedulerResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCompShareStopScheduler", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCompShareTeamRequest is request schema for UpdateCompShareTeam action
+type UpdateCompShareTeamRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 团队简介
+	Description *string `required:"false"`
+
+	// 团队名称
+	Name *string `required:"false"`
+}
+
+// UpdateCompShareTeamResponse is response schema for UpdateCompShareTeam action
+type UpdateCompShareTeamResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewUpdateCompShareTeamRequest will create request of UpdateCompShareTeam action.
+func (c *UCompShareClient) NewUpdateCompShareTeamRequest() *UpdateCompShareTeamRequest {
+	req := &UpdateCompShareTeamRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCompShareTeam
+
+更改团队信息
+*/
+func (c *UCompShareClient) UpdateCompShareTeam(req *UpdateCompShareTeamRequest) (*UpdateCompShareTeamResponse, error) {
+	var err error
+	var res UpdateCompShareTeamResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCompShareTeam", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
