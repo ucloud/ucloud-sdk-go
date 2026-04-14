@@ -87,6 +87,57 @@ type ULHostImageSet struct {
 }
 
 /*
+ULHostDiskSet - 轻量应用主机的磁盘信息
+*/
+type ULHostDiskSet struct {
+
+	// 磁盘Id
+	DiskId string
+
+	// 磁盘类型。如："CLOUD_RSSD"、"CLOUD_SSD"
+	DiskType string
+
+	// 磁盘盘符。系统盘："vda"
+	Drive string
+
+	// 是否为系统盘。是："True"；否："False"
+	IsBoot string
+
+	// 磁盘大小。单位：GB
+	Size int
+
+	// 磁盘类型。系统盘："Boot"；数据盘："Data"
+	Type string
+}
+
+/*
+ExclusiveUTPInfo - 流量包详情
+*/
+type ExclusiveUTPInfo struct {
+
+	// 当前周期剩余流量
+	AvailableSize int
+
+	// 创建时间
+	CreateTime int
+
+	// 当前周期超出限额的流量
+	ExcessSize int
+
+	// 上次重置时间
+	LastResetTime int
+
+	// 下次重置时间
+	NextResetTime int
+
+	// 当前周期总流量
+	TotalSize int
+
+	// 当前周期已使用流量
+	UsedSize int
+}
+
+/*
 UHostIPSet -
 */
 type UHostIPSet struct {
@@ -123,57 +174,6 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
-}
-
-/*
-ExclusiveUTPInfo - 流量包详情
-*/
-type ExclusiveUTPInfo struct {
-
-	// 当前周期剩余流量
-	AvailableSize int
-
-	// 创建时间
-	CreateTime int
-
-	// 当前周期超出限额的流量
-	ExcessSize int
-
-	// 上次重置时间
-	LastResetTime int
-
-	// 下次重置时间
-	NextResetTime int
-
-	// 当前周期总流量
-	TotalSize int
-
-	// 当前周期已使用流量
-	UsedSize int
-}
-
-/*
-ULHostDiskSet - 轻量应用主机的磁盘信息
-*/
-type ULHostDiskSet struct {
-
-	// 磁盘Id
-	DiskId string
-
-	// 磁盘类型。如："CLOUD_RSSD"、"CLOUD_SSD"
-	DiskType string
-
-	// 磁盘盘符。系统盘："vda"
-	Drive string
-
-	// 是否为系统盘。是："True"；否："False"
-	IsBoot string
-
-	// 磁盘大小。单位：GB
-	Size int
-
-	// 磁盘类型。系统盘："Boot"；数据盘："Data"
-	Type string
 }
 
 /*
