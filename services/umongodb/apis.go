@@ -74,6 +74,74 @@ func (c *UMongoDBClient) BackupUMongoDBCluster(req *BackupUMongoDBClusterRequest
 	return &res, nil
 }
 
+// BackupUMongoDBLogRequest is request schema for BackupUMongoDBLog action
+type BackupUMongoDBLogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 日志开始时间,最早为7x24小时前
+	Begin *int `required:"true"`
+
+	// 集群id
+	ClusterId *string `required:"true"`
+
+	// 日志结束时间,时间区间不能超过24小时
+	End *int `required:"true"`
+
+	// 日志类型:SlowLog,ErrorLog
+	LogType *string `required:"true"`
+
+	// 日志包名称
+	Name *string `required:"true"`
+
+	// 节点id, 慢日志 mongos 节点不可选
+	NodeId *string `required:"true"`
+}
+
+// BackupUMongoDBLogResponse is response schema for BackupUMongoDBLog action
+type BackupUMongoDBLogResponse struct {
+	response.CommonBase
+}
+
+// NewBackupUMongoDBLogRequest will create request of BackupUMongoDBLog action.
+func (c *UMongoDBClient) NewBackupUMongoDBLogRequest() *BackupUMongoDBLogRequest {
+	req := &BackupUMongoDBLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BackupUMongoDBLog
+
+日志打包
+*/
+func (c *UMongoDBClient) BackupUMongoDBLog(req *BackupUMongoDBLogRequest) (*BackupUMongoDBLogResponse, error) {
+	var err error
+	var res BackupUMongoDBLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BackupUMongoDBLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUMongoDBConfigTemplateRequest is request schema for CreateUMongoDBConfigTemplate action
 type CreateUMongoDBConfigTemplateRequest struct {
 	request.CommonBase
@@ -142,6 +210,30 @@ func (c *UMongoDBClient) CreateUMongoDBConfigTemplate(req *CreateUMongoDBConfigT
 	return &res, nil
 }
 
+/*
+CreateUMongoDBReplSetParamLabels is request schema for complex param
+*/
+type CreateUMongoDBReplSetParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签值
+	Value *string `required:"false"`
+}
+
+/*
+CreateUMongoDBReplSetParamSecGroupId is request schema for complex param
+*/
+type CreateUMongoDBReplSetParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
+}
+
 // CreateUMongoDBReplSetRequest is request schema for CreateUMongoDBReplSet action
 type CreateUMongoDBReplSetRequest struct {
 	request.CommonBase
@@ -161,26 +253,35 @@ type CreateUMongoDBReplSetRequest struct {
 	// 付费方式：Year， Month， Dynamic，Trial，默认: Month
 	ChargeType *string `required:"false"`
 
-	// 副本集的Mongodb的版本，例如MongoDB_3_6, MongoDB_4_2
+	// 跨可用区列表
+	CrossZones []string `required:"false"`
+
+	// 副本集的Mongodb的版本，例如MongoDB 3.6, MongoDB 4.2
 	DBVersion *string `required:"true"`
 
-	// 磁盘空间(GB)
+	// 磁盘空间 (GB)：取值范围 20~32000，仅支持 10 的整数倍
 	DiskSpace *int `required:"true"`
+
+	//
+	Labels []CreateUMongoDBReplSetParamLabels `required:"false"`
 
 	// mongo服务端口
 	ListenPort *int `required:"false"`
 
-	// 机型配置
+	// 机型配置,如 o.mongo2m.medium
 	MachineTypeId *string `required:"true"`
 
 	// 副本集实例名称，至少6位
 	Name *string `required:"true"`
 
-	// 副本集节点数量
+	// 副本集节点数量：仅支持 3、5、7 奇数节点
 	NodeCount *int `required:"true"`
 
 	// 购买时长，默认值1
 	Quantity *int `required:"false"`
+
+	//
+	SecGroupId []CreateUMongoDBReplSetParamSecGroupId `required:"false"`
 
 	// 子网ID
 	SubnetId *string `required:"false"`
@@ -228,6 +329,30 @@ func (c *UMongoDBClient) CreateUMongoDBReplSet(req *CreateUMongoDBReplSetRequest
 	return &res, nil
 }
 
+/*
+CreateUMongoDBShardedClusterParamLabels is request schema for complex param
+*/
+type CreateUMongoDBShardedClusterParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签值
+	Value *string `required:"false"`
+}
+
+/*
+CreateUMongoDBShardedClusterParamSecGroupId is request schema for complex param
+*/
+type CreateUMongoDBShardedClusterParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
+}
+
 // CreateUMongoDBShardedClusterRequest is request schema for CreateUMongoDBShardedCluster action
 type CreateUMongoDBShardedClusterRequest struct {
 	request.CommonBase
@@ -247,16 +372,19 @@ type CreateUMongoDBShardedClusterRequest struct {
 	// 付费方式：Year， Month， Dynamic，Trial，默认: Month
 	ChargeType *string `required:"false"`
 
-	// 副本集的Mongodb的版本，例如MongoDB-3.6, MongoDB-4.2
+	// 副本集的Mongodb的版本，例如MongoDB 3.6, MongoDB 4.2
 	DBVersion *string `required:"true"`
 
-	// 数据节点磁盘空间(GB)
+	// 数据节点磁盘空间(GB):取值范围 20~32000，仅支持 10 的整数倍
 	DiskSpace *int `required:"true"`
+
+	//
+	Labels []CreateUMongoDBShardedClusterParamLabels `required:"false"`
 
 	// mongo服务端口
 	ListenPort *int `required:"false"`
 
-	// 数据节点机型配置
+	// 数据节点机型配置,如 o.mongo2m.medium
 	MachineTypeId *string `required:"true"`
 
 	// Mongos节点机型配置
@@ -273,6 +401,9 @@ type CreateUMongoDBShardedClusterRequest struct {
 
 	// 购买时长，默认值1
 	Quantity *int `required:"false"`
+
+	//
+	SecGroupId []CreateUMongoDBShardedClusterParamSecGroupId `required:"false"`
 
 	// 分片数量
 	ShardCount *int `required:"true"`
@@ -337,10 +468,13 @@ type DescribeUMongoDBBackupURLRequest struct {
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
+	// Zone *string `required:"false"`
 
 	// 文件备份ID
 	BackupId *string `required:"false"`
+
+	// 类型:如 oplog
+	Category *string `required:"false"`
 
 	// 集群ID
 	ClusterId *string `required:"true"`
@@ -568,6 +702,80 @@ func (c *UMongoDBClient) GetUMongoDBCfgTempItem(req *GetUMongoDBCfgTempItemReque
 	return &res, nil
 }
 
+// GetUMongoDBLogRequest is request schema for GetUMongoDBLog action
+type GetUMongoDBLogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 查询的日志开始的时间戳（Unix Timestamp）。对于实时查询，这个参数应该是上次轮询请求时的时间戳，后台会返回从该值到当前时间的日志内容
+	Begin *int `required:"true"`
+
+	// 集群id
+	ClusterId *string `required:"true"`
+
+	// 查询日志的结束时间戳(Unix Timestamp），对于实时查询不传该值，与BeginTime的差值不超过24小时：(EndTime-BeginTime) < 24*60*60
+	End *int `required:"false"`
+
+	// 日志类型:SlowLog,ErrorLog
+	LogType *string `required:"true"`
+
+	// 节点id, 慢日志 mongos 节点不可选
+	NodeId *string `required:"true"`
+}
+
+// GetUMongoDBLogResponse is response schema for GetUMongoDBLog action
+type GetUMongoDBLogResponse struct {
+	response.CommonBase
+
+	// 是否已被截断
+	IsTruncate bool
+
+	// 查询到的日志内容，一段纯文本
+	Log string
+
+	// 支持的最大行数
+	MaxLine int
+}
+
+// NewGetUMongoDBLogRequest will create request of GetUMongoDBLog action.
+func (c *UMongoDBClient) NewGetUMongoDBLogRequest() *GetUMongoDBLogRequest {
+	req := &GetUMongoDBLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUMongoDBLog
+
+查询某一段时间内集群节点的错误日志或慢查询日志
+*/
+func (c *UMongoDBClient) GetUMongoDBLog(req *GetUMongoDBLogRequest) (*GetUMongoDBLogResponse, error) {
+	var err error
+	var res GetUMongoDBLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUMongoDBLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUMongoDBRecoverTimeRangeRequest is request schema for GetUMongoDBRecoverTimeRange action
 type GetUMongoDBRecoverTimeRangeRequest struct {
 	request.CommonBase
@@ -733,6 +941,183 @@ func (c *UMongoDBClient) ListUMongoDBConfigTemplate(req *ListUMongoDBConfigTempl
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUMongoDBConfigTemplate", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUMongoDBInstancesRequest is request schema for ListUMongoDBInstances action
+type ListUMongoDBInstancesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 集群ID
+	ClusterId *string `required:"false"`
+}
+
+// ListUMongoDBInstancesResponse is response schema for ListUMongoDBInstances action
+type ListUMongoDBInstancesResponse struct {
+	response.CommonBase
+
+	// 副本集ID
+	DataSet []MongodbInstance
+
+	// 错误信息
+	Message string
+}
+
+// NewListUMongoDBInstancesRequest will create request of ListUMongoDBInstances action.
+func (c *UMongoDBClient) NewListUMongoDBInstancesRequest() *ListUMongoDBInstancesRequest {
+	req := &ListUMongoDBInstancesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUMongoDBInstances
+
+获取副本集/分片集群列表
+*/
+func (c *UMongoDBClient) ListUMongoDBInstances(req *ListUMongoDBInstancesRequest) (*ListUMongoDBInstancesResponse, error) {
+	var err error
+	var res ListUMongoDBInstancesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUMongoDBInstances", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUMongoDBLogPackageRequest is request schema for ListUMongoDBLogPackage action
+type ListUMongoDBLogPackageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 集群id
+	ClusterId *string `required:"true"`
+
+	// 节点id
+	NodeId *string `required:"false"`
+}
+
+// ListUMongoDBLogPackageResponse is response schema for ListUMongoDBLogPackage action
+type ListUMongoDBLogPackageResponse struct {
+	response.CommonBase
+
+	// 列表
+	DataSet []PackageInfo
+}
+
+// NewListUMongoDBLogPackageRequest will create request of ListUMongoDBLogPackage action.
+func (c *UMongoDBClient) NewListUMongoDBLogPackageRequest() *ListUMongoDBLogPackageRequest {
+	req := &ListUMongoDBLogPackageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUMongoDBLogPackage
+
+日志打包列表
+*/
+func (c *UMongoDBClient) ListUMongoDBLogPackage(req *ListUMongoDBLogPackageRequest) (*ListUMongoDBLogPackageResponse, error) {
+	var err error
+	var res ListUMongoDBLogPackageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUMongoDBLogPackage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUMongoDBMachineSpecRequest is request schema for ListUMongoDBMachineSpec action
+type ListUMongoDBMachineSpecRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 机型,如O
+	ClassType *string `required:"false"`
+
+	// 磁盘类型，如CLOUD_RSSD
+	DiskType *string `required:"false"`
+}
+
+// ListUMongoDBMachineSpecResponse is response schema for ListUMongoDBMachineSpec action
+type ListUMongoDBMachineSpecResponse struct {
+	response.CommonBase
+
+	// 规格列表
+	DataSet []MongodbMachineSpec
+}
+
+// NewListUMongoDBMachineSpecRequest will create request of ListUMongoDBMachineSpec action.
+func (c *UMongoDBClient) NewListUMongoDBMachineSpecRequest() *ListUMongoDBMachineSpecRequest {
+	req := &ListUMongoDBMachineSpecRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUMongoDBMachineSpec
+
+获取UMongoDB支持机器类型列表
+*/
+func (c *UMongoDBClient) ListUMongoDBMachineSpec(req *ListUMongoDBMachineSpecRequest) (*ListUMongoDBMachineSpecResponse, error) {
+	var err error
+	var res ListUMongoDBMachineSpecResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUMongoDBMachineSpec", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1027,6 +1412,65 @@ func (c *UMongoDBClient) ModifyUMongoDBBackupParam(req *ModifyUMongoDBBackupPara
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ModifyUMongoDBBackupParam", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ResizeUMongoDBInstanceRequest is request schema for ResizeUMongoDBInstance action
+type ResizeUMongoDBInstanceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 集群资源ID
+	ClusterId *string `required:"true"`
+
+	// 集群数据节点磁盘配置
+	DiskSpace *int `required:"false"`
+
+	// 集群数据节点机型配置
+	MachineTypeId *string `required:"false"`
+
+	// 集群Mongos节点机型配置
+	MongosMachineTypeId *string `required:"false"`
+}
+
+// ResizeUMongoDBInstanceResponse is response schema for ResizeUMongoDBInstance action
+type ResizeUMongoDBInstanceResponse struct {
+	response.CommonBase
+}
+
+// NewResizeUMongoDBInstanceRequest will create request of ResizeUMongoDBInstance action.
+func (c *UMongoDBClient) NewResizeUMongoDBInstanceRequest() *ResizeUMongoDBInstanceRequest {
+	req := &ResizeUMongoDBInstanceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ResizeUMongoDBInstance
+
+集群配置升降级
+*/
+func (c *UMongoDBClient) ResizeUMongoDBInstance(req *ResizeUMongoDBInstanceRequest) (*ResizeUMongoDBInstanceResponse, error) {
+	var err error
+	var res ResizeUMongoDBInstanceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ResizeUMongoDBInstance", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

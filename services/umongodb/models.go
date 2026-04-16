@@ -3,6 +3,30 @@
 package umongodb
 
 /*
+MongodbMachineType -
+*/
+type MongodbMachineType struct {
+
+	// cpu核数
+	Cpu int
+
+	// 配置简称  2C4G
+	Description string
+
+	// 配置分组，2m , 4m
+	Group string
+
+	// 机器类型ID o.mongo2m.medium，o.mongo2m.xlarge
+	MachineTypeId string
+
+	// 内存用量(GB)
+	Memory int
+
+	// 机器类型，N/O
+	UHhostMachineType string
+}
+
+/*
 DiskInfo - 磁盘信息
 */
 type DiskInfo struct {
@@ -12,48 +36,6 @@ type DiskInfo struct {
 
 	// 磁盘容量单位GB
 	DiskSize int
-}
-
-/*
-ReplicaInfo - 副本集群信息
-*/
-type ReplicaInfo struct {
-
-	// 集群ID
-	ClusterId string
-
-	// 副本集创建时间
-	CreateTime int
-
-	// 副本集删除时间
-	DeleteTime int
-
-	// 隔离组ID
-	IsolationGroupId string
-
-	// 机器类型
-	MachineType string
-
-	// 机器类型Id
-	MachineTypeId string
-
-	// 副本集修改时间
-	ModifyTime int
-
-	// 副本集下的节点数量
-	NodeCount int
-
-	// 副本集下的节点信息
-	NodeInfos []NodeInfo
-
-	// 副本集ID
-	ReplicaId string
-
-	// 副本类型,ConfigRepl或者DataRepl
-	ReplicaType string
-
-	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
-	State string
 }
 
 /*
@@ -105,6 +87,48 @@ type NodeInfo struct {
 }
 
 /*
+ReplicaInfo - 副本集群信息
+*/
+type ReplicaInfo struct {
+
+	// 集群ID
+	ClusterId string
+
+	// 副本集创建时间
+	CreateTime int
+
+	// 副本集删除时间
+	DeleteTime int
+
+	// 隔离组ID
+	IsolationGroupId string
+
+	// 机器类型
+	MachineType string
+
+	// 机器类型Id
+	MachineTypeId string
+
+	// 副本集修改时间
+	ModifyTime int
+
+	// 副本集下的节点数量
+	NodeCount int
+
+	// 副本集下的节点信息
+	NodeInfos []NodeInfo
+
+	// 副本集ID
+	ReplicaId string
+
+	// 副本类型,ConfigRepl或者DataRepl
+	ReplicaType string
+
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
+	State string
+}
+
+/*
 ClusterInfo - 集群信息
 */
 type ClusterInfo struct {
@@ -114,6 +138,9 @@ type ClusterInfo struct {
 
 	// 集群类型，ReplicaSet :副本集，SharedCluster：分片集
 	ClusterType string
+
+	// 配置节点计算规格
+	ConfigComputeType MongodbMachineType
 
 	// Config配置集群节点配置，分片集有效
 	ConfigMachineType string
@@ -130,8 +157,14 @@ type ClusterInfo struct {
 	// DB实例创建时间
 	CreateTime int
 
+	// 跨用区列表
+	CrossZones []string
+
 	// 副本集的Mongodb的版本
 	DBVersion string
+
+	// 数据节点计算规格
+	DataComputeType MongodbMachineType
 
 	// 数据副本信息
 	DataReplicaInfos []ReplicaInfo
@@ -142,11 +175,17 @@ type ClusterInfo struct {
 	// 磁盘空间(GB), 默认根据配置机型
 	DiskSpace int
 
+	// 是否开启了SSL；1->未开启 2->开启
+	EnableSSL int
+
 	// 实例名称
 	InstanceName string
 
 	// 计算规格
 	MachineTypeId string
+
+	// 路由节点计算规格
+	MongosComputeType MongodbMachineType
 
 	// Mongos节点数量，分片集有效
 	MongosCount int
@@ -154,13 +193,16 @@ type ClusterInfo struct {
 	// Mongos节点信息
 	MongosInfo []NodeInfo
 
+	// SSL到期时间
+	SSLExpirationTime int
+
 	// 分片数量，分片集有效
 	ShardCount int
 
 	// 每分片节点数量，分片集有效
 	ShardNodeCount int
 
-	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败。
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败,Upgrading: 升降级中，UpgradeFailed: 升降级失败,Switching:主备切换中，UpdatingSSL：修改SSL中，UpdateSSLFail：修改SSL失败
 	State string
 
 	// 子网ID
@@ -298,6 +340,9 @@ type BackupInfo struct {
 	// 实例ID
 	ClusterId string
 
+	// 磁盘大小
+	DiskSize int
+
 	// 备份结束时间
 	EndTime int
 
@@ -312,6 +357,9 @@ type BackupInfo struct {
 
 	// 虚拟节点id
 	VirtualClusterId string
+
+	// 可用区
+	Zone string
 }
 
 /*
@@ -348,27 +396,117 @@ type ConfigTemplate struct {
 }
 
 /*
-MongodbMachineType -
+MongodbInstance - 集群信息
 */
-type MongodbMachineType struct {
+type MongodbInstance struct {
 
-	// cpu核数
-	Cpu int
+	// 副本集/分片集群ID
+	ClusterId string
 
-	// 配置简称  2C4G
-	Description string
+	// 集群类型，ReplicaSet :副本集，SharedCluster：分片集
+	ClusterType string
 
-	// 配置分组，2m , 4m
-	Group string
+	// 副本集/分片集群的访问地址
+	ConnectURL string
 
-	// 机器类型ID o.mongo2m.medium，o.mongo2m.xlarge
-	MachineTypeId string
+	// 副本集/分片集群的创建时间
+	CreateTime int
 
-	// 内存用量(GB)
-	Memory int
+	// 跨可用区列表
+	CrossZones []string
 
-	// 机器类型，N/O
-	UHhostMachineType string
+	// 副本集/分片集群的Mongodb的版本，包括MongoDB-3.6, MongoDB-4.2
+	DBVersion string
+
+	// 数据节点计算规格
+	DataComputeType MongodbMachineType
+
+	// 数据节点磁盘空间(GB)
+	DiskSpace int
+
+	// DB实例过期时间，采用UTC计时时间戳
+	ExpiredTime int
+
+	// 副本集/分片集IPv6访问地址
+	IPv6ConnectURL string
+
+	// 副本集/分片集群实例名称
+	Name string
+
+	// 副本集/分片集群状态标记 Initing：初始化中，InitFailed：安装失败，Starting：启动中，StartFailed：启动失败，Running：运行，Stopping：关闭中，Stopped：已关闭, StopFailed：关闭失败，Deleting：删除中，Deleted：已删除，DeleteFailed：删除失败，Restarting：重启中，RestartFailed：重启失败,Upgrading: 升降级中，UpgradeFailed: 升降级失败,Switching:主备切换中
+	State string
+
+	// 子网ID
+	SubnetId string
+
+	// 业务组
+	Tag string
+
+	// VPC的ID
+	VPCId string
+
+	// 可用区
+	Zone string
+}
+
+/*
+PackageInfo - 打包模型
+*/
+type PackageInfo struct {
+
+	// 开始时间
+	Begin int
+
+	// 集群id
+	ClusterId string
+
+	// 创建时间
+	CreateTime int
+
+	// 结束时间
+	End int
+
+	// 完成时间
+	FinishTime int
+
+	// id
+	Id int
+
+	// 名称
+	Name string
+
+	// 节点id
+	NodeId string
+
+	// SlowLog,ErrorLog
+	PackageType string
+
+	// 角色
+	Role string
+
+	// 大小,单位字节
+	Size int
+
+	// Package_Running,Package_Success,Package_Failed,Package_Deleting,Package_Deleted,Package_DeleteFailed
+	State string
+}
+
+/*
+MongodbMachineSpec - 规格类型
+*/
+type MongodbMachineSpec struct {
+
+	// 规格类型;O | N
+	ClassType string
+
+	// 计算规格列表
+	ComputeType []MongodbMachineType
+
+	// 默认规格
+	DefaultMachineType MongodbMachineType
+
+	// 磁盘类型;CLOUD_RSSD | CLOUD_SSD | LOCAL_SSD
+	DiskType []string
 }
 
 /*
