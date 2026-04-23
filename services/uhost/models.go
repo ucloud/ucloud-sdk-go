@@ -42,18 +42,18 @@ type KeyPair struct {
 }
 
 /*
-Collection - CPU和内存可支持的规格
+CpuPlatformWithModels -
 */
-type Collection struct {
+type CpuPlatformWithModels struct {
 
-	// CPU规格
-	Cpu int
+	// CPU频率
+	CpuFrequency string
 
-	// 内存规格
-	Memory []int
+	// CPU Model列表
+	CpuModels []string
 
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
+	// CPU平台
+	Name string
 }
 
 /*
@@ -72,20 +72,95 @@ type FeatureModes struct {
 }
 
 /*
-DataDiskInfo - 数据盘信息
+CpuPlatforms - CPU平台信息
 */
-type DataDiskInfo struct {
+type CpuPlatforms struct {
 
-	// 数据盘可支持的服务
-	Features []string
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
 
-	// MaximalSize为磁盘最大值
-	MaximalSize int
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
 
-	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
-	MinimalSize int
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
+}
 
-	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+UHostFamily -
+*/
+type UHostFamily struct {
+
+	// CPU频率信息
+	CpuFrequency string
+
+	// CPU平台信息
+	CpuPlatforms []CpuPlatformWithModels
+
+	// 规格族
 	Name string
 }
 
@@ -108,38 +183,20 @@ type BootDiskInfo struct {
 }
 
 /*
-Performance - GPU的性能指标
+DataDiskInfo - 数据盘信息
 */
-type Performance struct {
+type DataDiskInfo struct {
 
-	// 交互展示参数，可忽略
-	Rate int
+	// 数据盘可支持的服务
+	Features []string
 
-	// 值，单位是TFlops
-	Value float64
-}
+	// MaximalSize为磁盘最大值
+	MaximalSize int
 
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
 
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
 	Name string
 }
 
@@ -159,39 +216,15 @@ type Disks struct {
 }
 
 /*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
-}
-
-/*
 AvailableInstanceTypes - https://ushare.ucloudadmin.com/pages/viewpage.action?pageId=104662646
 */
 type AvailableInstanceTypes struct {
 
 	// 支持的CPU平台，并且按照Intel、AMD和Ampere分类返回
 	CpuPlatforms CpuPlatforms
+
+	// 机型描述
+	Description string
 
 	// 磁盘信息。磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。其中云盘主要包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。MinimalSize为磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。MaximalSize为磁盘最大值。InstantResize表示系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。Features为磁盘可支持的服务：数据方舟|DATAARK，快照服务|SNAPSHOT，加密盘|Encrypted。
 	Disks []Disks
@@ -202,6 +235,9 @@ type AvailableInstanceTypes struct {
 	// GPU的显存指标，value为值，单位是GB。
 	GraphicsMemory GraphicsMemory
 
+	// 实例类型，枚举值["uhost", "spot"]
+	InstanceType string
+
 	// 区分是否是GPU机型：GPU机型|GPU，非GPU机型|Normal。
 	MachineClass string
 
@@ -211,11 +247,17 @@ type AvailableInstanceTypes struct {
 	// 机型名称：快杰O型|O 、快杰共享型|OM 、快杰内存型|OMEM 、 快杰PRO型|OPRO、通用N型|N、高主频C型|C和GPU G型|G等
 	Name string
 
+	// 父机型
+	ParentType string
+
 	// GPU的性能指标，value为值，单位是TFlops。
 	Performance Performance
 
 	// 机型状态：可售|Normal 、 公测|Beta、售罄|Soldout、隐藏|Hidden
 	Status string
+
+	// 规格族信息
+	UHostFamilies []UHostFamily
 
 	// 可用区信息
 	Zone string
@@ -342,6 +384,75 @@ type IsolationGroup struct {
 }
 
 /*
+UDSetUDHostAttribute - 私有专区对应的宿主机属性
+*/
+type UDSetUDHostAttribute struct {
+
+	// 是否绑定私有专区宿主机
+	HostBinding bool
+
+	// 私有专区宿主机
+	UDHostId string
+
+	// 私有专区
+	UDSetId string
+}
+
+/*
+UHostDiskSet - DescribeUHostInstance
+*/
+type UHostDiskSet struct {
+
+	// 备份方案。若开通了数据方舟，则为DATAARK
+	BackupType string
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -381,75 +492,6 @@ type UHostIPSet struct {
 }
 
 /*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
-UHostDiskSet - DescribeUHostInstance
-*/
-type UHostDiskSet struct {
-
-	// 备份方案。若开通了数据方舟，则为DATAARK
-	BackupType string
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
-UDSetUDHostAttribute - 私有专区对应的宿主机属性
-*/
-type UDSetUDHostAttribute struct {
-
-	// 是否绑定私有专区宿主机
-	HostBinding bool
-
-	// 私有专区宿主机
-	UDHostId string
-
-	// 私有专区
-	UDSetId string
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
 UHostInstanceSet - DescribeUHostInstance
 */
 type UHostInstanceSet struct {
@@ -481,9 +523,6 @@ type UHostInstanceSet struct {
 	// 创建时间，格式为Unix时间戳
 	CreateTime int
 
-	//
-	DeleteTime int `deprecated:"true"`
-
 	// 磁盘信息见 UHostDiskSet
 	DiskSet []UHostDiskSet
 
@@ -496,7 +535,7 @@ type UHostInstanceSet struct {
 	// GPU个数
 	GPU int
 
-	// GPU类型;枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","A100","A800"]
+	// GPU类型;枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","A100","A800","H20"]
 	GpuType string
 
 	// true: 开启 hidden kvm 功能；false: 不是
@@ -516,9 +555,6 @@ type UHostInstanceSet struct {
 
 	// 详细信息见 UHostIPSet
 	IPSet []UHostIPSet
-
-	//
-	IPs []string `deprecated:"true"`
 
 	// true: 有ipv6特性；false，没有ipv6特性
 	IPv6Feature bool
@@ -595,6 +631,9 @@ type UHostInstanceSet struct {
 	// 私有专区宿主机属性
 	UDHostAttribute UDSetUDHostAttribute
 
+	// 规格族。 由机型代号和 CPU 平台组成，用于指定云主机的硬件类型与处理器平台。 当 MachineType 为 "O"（快杰型）时，支持以下取值： - o1i：快杰型 O1 代，Intel 平台 - o1a：快杰型 O1 代，AMD 平台 - o1r：快杰型 O1 代，ARM 平台 - o2i：快杰型 O2 代，Intel 平台 默认值：o1i 或 o1a或o1r（系统将根据资源情况自动选择） 当 MachineType 为 "OM"（快杰共享型）时，支持以下取值： - om1i：快杰内存增强型 OM1 代，Intel 平台 - om2i：快杰内存增强型 OM2 代，Intel 平台
+	UHostFamily string
+
 	// UHost实例ID
 	UHostId string
 
@@ -603,6 +642,21 @@ type UHostInstanceSet struct {
 
 	// 可用区。参见 [可用区列表](../summary/regionlist.html)
 	Zone string
+}
+
+/*
+UHostSnapshotSet -
+*/
+type UHostSnapshotSet struct {
+
+	//
+	SnapshotName string
+
+	//
+	SnapshotState string
+
+	//
+	SnapshotTime string
 }
 
 /*
@@ -680,12 +734,12 @@ type UHostPriceSet struct {
 	ChargeType string
 
 	// 产品列表价。
-	ListPrice float64
+	ListPrice float64 `deprecated:"true"`
 
 	// 列表价详细信息（只有询价接口返回）。
-	ListPriceDetail PriceDetail
+	ListPriceDetail PriceDetail `deprecated:"true"`
 
-	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）。
+	// 限时优惠的折前原价。
 	OriginalPrice float64
 
 	// 原价详细信息（只有询价接口返回）。
@@ -707,7 +761,7 @@ type UHostRefundPriceSet struct {
 	Code int
 
 	// 当 Code 非 0 时提供详细的描述信息
-	Message string
+	Message string `deprecated:"true"`
 
 	// 实例的删除退费金额
 	RefundPrice float64

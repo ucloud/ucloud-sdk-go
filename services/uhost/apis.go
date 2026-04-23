@@ -9,6 +9,63 @@ import (
 
 // UHost API Schema
 
+// AddUHostToIsolationGroupRequest is request schema for AddUHostToIsolationGroup action
+type AddUHostToIsolationGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数]
+	// ProjectId *string `required:"false"`
+
+	// [公共参数]
+	// Region *string `required:"true"`
+
+	// [公共参数]
+	// Zone *string `required:"true"`
+
+	//
+	GroupId *string `required:"true"`
+
+	//
+	UHostId *string `required:"true"`
+}
+
+// AddUHostToIsolationGroupResponse is response schema for AddUHostToIsolationGroup action
+type AddUHostToIsolationGroupResponse struct {
+	response.CommonBase
+
+	//
+	UHostId string
+}
+
+// NewAddUHostToIsolationGroupRequest will create request of AddUHostToIsolationGroup action.
+func (c *UHostClient) NewAddUHostToIsolationGroupRequest() *AddUHostToIsolationGroupRequest {
+	req := &AddUHostToIsolationGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddUHostToIsolationGroup
+*/
+func (c *UHostClient) AddUHostToIsolationGroup(req *AddUHostToIsolationGroupRequest) (*AddUHostToIsolationGroupResponse, error) {
+	var err error
+	var res AddUHostToIsolationGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddUHostToIsolationGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CopyCustomImageRequest is request schema for CopyCustomImage action
 type CopyCustomImageRequest struct {
 	request.CommonBase
@@ -217,63 +274,24 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+CreateUHostInstanceParamVolumes is request schema for complex param
 */
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-}
-
-/*
-CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceEIP struct {
-
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth *int `required:"false"`
-
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId *string `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	GlobalSSH *CreateUHostInstanceParamNetworkInterfaceEIPGlobalSSH `required:"false" deprecated:"true"`
-
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName *string `required:"false"`
-
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode *string `required:"false"`
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId *string `required:"false"`
+type CreateUHostInstanceParamVolumes struct {
 }
 
 /*
 UHostDiskCustomBackup is request schema for complex param
 */
 type UHostDiskCustomBackup struct {
-}
 
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30。
+	Day *string `required:"false"`
 
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96。
+	Hour *string `required:"false"`
 
-	// 安全组优先级。取值范围[1, 5]
-	Priority *int `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48。
+	Journal *string `required:"false"`
 }
 
 /*
@@ -281,11 +299,17 @@ UHostDisk is request schema for complex param
 */
 type UHostDisk struct {
 
+	// 指定快照备份策略。当Disks.N.BackupType为"SNAPSHOT"时此参数生效。枚举值："Base"：标准版，"Ultimate"：旗舰版，"Custom"：自定义备份链；默认值："Base"。
+	BackupMode *string `required:"false"`
+
 	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > SNAPSHOT，快照 \\当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]],默认值:NONE
 	BackupType *string `required:"false"`
 
 	// 云盘代金券id。不适用于系统盘/本地盘。请通过DescribeCoupon接口查询，或登录用户中心查看
 	CouponId *string `required:"false"`
+
+	//
+	CustomBackup *UHostDiskCustomBackup `required:"false"`
 
 	// 【功能仅部分可用区开放，详询技术支持】磁盘是否加密。加密：true, 不加密: false加密必须传入对应的的KmsKeyId,默认值false
 	Encrypted *bool `required:"false"`
@@ -307,15 +331,78 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamSecGroupId is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
+type CreateUHostInstanceParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceEIP struct {
+
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth *int `required:"false"`
+
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId *string `required:"false"`
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName *string `required:"false"`
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode *string `required:"false"`
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+
+	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
+	Address *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
-	CouponId *string `required:"false" deprecated:"true"`
+	Adress *string `required:"false" deprecated:"true"`
 
 	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
+	ShareBandwidthId *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+
+	//
+	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamLabels is request schema for complex param
+*/
+type CreateUHostInstanceParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签的值
+	Value *string `required:"false"`
 }
 
 /*
@@ -359,6 +446,9 @@ type CreateUHostInstanceRequest struct {
 	CouponId *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
+	DiskPassword *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
 	DiskSpace *int `required:"false" deprecated:"true"`
 
 	//
@@ -370,11 +460,14 @@ type CreateUHostInstanceRequest struct {
 	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
 	GPU *int `required:"false"`
 
-	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","A100","A800"]。MachineType为G时必填
+	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","4090_48G","A100","A800","H20"]。MachineType为G时必填
 	GpuType *string `required:"false"`
 
 	// 【私有专区属性】专区云主机开启宿住关联属性
 	HostBinding *bool `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	HostIp *string `required:"false" deprecated:"true"`
 
 	// 【该字段已废弃，请谨慎使用】
 	HostType *string `required:"false" deprecated:"true"`
@@ -400,7 +493,10 @@ type CreateUHostInstanceRequest struct {
 	// KeypairId 密钥对ID，LoginMode为KeyPair时此项必须。
 	KeyPairId *string `required:"false"`
 
-	// 主机登陆模式。密码（默认选项）: Password，密钥：KeyPair。
+	//
+	Labels []CreateUHostInstanceParamLabels `required:"false"`
+
+	// 主机登陆模式。密码（默认选项）: Password，密钥：KeyPair，Password，自制镜像密码：ImagePasswd。
 	LoginMode *string `required:"true"`
 
 	// 云主机机型（V2.0），在本字段和字段UHostType中，仅需要其中1个字段即可。枚举值["N", "C", "G", "O", "OM", "OMEM"， "OPRO", "OPROG"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
@@ -443,7 +539,7 @@ type CreateUHostInstanceRequest struct {
 	Quantity *int `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
-	ResourceType *int `required:"false" deprecated:"true"`
+	ResourceType *string `required:"false" deprecated:"true"`
 
 	// 【该字段已废弃，请谨慎使用】
 	RestrictMode *string `required:"false" deprecated:"true"`
@@ -456,6 +552,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 主机安全模式。Firewall：防火墙；SecGroup：安全组；默认值：Firewall。
 	SecurityMode *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	SetId *int `required:"false" deprecated:"true"`
 
 	// 【该字段已废弃，请谨慎使用】
 	StorageType *string `required:"false" deprecated:"true"`
@@ -475,6 +574,9 @@ type CreateUHostInstanceRequest struct {
 	// 【私有专区属性】专区id
 	UDSetId *string `required:"false"`
 
+	// 规格族。 由机型代号和 CPU 平台组成，用于指定云主机的硬件类型与处理器平台。 当 MachineType 为 "O"（快杰型）时，支持以下取值：- o1i：快杰型 O1 代，Intel 平台 - o1a：快杰型 O1 代，AMD 平台- o1r：快杰型 O1 代，ARM 平台 - o2i：快杰型 O2 代，Intel 平台 默认值：o1i 或 o1a（系统将根据资源情况自动选择） 当 MachineType 为 "OM"（快杰共享型）时，支持以下取值： - om1i：快杰内存增强型 OM1 代，Intel 平台 - om2i：快杰内存增强型 OM2 代，Intel 平台注意：规格族必须与 MachineType 匹配，否则请求将被拒绝。
+	UHostFamily *string `required:"false"`
+
 	// 【建议后续不再使用】云主机机型（V1.0），在本字段和字段MachineType中，仅需要其中1个字段即可。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
 
@@ -486,9 +588,6 @@ type CreateUHostInstanceRequest struct {
 
 	// VPC ID。默认为当前地域的默认VPC。
 	VPCId *string `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Volumes []CreateUHostInstanceParamVolumes `required:"false" deprecated:"true"`
 }
 
 // CreateUHostInstanceResponse is response schema for CreateUHostInstance action
@@ -705,7 +804,7 @@ type DescribeAvailableInstanceTypesRequest struct {
 	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
+	// Region *string `required:"false"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
@@ -801,14 +900,8 @@ type DescribeImageRequest struct {
 type DescribeImageResponse struct {
 	response.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	Action string `deprecated:"true"`
-
 	// 镜像列表详见 UHostImageSet
 	ImageSet []UHostImageSet
-
-	// 【该字段已废弃，请谨慎使用】
-	RetCode int `deprecated:"true"`
 
 	// 满足条件的镜像总数
 	TotalCount int
@@ -983,6 +1076,63 @@ func (c *UHostClient) DescribeUHostInstance(req *DescribeUHostInstanceRequest) (
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeUHostInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUHostInstanceSnapshotRequest is request schema for DescribeUHostInstanceSnapshot action
+type DescribeUHostInstanceSnapshotRequest struct {
+	request.CommonBase
+
+	// [公共参数]
+	// ProjectId *string `required:"false"`
+
+	// [公共参数]
+	// Region *string `required:"true"`
+
+	// [公共参数]
+	// Zone *string `required:"false"`
+
+	//
+	UHostId *string `required:"true"`
+}
+
+// DescribeUHostInstanceSnapshotResponse is response schema for DescribeUHostInstanceSnapshot action
+type DescribeUHostInstanceSnapshotResponse struct {
+	response.CommonBase
+
+	//
+	SnapshotSet []UHostSnapshotSet
+
+	//
+	UhostId string
+}
+
+// NewDescribeUHostInstanceSnapshotRequest will create request of DescribeUHostInstanceSnapshot action.
+func (c *UHostClient) NewDescribeUHostInstanceSnapshotRequest() *DescribeUHostInstanceSnapshotRequest {
+	req := &DescribeUHostInstanceSnapshotRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: DescribeUHostInstanceSnapshot
+*/
+func (c *UHostClient) DescribeUHostInstanceSnapshot(req *DescribeUHostInstanceSnapshotRequest) (*DescribeUHostInstanceSnapshotResponse, error) {
+	var err error
+	var res DescribeUHostInstanceSnapshotResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUHostInstanceSnapshot", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1196,6 +1346,12 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
+}
+
+/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1211,21 +1367,6 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-
-	// 【该字段已废弃，请谨慎使用】
-	IsBoot *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Size *int `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action
@@ -1244,7 +1385,7 @@ type GetUHostInstancePriceRequest struct {
 	// CPU核数。可选参数：1-64。可选范围参照控制台。默认值: 4
 	CPU *int `required:"true"`
 
-	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时付费 // >Preemptive 抢占式实例 \\ 如果不传某个枚举值，默认返回年付、月付、时付的价格组合集。
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时付费 // >Spot 抢占式实例 \\ 如果不传某个枚举值，默认返回年付、月付、时付的价格组合集。
 	ChargeType *string `required:"false"`
 
 	// 购买台数，范围[1,5]
@@ -1262,7 +1403,7 @@ type GetUHostInstancePriceRequest struct {
 	// GPU卡核心数。仅GPU机型支持此字段。
 	GPU *int `required:"false"`
 
-	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4","MI100","V100S"]
+	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","A100","A800"]
 	GpuType *string `required:"false"`
 
 	// 镜像Id，可通过 [DescribeImage](describe_image.html) 获取镜像ID， 如果镜像ID不传，系统盘大小必传
@@ -1295,11 +1436,11 @@ type GetUHostInstancePriceRequest struct {
 	// 专区云主机。如果要在专区宿主机上创建云主机，该参数可以填写为true
 	UDSetUHostInstance *bool `required:"false"`
 
+	// 规格族。 由机型代号和 CPU 平台组成，用于指定云主机的硬件类型与处理器平台。当 MachineType 为 "O"（快杰型）时，支持以下取值： - o1i：快杰型 O1 代，Intel 平台 - o1a：快杰型 O1 代，AMD 平台- o1r：快杰型 O1 代，ARM 平台 - o2i：快杰型 O2 代，Intel 平台 默认值：o1i 或 o1a或o1r（系统将根据资源情况自动选择） 当 MachineType 为 "OM"（快杰共享型）时，支持以下取值： - om1i：快杰内存增强型 OM1 代，Intel 平台 - om2i：快杰内存增强型 OM2 代，Intel 平台注意：规格族必须与 MachineType 匹配，否则请求将被拒绝。
+	UHostFamily *string `required:"false"`
+
 	// 【待废弃】云主机机型（V1版本概念）。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Volumes []GetUHostInstancePriceParamVolumes `required:"false" deprecated:"true"`
 }
 
 // GetUHostInstancePriceResponse is response schema for GetUHostInstancePrice action
@@ -2187,11 +2328,14 @@ type ReinstallUHostInstanceRequest struct {
 	// 数据盘是否需要自动分区挂载。当镜像支持Cloud-init Feature时可填写此字段。取值“On”（默认值）， “Off”
 	AutoDataDiskInit *string `required:"false"`
 
-	// 系统盘大小。 单位：GB， 范围[20,100]， 步长：10
+	// 系统盘大小。 单位：GB， 范围[20,100]。
 	BootDiskSpace *int `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
 	DNSServers []string `required:"false" deprecated:"true"`
+
+	// 操作系统主机名
+	HostName *string `required:"false"`
 
 	// 镜像Id，默认使用原镜像 参见 [DescribeImage](describe_image.html)
 	ImageId *string `required:"false"`
@@ -2199,13 +2343,13 @@ type ReinstallUHostInstanceRequest struct {
 	// KeypairId 密钥对ID，LoginMode为KeyPair时此项必须。
 	KeyPairId *string `required:"false"`
 
-	// 主机登陆模式。密码（默认选项）: Password，密钥 KeyPair。
+	// 主机登陆模式。密码（默认选项）: Password，密钥 KeyPair，自制镜像密码: ImagePasswd。
 	LoginMode *string `required:"false"`
 
 	// 如果重装UHost实例时LoginMode为Password，则必须填写，如果LoginMode为KeyPair，不需要填写 （密码格式使用BASE64编码；举例如下：# echo -n Password1 | base64UGFzc3dvcmQx。）
 	Password *string `required:"false"`
 
-	// 是否保留数据盘，保留：Yes，不报留：No， 默认：Yes；如果是从Windows重装为Linux或反之，则无法保留数据盘（该参数目前仅对本地数据盘起作用）
+	// 是否保留数据盘，保留：Yes，不保留：No， 默认：Yes；如果是从Windows重装为Linux或反之，则无法保留数据盘（该参数目前仅对本地数据盘起作用）
 	ReserveDisk *string `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
@@ -2732,24 +2876,24 @@ func (c *UHostClient) TerminateUHostInstance(req *TerminateUHostInstanceRequest)
 type UpgradeToArkUHostInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// [公共参数]
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// [公共参数]
 	// Zone *string `required:"true"`
 
-	// 代金券ID 请参考DescribeCoupon接口
+	//
 	CouponId *string `required:"false"`
 
-	// UHost主机的资源ID，例如UHostIds.0代表希望升级的主机1，UHostIds.1代表主机2。
-	UHostIds []string `required:"true"`
+	//
+	UHostIds []string `required:"false"`
 }
 
 // UpgradeToArkUHostInstanceResponse is response schema for UpgradeToArkUHostInstance action
 type UpgradeToArkUHostInstanceResponse struct {
 	response.CommonBase
 
-	// UHost主机的资源ID数组
+	//
 	UHostSet []string
 }
 
@@ -2761,14 +2905,12 @@ func (c *UHostClient) NewUpgradeToArkUHostInstanceRequest() *UpgradeToArkUHostIn
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
+	req.SetRetryable(false)
 	return req
 }
 
 /*
 API: UpgradeToArkUHostInstance
-
-普通升级为方舟机型
 */
 func (c *UHostClient) UpgradeToArkUHostInstance(req *UpgradeToArkUHostInstanceRequest) (*UpgradeToArkUHostInstanceResponse, error) {
 	var err error
