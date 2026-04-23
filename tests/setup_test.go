@@ -62,6 +62,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
 	"github.com/ucloud/ucloud-sdk-go/services/uads"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
+	"github.com/ucloud/ucloud-sdk-go/services/uclickhouse"
 	"github.com/ucloud/ucloud-sdk-go/services/ucompshare"
 	"github.com/ucloud/ucloud-sdk-go/services/udbproxy"
 	"github.com/ucloud/ucloud-sdk-go/services/uddb"
@@ -196,6 +197,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UCDN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucdn.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UClickhouse", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uclickhouse.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UCompShare", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucompshare.NewClient(&cfg, &credential), nil
