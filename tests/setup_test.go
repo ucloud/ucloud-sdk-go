@@ -71,6 +71,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/ufs"
 	"github.com/ucloud/ucloud-sdk-go/services/ugn"
+	"github.com/ucloud/ucloud-sdk-go/services/uhids"
 	"github.com/ucloud/ucloud-sdk-go/services/uhub"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/ulighthost"
@@ -235,6 +236,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UGN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ugn.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UHIDS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uhids.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uhost.NewClient(&cfg, &credential), nil
