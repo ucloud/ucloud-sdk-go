@@ -9,38 +9,208 @@ import (
 
 // TiDB API Schema
 
-// CreateTiDBServiceRequest is request schema for CreateTiDBService action
-type CreateTiDBServiceRequest struct {
+/*
+CreateTiDBClusterServiceParamOrderDetail is request schema for complex param
+*/
+type CreateTiDBClusterServiceParamOrderDetail struct {
+
+	// 计费项数量
+	Multiple *int `required:"true"`
+
+	// 计费项名称，CPU / MEM / DISK
+	ProductName *string `required:"true"`
+}
+
+/*
+CreateTiDBClusterServiceParamNodeConfig is request schema for complex param
+*/
+type CreateTiDBClusterServiceParamNodeConfig struct {
+
+	// 节点规格ID
+	ConfigId *string `required:"true"`
+
+	// 节点磁盘容量
+	DiskSize *int `required:"true"`
+
+	// 节点数量
+	NodeCount *int `required:"true"`
+
+	// 节点类型
+	ServerType *string `required:"true"`
+}
+
+/*
+CreateTiDBClusterServiceParamSecGroupInfo is request schema for complex param
+*/
+type CreateTiDBClusterServiceParamSecGroupInfo struct {
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	SecGroupId *string `required:"false"`
+}
+
+/*
+CreateTiDBClusterServiceParamLabels is request schema for complex param
+*/
+type CreateTiDBClusterServiceParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签的值
+	Value *string `required:"false"`
+}
+
+// CreateTiDBClusterServiceRequest is request schema for CreateTiDBClusterService action
+type CreateTiDBClusterServiceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目 ID
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// 容灾类型：10:同可用区，20:跨可用区，默认是同可用区
-	DTType *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
-	// ipv4
+	// 活动ID。
+	ActivityId *int `required:"false"`
+
+	// 告警策略IDs
+	AlertStrategyIds []int `required:"false"`
+
+	// 计费模式。枚举值为： Year，按年付费； Month，按月付费； Dynamic，按小时付费（需开启权限）。默认为月付
+	ChargeType *string `required:"true"`
+
+	// 代金券Id
+	Coupon *string `required:"true"`
+
+	// 容灾类型：10:同可用区，20:跨可用区，默认是同可用区
+	DTType *string `required:"true"`
+
+	// 集群版本号
+	DbVersion *string `required:"false"`
+
+	// 指定Ip地址
 	Ip *string `required:"false"`
 
-	// 服务名称， 长度不超过64
+	//
+	Labels []CreateTiDBClusterServiceParamLabels `required:"false"`
+
+	// 集群名称
 	Name *string `required:"true"`
 
-	// 服务root账号的密码， 长度不超过32
+	//
+	NodeConfig []CreateTiDBClusterServiceParamNodeConfig `required:"false"`
+
+	//
+	OrderDetail []CreateTiDBClusterServiceParamOrderDetail `required:"false"`
+
+	// 集群密码
 	Password *string `required:"true"`
 
-	// 端口
+	// 指定端口
 	Port *string `required:"false"`
 
-	// 子网 ID
+	// 活动ID。若有产品折扣，则由各产品与计费约定。
+	PromotionId *string `required:"false"`
+
+	// 公网Ulb ID
+	PubUlbId *string `required:"true"`
+
+	// 购买时长。默认: 1。按小时购买(Dynamic)时无需此参数。 月付时，此参数传0，代表了购买至月末
+	Quantity *float64 `required:"true"`
+
+	// 活动规则ID。
+	RuleId *int `required:"false"`
+
+	//
+	SecGroupInfo []CreateTiDBClusterServiceParamSecGroupInfo `required:"false"`
+
+	// 子网ID
 	SubnetId *string `required:"true"`
 
-	// 实例类型:   0: 旗舰版，30: 体验版，60: 轻量版
+	// 参数模版ID
+	TemplateId *string `required:"false"`
+
+	// VPC id
+	VPCId *string `required:"true"`
+}
+
+// CreateTiDBClusterServiceResponse is response schema for CreateTiDBClusterService action
+type CreateTiDBClusterServiceResponse struct {
+	response.CommonBase
+
+	// 详情详情
+	Data ServiceData
+}
+
+// NewCreateTiDBClusterServiceRequest will create request of CreateTiDBClusterService action.
+func (c *TiDBClient) NewCreateTiDBClusterServiceRequest() *CreateTiDBClusterServiceRequest {
+	req := &CreateTiDBClusterServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateTiDBClusterService
+
+创建预付费实例
+*/
+func (c *TiDBClient) CreateTiDBClusterService(req *CreateTiDBClusterServiceRequest) (*CreateTiDBClusterServiceResponse, error) {
+	var err error
+	var res CreateTiDBClusterServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateTiDBClusterService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateTiDBServiceRequest is request schema for CreateTiDBService action
+type CreateTiDBServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数]
+	// ProjectId *string `required:"true"`
+
+	// [公共参数]
+	// Region *string `required:"true"`
+
+	//
+	DTType *string `required:"false"`
+
+	//
+	Ip *string `required:"false"`
+
+	//
+	Name *string `required:"true"`
+
+	//
+	Password *string `required:"true"`
+
+	//
+	Port *string `required:"false"`
+
+	//
+	SubnetId *string `required:"true"`
+
+	//
 	TikvMemoryHardTh *string `required:"false"`
 
-	// VPC ID
+	//
 	VPCId *string `required:"true"`
 }
 
@@ -48,13 +218,13 @@ type CreateTiDBServiceRequest struct {
 type CreateTiDBServiceResponse struct {
 	response.CommonBase
 
-	// Service Data
+	//
 	Data ServiceID
 
-	// 返回信息
+	//
 	Message string
 
-	// 服务ID
+	//
 	ServiceId string
 }
 
@@ -72,8 +242,6 @@ func (c *TiDBClient) NewCreateTiDBServiceRequest() *CreateTiDBServiceRequest {
 
 /*
 API: CreateTiDBService
-
-创建TiDB服务
 */
 func (c *TiDBClient) CreateTiDBService(req *CreateTiDBServiceRequest) (*CreateTiDBServiceResponse, error) {
 	var err error
@@ -89,14 +257,73 @@ func (c *TiDBClient) CreateTiDBService(req *CreateTiDBServiceRequest) (*CreateTi
 	return &res, nil
 }
 
-// DeleteTiDBServiceRequest is request schema for DeleteTiDBService action
-type DeleteTiDBServiceRequest struct {
+// DeleteTiDBClusterServiceRequest is request schema for DeleteTiDBClusterService action
+type DeleteTiDBClusterServiceRequest struct {
 	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// 资源ID
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 是否清理备份数据
+	DeleteBackup *bool `required:"false"`
+
+	// 集群ID
+	Id *string `required:"true"`
+}
+
+// DeleteTiDBClusterServiceResponse is response schema for DeleteTiDBClusterService action
+type DeleteTiDBClusterServiceResponse struct {
+	response.CommonBase
+
+	// 集群ID
+	ServiceId string
+}
+
+// NewDeleteTiDBClusterServiceRequest will create request of DeleteTiDBClusterService action.
+func (c *TiDBClient) NewDeleteTiDBClusterServiceRequest() *DeleteTiDBClusterServiceRequest {
+	req := &DeleteTiDBClusterServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteTiDBClusterService
+
+删除预付费实例
+*/
+func (c *TiDBClient) DeleteTiDBClusterService(req *DeleteTiDBClusterServiceRequest) (*DeleteTiDBClusterServiceResponse, error) {
+	var err error
+	var res DeleteTiDBClusterServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteTiDBClusterService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteTiDBServiceRequest is request schema for DeleteTiDBService action
+type DeleteTiDBServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数]
+	// Region *string `required:"true"`
+
+	//
 	Id *string `required:"true"`
 }
 
@@ -104,10 +331,10 @@ type DeleteTiDBServiceRequest struct {
 type DeleteTiDBServiceResponse struct {
 	response.CommonBase
 
-	// 返回信息
+	//
 	Message string
 
-	// ServiceId
+	//
 	ServiceId string
 }
 
@@ -119,14 +346,12 @@ func (c *TiDBClient) NewDeleteTiDBServiceRequest() *DeleteTiDBServiceRequest {
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
+	req.SetRetryable(false)
 	return req
 }
 
 /*
 API: DeleteTiDBService
-
-删除一个服务
 */
 func (c *TiDBClient) DeleteTiDBService(req *DeleteTiDBServiceRequest) (*DeleteTiDBServiceResponse, error) {
 	var err error
@@ -142,20 +367,8 @@ func (c *TiDBClient) DeleteTiDBService(req *DeleteTiDBServiceRequest) (*DeleteTi
 	return &res, nil
 }
 
-/*
-SetTiDBConfigParamConfigs is request schema for complex param
-*/
-type SetTiDBConfigParamConfigs struct {
-
-	// 修改的参数名: proxysql_mysql-max_connections:类型：string, 描述:  所有用户总共的最大连接数 。proxysql_max_connections:  类型：string, 描述:  每个用户的最大连接数。tidb_gc:  类型：string, 描述:   tikv_gc_life_time。
-	Name *string `required:"true"`
-
-	// 对应修改的参数值: string
-	Value *string `required:"true"`
-}
-
-// SetTiDBConfigRequest is request schema for SetTiDBConfig action
-type SetTiDBConfigRequest struct {
+// GetTiDBClusterServiceRequest is request schema for GetTiDBClusterService action
+type GetTiDBClusterServiceRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
@@ -164,10 +377,669 @@ type SetTiDBConfigRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 实例ID
+	Id *string `required:"true"`
+}
+
+// GetTiDBClusterServiceResponse is response schema for GetTiDBClusterService action
+type GetTiDBClusterServiceResponse struct {
+	response.CommonBase
+
+	// 集群详情
+	Data UTiDBServiceData
+}
+
+// NewGetTiDBClusterServiceRequest will create request of GetTiDBClusterService action.
+func (c *TiDBClient) NewGetTiDBClusterServiceRequest() *GetTiDBClusterServiceRequest {
+	req := &GetTiDBClusterServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetTiDBClusterService
+
+获取预付费实例详情
+*/
+func (c *TiDBClient) GetTiDBClusterService(req *GetTiDBClusterServiceRequest) (*GetTiDBClusterServiceResponse, error) {
+	var err error
+	var res GetTiDBClusterServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetTiDBClusterService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetTiDBClusterUhostSpecsRequest is request schema for GetTiDBClusterUhostSpecs action
+type GetTiDBClusterUhostSpecsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 节点类型列表
+	NodeTypes []string `required:"true"`
+}
+
+// GetTiDBClusterUhostSpecsResponse is response schema for GetTiDBClusterUhostSpecs action
+type GetTiDBClusterUhostSpecsResponse struct {
+	response.CommonBase
+
+	// 详情
+	Data []UhostSpecs
+}
+
+// NewGetTiDBClusterUhostSpecsRequest will create request of GetTiDBClusterUhostSpecs action.
+func (c *TiDBClient) NewGetTiDBClusterUhostSpecsRequest() *GetTiDBClusterUhostSpecsRequest {
+	req := &GetTiDBClusterUhostSpecsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetTiDBClusterUhostSpecs
+
+拉取预付费机器规格信息
+*/
+func (c *TiDBClient) GetTiDBClusterUhostSpecs(req *GetTiDBClusterUhostSpecsRequest) (*GetTiDBClusterUhostSpecsResponse, error) {
+	var err error
+	var res GetTiDBClusterUhostSpecsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetTiDBClusterUhostSpecs", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListTiDBClusterBackupRequest is request schema for ListTiDBClusterBackup action
+type ListTiDBClusterBackupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 实例id
+	Id *string `required:"true"`
+
+	// 返回数据长度，默认为30，最大30
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+}
+
+// ListTiDBClusterBackupResponse is response schema for ListTiDBClusterBackup action
+type ListTiDBClusterBackupResponse struct {
+	response.CommonBase
+
+	// 备份信息
+	Data BackupData
+
+	// 备份总数
+	TotalCount int
+}
+
+// NewListTiDBClusterBackupRequest will create request of ListTiDBClusterBackup action.
+func (c *TiDBClient) NewListTiDBClusterBackupRequest() *ListTiDBClusterBackupRequest {
+	req := &ListTiDBClusterBackupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListTiDBClusterBackup
+
+列出按实例备份tidb的备份列表
+*/
+func (c *TiDBClient) ListTiDBClusterBackup(req *ListTiDBClusterBackupRequest) (*ListTiDBClusterBackupResponse, error) {
+	var err error
+	var res ListTiDBClusterBackupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListTiDBClusterBackup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListTiDBClusterRestoreRequest is request schema for ListTiDBClusterRestore action
+type ListTiDBClusterRestoreRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 实例的服务Id
+	Id *string `required:"true"`
+
+	// 返回数据长度，默认为30，最大30
+	Limit *int `required:"true"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"true"`
+}
+
+// ListTiDBClusterRestoreResponse is response schema for ListTiDBClusterRestore action
+type ListTiDBClusterRestoreResponse struct {
+	response.CommonBase
+
+	// 恢复信息
+	RestoreData RestoreData
+}
+
+// NewListTiDBClusterRestoreRequest will create request of ListTiDBClusterRestore action.
+func (c *TiDBClient) NewListTiDBClusterRestoreRequest() *ListTiDBClusterRestoreRequest {
+	req := &ListTiDBClusterRestoreRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListTiDBClusterRestore
+
+列出实例恢复列表
+*/
+func (c *TiDBClient) ListTiDBClusterRestore(req *ListTiDBClusterRestoreRequest) (*ListTiDBClusterRestoreResponse, error) {
+	var err error
+	var res ListTiDBClusterRestoreResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListTiDBClusterRestore", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListTiDBClusterServiceRequest is request schema for ListTiDBClusterService action
+type ListTiDBClusterServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *string `required:"false"`
+}
+
+// ListTiDBClusterServiceResponse is response schema for ListTiDBClusterService action
+type ListTiDBClusterServiceResponse struct {
+	response.CommonBase
+
+	// 集群列表
+	Data []UTiDBServiceData
+}
+
+// NewListTiDBClusterServiceRequest will create request of ListTiDBClusterService action.
+func (c *TiDBClient) NewListTiDBClusterServiceRequest() *ListTiDBClusterServiceRequest {
+	req := &ListTiDBClusterServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListTiDBClusterService
+
+拉取预付费实例列表
+*/
+func (c *TiDBClient) ListTiDBClusterService(req *ListTiDBClusterServiceRequest) (*ListTiDBClusterServiceResponse, error) {
+	var err error
+	var res ListTiDBClusterServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListTiDBClusterService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+ModifyTiDBClusterBinlogParamNodeConfig is request schema for complex param
+*/
+type ModifyTiDBClusterBinlogParamNodeConfig struct {
+
+	// 节点配置ID
+	ConfigId *string `required:"true"`
+
+	// 节点磁盘大小
+	DiskSize *int `required:"true"`
+
+	// 节点个数
+	NodeCount *int `required:"true"`
+
+	// 节点角色
+	ServerType *string `required:"true"`
+}
+
+// ModifyTiDBClusterBinlogRequest is request schema for ModifyTiDBClusterBinlog action
+type ModifyTiDBClusterBinlogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// binlog 状态
+	Enable *string `required:"true"`
+
+	// TIDB service id
+	Id *string `required:"true"`
+
+	//
+	NodeConfig *ModifyTiDBClusterBinlogParamNodeConfig `required:"false"`
+}
+
+// ModifyTiDBClusterBinlogResponse is response schema for ModifyTiDBClusterBinlog action
+type ModifyTiDBClusterBinlogResponse struct {
+	response.CommonBase
+
+	// ServiceId
+	ServiceId string
+}
+
+// NewModifyTiDBClusterBinlogRequest will create request of ModifyTiDBClusterBinlog action.
+func (c *TiDBClient) NewModifyTiDBClusterBinlogRequest() *ModifyTiDBClusterBinlogRequest {
+	req := &ModifyTiDBClusterBinlogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyTiDBClusterBinlog
+
+开启/关闭 binlog
+*/
+func (c *TiDBClient) ModifyTiDBClusterBinlog(req *ModifyTiDBClusterBinlogRequest) (*ModifyTiDBClusterBinlogResponse, error) {
+	var err error
+	var res ModifyTiDBClusterBinlogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyTiDBClusterBinlog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+ModifyTiDBClusterNodeParamNodeConfig is request schema for complex param
+*/
+type ModifyTiDBClusterNodeParamNodeConfig struct {
+
+	// 节点配置ID
+	ConfigId *string `required:"true"`
+
+	// 节点个数
+	NodeCount *int `required:"true"`
+
+	// 节点角色
+	ServerType *string `required:"true"`
+}
+
+// ModifyTiDBClusterNodeRequest is request schema for ModifyTiDBClusterNode action
+type ModifyTiDBClusterNodeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// TIDB service id
+	Id *string `required:"true"`
+
+	//
+	NodeConfig *ModifyTiDBClusterNodeParamNodeConfig `required:"false"`
+
+	// 扩缩类型，枚举值为：SCALEOUT，扩容；SCALEIN，缩容；
+	ScaleType *string `required:"true"`
+
+	// 缩容节点ID，缩容时必填
+	ServerId *string `required:"false"`
+
+	// 开始时间
+	StartTime *int `required:"false"`
+}
+
+// ModifyTiDBClusterNodeResponse is response schema for ModifyTiDBClusterNode action
+type ModifyTiDBClusterNodeResponse struct {
+	response.CommonBase
+
+	// ServiceId
+	ServiceId string
+}
+
+// NewModifyTiDBClusterNodeRequest will create request of ModifyTiDBClusterNode action.
+func (c *TiDBClient) NewModifyTiDBClusterNodeRequest() *ModifyTiDBClusterNodeRequest {
+	req := &ModifyTiDBClusterNodeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyTiDBClusterNode
+
+集群扩缩容
+*/
+func (c *TiDBClient) ModifyTiDBClusterNode(req *ModifyTiDBClusterNodeRequest) (*ModifyTiDBClusterNodeResponse, error) {
+	var err error
+	var res ModifyTiDBClusterNodeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyTiDBClusterNode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+ModifyTiDBClusterTiFlashParamNodeConfig is request schema for complex param
+*/
+type ModifyTiDBClusterTiFlashParamNodeConfig struct {
+
+	// 节点配置ID
+	ConfigId *string `required:"true"`
+
+	// 节点磁盘大小
+	DiskSize *int `required:"true"`
+
+	// 节点个数
+	NodeCount *int `required:"true"`
+
+	// 节点角色
+	ServerType *string `required:"true"`
+}
+
+// ModifyTiDBClusterTiFlashRequest is request schema for ModifyTiDBClusterTiFlash action
+type ModifyTiDBClusterTiFlashRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// tiflash 状态
+	Enable *string `required:"true"`
+
+	// TIDB service id
+	Id *string `required:"true"`
+
+	//
+	NodeConfig *ModifyTiDBClusterTiFlashParamNodeConfig `required:"false"`
+}
+
+// ModifyTiDBClusterTiFlashResponse is response schema for ModifyTiDBClusterTiFlash action
+type ModifyTiDBClusterTiFlashResponse struct {
+	response.CommonBase
+
+	// ServiceId
+	ServiceId string
+}
+
+// NewModifyTiDBClusterTiFlashRequest will create request of ModifyTiDBClusterTiFlash action.
+func (c *TiDBClient) NewModifyTiDBClusterTiFlashRequest() *ModifyTiDBClusterTiFlashRequest {
+	req := &ModifyTiDBClusterTiFlashRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyTiDBClusterTiFlash
+
+开启/关闭 tiflash
+*/
+func (c *TiDBClient) ModifyTiDBClusterTiFlash(req *ModifyTiDBClusterTiFlashRequest) (*ModifyTiDBClusterTiFlashResponse, error) {
+	var err error
+	var res ModifyTiDBClusterTiFlashResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyTiDBClusterTiFlash", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+ModifyTiDBClusterUhostDiskParamNodeConfig is request schema for complex param
+*/
+type ModifyTiDBClusterUhostDiskParamNodeConfig struct {
+
+	// 磁盘容量
+	DiskSize *int `required:"true"`
+
+	// 节点角色
+	ServerType *string `required:"true"`
+}
+
+// ModifyTiDBClusterUhostDiskRequest is request schema for ModifyTiDBClusterUhostDisk action
+type ModifyTiDBClusterUhostDiskRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 实例ID
+	Id *string `required:"true"`
+
+	//
+	NodeConfig *ModifyTiDBClusterUhostDiskParamNodeConfig `required:"false"`
+
+	// 扩缩类型，枚举值为：SCALEOUT，扩容；SCALEIN，缩容；
+	ScaleType *string `required:"true"`
+
+	// 开始时间
+	StartTime *int `required:"false"`
+}
+
+// ModifyTiDBClusterUhostDiskResponse is response schema for ModifyTiDBClusterUhostDisk action
+type ModifyTiDBClusterUhostDiskResponse struct {
+	response.CommonBase
+
+	// 实例ID
+	ServiceId string
+}
+
+// NewModifyTiDBClusterUhostDiskRequest will create request of ModifyTiDBClusterUhostDisk action.
+func (c *TiDBClient) NewModifyTiDBClusterUhostDiskRequest() *ModifyTiDBClusterUhostDiskRequest {
+	req := &ModifyTiDBClusterUhostDiskRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyTiDBClusterUhostDisk
+
+变更集群节点磁盘容量
+*/
+func (c *TiDBClient) ModifyTiDBClusterUhostDisk(req *ModifyTiDBClusterUhostDiskRequest) (*ModifyTiDBClusterUhostDiskResponse, error) {
+	var err error
+	var res ModifyTiDBClusterUhostDiskResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyTiDBClusterUhostDisk", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+ModifyTiDBClusterUhostSpecsParamNodeConfig is request schema for complex param
+*/
+type ModifyTiDBClusterUhostSpecsParamNodeConfig struct {
+
+	// 机器规格ID
+	ConfigId *string `required:"true"`
+
+	// 节点角色
+	ServerType *string `required:"true"`
+}
+
+// ModifyTiDBClusterUhostSpecsRequest is request schema for ModifyTiDBClusterUhostSpecs action
+type ModifyTiDBClusterUhostSpecsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 实例ID
+	Id *string `required:"true"`
+
+	//
+	NodeConfig *ModifyTiDBClusterUhostSpecsParamNodeConfig `required:"false"`
+
+	// 开始时间
+	StartTime *int `required:"false"`
+}
+
+// ModifyTiDBClusterUhostSpecsResponse is response schema for ModifyTiDBClusterUhostSpecs action
+type ModifyTiDBClusterUhostSpecsResponse struct {
+	response.CommonBase
+
+	// 实例ID
+	ServiceId string
+}
+
+// NewModifyTiDBClusterUhostSpecsRequest will create request of ModifyTiDBClusterUhostSpecs action.
+func (c *TiDBClient) NewModifyTiDBClusterUhostSpecsRequest() *ModifyTiDBClusterUhostSpecsRequest {
+	req := &ModifyTiDBClusterUhostSpecsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyTiDBClusterUhostSpecs
+
+修改集群主机规格
+*/
+func (c *TiDBClient) ModifyTiDBClusterUhostSpecs(req *ModifyTiDBClusterUhostSpecsRequest) (*ModifyTiDBClusterUhostSpecsResponse, error) {
+	var err error
+	var res ModifyTiDBClusterUhostSpecsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyTiDBClusterUhostSpecs", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+SetTiDBConfigParamConfigs is request schema for complex param
+*/
+type SetTiDBConfigParamConfigs struct {
+
+	//
+	Name *string `required:"true"`
+
+	//
+	Value *string `required:"true"`
+}
+
+// SetTiDBConfigRequest is request schema for SetTiDBConfig action
+type SetTiDBConfigRequest struct {
+	request.CommonBase
+
+	// [公共参数]
+	// ProjectId *string `required:"false"`
+
+	// [公共参数]
+	// Region *string `required:"true"`
+
 	//
 	Configs []SetTiDBConfigParamConfigs `required:"false"`
 
-	// 资源Id
+	//
 	Id *string `required:"true"`
 }
 
@@ -175,7 +1047,7 @@ type SetTiDBConfigRequest struct {
 type SetTiDBConfigResponse struct {
 	response.CommonBase
 
-	// ServiceId
+	//
 	ServiceId string
 }
 
@@ -187,14 +1059,12 @@ func (c *TiDBClient) NewSetTiDBConfigRequest() *SetTiDBConfigRequest {
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
+	req.SetRetryable(false)
 	return req
 }
 
 /*
 API: SetTiDBConfig
-
-设置TiDB服务实例参数
 */
 func (c *TiDBClient) SetTiDBConfig(req *SetTiDBConfigRequest) (*SetTiDBConfigResponse, error) {
 	var err error
@@ -203,6 +1073,186 @@ func (c *TiDBClient) SetTiDBConfig(req *SetTiDBConfigRequest) (*SetTiDBConfigRes
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("SetTiDBConfig", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// StartTiDBClusterBackupRequest is request schema for StartTiDBClusterBackup action
+type StartTiDBClusterBackupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 备份过滤规则
+	BackupFilter *string `required:"false"`
+
+	// 备份时间
+	BackupTs *string `required:"false"`
+
+	// 实例的服务Id
+	Id *string `required:"true"`
+}
+
+// StartTiDBClusterBackupResponse is response schema for StartTiDBClusterBackup action
+type StartTiDBClusterBackupResponse struct {
+	response.CommonBase
+
+	// 备份id
+	BackupId string
+
+	// 返回信息
+	Message string
+
+	// 实例id
+	ServiceId string
+}
+
+// NewStartTiDBClusterBackupRequest will create request of StartTiDBClusterBackup action.
+func (c *TiDBClient) NewStartTiDBClusterBackupRequest() *StartTiDBClusterBackupRequest {
+	req := &StartTiDBClusterBackupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: StartTiDBClusterBackup
+
+开始按实例计费的tidb的备份
+*/
+func (c *TiDBClient) StartTiDBClusterBackup(req *StartTiDBClusterBackupRequest) (*StartTiDBClusterBackupResponse, error) {
+	var err error
+	var res StartTiDBClusterBackupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("StartTiDBClusterBackup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// StartTiDBClusterRestoreRequest is request schema for StartTiDBClusterRestore action
+type StartTiDBClusterRestoreRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 备份id
+	BackupId *string `required:"true"`
+
+	// 实例id
+	Id *string `required:"true"`
+}
+
+// StartTiDBClusterRestoreResponse is response schema for StartTiDBClusterRestore action
+type StartTiDBClusterRestoreResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// 恢复任务Id
+	RestoreId string
+
+	// 实例id
+	ServiceId string
+}
+
+// NewStartTiDBClusterRestoreRequest will create request of StartTiDBClusterRestore action.
+func (c *TiDBClient) NewStartTiDBClusterRestoreRequest() *StartTiDBClusterRestoreRequest {
+	req := &StartTiDBClusterRestoreRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: StartTiDBClusterRestore
+
+开始按实例计费tidb的恢复
+*/
+func (c *TiDBClient) StartTiDBClusterRestore(req *StartTiDBClusterRestoreRequest) (*StartTiDBClusterRestoreResponse, error) {
+	var err error
+	var res StartTiDBClusterRestoreResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("StartTiDBClusterRestore", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpgradeTiDBClusterRequest is request schema for UpgradeTiDBCluster action
+type UpgradeTiDBClusterRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 目标版本号
+	DbVersion *string `required:"true"`
+
+	// 实例id
+	Id *string `required:"true"`
+
+	// 任务开始时间
+	StartTime *int `required:"false"`
+}
+
+// UpgradeTiDBClusterResponse is response schema for UpgradeTiDBCluster action
+type UpgradeTiDBClusterResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpgradeTiDBClusterRequest will create request of UpgradeTiDBCluster action.
+func (c *TiDBClient) NewUpgradeTiDBClusterRequest() *UpgradeTiDBClusterRequest {
+	req := &UpgradeTiDBClusterRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpgradeTiDBCluster
+
+升级预付费tidb集群
+*/
+func (c *TiDBClient) UpgradeTiDBCluster(req *UpgradeTiDBClusterRequest) (*UpgradeTiDBClusterResponse, error) {
+	var err error
+	var res UpgradeTiDBClusterResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpgradeTiDBCluster", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

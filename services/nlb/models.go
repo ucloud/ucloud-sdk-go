@@ -82,6 +82,9 @@ type Listener struct {
 	// 端口范围的结束端口
 	EndPort int
 
+	// 传递源 IP 方法。限定取值："" / "None" / "Toa"/"ProxyProto"，空字符串和 None 代表关闭。
+	ForwardSrcIPMethod string
+
 	// 健康检查相关配置
 	HealthCheckConfig HealthCheckConfig
 

@@ -112,8 +112,8 @@ type CreateNLBListenerParamHealthCheckConfig struct {
 	// 是否开启健康检查功能。暂时不支持关闭，默认 true
 	Enabled *bool `required:"false"`
 
-	// 健康检查探测端口 说明： 限定取值：[1-65535]
-	Port *int `required:"false"`
+	// 健康检查探测端口 说明： 限定取值：[1-65535]，Ping 探测下，端口可填 0
+	Port *int `required:"true"`
 
 	// UDP" 检查模式的请求字符串
 	ReqMsg *string `required:"false"`
@@ -121,7 +121,7 @@ type CreateNLBListenerParamHealthCheckConfig struct {
 	// "UDP" 检查模式的预期响应字符串
 	ResMsg *string `required:"false"`
 
-	// 健康检查方式 限定取值："Port"/"UDP"/"Ping" 默认值：“Port”
+	// 健康检查方式 限定取值："Port"/"UDP"/"Ping" 默认值：“Port”，Ping 只允许 UDP 协议监听器设置
 	Type *string `required:"false"`
 }
 
@@ -138,6 +138,9 @@ type CreateNLBListenerRequest struct {
 	// 端口范围的结束端口限定取值：[1-65535]取值不小于起始端口默认值 65535
 	EndPort *int `required:"false"`
 
+	// 传递源 IP 方法。限定取值："" / "None" / "Toa"/"ProxyProto"，空字符串和 None 代表关闭。
+	ForwardSrcIPMethod *string `required:"false"`
+
 	//
 	HealthCheckConfig *CreateNLBListenerParamHealthCheckConfig `required:"false"`
 
@@ -148,7 +151,7 @@ type CreateNLBListenerRequest struct {
 	Name *string `required:"false"`
 
 	// 监听协议限定取值："TCP"/"UDP"
-	Protocol *string `required:"false"`
+	Protocol *string `required:"true"`
 
 	// 监听器的备注信息限定字符长度：[0-255]
 	Remark *string `required:"false"`
@@ -227,7 +230,7 @@ type CreateNetworkLoadBalancerRequest struct {
 	// 负载均衡实例的名称限定字符长度：[1-255]限定特殊字符，仅支持：-_.默认值：nlb
 	Name *string `required:"false"`
 
-	// 购买的时长
+	// 购买的时长，ChargeType = "Month"，Quantity = 0 代表购买到月底，其余情况必须赋值
 	Quantity *int `required:"false"`
 
 	// 负载均衡实例的备注信息限定字符长度：[0-255]
@@ -247,10 +250,10 @@ type CreateNetworkLoadBalancerRequest struct {
 type CreateNetworkLoadBalancerResponse struct {
 	response.CommonBase
 
-	//
+	// 返回信息
 	Message string
 
-	//
+	// 返回的NLBId
 	NLBId string
 }
 
@@ -411,17 +414,17 @@ type DescribeNLBListenersRequest struct {
 	NLBId *string `required:"true"`
 
 	// 设置监听器的偏移量
-	Offset *string `required:"false"`
+	Offset *int `required:"false"`
 }
 
 // DescribeNLBListenersResponse is response schema for DescribeNLBListeners action
 type DescribeNLBListenersResponse struct {
 	response.CommonBase
 
-	//
+	// 返回的监听器列表
 	Listeners []Listener
 
-	//
+	// 全部个数
 	TotalCount int
 }
 
@@ -466,9 +469,6 @@ type DescribeNetworkLoadBalancersRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// 负载均衡实例的转发类型
-	ForwardingMode *string `required:"false"`
-
 	// 数据分页值，默认为100
 	Limit *int `required:"false"`
 
@@ -492,7 +492,7 @@ type DescribeNetworkLoadBalancersRequest struct {
 type DescribeNetworkLoadBalancersResponse struct {
 	response.CommonBase
 
-	//
+	// 返回的负载均衡实例列表
 	NLBs []NetworkLoadBalancer
 
 	// 满足条件的负载均衡实例总数
@@ -678,6 +678,9 @@ type UpdateNLBListenerAttributeRequest struct {
 
 	// 端口范围的结束端口 限定取值：[1-65535] 取值不小于起始端口 默认值 65535，只有全端口模式支持修改
 	EndPort *int `required:"false"`
+
+	// 传递源 IP 方法。限定取值："" / "None" / "Toa"，空字符串和 None 代表关闭。
+	ForwardSrcIPMethod *string `required:"false"`
 
 	//
 	HealthCheckConfig *UpdateNLBListenerAttributeParamHealthCheckConfig `required:"false"`

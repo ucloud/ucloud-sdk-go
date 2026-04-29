@@ -3,10 +3,151 @@
 package tidb
 
 /*
-ServiceID - 服务ID
+ServiceData - 服务ID
 */
-type ServiceID struct {
+type ServiceData struct {
 
 	// 服务ID
 	Id string
+}
+
+/*
+ServiceID -
+*/
+type ServiceID struct {
+
+	//
+	Id string
+}
+
+/*
+UTiDBServiceData - 预付费实例详情
+*/
+type UTiDBServiceData struct {
+
+	// 自动备份状态
+	AutoBackup string
+
+	// 集群Binlog服务状态
+	BinlogState string
+
+	// 创建时间
+	CreateTime int
+
+	// 容灾类型
+	DTType int
+
+	// Dashboard地址
+	DashboardUrl string
+
+	// grafana地址
+	GrafanaUrl string
+
+	// 集群ID
+	Id string
+
+	// 集群ip
+	Ip string
+
+	// 集群名称
+	Name string
+
+	// 集群端口
+	Port int
+
+	// 集群状态
+	State string
+
+	// 子网ID
+	SubnetId string
+
+	// 集群TiFlash服务状态
+	TiFlashState string
+
+	// 私有网Id
+	VPCId string
+
+	// 集群版本
+	Version string
+}
+
+/*
+UhostSpecs - 预付费机器规格
+*/
+type UhostSpecs struct {
+
+	// 节点规格ID
+	ConfigId string
+
+	// 节点规格名称
+	ConfigName string
+
+	// CPU核数
+	CoreNum int
+
+	// 磁盘容量变更步长
+	DiskStep int
+
+	// 最大磁盘容量
+	MaxDiskCapacity int
+
+	// 内存
+	Memory int
+
+	// 最小磁盘容量
+	MinDiskCapacity int
+
+	// 节点类型
+	NodeType string
+}
+
+/*
+BackupData - Backup数据
+*/
+type BackupData struct {
+
+	// 备份结束时间
+	BackupEndTime int
+
+	// 备份 ID
+	BackupId string
+
+	// 备份文件大小，单位：MB
+	BackupSize int
+
+	// 备份起始时间
+	BackupStartTime int
+
+	// 备份方式
+	BackupType string
+
+	// 备份状态
+	State string
+}
+
+/*
+RestoreData - 恢复的数据
+*/
+type RestoreData struct {
+
+	// 备份Id
+	BackupId string
+
+	// 恢复的结束时间
+	RestoreEndTime int
+
+	// 恢复的Id
+	RestoreId string
+
+	// 恢复的起始时间
+	RestoreStartTime int
+
+	// 源实例Id
+	SourceServiceId string
+
+	// 恢复的状态
+	State string
+
+	// 目标实例Id
+	TargetServiceId string
 }
