@@ -57,6 +57,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
 	"github.com/ucloud/ucloud-sdk-go/services/iam"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
+	"github.com/ucloud/ucloud-sdk-go/services/nlb"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/sts"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
@@ -71,7 +72,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
 	"github.com/ucloud/ucloud-sdk-go/services/ufs"
 	"github.com/ucloud/ucloud-sdk-go/services/ugn"
-	"github.com/ucloud/ucloud-sdk-go/services/uhids"
 	"github.com/ucloud/ucloud-sdk-go/services/uhub"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/ulighthost"
@@ -174,6 +174,9 @@ func testSetup() {
 	spec.AddFixture("ISMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return isms.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("NLB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return nlb.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("PathX", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return pathx.NewClient(&cfg, &credential), nil
 	}))
@@ -236,9 +239,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UGN", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ugn.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UHIDS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return uhids.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uhost.NewClient(&cfg, &credential), nil
