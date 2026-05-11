@@ -42,21 +42,6 @@ type KeyPair struct {
 }
 
 /*
-CpuPlatformWithModels -
-*/
-type CpuPlatformWithModels struct {
-
-	// CPU频率
-	CpuFrequency string
-
-	// CPU Model列表
-	CpuModels []string
-
-	// CPU平台
-	Name string
-}
-
-/*
 FeatureModes - 可以支持的模式类别
 */
 type FeatureModes struct {
@@ -69,21 +54,6 @@ type FeatureModes struct {
 
 	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
 	RelatedToImageFeature []string
-}
-
-/*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
 }
 
 /*
@@ -111,42 +81,18 @@ type GraphicsMemory struct {
 }
 
 /*
-Performance - GPU的性能指标
+CpuPlatformWithModels -
 */
-type Performance struct {
+type CpuPlatformWithModels struct {
 
-	// 交互展示参数，可忽略
-	Rate int
+	// CPU频率
+	CpuFrequency string
 
-	// 值，单位是TFlops
-	Value float64
-}
+	// CPU Model列表
+	CpuModels []string
 
-/*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
+	// CPU平台
+	Name string
 }
 
 /*
@@ -201,6 +147,48 @@ type DataDiskInfo struct {
 }
 
 /*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
+CpuPlatforms - CPU平台信息
+*/
+type CpuPlatforms struct {
+
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
+
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
+}
+
+/*
 Disks - 磁盘信息
 */
 type Disks struct {
@@ -213,6 +201,18 @@ type Disks struct {
 
 	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
 }
 
 /*
@@ -384,18 +384,51 @@ type IsolationGroup struct {
 }
 
 /*
-UDSetUDHostAttribute - 私有专区对应的宿主机属性
+UHostIPSet - DescribeUHostInstance
 */
-type UDSetUDHostAttribute struct {
+type UHostIPSet struct {
 
-	// 是否绑定私有专区宿主机
-	HostBinding bool
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
+	Bandwidth int
 
-	// 私有专区宿主机
-	UDHostId string
+	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
+	Default string
 
-	// 私有专区
-	UDSetId string
+	// IP地址
+	IP string
+
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
+	IPId string
+
+	// IPv4/IPv6；
+	IPMode string
+
+	// 内网 Private 类型下，当前网卡的Mac。
+	Mac string
+
+	// 弹性网卡为默认网卡时，返回对应的 ID 值
+	NetworkInterfaceId string
+
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
+	VPCId string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
 }
 
 /*
@@ -444,51 +477,18 @@ type UHostKeyPair struct {
 }
 
 /*
-SpotAttribute - 竞价实例属性
+UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
-type SpotAttribute struct {
+type UDSetUDHostAttribute struct {
 
-	// 回收时间
-	RecycleTime int
-}
+	// 是否绑定私有专区宿主机
+	HostBinding bool
 
-/*
-UHostIPSet - DescribeUHostInstance
-*/
-type UHostIPSet struct {
+	// 私有专区宿主机
+	UDHostId string
 
-	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// 外网IP资源ID 。(内网IP无对应的资源ID)
-	IPId string
-
-	// IPv4/IPv6；
-	IPMode string
-
-	// 内网 Private 类型下，当前网卡的Mac。
-	Mac string
-
-	// 弹性网卡为默认网卡时，返回对应的 ID 值
-	NetworkInterfaceId string
-
-	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
-	VPCId string
-
-	// 当前EIP的权重。权重最大的为当前的出口IP。
-	Weight int
+	// 私有专区
+	UDSetId string
 }
 
 /*
