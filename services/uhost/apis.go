@@ -66,6 +66,167 @@ func (c *UHostClient) AddUHostToIsolationGroup(req *AddUHostToIsolationGroupRequ
 	return &res, nil
 }
 
+/*
+CheckUHostResourceCapacityParamDisksCustomBackup is request schema for complex param
+*/
+type CheckUHostResourceCapacityParamDisksCustomBackup struct {
+
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30。
+	Day *string `required:"false"`
+
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96。
+	Hour *string `required:"false"`
+
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48。
+	Journal *string `required:"false"`
+}
+
+/*
+CheckUHostResourceCapacityParamDisks is request schema for complex param
+*/
+type CheckUHostResourceCapacityParamDisks struct {
+
+	// 指定快照备份策略。当Disks.N.BackupType为"SNAPSHOT"时此参数生效。枚举值："Lite"：轻量版，"Base"：基础版，"Ultimate"：旗舰版，"Custom"：自定义备份链；默认值："Base"
+	BackupMode *string `required:"false"`
+
+	// 磁盘备份方案。枚举值：\\ > NONE，无备份 \\ > DATAARK，数据方舟 \\ > SNAPSHOT，快照 \\当前磁盘支持的备份模式参考 [[api:uhost-api:disk_type|磁盘类型]],默认值:NONE
+	BackupType *string `required:"false"`
+
+	// 云盘代金券id。不适用于系统盘/本地盘。请通过DescribeCoupon接口查询，或登录用户中心查看
+	CouponId *string `required:"false"`
+
+	//
+	CustomBackup *CheckUHostResourceCapacityParamDisksCustomBackup `required:"false"`
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot *string `required:"true"`
+
+	// 磁盘大小，单位GB。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Size *int `required:"true"`
+
+	// 从快照创建盘时所用快照id，目前仅支持数据盘
+	SnapshotId *string `required:"false"`
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	Type *string `required:"true"`
+}
+
+/*
+CheckUHostResourceCapacityParamFeatures is request schema for complex param
+*/
+type CheckUHostResourceCapacityParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
+}
+
+// CheckUHostResourceCapacityRequest is request schema for CheckUHostResourceCapacity action
+type CheckUHostResourceCapacityRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 虚拟CPU核数。可选参数：1-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
+	CPU *int `required:"false"`
+
+	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\ > Spot计费为抢占式实例(内测阶段) \\ 默认为月付
+	ChargeType *string `required:"false"`
+
+	//
+	Disks []CheckUHostResourceCapacityParamDisks `required:"false"`
+
+	//
+	Features *CheckUHostResourceCapacityParamFeatures `required:"false"`
+
+	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
+	GPU *int `required:"false"`
+
+	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "MI100", "V100S",2080","2080TiS","2080TiPro","3090","A100", "4090", "4090Pro", "4090_48G", "5090"]，MachineType为G时必填
+	GpuType *string `required:"false"`
+
+	// 热升级特性。True为开启，False为未开启，默认False。
+	HotplugFeature *bool `required:"false"`
+
+	// 镜像ID。 请通过 [DescribeImage](describe_image.html)获取
+	ImageId *string `required:"true"`
+
+	// 硬件隔离组id。可通过DescribeIsolationGroup获取。
+	IsolationGroup *string `required:"false"`
+
+	// 云主机机型（V2.0），在本字段和字段UHostType中，仅需要其中1个字段即可。枚举值["N", "C", "G", "O", "OS", "OM", "OPRO", "OMAX", "O.BM", "O.EPC"]。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
+	MachineType *string `required:"false"`
+
+	// 本次最大创建主机数量，取值范围是[1,100]，默认值为1。
+	MaxCount *int `required:"false"`
+
+	// 内存大小。单位：MB。范围 ：[1024, 262144]，取值为1024的倍数（可选范围参考控制台）。默认值：8192
+	Memory *int `required:"false"`
+
+	// 本次最小创建主机数量，取值范围是[1,100]，默认值为1。
+	MinCount *int `required:"false"`
+
+	// 最低cpu平台，枚举值["Intel/Auto", "Intel/IvyBridge", "Intel/Haswell", "Intel/Broadwell", "Intel/Skylake", "Intel/Cascadelake", "Intel/CascadelakeR", "Intel/IceLake", "Amd/Epyc2", "Amd/Auto","Ampere/Auto","Ampere/Altra"],默认值是"Intel/Auto"。
+	MinimalCpuPlatform *string `required:"false"`
+
+	// 网络增强特性。枚举值：Normal，不开启;  Super，开启网络增强1.0； Ultra，开启网络增强2.0（详情参考官网文档）
+	NetCapability *string `required:"false"`
+
+	// 主机安全模式。Firewall：防火墙；SecGroup：安全组；默认值：Firewall。
+	SecurityMode *string `required:"false"`
+
+	// 规格族。由机型代号和 CPU 平台组成，用于指定云主机的硬件类型与处理器平台。当 MachineType 为 "O"（快杰型）时，支持以下取值：o1i：快杰型 O1 代，Intel 平台o1a：快杰型 O1 代，AMD 平台o1r：快杰型 O1 代，ARM 平台o2i：快杰型 O2 代，Intel 平台默认值：o1i 或 o1a（系统将根据资源情况自动选择）当 MachineType 为 "OM"（快杰共享型）时，支持以下取值：om1i：快杰内存增强型 OM1 代，Intel 平台om2i：快杰内存增强型 OM2 代，Intel 平台⚠️ 注意：规格族必须与 MachineType 匹配，否则请求将被拒绝。
+	UHostFamily *string `required:"false"`
+}
+
+// CheckUHostResourceCapacityResponse is response schema for CheckUHostResourceCapacity action
+type CheckUHostResourceCapacityResponse struct {
+	response.CommonBase
+
+	// 随机的资源对应的RdmaClusterId数组，若资源不足则为空，只有快杰系列机型，以及A800才可能有此字段
+	RdmaClusterIds []string
+
+	// 资源是否充足
+	ResourceEnough bool
+}
+
+// NewCheckUHostResourceCapacityRequest will create request of CheckUHostResourceCapacity action.
+func (c *UHostClient) NewCheckUHostResourceCapacityRequest() *CheckUHostResourceCapacityRequest {
+	req := &CheckUHostResourceCapacityRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: CheckUHostResourceCapacity
+
+主机创建资源余量检查
+*/
+func (c *UHostClient) CheckUHostResourceCapacity(req *CheckUHostResourceCapacityRequest) (*CheckUHostResourceCapacityResponse, error) {
+	var err error
+	var res CheckUHostResourceCapacityResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CheckUHostResourceCapacity", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CopyCustomImageRequest is request schema for CopyCustomImage action
 type CopyCustomImageRequest struct {
 	request.CommonBase
@@ -274,6 +435,78 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
+CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceEIP struct {
+
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth *int `required:"false"`
+
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId *string `required:"false"`
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName *string `required:"false"`
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode *string `required:"false"`
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+
+	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
+	Address *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Adress *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	ShareBandwidthId *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+
+	//
+	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
+	UNI *bool `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamLabels is request schema for complex param
+*/
+type CreateUHostInstanceParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签的值
+	Value *string `required:"false"`
+}
+
+/*
 CreateUHostInstanceParamVolumes is request schema for complex param
 */
 type CreateUHostInstanceParamVolumes struct {
@@ -342,78 +575,6 @@ type CreateUHostInstanceParamSecGroupId struct {
 	Priority *int `required:"false"`
 }
 
-/*
-CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceEIP struct {
-
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth *int `required:"false"`
-
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId *string `required:"false"`
-
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName *string `required:"false"`
-
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode *string `required:"false"`
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-
-	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
-	Address *string `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Adress *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	ShareBandwidthId *string `required:"false" deprecated:"true"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-
-	//
-	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamLabels is request schema for complex param
-*/
-type CreateUHostInstanceParamLabels struct {
-
-	// 用户资源标签的键值
-	Key *string `required:"false"`
-
-	// 用户资源标签的值
-	Value *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
-	UNI *bool `required:"false"`
-}
-
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
 type CreateUHostInstanceRequest struct {
 	request.CommonBase
@@ -444,6 +605,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 主机代金券ID。请通过DescribeCoupon接口查询，或登录用户中心查看
 	CouponId *string `required:"false"`
+
+	// 删除保护，设置删除保护参数，true表示不允许控制台删除
+	DeletionProtection *bool `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
 	DiskPassword *string `required:"false" deprecated:"true"`
