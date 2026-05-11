@@ -51,6 +51,18 @@ type UHostConfig struct {
 }
 
 /*
+IP - IP 信息
+*/
+type IP struct {
+
+	// IP地址
+	IP string
+
+	// IP类型
+	Type string
+}
+
+/*
 BrokerOfTopicInfo - broker 的 topic 相关信息
 */
 type BrokerOfTopicInfo struct {
@@ -69,18 +81,6 @@ type BrokerOfTopicInfo struct {
 
 	// partition 数量
 	TotalPartitions int
-}
-
-/*
-IP - IP 信息
-*/
-type IP struct {
-
-	// IP地址
-	IP string
-
-	// IP类型
-	Type string
 }
 
 /*
@@ -147,7 +147,7 @@ type Broker struct {
 }
 
 /*
-ClusterInfo - 集群信息
+ClusterInfo - 实例信息
 */
 type ClusterInfo struct {
 
@@ -241,8 +241,17 @@ type InstanceType struct {
 	// 磁盘类型。RSSD 表示固态云盘，SSD 表示本地固态盘，COMMON 表示本地 SATA 盘
 	DiskType string
 
+	// 该机型是否支持安全组
+	IsOpenSecGroup bool
+
+	// 机型最大支持磁盘大小
+	MaxDiskSize int
+
 	// 内存大小（单位 MB）
 	Memory string
+
+	// 机型最小支持磁盘大小
+	MinDiskSize int
 
 	// 机型名称
 	NodeTypeName string
@@ -252,6 +261,9 @@ type InstanceType struct {
 Group - Kafka 消费者组每一项的信息
 */
 type Group struct {
+
+	// 消费者组资源ID
+	GroupId string
 
 	// 消费者组组名
 	GroupName string
@@ -273,6 +285,72 @@ type Version struct {
 
 	// kafka版本
 	Version string
+}
+
+/*
+ClusterSet - 实例信息
+*/
+type ClusterSet struct {
+
+	// 是否自动续费
+	AutoRenew string
+
+	// 业务组 ID
+	BusinessId string
+
+	// 付费类型
+	ChargeType string
+
+	// 实例id
+	ClusterInstanceId string
+
+	// 实例名称
+	ClusterInstanceName string
+
+	// 实例创建时间戳
+	CreateTime int
+
+	// 实例过期时间
+	ExpireTime int
+
+	// 框架
+	Framework string
+
+	// Kafka 框架版本
+	FrameworkVersion string
+
+	// 实例机型
+	InstanceGroupType string
+
+	// 事件状态未读消息（已废弃）
+	NewMessage string
+
+	// 冗余计数（已废弃）
+	RedundantCount int
+
+	// 实例备注
+	Remark string
+
+	// 实例运行时间
+	RunningTime int
+
+	// 实例当前状态,集群状态："Running"| "Abnormal"| "Creating"| "Deleting"| "CreateFailed"| "DeleteFailed"| "Unavailable"| "Deleted"| "Updating"| "Deploying"| "Migrating"| "ExpandFailed"
+	State string
+
+	// 所属子网 id
+	SubnetId string
+
+	// 实例标记
+	Tag string
+
+	// 实例节点个数
+	UHostCount int
+
+	// 所属 VPC id
+	VPCId string
+
+	// 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Zone string
 }
 
 /*

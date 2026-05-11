@@ -26,7 +26,7 @@ type AddUKafkaInstanceNodeRequest struct {
 	InstanceId *string `required:"true"`
 
 	// 新添加节点数量
-	NodeCount *int `required:"true"`
+	NodeCount *string `required:"true"`
 
 	// 机型，支持的机型可通过GetUKafkaNodeType 接口返回的InstanceTypeSet[].InstanceTypeName
 	NodeType *string `required:"true"`
@@ -102,7 +102,7 @@ type CreateUKafkaInstanceRequest struct {
 	// kafka版本，支持的版本可通过ListUKafkaFrameworkVersion 接口返回字段的FrameworkVersions获取
 	FrameworkVersion *string `required:"true"`
 
-	// 实例名，可自定义
+	// 实例名，可自定义。只能包含中英文、数字以及- _ .
 	InstanceName *string `required:"true"`
 
 	// 是否开启安全组，支持"true","false"，默认 false
@@ -111,7 +111,7 @@ type CreateUKafkaInstanceRequest struct {
 	// kafka 日志保存时间，支持范围[1,240]。默认 72 小时
 	LogRetentionHours *string `required:"false"`
 
-	// 集群节点数量。默认 3 节点
+	// 实例节点数量。默认 3 节点
 	NodeCount *int `required:"false"`
 
 	// 机型，支持的机型可通过GetUKafkaNodeType 接口返回的InstanceTypeSet[].InstanceTypeName
@@ -153,7 +153,7 @@ func (c *UKafkaClient) NewCreateUKafkaInstanceRequest() *CreateUKafkaInstanceReq
 /*
 API: CreateUKafkaInstance
 
-创建一个ukafka实例
+创建实例接口。\\ 创建实例前需要按以下步骤准备必要参数：\\ 1.获取Region（地域）和 Zone（可用区），访问链接：https://docs.ucloud.cn/api/summary/regionlist 可以获取所有支持的地域和可用区；\\ 2.获取FrameworkVersion，访问链接：https://docs.ucloud.cn/api/ukafka-api/list_ukafka_framework_version，响应字段的FrameworkVersions[N].Version是支持的 Kafka 版本；\\ 3.ChargeType付费类型，可用值：Dynamic为按小时付费，Month为按月付费，Year为按年付费；\\ 4.获取NodeType机型详情，访问链接：https://docs.ucloud.cn/api/ukafka-api/get_ukafka_node_type，响应字段的NodeTypeSet[N].NodeTypeName是支持的所有机型；\\ 5.获取DiskSize磁盘大小范围 ，访问链接：https://docs.ucloud.cn/api/ukafka-api/get_ukafka_node_type，该接口响应字段的NodeTypeSet[N].MinDiskSize和NodeTypeSet[N].MaxDiskSize是磁盘大小的取值范围；\\ 6.InstanceName，自定义输入实例名称，只能包含中英文、数字以及- _ .
 */
 func (c *UKafkaClient) CreateUKafkaInstance(req *CreateUKafkaInstanceRequest) (*CreateUKafkaInstanceResponse, error) {
 	var err error
@@ -238,7 +238,7 @@ type DescribeUKafkaConsumerRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// Kafka 集群 ID
+	// 实例 ID
 	ClusterInstanceId *string `required:"true"`
 
 	// 消费组组名
@@ -256,7 +256,7 @@ type DescribeUKafkaConsumerResponse struct {
 	GroupName string
 
 	// 消费者组所订阅 topic 信息
-	Topics string
+	Topics []string
 
 	// 消费者组类型
 	Type string
@@ -314,7 +314,7 @@ type DescribeUKafkaInstanceRequest struct {
 type DescribeUKafkaInstanceResponse struct {
 	response.CommonBase
 
-	// 集群信息列表
+	// 实例信息列表
 	ClusterSet []ClusterInfo
 }
 
@@ -333,7 +333,7 @@ func (c *UKafkaClient) NewDescribeUKafkaInstanceRequest() *DescribeUKafkaInstanc
 /*
 API: DescribeUKafkaInstance
 
-获取整个集群的信息
+获取整个实例的信息。实例ID，可以通过ListUKafkaInstance 接口的ClusterSet. ClusterInstanceId 获取
 */
 func (c *UKafkaClient) DescribeUKafkaInstance(req *DescribeUKafkaInstanceRequest) (*DescribeUKafkaInstanceResponse, error) {
 	var err error
@@ -412,16 +412,16 @@ func (c *UKafkaClient) GetUKafkaNodeType(req *GetUKafkaNodeTypeRequest) (*GetUKa
 type IsUKafkaTopicNameExistRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 集群ID
+	// 实例ID，可以通过ListUKafkaInstance 接口的ClusterSet. ClusterInstanceId 获取
 	ClusterInstanceId *string `required:"true"`
 
 	// 待检查的topic名称
@@ -451,7 +451,7 @@ func (c *UKafkaClient) NewIsUKafkaTopicNameExistRequest() *IsUKafkaTopicNameExis
 /*
 API: IsUKafkaTopicNameExist
 
-检查一个topic名称是否已经在集群中了
+检查一个topic名称是否已经在集群中了。实例ID，可以通过ListUKafkaInstance 接口的ClusterSet. ClusterInstanceId 获取
 */
 func (c *UKafkaClient) IsUKafkaTopicNameExist(req *IsUKafkaTopicNameExistRequest) (*IsUKafkaTopicNameExistResponse, error) {
 	var err error
@@ -471,16 +471,16 @@ func (c *UKafkaClient) IsUKafkaTopicNameExist(req *IsUKafkaTopicNameExistRequest
 type ListUKafkaConsumersRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目 ID。不填写为默认项目，子帐号必须填写。 请参考 [GetProjectList 接口](../summary/get_project_list.html)
+	// [公共参数] 项目 ID。不填写为默认项目，子帐号必须填写。 请参考 [GetProjectList 接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// Kafka 集群 ID
+	// 实例ID，可以通过ListUKafkaInstance 接口的ClusterSet. ClusterInstanceId 获取
 	ClusterInstanceId *string `required:"true"`
 }
 
@@ -591,16 +591,10 @@ type ListUKafkaInstanceRequest struct {
 	// Region *string `required:"true"`
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"false"`
+	// Zone *string `required:"true"`
 
 	// 业务组 ID
 	BusinessId *string `required:"false"`
-
-	// 实例ID
-	ClusterInstanceId *string `required:"false"`
-
-	// 是否过滤删除了的节点，默认为‘true’
-	Filter *string `required:"false"`
 
 	// 默认为60
 	Limit *string `required:"false"`
@@ -619,8 +613,8 @@ type ListUKafkaInstanceRequest struct {
 type ListUKafkaInstanceResponse struct {
 	response.CommonBase
 
-	// 信息
-	ClusterSet string
+	// 实例信息
+	ClusterSet ClusterSet
 
 	// 错误信息
 	Message string
@@ -644,7 +638,7 @@ func (c *UKafkaClient) NewListUKafkaInstanceRequest() *ListUKafkaInstanceRequest
 /*
 API: ListUKafkaInstance
 
-列举集群信息
+获取实例列表信息
 */
 func (c *UKafkaClient) ListUKafkaInstance(req *ListUKafkaInstanceRequest) (*ListUKafkaInstanceResponse, error) {
 	var err error
@@ -664,16 +658,16 @@ func (c *UKafkaClient) ListUKafkaInstance(req *ListUKafkaInstanceRequest) (*List
 type ListUKafkaTopicsRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目 ID。不填写为默认项目，子帐号必须填写。 请参考 [GetProjectList 接口](../summary/get_project_list.html)
+	// [公共参数] 项目 ID。不填写为默认项目，子帐号必须填写。 请参考 [GetProjectList 接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 集群资源id
+	// 实例ID，可以通过ListUKafkaInstance 接口的ClusterSet. ClusterInstanceId 获取
 	ClusterInstanceId *string `required:"true"`
 }
 
@@ -681,7 +675,7 @@ type ListUKafkaTopicsRequest struct {
 type ListUKafkaTopicsResponse struct {
 	response.CommonBase
 
-	// 列表长度
+	// topic 列表长度
 	Length int
 
 	// topic 信息列表
@@ -703,7 +697,7 @@ func (c *UKafkaClient) NewListUKafkaTopicsRequest() *ListUKafkaTopicsRequest {
 /*
 API: ListUKafkaTopics
 
-展示kafka集群上所有topic
+获取 kafka 实例 topic  列表信息。实例ID，可以通过ListUKafkaInstance 接口的ClusterSet. ClusterInstanceId 获取
 */
 func (c *UKafkaClient) ListUKafkaTopics(req *ListUKafkaTopicsRequest) (*ListUKafkaTopicsResponse, error) {
 	var err error
@@ -735,7 +729,7 @@ type ModifyUKafkaInstanceTypeRequest struct {
 	// 实例ID
 	InstanceId *string `required:"true"`
 
-	// 目标机型，支持的机型可通过GetUKafkaNodeType 接口返回的InstanceTypeSet[].InstanceTypeName
+	// 目标机型，支持的机型可通过GetUKafkaNodeType 接口返回的InstanceTypeSet[].InstanceTypeName。仅升级CPU 和内存
 	NodeType *string `required:"true"`
 }
 
@@ -762,7 +756,7 @@ func (c *UKafkaClient) NewModifyUKafkaInstanceTypeRequest() *ModifyUKafkaInstanc
 /*
 API: ModifyUKafkaInstanceType
 
-规格升降级
+规格升降级，仅升级CPU 和内存
 */
 func (c *UKafkaClient) ModifyUKafkaInstanceType(req *ModifyUKafkaInstanceTypeRequest) (*ModifyUKafkaInstanceTypeResponse, error) {
 	var err error
