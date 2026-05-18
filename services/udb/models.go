@@ -3,60 +3,42 @@
 package udb
 
 /*
-UDBBackupSet - DescribeUDBBackup
+MongoDBShardedClusterSet -
 */
-type UDBBackupSet struct {
+type MongoDBShardedClusterSet struct {
 
-	// 备份完成时间(Unix时间戳)
-	BackupEndTime int
+	//
+	CreateTime int
 
-	// 备份id
-	BackupId int
-
-	// 备份名称
-	BackupName string
-
-	// 备份文件大小(字节)
-	BackupSize int
-
-	// 备份时间(Unix时间戳)
-	BackupTime int
-
-	// 备份类型,取值为0或1,0表示自动，1表示手动
-	BackupType int
-
-	// 跨机房高可用备库所在可用区
-	BackupZone string
-
-	// dbid
+	//
 	DBId string
 
-	// 对应的db名称
-	DBName string
+	//
+	DBTypeId string
 
-	// 备份错误信息
-	ErrorInfo string
+	//
+	MongosCount int
 
-	// 备份文件的MD5值，备份完成后显示，备份中或备份失败时为空,目前只支持Mysql NVMe机型与Mongo
-	MD5 string
+	//
+	Name string
 
-	// 备份状态 Backuping // 备份中 Success // 备份成功 Failed // 备份失败 Expired // 备份过期
-	State string
+	//
+	ShardsrvCount int
 
-	// 备份所在可用区
+	//
+	SubnetId string
+
+	//
+	Tag string
+
+	//
+	VPCId string
+
+	//
+	VirtualIPs []string
+
+	//
 	Zone string
-}
-
-/*
-UFileDataSet - 增加ufile的描述
-*/
-type UFileDataSet struct {
-
-	// bucket名称
-	Bucket string
-
-	// Ufile的令牌tokenid
-	TokenID string
 }
 
 /*
@@ -111,6 +93,9 @@ type UDBSlaveInstanceSet struct {
 
 	// DB实例过期时间，采用UTC计时时间戳
 	ExpiredTime int
+
+	//
+	IPv6Address string `deprecated:"true"`
 
 	// UDB实例模式类型, 可选值如下: "Normal": 普通版UDB实例;"HA": 高可用版UDB实例
 	InstanceMode string
@@ -183,6 +168,18 @@ type UDBSlaveInstanceSet struct {
 
 	// 可用区
 	Zone string
+}
+
+/*
+UFileDataSet - 增加ufile的描述
+*/
+type UFileDataSet struct {
+
+	// bucket名称
+	Bucket string
+
+	// Ufile的令牌tokenid
+	TokenID string
 }
 
 /*
@@ -339,6 +336,87 @@ type UDBInstanceSet struct {
 }
 
 /*
+UDBBackupSet - DescribeUDBBackup
+*/
+type UDBBackupSet struct {
+
+	// 备份完成时间(Unix时间戳)
+	BackupEndTime int
+
+	// 备份id
+	BackupId int
+
+	// 备份名称
+	BackupName string
+
+	// 备份文件大小(字节)
+	BackupSize int
+
+	// 备份时间(Unix时间戳)
+	BackupTime int
+
+	// 备份类型,取值为0或1,0表示自动，1表示手动
+	BackupType int
+
+	// 跨机房高可用备库所在可用区
+	BackupZone string
+
+	// dbid
+	DBId string
+
+	// 对应的db名称
+	DBName string
+
+	// 备份错误信息
+	ErrorInfo string
+
+	// 备份文件的MD5值，备份完成后显示，备份中或备份失败时为空,目前只支持Mysql NVMe机型与Mongo
+	MD5 string
+
+	// 备份状态 Backuping // 备份中 Success // 备份成功 Failed // 备份失败 Expired // 备份过期
+	State string
+
+	// 备份所在可用区
+	Zone string
+}
+
+/*
+BinlogBackupSet - DescribeUDBBinlogBackup
+*/
+type BinlogBackupSet struct {
+
+	// 备份id
+	BackupId int
+
+	// 备份名称
+	BackupName string
+
+	// 备份文件大小
+	BackupSize int
+
+	// 备份时间
+	BackupTime int
+
+	// binlog备份类型 Manual:手动备份 ,Auto:自动备份
+	BinlogType string
+
+	// dbid
+	DBId string
+
+	// 日志结束时间
+	LogEndTime int
+
+	// 日志开始时间
+	LogStartTime int
+
+	// 节点标识ID
+	ServerId string
+
+	// 备份状态 Backuping // 备份中 Success // 备份成功 Failed // 备份失败 Expired // 备份过期
+	State string
+}
+
+/*
 UDBInstanceBinlogSet - DescribeUDBInstanceBinlog
 */
 type UDBInstanceBinlogSet struct {
@@ -450,6 +528,9 @@ type UDBParamGroupSet struct {
 
 	// 参数组名称
 	GroupName string
+
+	// 参数组类型：1：稳定版参数组，2:高性能版参数组。默认是稳定版参数组
+	GroupType int
 
 	// 参数组是否可修改
 	Modifiable bool
