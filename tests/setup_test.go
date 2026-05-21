@@ -83,7 +83,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/usms"
 	"github.com/ucloud/ucloud-sdk-go/services/utsdb"
 	"github.com/ucloud/ucloud-sdk-go/services/uvms"
-	"github.com/ucloud/ucloud-sdk-go/services/uwsc"
 )
 
 func TestMain(m *testing.M) {
@@ -287,9 +286,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UVMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uvms.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UWSC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return uwsc.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil

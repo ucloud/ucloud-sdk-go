@@ -67,6 +67,15 @@ func (c *UHostClient) AddUHostToIsolationGroup(req *AddUHostToIsolationGroupRequ
 }
 
 /*
+CheckUHostResourceCapacityParamFeatures is request schema for complex param
+*/
+type CheckUHostResourceCapacityParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
+}
+
+/*
 CheckUHostResourceCapacityParamDisksCustomBackup is request schema for complex param
 */
 type CheckUHostResourceCapacityParamDisksCustomBackup struct {
@@ -109,15 +118,6 @@ type CheckUHostResourceCapacityParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-CheckUHostResourceCapacityParamFeatures is request schema for complex param
-*/
-type CheckUHostResourceCapacityParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
 }
 
 // CheckUHostResourceCapacityRequest is request schema for CheckUHostResourceCapacity action
@@ -435,6 +435,30 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
+	UNI *bool `required:"false"`
+}
+
+/*
+UHostDiskCustomBackup is request schema for complex param
+*/
+type UHostDiskCustomBackup struct {
+
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30。
+	Day *string `required:"false"`
+
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96。
+	Hour *string `required:"false"`
+
+	// Disks.N.BackupMode为"Custom"时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48。
+	Journal *string `required:"false"`
+}
+
+/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -471,63 +495,6 @@ type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-
-	//
-	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
-	UNI *bool `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamLabels is request schema for complex param
-*/
-type CreateUHostInstanceParamLabels struct {
-
-	// 用户资源标签的键值
-	Key *string `required:"false"`
-
-	// 用户资源标签的值
-	Value *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamVolumes is request schema for complex param
-*/
-type CreateUHostInstanceParamVolumes struct {
-}
-
-/*
-UHostDiskCustomBackup is request schema for complex param
-*/
-type UHostDiskCustomBackup struct {
-
-	// Disks.N.BackupMode为"Custom"时，进行设置, 以5天级为基础进行倍数扩增，如5、10、15、20、25、30。
-	Day *string `required:"false"`
-
-	// Disks.N.BackupMode为"Custom"时，进行设置, 以24小时级为基础进行倍数扩增，如24、48、72、96。
-	Hour *string `required:"false"`
-
-	// Disks.N.BackupMode为"Custom"时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48。
-	Journal *string `required:"false"`
-}
-
-/*
 UHostDisk is request schema for complex param
 */
 type UHostDisk struct {
@@ -561,6 +528,39 @@ type UHostDisk struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+CreateUHostInstanceParamLabels is request schema for complex param
+*/
+type CreateUHostInstanceParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签的值
+	Value *string `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+
+	//
+	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
 }
 
 /*
