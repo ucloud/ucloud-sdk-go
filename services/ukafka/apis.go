@@ -120,11 +120,11 @@ type CreateUKafkaInstanceRequest struct {
 	// 实例数量，默认 1
 	Quantity *string `required:"false"`
 
-	// 子网 ID
-	SubnetId *string `required:"true"`
+	// 子网 ID，不填时为默认子网 ID
+	SubnetId *string `required:"false"`
 
-	// VPCID
-	VPCId *string `required:"true"`
+	// VPCID，不填时为默认VPCID
+	VPCId *string `required:"false"`
 }
 
 // CreateUKafkaInstanceResponse is response schema for CreateUKafkaInstance action

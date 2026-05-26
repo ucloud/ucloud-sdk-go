@@ -3,6 +3,27 @@
 package ukafka
 
 /*
+BrokerOfTopicInfo - broker 的 topic 相关信息
+*/
+type BrokerOfTopicInfo struct {
+
+	// topic 在 broker 上分布的 partition 数量
+	PartitionOnBroker string
+
+	// topic 在 broker上 partition 列表
+	Partitions string
+
+	// Topic 副本数
+	Replication int
+
+	// topic 名称
+	TopicName string
+
+	// partition 数量
+	TotalPartitions int
+}
+
+/*
 Url -
 */
 type Url struct {
@@ -27,6 +48,18 @@ type Endpoints struct {
 }
 
 /*
+IP - IP 信息
+*/
+type IP struct {
+
+	// IP地址
+	IP string
+
+	// IP类型
+	Type string
+}
+
+/*
 UHostConfig - 节点配置
 */
 type UHostConfig struct {
@@ -48,39 +81,6 @@ type UHostConfig struct {
 
 	// 节点内部系统名称【删除】
 	OS string
-}
-
-/*
-IP - IP 信息
-*/
-type IP struct {
-
-	// IP地址
-	IP string
-
-	// IP类型
-	Type string
-}
-
-/*
-BrokerOfTopicInfo - broker 的 topic 相关信息
-*/
-type BrokerOfTopicInfo struct {
-
-	// topic 在 broker 上分布的 partition 数量
-	PartitionOnBroker string
-
-	// topic 在 broker上 partition 列表
-	Partitions string
-
-	// Topic 副本数
-	Replication int
-
-	// topic 名称
-	TopicName string
-
-	// partition 数量
-	TotalPartitions int
 }
 
 /*
