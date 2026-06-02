@@ -3,6 +3,15 @@
 package uk8s
 
 /*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
+}
+
+/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -57,15 +66,6 @@ type IPSet struct {
 
 	// 国际: Internation，BGP: Bgp，内网: Private
 	Type string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
 }
 
 /*
@@ -159,6 +159,9 @@ type UHostIPSet struct {
 
 	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
 	Bandwidth int
+
+	//
+	Default string `deprecated:"true"`
 
 	// IP地址
 	IP string
