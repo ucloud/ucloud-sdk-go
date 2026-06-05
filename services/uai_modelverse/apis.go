@@ -16,8 +16,29 @@ type CreateUMInferAPIKeyRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
+	// 日限额，单位随用户所在渠道。126渠道单位为美元
+	DailyLimitAmount *string `required:"false"`
+
+	// 全部模型访问开关，开启不受 GrantedModels 参数控制，关闭只能访问 GrantedModels 中添加模型
+	GrantAllModels *bool `required:"false"`
+
+	// 授权模型，内容为数组格式。当 GrantAllModels 为false时 当前key只可访问数组中模型。例：["deepseek-ai/DeepSeek-V3.2-Think"]
+	GrantedModels *string `required:"false"`
+
+	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:192.168.1.1192.168.1.10-192.168.1.100192.168.1.10/24
+	IPWhitelist *string `required:"false"`
+
+	// 是否modelverse可用 0: 启用 1: 禁用
+	ModelverseDisabled *int `required:"false"`
+
+	// 月限额，单位随用户所在渠道。126渠道单位为美元
+	MonthlyLimitAmount *string `required:"false"`
+
 	// apikey名称
 	Name *string `required:"true"`
+
+	// 是否沙盒可用 0: 启用 1: 禁用(astraflow 沙盒控制未上线，暂时无效)
+	SandBoxDisabled *int `required:"false"`
 }
 
 // CreateUMInferAPIKeyResponse is response schema for CreateUMInferAPIKey action
@@ -26,6 +47,9 @@ type CreateUMInferAPIKeyResponse struct {
 
 	// apikey
 	Data APIKey
+
+	// 总条数
+	TotalCount int
 }
 
 // NewCreateUMInferAPIKeyRequest will create request of CreateUMInferAPIKey action.
@@ -109,6 +133,403 @@ func (c *UAI_ModelverseClient) DeleteUMInferAPIKey(req *DeleteUMInferAPIKeyReque
 	return &res, nil
 }
 
+// DownloadListPaidOrdersRequest is request schema for DownloadListPaidOrders action
+type DownloadListPaidOrdersRequest struct {
+	request.CommonBase
+
+	// 查询结束时间（Unix 时间戳，秒级），必填；必须大于 StartTime
+	EndTime *int `required:"true"`
+
+	// 模型ID列表（可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes []int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []int `required:"false"`
+
+	// 计费单元（SKU）列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单位列表（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// 资源ID列表（可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级），必填
+	StartTime *int `required:"true"`
+}
+
+// DownloadListPaidOrdersResponse is response schema for DownloadListPaidOrders action
+type DownloadListPaidOrdersResponse struct {
+	response.CommonBase
+
+	// 下载文件信息
+	Data DownloadFileData
+}
+
+// NewDownloadListPaidOrdersRequest will create request of DownloadListPaidOrders action.
+func (c *UAI_ModelverseClient) NewDownloadListPaidOrdersRequest() *DownloadListPaidOrdersRequest {
+	req := &DownloadListPaidOrdersRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DownloadListPaidOrders
+
+生成已完成（已支付）订单明细 Excel 文件并返回 US3 预签名下载链接；查询条件与 ListPaidOrders 完全一致，StartTime/EndTime 必填；取数范围是 [StartTime, EndTime)，即取开始计费时间大于等于StartTime且小于EndTime的数据
+*/
+func (c *UAI_ModelverseClient) DownloadListPaidOrders(req *DownloadListPaidOrdersRequest) (*DownloadListPaidOrdersResponse, error) {
+	var err error
+	var res DownloadListPaidOrdersResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DownloadListPaidOrders", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DownloadListUnpaidOrdersRequest is request schema for DownloadListUnpaidOrders action
+type DownloadListUnpaidOrdersRequest struct {
+	request.CommonBase
+
+	// 查询结束时间（Unix 时间戳，秒级），必填；必须大于 StartTime
+	EndTime *int `required:"true"`
+
+	// 模型ID列表（可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes []int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []int `required:"false"`
+
+	// 计费单元（SKU）列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单位列表（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// 资源ID列表（可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级），必填
+	StartTime *int `required:"true"`
+}
+
+// DownloadListUnpaidOrdersResponse is response schema for DownloadListUnpaidOrders action
+type DownloadListUnpaidOrdersResponse struct {
+	response.CommonBase
+
+	// 下载文件信息
+	Data DownloadFileData
+}
+
+// NewDownloadListUnpaidOrdersRequest will create request of DownloadListUnpaidOrders action.
+func (c *UAI_ModelverseClient) NewDownloadListUnpaidOrdersRequest() *DownloadListUnpaidOrdersRequest {
+	req := &DownloadListUnpaidOrdersRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DownloadListUnpaidOrders
+
+生成欠费（未支付）订单明细 Excel 文件并返回 US3 预签名下载链接；查询条件与 ListUnpaidOrders 完全一致，StartTime/EndTime 必填
+*/
+func (c *UAI_ModelverseClient) DownloadListUnpaidOrders(req *DownloadListUnpaidOrdersRequest) (*DownloadListUnpaidOrdersResponse, error) {
+	var err error
+	var res DownloadListUnpaidOrdersResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DownloadListUnpaidOrders", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DownloadOrderSummaryRequest is request schema for DownloadOrderSummary action
+type DownloadOrderSummaryRequest struct {
+	request.CommonBase
+
+	// 计费类型数组（多选，可选）
+	ChargeTypes []int `required:"false"`
+
+	// 查询结束时间（Unix 时间戳，秒级），必填；必须大于 StartTime
+	EndTime *int `required:"true"`
+
+	// 模型ID列表（可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes []int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []int `required:"false"`
+
+	// 计费单元（SKU）列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单位列表（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// 资源ID列表（可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级），必填
+	StartTime *int `required:"true"`
+}
+
+// DownloadOrderSummaryResponse is response schema for DownloadOrderSummary action
+type DownloadOrderSummaryResponse struct {
+	response.CommonBase
+
+	// 下载文件信息
+	Data DownloadFileData
+}
+
+// NewDownloadOrderSummaryRequest will create request of DownloadOrderSummary action.
+func (c *UAI_ModelverseClient) NewDownloadOrderSummaryRequest() *DownloadOrderSummaryRequest {
+	req := &DownloadOrderSummaryRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DownloadOrderSummary
+
+生成订单汇总 Excel 文件（包含已完成订单和欠费订单两个 sheet），返回 US3 预签名下载链接；StartTime/EndTime 必填
+*/
+func (c *UAI_ModelverseClient) DownloadOrderSummary(req *DownloadOrderSummaryRequest) (*DownloadOrderSummaryResponse, error) {
+	var err error
+	var res DownloadOrderSummaryResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DownloadOrderSummary", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetFilterOptionsRequest is request schema for GetFilterOptions action
+type GetFilterOptionsRequest struct {
+	request.CommonBase
+
+	// 产品类型（单选，可选），枚举值：`modelverse`、`sandbox`；为空时返回所有产品下的选项
+	ProductCode *string `required:"false"`
+}
+
+// GetFilterOptionsResponse is response schema for GetFilterOptions action
+type GetFilterOptionsResponse struct {
+	response.CommonBase
+
+	// 账单维度选项列表
+	Dimensions []FilterOptionAiBill
+
+	// 模型选项列表
+	Models []FilterOptionAiBill
+
+	// 订单类型选项列表
+	OrderTypes []FilterOptionAiBill
+
+	// 计费 SKU 选项列表
+	PricingSKUs []FilterOptionAiBill
+
+	// 计费单位选项列表
+	PricingUnits []FilterOptionAiBill
+
+	// 产品类型选项列表
+	ProductCodes []FilterOptionAiBill
+
+	// 项目选项列表
+	Projects []FilterOptionAiBill
+
+	// 地域选项列表
+	Regions []FilterOptionAiBill
+
+	// 资源选项列表
+	ResourceIds []FilterOptionAiBill
+}
+
+// NewGetFilterOptionsRequest will create request of GetFilterOptions action.
+func (c *UAI_ModelverseClient) NewGetFilterOptionsRequest() *GetFilterOptionsRequest {
+	req := &GetFilterOptionsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetFilterOptions
+
+查询可用于订单筛选的资源、模型、地域等选项列表
+*/
+func (c *UAI_ModelverseClient) GetFilterOptions(req *GetFilterOptionsRequest) (*GetFilterOptionsResponse, error) {
+	var err error
+	var res GetFilterOptionsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetFilterOptions", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetOrderAmountRequest is request schema for GetOrderAmount action
+type GetOrderAmountRequest struct {
+	request.CommonBase
+
+	// 查询结束时间（Unix 时间戳，秒级）。需与 `StartTime` 同时提供
+	EndTime *int `required:"true"`
+
+	// 模型ID列表（可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型列表（可选）
+	OrderTypes []int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []string `required:"false"`
+
+	// 计费单元（SKU）列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单位列表（可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// 资源ID列表（可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级）。需与 `EndTime` 同时提供，最大查询跨度 366 天
+	StartTime *int `required:"true"`
+}
+
+// GetOrderAmountResponse is response schema for GetOrderAmount action
+type GetOrderAmountResponse struct {
+	response.CommonBase
+
+	// 赠金账户总金额
+	BonusAmount string
+
+	// 现金账户总金额
+	CashAmount string
+
+	// 代金券抵扣总额
+	CouponAmount string
+
+	// 订单总数
+	OrderCount int
+
+	// 已支付金额
+	PaidAmount string
+
+	// 已支付订单数
+	PaidCount int
+
+	// 星力卡抵扣总金额
+	StarCardAmount string
+
+	// 订单总额（所有订单的总金额）
+	TotalOrderAmount string
+
+	// 待支付金额
+	UnpaidAmount string
+
+	// 待支付订单数量
+	UnpaidCount int
+}
+
+// NewGetOrderAmountRequest will create request of GetOrderAmount action.
+func (c *UAI_ModelverseClient) NewGetOrderAmountRequest() *GetOrderAmountRequest {
+	req := &GetOrderAmountRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetOrderAmount
+
+查询指定条件下订单的金额汇总及数量统计
+*/
+func (c *UAI_ModelverseClient) GetOrderAmount(req *GetOrderAmountRequest) (*GetOrderAmountResponse, error) {
+	var err error
+	var res GetOrderAmountResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetOrderAmount", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUMInferAPIModelRequest is request schema for GetUMInferAPIModel action
 type GetUMInferAPIModelRequest struct {
 	request.CommonBase
@@ -158,65 +579,6 @@ func (c *UAI_ModelverseClient) GetUMInferAPIModel(req *GetUMInferAPIModelRequest
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUMInferAPIModel", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// GetUMInferServiceRequest is request schema for GetUMInferService action
-type GetUMInferServiceRequest struct {
-	request.CommonBase
-
-	// limit
-	Limit *string `required:"false"`
-
-	// offset
-	Offset *string `required:"false"`
-
-	// 推理服务id
-	UminferID *string `required:"false"`
-
-	// 默认preDeploy,可获取DeepSeek Key
-	UminferType *string `required:"false"`
-}
-
-// GetUMInferServiceResponse is response schema for GetUMInferService action
-type GetUMInferServiceResponse struct {
-	response.CommonBase
-
-	// 推理服务数据
-	Data []UMInferServiceData
-
-	// 模型数量
-	TotalCount int
-}
-
-// NewGetUMInferServiceRequest will create request of GetUMInferService action.
-func (c *UAI_ModelverseClient) NewGetUMInferServiceRequest() *GetUMInferServiceRequest {
-	req := &GetUMInferServiceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: GetUMInferService
-
-获取模型服务
-*/
-func (c *UAI_ModelverseClient) GetUMInferService(req *GetUMInferServiceRequest) (*GetUMInferServiceResponse, error) {
-	var err error
-	var res GetUMInferServiceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("GetUMInferService", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -276,6 +638,172 @@ func (c *UAI_ModelverseClient) GetUMInferTokenUsage(req *GetUMInferTokenUsageReq
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUMInferTokenUsage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListPaidOrderSummaryRequest is request schema for ListPaidOrderSummary action
+type ListPaidOrderSummaryRequest struct {
+	request.CommonBase
+
+	// 计费类型数组（多选，可选）
+	ChargeTypes []int `required:"false"`
+
+	// 查询结束时间（Unix 时间戳，秒级），必填；必须大于 StartTime
+	EndTime *int `required:"true"`
+
+	// 模型ID数组（多选，可选)
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes []int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []int `required:"false"`
+
+	// 计费单元（SKU）列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单位数组（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（多选，可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（多选，可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// 资源ID数组（多选，可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级），必填
+	StartTime *int `required:"true"`
+}
+
+// ListPaidOrderSummaryResponse is response schema for ListPaidOrderSummary action
+type ListPaidOrderSummaryResponse struct {
+	response.CommonBase
+
+	// 已完成订单汇总列表
+	Summaries []OrderSummaryItem
+}
+
+// NewListPaidOrderSummaryRequest will create request of ListPaidOrderSummary action.
+func (c *UAI_ModelverseClient) NewListPaidOrderSummaryRequest() *ListPaidOrderSummaryRequest {
+	req := &ListPaidOrderSummaryRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListPaidOrderSummary
+
+按指定维度汇总查询已完成（已支付）订单的统计数据
+*/
+func (c *UAI_ModelverseClient) ListPaidOrderSummary(req *ListPaidOrderSummaryRequest) (*ListPaidOrderSummaryResponse, error) {
+	var err error
+	var res ListPaidOrderSummaryResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListPaidOrderSummary", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListPaidOrdersRequest is request schema for ListPaidOrders action
+type ListPaidOrdersRequest struct {
+	request.CommonBase
+
+	// 查询结束时间（Unix 时间戳，秒级）。需与 `StartTime` 同时提供
+	EndTime *int `required:"true"`
+
+	// 模型ID数组（多选，可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes []int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []int `required:"false"`
+
+	// 页码，从1开始
+	Page *int `required:"true"`
+
+	// 每页数量（最小10，最大100）
+	PageSize *int `required:"true"`
+
+	// 计费 SKU 列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单位数组（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（多选，可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（多选，可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// 资源ID数组（多选，可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级）。与 `EndTime` 同时提供时启用自定义周期查询；EndTime 必须大于 StartTime
+	StartTime *int `required:"true"`
+}
+
+// ListPaidOrdersResponse is response schema for ListPaidOrders action
+type ListPaidOrdersResponse struct {
+	response.CommonBase
+
+	// 订单列表
+	Orders []OrderItemDetail
+
+	// 当前页码
+	Page int
+
+	// 每页数量
+	PageSize int
+
+	// 总记录数
+	Total int
+}
+
+// NewListPaidOrdersRequest will create request of ListPaidOrders action.
+func (c *UAI_ModelverseClient) NewListPaidOrdersRequest() *ListPaidOrdersRequest {
+	req := &ListPaidOrdersRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListPaidOrders
+
+查询已完成（已支付）的订单明细列表，StartTime/EndTime 必填；取数范围是 [StartTime, EndTime)，即取开始计费时间大于等于StartTime且小于EndTime的数据
+*/
+func (c *UAI_ModelverseClient) ListPaidOrders(req *ListPaidOrdersRequest) (*ListPaidOrdersResponse, error) {
+	var err error
+	var res ListPaidOrdersResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListPaidOrders", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -363,54 +891,6 @@ func (c *UAI_ModelverseClient) ListUFSquareModel(req *ListUFSquareModelRequest) 
 	return &res, nil
 }
 
-// ListUFSquareModelLenRequest is request schema for ListUFSquareModelLen action
-type ListUFSquareModelLenRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-}
-
-// ListUFSquareModelLenResponse is response schema for ListUFSquareModelLen action
-type ListUFSquareModelLenResponse struct {
-	response.CommonBase
-
-	// 模型上下文长度列表
-	MaxModelLens []int
-}
-
-// NewListUFSquareModelLenRequest will create request of ListUFSquareModelLen action.
-func (c *UAI_ModelverseClient) NewListUFSquareModelLenRequest() *ListUFSquareModelLenRequest {
-	req := &ListUFSquareModelLenRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: ListUFSquareModelLen
-
-获取模型广场上下文长度列表
-*/
-func (c *UAI_ModelverseClient) ListUFSquareModelLen(req *ListUFSquareModelLenRequest) (*ListUFSquareModelLenResponse, error) {
-	var err error
-	var res ListUFSquareModelLenResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("ListUFSquareModelLen", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // ListUMInferAPIKeyRequest is request schema for ListUMInferAPIKey action
 type ListUMInferAPIKeyRequest struct {
 	request.CommonBase
@@ -421,8 +901,14 @@ type ListUMInferAPIKeyRequest struct {
 	// 返回数据长度，默认为20，最大100
 	Limit *int `required:"false"`
 
+	// 是否modelverse可用 0: 启用 1: 禁用
+	ModelverseDisabled *int `required:"false"`
+
 	// 列表起始位置偏移量，默认为0
 	Offset *int `required:"false"`
+
+	// 是否沙盒可用 0: 启用 1: 禁用(astraflow 沙盒控制未上线，暂时无效)
+	SandBoxDisabled *int `required:"false"`
 }
 
 // ListUMInferAPIKeyResponse is response schema for ListUMInferAPIKey action
@@ -464,6 +950,157 @@ func (c *UAI_ModelverseClient) ListUMInferAPIKey(req *ListUMInferAPIKeyRequest) 
 	return &res, nil
 }
 
+// ListUnpaidOrderSummaryRequest is request schema for ListUnpaidOrderSummary action
+type ListUnpaidOrderSummaryRequest struct {
+	request.CommonBase
+
+	// 计费类型数组（多选，可选）
+	ChargeTypes []int `required:"false"`
+
+	// 查询结束时间（Unix 时间戳，秒级），必填；必须大于 StartTime
+	EndTime *int `required:"true"`
+
+	// 模型ID数组（多选，可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes *int `required:"false"`
+
+	// 组织ID列表（可选）
+	OrganizationIds []int `required:"false"`
+
+	// 计费单元（SKU）列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单元数组（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 地域列表（多选，可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// Key数组（多选，可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级），必填
+	StartTime *int `required:"true"`
+}
+
+// ListUnpaidOrderSummaryResponse is response schema for ListUnpaidOrderSummary action
+type ListUnpaidOrderSummaryResponse struct {
+	response.CommonBase
+
+	// 欠费订单汇总列表
+	Summaries []OrderSummaryItem
+}
+
+// NewListUnpaidOrderSummaryRequest will create request of ListUnpaidOrderSummary action.
+func (c *UAI_ModelverseClient) NewListUnpaidOrderSummaryRequest() *ListUnpaidOrderSummaryRequest {
+	req := &ListUnpaidOrderSummaryRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUnpaidOrderSummary
+
+按指定维度汇总查询欠费订单的统计数据
+*/
+func (c *UAI_ModelverseClient) ListUnpaidOrderSummary(req *ListUnpaidOrderSummaryRequest) (*ListUnpaidOrderSummaryResponse, error) {
+	var err error
+	var res ListUnpaidOrderSummaryResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUnpaidOrderSummary", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUnpaidOrdersRequest is request schema for ListUnpaidOrders action
+type ListUnpaidOrdersRequest struct {
+	request.CommonBase
+
+	// 查询结束时间（Unix 时间戳，秒级）。需与 `StartTime` 同时提供
+	EndTime *int `required:"true"`
+
+	// 模型ID数组（多选，可选）
+	ModelIds []string `required:"false"`
+
+	// 订单类型数组（多选，可选）
+	OrderTypes []int `required:"false"`
+
+	// 页码,从1开始
+	Page *int `required:"true"`
+
+	// 每页数量（最小10，最大100）
+	PageSize *int `required:"true"`
+
+	// 计费 SKU 列表（可选）
+	PricingSkus []string `required:"false"`
+
+	// 计费单元数组（多选，可选）
+	PricingUnits []int `required:"false"`
+
+	// 产品类型列表（多选，可选），枚举值：`modelverse`、`sandbox`
+	ProductCodes []string `required:"false"`
+
+	// 地域列表（多选，可选），参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Regions []string `required:"false"`
+
+	// key数组（多选，可选）
+	ResourceIds []string `required:"false"`
+
+	// 查询开始时间（Unix 时间戳，秒级）。与 `EndTime` 同时提供时启用自定义周期查询；EndTime 必须大于 StartTime
+	StartTime *int `required:"true"`
+}
+
+// ListUnpaidOrdersResponse is response schema for ListUnpaidOrders action
+type ListUnpaidOrdersResponse struct {
+	response.CommonBase
+
+	// 欠费订单明细列表
+	Orders []UnpaidOrderItem
+}
+
+// NewListUnpaidOrdersRequest will create request of ListUnpaidOrders action.
+func (c *UAI_ModelverseClient) NewListUnpaidOrdersRequest() *ListUnpaidOrdersRequest {
+	req := &ListUnpaidOrdersRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUnpaidOrders
+
+查询当前欠费（未支付）的订单明细列表
+*/
+func (c *UAI_ModelverseClient) ListUnpaidOrders(req *ListUnpaidOrdersRequest) (*ListUnpaidOrdersResponse, error) {
+	var err error
+	var res ListUnpaidOrdersResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUnpaidOrders", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UpdateUMInferAPIKeyRequest is request schema for UpdateUMInferAPIKey action
 type UpdateUMInferAPIKeyRequest struct {
 	request.CommonBase
@@ -471,11 +1108,32 @@ type UpdateUMInferAPIKeyRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
+	// 日限额，单位随用户所在渠道。126渠道单位为美元
+	DailyLimitAmount *string `required:"false"`
+
+	// 全部模型访问开关，开启不受 GrantedModels 参数控制，关闭只能访问 GrantedModels 中添加模型
+	GrantAllModels *bool `required:"false"`
+
+	// 授权模型，内容为数组格式。当 GrantAllModels 为false时 当前key只可访问数组中模型。例：["deepseek-ai/DeepSeek-V3.2-Think"]
+	GrantedModels *string `required:"false"`
+
+	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:  192.168.1.1 192.168.1.10-192.168.1.100 192.168.1.10/24
+	IPWhitelist *string `required:"false"`
+
 	// apikey的id
 	KeyId *string `required:"true"`
 
+	// 是否modelverse可用 0: 启用 1: 禁用
+	ModelverseDisabled *int `required:"false"`
+
+	// 月限额，单位随用户所在渠道。126渠道单位为美元
+	MonthlyLimitAmount *string `required:"false"`
+
 	// 更新的名称
-	Name *string `required:"true"`
+	Name *string `required:"false"`
+
+	// 是否沙盒可用 0: 启用 1: 禁用
+	SandBoxDisabled *int `required:"false"`
 }
 
 // UpdateUMInferAPIKeyResponse is response schema for UpdateUMInferAPIKey action

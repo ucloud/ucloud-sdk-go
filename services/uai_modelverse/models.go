@@ -13,11 +13,23 @@ type APIKey struct {
 	// 创建时间
 	CreateTime int
 
+	// 日限额，单位随用户所在渠道。126渠道单位为美元
+	DailyLimitAmount string
+
+	// 日已使用额，单位随用户所在渠道。126渠道单位为美元
+	DailyUsedAmount string
+
 	// 过期时间的unix时间戳，-1 用不过期
 	ExpireTime int
 
+	// 全部模型访问开关，开启不受 GrantedModels 参数控制，关闭只能访问 GrantedModels 中添加模型
+	GrantAllModels bool
+
 	// 授权的模型，英文逗号分隔，all表示所有模型都有权限
-	GrantedModels string
+	GrantedModels []string
+
+	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:  192.168.1.1 192.168.1.10-192.168.1.100 192.168.1.10/24
+	IPWhitelist string
 
 	// 密钥值
 	Key string
@@ -25,17 +37,56 @@ type APIKey struct {
 	// 资源ID
 	KeyId string
 
+	// 是否modelverse可用 0: 启用 1: 禁用
+	ModelverseDisabled int
+
+	// 月限额，单位随用户所在渠道。126渠道单位为美元
+	MonthlyLimitAmount string
+
+	// 月已使用额，单位随用户所在渠道。126渠道单位为美元
+	MonthlyUsedAmount string
+
 	// 名称
 	Name string
 
 	// 项目id
 	OrganizationId int
 
+	// 是否沙盒可用 0: 启用 1: 禁用(astraflow 沙盒控制未上线，暂时无效)
+	SandBoxDisabled int
+
 	// 状态，1 正常
 	Status int
 
 	// 公司id
 	TopOrganizationId int
+}
+
+/*
+DownloadFileData - 下载文件数据
+*/
+type DownloadFileData struct {
+
+	// 文件下载链接（US3 预签名 URL，请在有效期内立即下载）
+	DownloadURL string
+
+	// 文件名
+	FileName string
+
+	// 文件大小（字节）
+	FileSize int
+}
+
+/*
+FilterOptionAiBill - 筛选选项
+*/
+type FilterOptionAiBill struct {
+
+	// 显示名称
+	Name string
+
+	// 值实际是interface
+	Value string
 }
 
 /*
@@ -90,51 +141,6 @@ type UMinferAPIModel struct {
 }
 
 /*
-UMInferServiceData - 获取推理服务结构体
-*/
-type UMInferServiceData struct {
-
-	// 算力单元
-	ComputingUnit int
-
-	// 创建时间
-	CreateTime int
-
-	// 描述
-	Describe string
-
-	// 模型认证key
-	Key string
-
-	// 模型id
-	ModelID string
-
-	// 模型名字
-	ModelName string
-
-	// 服务名字
-	Name string
-
-	// 实际启动的副本数
-	ReadyReplicas int
-
-	// 副本数
-	Replicas int
-
-	// 服务状态
-	Status string
-
-	// 服务的url
-	URL string
-
-	// 推理服务资源id
-	UminferID string
-
-	// 推理服务资源类型
-	UminferType string
-}
-
-/*
 TokenUsageTimestamp - 时间戳级别的token使用量
 */
 type TokenUsageTimestamp struct {
@@ -174,6 +180,195 @@ type TokenUsage struct {
 
 	// 每个时间戳的token使用量
 	Usages []TokenUsageTimestamp
+}
+
+/*
+OrderSummaryItem - 订单汇总项
+*/
+type OrderSummaryItem struct {
+
+	// 计费类型
+	ChargeType int
+
+	// 折后单价
+	DiscountPrice string
+
+	// 列表价（原单价）
+	ListPrice string
+
+	// 模型ID
+	ModelID string
+
+	// 模型名称
+	ModelName string
+
+	// 订单类型
+	OrderType int
+
+	// 订单类型显示名
+	OrderTypeDisplay string
+
+	// 计费单元（SKU）名称
+	PricingSKU string
+
+	// 计费单位（计量单元）
+	PricingUnit int
+
+	// 计费单位名称
+	PricingUnitName string
+
+	// 资源ID
+	ResourceId string
+
+	// 订单状态（2=已支付; 3=已撤销）
+	Status int
+
+	// 订单状态显示名
+	StatusDisplay string
+
+	// 总赠金账户扣款（仅已完成订单返回）
+	SumBonusAccount string
+
+	// 总现金账户扣款（仅已完成订单返回）
+	SumCashAccount string
+
+	// 总代金券抵扣（仅已完成订单返回）
+	SumCoupon string
+
+	// 总订单金额（格式化后的字符串）
+	SumOrderPrice string
+
+	// 总原价（格式化后的字符串）
+	SumOriginalPrice string
+
+	// 总用量（原始值）
+	SumQuantity int
+
+	// 总用量显示（格式化后的字符串，千token和百万token会进行转换）
+	SumQuantityDisplay string
+
+	// 总星力卡抵扣金额（仅已完成订单返回）
+	SumStarCardAccount string
+}
+
+/*
+OrderItemDetail - 订单项详情
+*/
+type OrderItemDetail struct {
+
+	// 赠金账户扣款金额
+	BonusAccount string
+
+	// 现金账户扣款金额
+	CashAccount string
+
+	// 渠道
+	Channel int
+
+	// 计费类型
+	ChargeType int
+
+	// 计费类型显示名
+	ChargeTypeDisplay string
+
+	// 公司id
+	CompanyID int
+
+	// 代金券抵扣金额
+	Coupon string
+
+	// 币种（如：CNY、USD）
+	Currency string
+
+	// 币种显示名
+	CurrencyDisplay string
+
+	// 折后价（折后单价）
+	DiscountPrice string
+
+	// 结束计费时间（Unix 时间戳，秒级）
+	EndTime int
+
+	// 列表价（原单价）
+	ListPrice string
+
+	// 模型ID
+	ModelID string
+
+	// 模型名称
+	ModelName string
+
+	// 订单号
+	OrderNo string
+
+	// 订单总额
+	OrderTotalPrice string
+
+	// 订单类型
+	OrderType int
+
+	// 订单类型显示名
+	OrderTypeDisplay string
+
+	// 项目ID
+	OrganizationID int
+
+	// 项目名称
+	OrganizationName string
+
+	// 原价
+	OriginalPrice string
+
+	// 支付完成时间（Unix 时间戳，秒级）
+	PaidTime int
+
+	// 计费单元（SKU）名称
+	PricingSKU string
+
+	// 计费单位（计量单元）
+	PricingUnit int
+
+	// 计费单位显示名（如：千Token、张、秒）
+	PricingUnitDisplay string
+
+	// 产品类型
+	ProductCode string
+
+	// 产品类型显示名
+	ProductCodeDisplay string
+
+	// 用量
+	Quantity int
+
+	// 用量显示（含单位）
+	QuantityDisplay string
+
+	// 地域
+	Region string
+
+	// 地域显示名
+	RegionDisplay string
+
+	// 资源ID
+	ResourceID string
+
+	// 星力卡抵扣金额
+	StarCardAccount string
+
+	// 开始计费时间（Unix 时间戳，秒级）
+	StartTime int
+
+	// 订单状态
+	Status int
+
+	// 订单状态显示名
+	StatusDisplay string
+
+	// 欠费订单号
+	UnpaidOrderNo string
+
+	// 用户邮箱
+	UserEmail string
 }
 
 /*
@@ -219,4 +414,124 @@ type SquareModel struct {
 
 	// 更新时间
 	UpdateAt int
+}
+
+/*
+UnpaidOrderItem - 欠费订单项
+*/
+type UnpaidOrderItem struct {
+
+	// 渠道
+	Channel int
+
+	// 计费类型
+	ChargeType int
+
+	// 计价方式显示名
+	ChargeTypeDisplay string
+
+	// 公司id
+	CompanyID int
+
+	// 创建订单时间（Unix 时间戳，秒级）
+	CreateTime string
+
+	// 币种（如：CNY、USD）
+	Currency string
+
+	// 币种显示名
+	CurrencyDisplay string
+
+	// 折后价（折后单价）
+	DiscountPrice string
+
+	// 结束计费时间（Unix 时间戳，秒级）
+	EndTime int
+
+	// 列表价（原单价）
+	ListPrice string
+
+	// 模型ID
+	ModelID string
+
+	// 模型名称
+	ModelName string
+
+	// 订单号
+	OrderNo string
+
+	// 订单总额
+	OrderTotalPrice string
+
+	// 订单类型
+	OrderType int
+
+	// 订单类型显示名
+	OrderTypeDisplay string
+
+	// 组织ID
+	OrganizationID int
+
+	// 组织名称
+	OrganizationName string
+
+	// 原价
+	OriginalPrice string
+
+	// 订单支付时间（Unix 时间戳，秒级）
+	PaidTime int
+
+	// 计费单元（SKU）名称
+	PricingSKU string
+
+	// 计费单位（计量单元）
+	PricingUnit int
+
+	// 计费单位显示名（如：千Token、张、秒）
+	PricingUnitDisplay string
+
+	// 产品类型
+	ProductCode string
+
+	// 产品类型显示名
+	ProductCodeDisplay string
+
+	// 用量
+	Quantity int
+
+	// 用量显示（含单位）
+	QuantityDisplay string
+
+	// 地域代码
+	Region string
+
+	// 地域显示名
+	RegionDisplay string
+
+	// 模型key
+	ResourceID string
+
+	// 资源类型
+	ResourceType int
+
+	// 资源类型显示名
+	ResourceTypeDisplay string
+
+	// 撤销时间（Unix 时间戳，秒级）
+	RevocationTime string
+
+	// 来源订单号
+	SourceOrderNo string
+
+	// 开始计费时间（Unix 时间戳，秒级）
+	StartTime int
+
+	// 订单状态
+	Status int
+
+	// 订单状态显示名
+	StatusDisplay string
+
+	// 用户邮箱
+	UserEmail string
 }
