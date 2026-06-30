@@ -61,7 +61,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/sts"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
 	"github.com/ucloud/ucloud-sdk-go/services/uads"
-	"github.com/ucloud/ucloud-sdk-go/services/uas"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/ucompshare"
 	"github.com/ucloud/ucloud-sdk-go/services/udbproxy"
@@ -188,9 +187,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UADS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uads.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UAS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return uas.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UAccount", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uaccount.NewClient(&cfg, &credential), nil
