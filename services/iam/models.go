@@ -82,14 +82,44 @@ LoginProfile - 登录资料
 */
 type LoginProfile struct {
 
-	// 是否必需绑定MFA
+	// 是否强制绑定MFA
 	MFABindRequired bool
 
-	// 密码最长有效期，单位：天
+	// 最大密码过期时间
 	MaxPasswordAge int
 
-	// 登录资料状态
+	// 下次登录是否重置密码
+	PasswordResetRequired bool
+
+	// 状态
 	Status string
+}
+
+/*
+GetRole - 获取角色返回信息
+*/
+type GetRole struct {
+
+	// 创建时间
+	CreatedAt int
+
+	// 描述信息
+	Description string
+
+	// 角色最大会话时间
+	MaxSessionDuration int
+
+	// 角色名称
+	RoleName string
+
+	// 角色信息策略文本
+	RolePolicyDocument string
+
+	// 角色标识
+	RoleURN string
+
+	// 更新时间
+	UpdatedAt string
 }
 
 /*
@@ -129,15 +159,12 @@ type Entity struct {
 }
 
 /*
-Policy - 权限策略
+AttachedPolicy - 被关联的权限策略
 */
-type Policy struct {
+type AttachedPolicy struct {
 
-	// 策略被添加到用户组时的时间戳
+	// 策略被绑定时的 Unix 时间戳
 	AttachedAt int
-
-	// 创建时间
-	CreatedAt int
 
 	// 描述
 	Description string
@@ -150,6 +177,9 @@ type Policy struct {
 
 	// 项目ID
 	ProjectID string
+
+	// 项目名称
+	ProjectName string
 
 	// 应用范围（ScopeRequired:项目级, ScopeEmpty:全局级, ScopeUnrestricted:项目级/全局级）
 	Scope string
@@ -177,6 +207,12 @@ type Project struct {
 Users - 用户模型
 */
 type Users struct {
+
+	// API访问权限
+	APIAccess bool
+
+	// 控制台访问权限
+	ConsoleAccess bool
 
 	// 创建时间戳
 	CreatedAt int

@@ -115,6 +115,59 @@ func (c *IAMClient) AttachPoliciesToGroup(req *AttachPoliciesToGroupRequest) (*A
 	return &res, nil
 }
 
+// AttachPoliciesToRoleRequest is request schema for AttachPoliciesToRole action
+type AttachPoliciesToRoleRequest struct {
+	request.CommonBase
+
+	// 策略标识
+	PolicyURNs []string `required:"true"`
+
+	// 项目ID
+	ProjectID *string `required:"false"`
+
+	// 角色名称
+	RoleName *string `required:"true"`
+
+	// 范围
+	Scope *string `required:"true"`
+}
+
+// AttachPoliciesToRoleResponse is response schema for AttachPoliciesToRole action
+type AttachPoliciesToRoleResponse struct {
+	response.CommonBase
+}
+
+// NewAttachPoliciesToRoleRequest will create request of AttachPoliciesToRole action.
+func (c *IAMClient) NewAttachPoliciesToRoleRequest() *AttachPoliciesToRoleRequest {
+	req := &AttachPoliciesToRoleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachPoliciesToRole
+
+关联IAM策略到角色
+*/
+func (c *IAMClient) AttachPoliciesToRole(req *AttachPoliciesToRoleRequest) (*AttachPoliciesToRoleResponse, error) {
+	var err error
+	var res AttachPoliciesToRoleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachPoliciesToRole", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // AttachPoliciesToUserRequest is request schema for AttachPoliciesToUser action
 type AttachPoliciesToUserRequest struct {
 	request.CommonBase
@@ -328,9 +381,6 @@ func (c *IAMClient) CreateIAMPolicy(req *CreateIAMPolicyRequest) (*CreateIAMPoli
 type CreateProjectRequest struct {
 	request.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	ParentId *string `required:"false" deprecated:"true"`
-
 	// 项目名称，不得与现有项目重名
 	ProjectName *string `required:"true"`
 }
@@ -374,6 +424,59 @@ func (c *IAMClient) CreateProject(req *CreateProjectRequest) (*CreateProjectResp
 	return &res, nil
 }
 
+// CreateRoleRequest is request schema for CreateRole action
+type CreateRoleRequest struct {
+	request.CommonBase
+
+	// 描述
+	Description *string `required:"false"`
+
+	// 角色最大会话时间（单位：秒）
+	MaxSessionDuration *string `required:"false"`
+
+	// 角色名称
+	RoleName *string `required:"true"`
+
+	// 角色信任策略文本
+	RolePolicyDocument *string `required:"true"`
+}
+
+// CreateRoleResponse is response schema for CreateRole action
+type CreateRoleResponse struct {
+	response.CommonBase
+}
+
+// NewCreateRoleRequest will create request of CreateRole action.
+func (c *IAMClient) NewCreateRoleRequest() *CreateRoleRequest {
+	req := &CreateRoleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateRole
+
+创建IAM角色信息
+*/
+func (c *IAMClient) CreateRole(req *CreateRoleRequest) (*CreateRoleResponse, error) {
+	var err error
+	var res CreateRoleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateRole", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUserRequest is request schema for CreateUser action
 type CreateUserRequest struct {
 	request.CommonBase
@@ -384,11 +487,23 @@ type CreateUserRequest struct {
 	// 显示名称
 	DisplayName *string `required:"false"`
 
-	// 用户邮箱（LoginProfileStatus值等于Active必传，LoginProfileStatus值等于Inactive不传）
-	Email *string `required:"false"`
+	// 【该字段已废弃，请谨慎使用】
+	Email *string `required:"false" deprecated:"true"`
+
+	// 是否自动生成密码（默认false）
+	GenerateRandomPassword *bool `required:"false"`
 
 	// 控制台登录访问状态（AccessKeyStatus值为Inactive时，LoginProfileStatus不能为Inactive）
 	LoginProfileStatus *string `required:"true"`
+
+	// 是否需要绑定MFA
+	MFABindRequired *bool `required:"false"`
+
+	// 用户密码（LoginProfileStatus值等于Active必传，LoginProfileStatus值等于Inactive不传）
+	Password *string `required:"false"`
+
+	// 是否需要重置密码
+	PasswordResetRequired *bool `required:"false"`
 
 	// 用户名
 	UserName *string `required:"true"`
@@ -398,8 +513,29 @@ type CreateUserRequest struct {
 type CreateUserResponse struct {
 	response.CommonBase
 
+	// API访问是否开启
+	APIAccess bool
+
+	// 密钥ID
+	AccessKeyID string
+
+	// 密钥凭证
+	AccessKeySecret string
+
+	// 公司ID
+	CompanyID int
+
+	// 控制台是否开启
+	ConsoleAccess bool
+
+	// 昵称
+	DisplayName string
+
 	// 错误消息
 	Message string
+
+	// 用户名
+	UserName string
 }
 
 // NewCreateUserRequest will create request of CreateUser action.
@@ -924,6 +1060,53 @@ func (c *IAMClient) GetLoginProfile(req *GetLoginProfileRequest) (*GetLoginProfi
 	return &res, nil
 }
 
+// GetRoleRequest is request schema for GetRole action
+type GetRoleRequest struct {
+	request.CommonBase
+
+	// 角色名称
+	RoleName *string `required:"true"`
+}
+
+// GetRoleResponse is response schema for GetRole action
+type GetRoleResponse struct {
+	response.CommonBase
+
+	// 角色信息
+	Role GetRole
+}
+
+// NewGetRoleRequest will create request of GetRole action.
+func (c *IAMClient) NewGetRoleRequest() *GetRoleRequest {
+	req := &GetRoleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetRole
+
+查询角色信息
+*/
+func (c *IAMClient) GetRole(req *GetRoleRequest) (*GetRoleResponse, error) {
+	var err error
+	var res GetRoleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetRole", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUserRequest is request schema for GetUser action
 type GetUserRequest struct {
 	request.CommonBase
@@ -967,6 +1150,56 @@ func (c *IAMClient) GetUser(req *GetUserRequest) (*GetUserResponse, error) {
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUser", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUserMFAInfoRequest is request schema for GetUserMFAInfo action
+type GetUserMFAInfoRequest struct {
+	request.CommonBase
+
+	// 用户名
+	UserName *string `required:"true"`
+}
+
+// GetUserMFAInfoResponse is response schema for GetUserMFAInfo action
+type GetUserMFAInfoResponse struct {
+	response.CommonBase
+
+	// 是否已启用多因素认证设备。
+	IsMFAEnable bool
+
+	// 错误信息
+	Message string
+}
+
+// NewGetUserMFAInfoRequest will create request of GetUserMFAInfo action.
+func (c *IAMClient) NewGetUserMFAInfoRequest() *GetUserMFAInfoRequest {
+	req := &GetUserMFAInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUserMFAInfo
+
+查询用户多因素认证设备信息
+*/
+func (c *IAMClient) GetUserMFAInfo(req *GetUserMFAInfoRequest) (*GetUserMFAInfoResponse, error) {
+	var err error
+	var res GetUserMFAInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUserMFAInfo", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1272,13 +1505,13 @@ type ListPoliciesForGroupRequest struct {
 type ListPoliciesForGroupResponse struct {
 	response.CommonBase
 
-	// 错误消息
+	// 错误信息
 	Message string
 
-	// 用户信息数组
-	Policies []Policy
+	// 权限策略列表
+	Policies []AttachedPolicy
 
-	// 总数
+	// 权限策略总数
 	TotalCount int
 }
 
@@ -1340,10 +1573,10 @@ type ListPoliciesForUserResponse struct {
 	// 错误消息
 	Message string
 
-	// 策略信息
-	Policies []Policy
+	// 权限策略列表
+	Policies []AttachedPolicy
 
-	// 数据集合数量
+	// 权限策略问数
 	TotalCount int
 }
 
@@ -1906,11 +2139,20 @@ func (c *IAMClient) UpdateIAMPolicyName(req *UpdateIAMPolicyNameRequest) (*Updat
 type UpdateLoginProfileRequest struct {
 	request.CommonBase
 
-	// 是否必需绑定MFA
+	// 是否自动生成密码
+	GenerateRandomPassword *bool `required:"false"`
+
+	// 设置子账号登录必须绑定MFA验证
 	MFABindRequired *bool `required:"false"`
 
-	// 密码最长有效期，单位：天
+	// 设置子账号密码有效时间
 	MaxPasswordAge *int `required:"false"`
+
+	// 设置子账号密码
+	Password *string `required:"false"`
+
+	// 设置子账号下次登录必须重置密码
+	PasswordResetRequired *bool `required:"false"`
 
 	// 登录资料状态
 	Status *string `required:"false"`
@@ -1925,6 +2167,9 @@ type UpdateLoginProfileRequest struct {
 // UpdateLoginProfileResponse is response schema for UpdateLoginProfile action
 type UpdateLoginProfileResponse struct {
 	response.CommonBase
+
+	// 登录信息
+	LoginProfile LoginProfile
 }
 
 // NewUpdateLoginProfileRequest will create request of UpdateLoginProfile action.
