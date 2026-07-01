@@ -204,6 +204,27 @@ type Project struct {
 }
 
 /*
+ListRoles -
+*/
+type ListRoles struct {
+
+	// 角色创建时间
+	CreatedAt int
+
+	// 描述信息
+	Description string
+
+	// 是否可编辑（true：可编辑，false：不可编辑）
+	IsEditable bool
+
+	// 角色名称
+	RoleName string
+
+	// 角色URN
+	RoleURN string
+}
+
+/*
 Users - 用户模型
 */
 type Users struct {
