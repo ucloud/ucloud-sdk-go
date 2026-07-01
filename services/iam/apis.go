@@ -754,6 +754,50 @@ func (c *IAMClient) DeleteProject(req *DeleteProjectRequest) (*DeleteProjectResp
 	return &res, nil
 }
 
+// DeleteRoleRequest is request schema for DeleteRole action
+type DeleteRoleRequest struct {
+	request.CommonBase
+
+	// 角色名称
+	RoleName *string `required:"true"`
+}
+
+// DeleteRoleResponse is response schema for DeleteRole action
+type DeleteRoleResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteRoleRequest will create request of DeleteRole action.
+func (c *IAMClient) NewDeleteRoleRequest() *DeleteRoleRequest {
+	req := &DeleteRoleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteRole
+
+删除角色信息
+*/
+func (c *IAMClient) DeleteRole(req *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	var err error
+	var res DeleteRoleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteRole", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteUserRequest is request schema for DeleteUser action
 type DeleteUserRequest struct {
 	request.CommonBase
@@ -850,6 +894,59 @@ func (c *IAMClient) DetachPoliciesFromGroup(req *DetachPoliciesFromGroupRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DetachPoliciesFromGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DetachPoliciesFromRoleRequest is request schema for DetachPoliciesFromRole action
+type DetachPoliciesFromRoleRequest struct {
+	request.CommonBase
+
+	// 策略
+	PolicyURNs []string `required:"true"`
+
+	// 项目标识
+	ProjectID *string `required:"false"`
+
+	// 角色名称
+	RoleName *string `required:"true"`
+
+	// 范围
+	Scope *string `required:"true"`
+}
+
+// DetachPoliciesFromRoleResponse is response schema for DetachPoliciesFromRole action
+type DetachPoliciesFromRoleResponse struct {
+	response.CommonBase
+}
+
+// NewDetachPoliciesFromRoleRequest will create request of DetachPoliciesFromRole action.
+func (c *IAMClient) NewDetachPoliciesFromRoleRequest() *DetachPoliciesFromRoleRequest {
+	req := &DetachPoliciesFromRoleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachPoliciesFromRole
+
+移除角色关联的IAM策略
+*/
+func (c *IAMClient) DetachPoliciesFromRole(req *DetachPoliciesFromRoleRequest) (*DetachPoliciesFromRoleResponse, error) {
+	var err error
+	var res DetachPoliciesFromRoleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachPoliciesFromRole", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1546,6 +1643,68 @@ func (c *IAMClient) ListPoliciesForGroup(req *ListPoliciesForGroupRequest) (*Lis
 	return &res, nil
 }
 
+// ListPoliciesForRoleRequest is request schema for ListPoliciesForRole action
+type ListPoliciesForRoleRequest struct {
+	request.CommonBase
+
+	// 返回数据长度，默认为20，最大100
+	Limit *string `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *string `required:"false"`
+
+	// 项目标识
+	ProjectID *string `required:"false"`
+
+	// 角色名称
+	RoleName *string `required:"true"`
+
+	// 范围
+	Scope *string `required:"false"`
+}
+
+// ListPoliciesForRoleResponse is response schema for ListPoliciesForRole action
+type ListPoliciesForRoleResponse struct {
+	response.CommonBase
+
+	// 权限策略列表
+	Policies AttachedPolicy
+
+	// 权限策略总数
+	TotalCount int
+}
+
+// NewListPoliciesForRoleRequest will create request of ListPoliciesForRole action.
+func (c *IAMClient) NewListPoliciesForRoleRequest() *ListPoliciesForRoleRequest {
+	req := &ListPoliciesForRoleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListPoliciesForRole
+
+列出角色关联的权限策略
+*/
+func (c *IAMClient) ListPoliciesForRole(req *ListPoliciesForRoleRequest) (*ListPoliciesForRoleResponse, error) {
+	var err error
+	var res ListPoliciesForRoleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListPoliciesForRole", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListPoliciesForUserRequest is request schema for ListPoliciesForUser action
 type ListPoliciesForUserRequest struct {
 	request.CommonBase
@@ -1660,6 +1819,59 @@ func (c *IAMClient) ListProjects(req *ListProjectsRequest) (*ListProjectsRespons
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListProjects", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListRolesRequest is request schema for ListRoles action
+type ListRolesRequest struct {
+	request.CommonBase
+
+	// 数据查询数量
+	Limit *string `required:"false"`
+
+	// 数据查询偏移量
+	Offset *string `required:"false"`
+}
+
+// ListRolesResponse is response schema for ListRoles action
+type ListRolesResponse struct {
+	response.CommonBase
+
+	// 角色信息列表
+	Roles []ListRoles
+
+	// 数据返回条数，无数据时返回 0
+	TotalCount int
+}
+
+// NewListRolesRequest will create request of ListRoles action.
+func (c *IAMClient) NewListRolesRequest() *ListRolesRequest {
+	req := &ListRolesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListRoles
+
+查询角色信息列表
+*/
+func (c *IAMClient) ListRoles(req *ListRolesRequest) (*ListRolesResponse, error) {
+	var err error
+	var res ListRolesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListRoles", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
