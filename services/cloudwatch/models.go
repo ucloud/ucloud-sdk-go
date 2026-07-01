@@ -392,7 +392,7 @@ type MetricResult struct {
 	ResourceId string
 
 	// TagMap是一个对象，key和value均为字符串。TagMap返回当前series的所有的tag的key和value。
-	TagMap string
+	TagMap map[string]string
 
 	//
 	Values []MetricSample
@@ -410,7 +410,7 @@ type QueryMetricDataRespItem struct {
 	Results []MetricResult
 
 	// 指标查询结果的所有tag的key和对应的所有value数组。Tags格式为，key为tagkey字符串，value为tagValue的字符串数组。
-	Tags string
+	Tags map[string][]string
 }
 
 /*
