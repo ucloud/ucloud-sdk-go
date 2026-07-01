@@ -119,7 +119,7 @@ type GetRole struct {
 	RoleURN string
 
 	// 更新时间
-	UpdatedAt string
+	UpdatedAt int
 }
 
 /*

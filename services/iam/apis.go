@@ -432,7 +432,7 @@ type CreateRoleRequest struct {
 	Description *string `required:"false"`
 
 	// 角色最大会话时间（单位：秒）
-	MaxSessionDuration *string `required:"false"`
+	MaxSessionDuration *int `required:"false"`
 
 	// 角色名称
 	RoleName *string `required:"true"`
