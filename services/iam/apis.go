@@ -1647,7 +1647,7 @@ func (c *IAMClient) ListPoliciesForGroup(req *ListPoliciesForGroupRequest) (*Lis
 type ListPoliciesForRoleRequest struct {
 	request.CommonBase
 
-	// 返回数据长度，默认为20，最大100
+	// 返回数据长度，默认为10，最大100
 	Limit *string `required:"false"`
 
 	// 列表起始位置偏移量，默认为0
@@ -1668,7 +1668,7 @@ type ListPoliciesForRoleResponse struct {
 	response.CommonBase
 
 	// 权限策略列表
-	Policies AttachedPolicy
+	Policies []AttachedPolicy
 
 	// 权限策略总数
 	TotalCount int
