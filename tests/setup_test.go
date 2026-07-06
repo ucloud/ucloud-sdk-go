@@ -79,6 +79,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/upfs"
 	"github.com/ucloud/ucloud-sdk-go/services/upgsql"
 	"github.com/ucloud/ucloud-sdk-go/services/uphone"
+	"github.com/ucloud/ucloud-sdk-go/services/urocketmq"
 	"github.com/ucloud/ucloud-sdk-go/services/uslk"
 	"github.com/ucloud/ucloud-sdk-go/services/usms"
 	"github.com/ucloud/ucloud-sdk-go/services/utsdb"
@@ -274,6 +275,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UPhone", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphone.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("URocketMQ", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return urocketmq.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("USLK", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uslk.NewClient(&cfg, &credential), nil

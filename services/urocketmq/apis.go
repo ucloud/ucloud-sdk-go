@@ -71,6 +71,231 @@ func (c *URocketMQClient) CreateURocketMQGroup(req *CreateURocketMQGroupRequest)
 	return &res, nil
 }
 
+// CreateURocketMQServiceRequest is request schema for CreateURocketMQService action
+type CreateURocketMQServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 计费模式。枚举值为： Year，按年付费； Month，按月付费；Dynamic，按小时预付费
+	ChargeType *string `required:"true"`
+
+	// 套餐版本，唯一值：Enterprise
+	Edition *string `required:"true"`
+
+	// 消息最长保留时长，默认值：3
+	FileReservedTime *string `required:"false"`
+
+	// 实例网络类型，唯一值：PrivateNet
+	Mode *string `required:"true"`
+
+	// Service 名称. 正则检查: ^[a-zA-Z0-9-_]{1,36}$
+	Name *string `required:"true"`
+
+	// 集群版本，枚举值： v4、v5
+	PublicVersion *string `required:"true"`
+
+	// 购买时长。月付时quantity传0代表购买至月末，小时付只支持quantity传0或不传，年付quantity不支持传0
+	Quantity *int `required:"false"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	// 消息存储空间, 单位 GB, 根据TPS的不同有不同的可选值。20000:[300,2000],50000:[700,2800],100000:[1500,5000],200000:[2000,8000]
+	Storage *int `required:"true"`
+
+	// 子网 ID, 默认为当前地域的默认子网
+	SubnetId *string `required:"true"`
+
+	// 业务组tag，默认值：Default
+	Tag *string `required:"false"`
+
+	// 每秒事务处理量。支持20000、50000、100000、200000
+	Tps *string `required:"true"`
+
+	// VPC ID, 默认为当前地域的默认 VPC
+	VPCId *string `required:"true"`
+}
+
+// CreateURocketMQServiceResponse is response schema for CreateURocketMQService action
+type CreateURocketMQServiceResponse struct {
+	response.CommonBase
+
+	// 新建 Service 的 ID
+	ServiceId string
+}
+
+// NewCreateURocketMQServiceRequest will create request of CreateURocketMQService action.
+func (c *URocketMQClient) NewCreateURocketMQServiceRequest() *CreateURocketMQServiceRequest {
+	req := &CreateURocketMQServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateURocketMQService
+
+创建一个RocketMQ服务
+*/
+func (c *URocketMQClient) CreateURocketMQService(req *CreateURocketMQServiceRequest) (*CreateURocketMQServiceResponse, error) {
+	var err error
+	var res CreateURocketMQServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateURocketMQService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateURocketMQTokenRequest is request schema for CreateURocketMQToken action
+type CreateURocketMQTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 允许消费的Topic名称数组
+	AllowConsumeTopicList *string `required:"false"`
+
+	// 允许生产的Topic名称数组
+	AllowProduceTopicList *string `required:"false"`
+
+	// 令牌名称
+	Name *string `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+
+	// Topic消费权限
+	TopicConsumePerm *string `required:"true"`
+
+	// Topic生产权限
+	TopicProducePerm *string `required:"true"`
+}
+
+// CreateURocketMQTokenResponse is response schema for CreateURocketMQToken action
+type CreateURocketMQTokenResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// Token Id
+	TokenId string
+}
+
+// NewCreateURocketMQTokenRequest will create request of CreateURocketMQToken action.
+func (c *URocketMQClient) NewCreateURocketMQTokenRequest() *CreateURocketMQTokenRequest {
+	req := &CreateURocketMQTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateURocketMQToken
+
+创建URocketMQ令牌
+*/
+func (c *URocketMQClient) CreateURocketMQToken(req *CreateURocketMQTokenRequest) (*CreateURocketMQTokenResponse, error) {
+	var err error
+	var res CreateURocketMQTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateURocketMQToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateURocketMQTopicRequest is request schema for CreateURocketMQTopic action
+type CreateURocketMQTopicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 消息类型，包括Normal:普通消息,PartitionSequence:分区顺序消息,GlobalSequence:全局顺序消息,Transaction:事务消息,Delay:延时消息
+	MessageType *string `required:"true"`
+
+	// Topic 名称. 正则检查: ^[a-zA-Z0-9-_]{1,36}$
+	Name *string `required:"true"`
+
+	// Topic 描述. 正则检查: ^[\\s\\S]{0,36}$
+	Remark *string `required:"false"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+}
+
+// CreateURocketMQTopicResponse is response schema for CreateURocketMQTopic action
+type CreateURocketMQTopicResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// 新建 Topic 的 ID
+	TopicId string
+}
+
+// NewCreateURocketMQTopicRequest will create request of CreateURocketMQTopic action.
+func (c *URocketMQClient) NewCreateURocketMQTopicRequest() *CreateURocketMQTopicRequest {
+	req := &CreateURocketMQTopicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateURocketMQTopic
+
+创建一个Topic，如果同名 Topic 在当前 Service 中已存在, 则会失败.
+*/
+func (c *URocketMQClient) CreateURocketMQTopic(req *CreateURocketMQTopicRequest) (*CreateURocketMQTopicResponse, error) {
+	var err error
+	var res CreateURocketMQTopicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateURocketMQTopic", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteURocketMQGroupRequest is request schema for DeleteURocketMQGroup action
 type DeleteURocketMQGroupRequest struct {
 	request.CommonBase
@@ -120,6 +345,360 @@ func (c *URocketMQClient) DeleteURocketMQGroup(req *DeleteURocketMQGroupRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteURocketMQGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteURocketMQServiceRequest is request schema for DeleteURocketMQService action
+type DeleteURocketMQServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+}
+
+// DeleteURocketMQServiceResponse is response schema for DeleteURocketMQService action
+type DeleteURocketMQServiceResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewDeleteURocketMQServiceRequest will create request of DeleteURocketMQService action.
+func (c *URocketMQClient) NewDeleteURocketMQServiceRequest() *DeleteURocketMQServiceRequest {
+	req := &DeleteURocketMQServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteURocketMQService
+
+删除一个已存在的Service
+*/
+func (c *URocketMQClient) DeleteURocketMQService(req *DeleteURocketMQServiceRequest) (*DeleteURocketMQServiceResponse, error) {
+	var err error
+	var res DeleteURocketMQServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteURocketMQService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteURocketMQTokenRequest is request schema for DeleteURocketMQToken action
+type DeleteURocketMQTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 实例ID
+	ServiceId *string `required:"true"`
+
+	// Token Id
+	TokenId *string `required:"true"`
+}
+
+// DeleteURocketMQTokenResponse is response schema for DeleteURocketMQToken action
+type DeleteURocketMQTokenResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewDeleteURocketMQTokenRequest will create request of DeleteURocketMQToken action.
+func (c *URocketMQClient) NewDeleteURocketMQTokenRequest() *DeleteURocketMQTokenRequest {
+	req := &DeleteURocketMQTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteURocketMQToken
+
+删除拥有对于实例下Topic进行细粒度管控的令牌配置。
+*/
+func (c *URocketMQClient) DeleteURocketMQToken(req *DeleteURocketMQTokenRequest) (*DeleteURocketMQTokenResponse, error) {
+	var err error
+	var res DeleteURocketMQTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteURocketMQToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteURocketMQTopicRequest is request schema for DeleteURocketMQTopic action
+type DeleteURocketMQTopicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+
+	// Topic名称
+	TopicName *string `required:"true"`
+}
+
+// DeleteURocketMQTopicResponse is response schema for DeleteURocketMQTopic action
+type DeleteURocketMQTopicResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewDeleteURocketMQTopicRequest will create request of DeleteURocketMQTopic action.
+func (c *URocketMQClient) NewDeleteURocketMQTopicRequest() *DeleteURocketMQTopicRequest {
+	req := &DeleteURocketMQTopicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteURocketMQTopic
+
+指定实例名称和Topic名称，删除该Topic
+*/
+func (c *URocketMQClient) DeleteURocketMQTopic(req *DeleteURocketMQTopicRequest) (*DeleteURocketMQTopicResponse, error) {
+	var err error
+	var res DeleteURocketMQTopicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteURocketMQTopic", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetURocketMQServiceRequest is request schema for GetURocketMQService action
+type GetURocketMQServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 服务ID
+	ServiceId *string `required:"true"`
+}
+
+// GetURocketMQServiceResponse is response schema for GetURocketMQService action
+type GetURocketMQServiceResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// Service 列表, 包含获取的 Service 详情
+	ServiceList []ServiceDetail
+}
+
+// NewGetURocketMQServiceRequest will create request of GetURocketMQService action.
+func (c *URocketMQClient) NewGetURocketMQServiceRequest() *GetURocketMQServiceRequest {
+	req := &GetURocketMQServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetURocketMQService
+
+获取指定id的Service的详情
+*/
+func (c *URocketMQClient) GetURocketMQService(req *GetURocketMQServiceRequest) (*GetURocketMQServiceResponse, error) {
+	var err error
+	var res GetURocketMQServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetURocketMQService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetURocketMQServicePriceRequest is request schema for GetURocketMQServicePrice action
+type GetURocketMQServicePriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 计费模式，枚举：Dynamic：按时付费，Month：按月付费，Year：按年付费
+	ChargeType *string `required:"true"`
+
+	// 版本类别，唯一值:Enterprise
+	Edition *string `required:"true"`
+
+	// 实例网络类型，唯一值:PrivateNet
+	Mode *string `required:"true"`
+
+	// 集群版本，枚举值： v4、v5
+	PublicVersion *string `required:"true"`
+
+	// 购买时长。默认: 1。按小时购买(Dynamic)时无需此参数。 月付时，此参数传 0，代表了购买至月末。
+	Quantity *int `required:"false"`
+
+	// 存储空间大小,单位：G，仅支持100的倍数
+	Storage *int `required:"true"`
+
+	// 规格，每秒生产消费的数据条数。
+	TPS *int `required:"true"`
+}
+
+// GetURocketMQServicePriceResponse is response schema for GetURocketMQServicePrice action
+type GetURocketMQServicePriceResponse struct {
+	response.CommonBase
+
+	// 价格信息
+	PriceSet []PriceSet
+}
+
+// NewGetURocketMQServicePriceRequest will create request of GetURocketMQServicePrice action.
+func (c *URocketMQClient) NewGetURocketMQServicePriceRequest() *GetURocketMQServicePriceRequest {
+	req := &GetURocketMQServicePriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetURocketMQServicePrice
+
+获取 URocketMQ 价格
+*/
+func (c *URocketMQClient) GetURocketMQServicePrice(req *GetURocketMQServicePriceRequest) (*GetURocketMQServicePriceResponse, error) {
+	var err error
+	var res GetURocketMQServicePriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetURocketMQServicePrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetURocketMQTokenRequest is request schema for GetURocketMQToken action
+type GetURocketMQTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 是否显示明文
+	Display *string `required:"false"`
+
+	// 实例ID
+	ServiceId *string `required:"true"`
+
+	// Token Id
+	TokenId *string `required:"true"`
+}
+
+// GetURocketMQTokenResponse is response schema for GetURocketMQToken action
+type GetURocketMQTokenResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// 令牌
+	Token Token
+}
+
+// NewGetURocketMQTokenRequest will create request of GetURocketMQToken action.
+func (c *URocketMQClient) NewGetURocketMQTokenRequest() *GetURocketMQTokenRequest {
+	req := &GetURocketMQTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetURocketMQToken
+
+获取令牌信息。
+*/
+func (c *URocketMQClient) GetURocketMQToken(req *GetURocketMQTokenRequest) (*GetURocketMQTokenResponse, error) {
+	var err error
+	var res GetURocketMQTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetURocketMQToken", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -185,6 +764,623 @@ func (c *URocketMQClient) ListURocketMQGroup(req *ListURocketMQGroupRequest) (*L
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListURocketMQGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListURocketMQServiceRequest is request schema for ListURocketMQService action
+type ListURocketMQServiceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 最多返回的条目数量, (0, 1000], 默认 20 条
+	Limit *int `required:"false"`
+
+	// 查询起始位置, [0, ∞)
+	Offset *int `required:"false"`
+}
+
+// ListURocketMQServiceResponse is response schema for ListURocketMQService action
+type ListURocketMQServiceResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// Service 列表, 包含获取的 Service 详情
+	ServiceList []ServiceBaseInfo
+}
+
+// NewListURocketMQServiceRequest will create request of ListURocketMQService action.
+func (c *URocketMQClient) NewListURocketMQServiceRequest() *ListURocketMQServiceRequest {
+	req := &ListURocketMQServiceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListURocketMQService
+
+获取 Service 列表
+*/
+func (c *URocketMQClient) ListURocketMQService(req *ListURocketMQServiceRequest) (*ListURocketMQServiceResponse, error) {
+	var err error
+	var res ListURocketMQServiceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListURocketMQService", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListURocketMQTokenRequest is request schema for ListURocketMQToken action
+type ListURocketMQTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+}
+
+// ListURocketMQTokenResponse is response schema for ListURocketMQToken action
+type ListURocketMQTokenResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// Token配置数组
+	TokenList []TokenDetail
+
+	// Token总数
+	TotalCount int
+}
+
+// NewListURocketMQTokenRequest will create request of ListURocketMQToken action.
+func (c *URocketMQClient) NewListURocketMQTokenRequest() *ListURocketMQTokenRequest {
+	req := &ListURocketMQTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListURocketMQToken
+
+获取URocketMQ令牌列表
+*/
+func (c *URocketMQClient) ListURocketMQToken(req *ListURocketMQTokenRequest) (*ListURocketMQTokenResponse, error) {
+	var err error
+	var res ListURocketMQTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListURocketMQToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListURocketMQTopicRequest is request schema for ListURocketMQTopic action
+type ListURocketMQTopicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 最多返回的条目数量, (0, 1000], 默认 20 条
+	Limit *int `required:"false"`
+
+	// 查询起始位置, [0, ∞)
+	Offset *int `required:"false"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+}
+
+// ListURocketMQTopicResponse is response schema for ListURocketMQTopic action
+type ListURocketMQTopicResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// Topic列表
+	TopicList []TopicInfo
+
+	// 记录总数
+	TotalCount int
+}
+
+// NewListURocketMQTopicRequest will create request of ListURocketMQTopic action.
+func (c *URocketMQClient) NewListURocketMQTopicRequest() *ListURocketMQTopicRequest {
+	req := &ListURocketMQTopicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListURocketMQTopic
+
+获取一个 RocketMQ 服务下的所有用户 Topic(不包括系统自动创建的, 例如 SYS开头的, RETRY开头的等)
+*/
+func (c *URocketMQClient) ListURocketMQTopic(req *ListURocketMQTopicRequest) (*ListURocketMQTopicResponse, error) {
+	var err error
+	var res ListURocketMQTopicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListURocketMQTopic", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// QueryURocketMQMessageByIDRequest is request schema for QueryURocketMQMessageByID action
+type QueryURocketMQMessageByIDRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Message ID
+	MsgId *string `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+
+	// Topic 名称
+	TopicName *string `required:"true"`
+}
+
+// QueryURocketMQMessageByIDResponse is response schema for QueryURocketMQMessageByID action
+type QueryURocketMQMessageByIDResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// message详细信息
+	MessageList []MessageDetail
+}
+
+// NewQueryURocketMQMessageByIDRequest will create request of QueryURocketMQMessageByID action.
+func (c *URocketMQClient) NewQueryURocketMQMessageByIDRequest() *QueryURocketMQMessageByIDRequest {
+	req := &QueryURocketMQMessageByIDRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryURocketMQMessageByID
+
+获取一个指定 ID 的 Message 的详情
+*/
+func (c *URocketMQClient) QueryURocketMQMessageByID(req *QueryURocketMQMessageByIDRequest) (*QueryURocketMQMessageByIDResponse, error) {
+	var err error
+	var res QueryURocketMQMessageByIDResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryURocketMQMessageByID", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// QueryURocketMQMessageByKeyRequest is request schema for QueryURocketMQMessageByKey action
+type QueryURocketMQMessageByKeyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Message Key（向Topic发送消息时自定义的Key）
+	Key *string `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+
+	// Topic 名称
+	TopicName *string `required:"true"`
+}
+
+// QueryURocketMQMessageByKeyResponse is response schema for QueryURocketMQMessageByKey action
+type QueryURocketMQMessageByKeyResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// message列表
+	MessageList []MessageBaseInfo
+}
+
+// NewQueryURocketMQMessageByKeyRequest will create request of QueryURocketMQMessageByKey action.
+func (c *URocketMQClient) NewQueryURocketMQMessageByKeyRequest() *QueryURocketMQMessageByKeyRequest {
+	req := &QueryURocketMQMessageByKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryURocketMQMessageByKey
+
+根据 Topic 和 Key 查询消息列表
+*/
+func (c *URocketMQClient) QueryURocketMQMessageByKey(req *QueryURocketMQMessageByKeyRequest) (*QueryURocketMQMessageByKeyResponse, error) {
+	var err error
+	var res QueryURocketMQMessageByKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryURocketMQMessageByKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// QueryURocketMQMessageByTopicRequest is request schema for QueryURocketMQMessageByTopic action
+type QueryURocketMQMessageByTopicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 开始时间 Unix 秒
+	Begin *int `required:"true"`
+
+	// 结束时间
+	End *int `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+
+	// Topic 名称
+	TopicName *string `required:"true"`
+}
+
+// QueryURocketMQMessageByTopicResponse is response schema for QueryURocketMQMessageByTopic action
+type QueryURocketMQMessageByTopicResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+
+	// message列表
+	MessageList []MessageBaseInfo
+}
+
+// NewQueryURocketMQMessageByTopicRequest will create request of QueryURocketMQMessageByTopic action.
+func (c *URocketMQClient) NewQueryURocketMQMessageByTopicRequest() *QueryURocketMQMessageByTopicRequest {
+	req := &QueryURocketMQMessageByTopicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryURocketMQMessageByTopic
+
+根据 Topic 查询某个时间范围内的消息, 默认最大3天范围. 根据 Topic 查询 Message 时, 不返回 `MessageBody`.
+*/
+func (c *URocketMQClient) QueryURocketMQMessageByTopic(req *QueryURocketMQMessageByTopicRequest) (*QueryURocketMQMessageByTopicResponse, error) {
+	var err error
+	var res QueryURocketMQMessageByTopicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryURocketMQMessageByTopic", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateURocketMQServiceNameRequest is request schema for UpdateURocketMQServiceName action
+type UpdateURocketMQServiceNameRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Service 名称
+	Name *string `required:"true"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+}
+
+// UpdateURocketMQServiceNameResponse is response schema for UpdateURocketMQServiceName action
+type UpdateURocketMQServiceNameResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpdateURocketMQServiceNameRequest will create request of UpdateURocketMQServiceName action.
+func (c *URocketMQClient) NewUpdateURocketMQServiceNameRequest() *UpdateURocketMQServiceNameRequest {
+	req := &UpdateURocketMQServiceNameRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateURocketMQServiceName
+
+更新 Service 名称
+*/
+func (c *URocketMQClient) UpdateURocketMQServiceName(req *UpdateURocketMQServiceNameRequest) (*UpdateURocketMQServiceNameResponse, error) {
+	var err error
+	var res UpdateURocketMQServiceNameResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateURocketMQServiceName", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateURocketMQServiceRemarkRequest is request schema for UpdateURocketMQServiceRemark action
+type UpdateURocketMQServiceRemarkRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Service 描述
+	Remark *string `required:"false"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+}
+
+// UpdateURocketMQServiceRemarkResponse is response schema for UpdateURocketMQServiceRemark action
+type UpdateURocketMQServiceRemarkResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpdateURocketMQServiceRemarkRequest will create request of UpdateURocketMQServiceRemark action.
+func (c *URocketMQClient) NewUpdateURocketMQServiceRemarkRequest() *UpdateURocketMQServiceRemarkRequest {
+	req := &UpdateURocketMQServiceRemarkRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateURocketMQServiceRemark
+
+	更新 Service 描述
+*/
+func (c *URocketMQClient) UpdateURocketMQServiceRemark(req *UpdateURocketMQServiceRemarkRequest) (*UpdateURocketMQServiceRemarkResponse, error) {
+	var err error
+	var res UpdateURocketMQServiceRemarkResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateURocketMQServiceRemark", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateURocketMQTokenRequest is request schema for UpdateURocketMQToken action
+type UpdateURocketMQTokenRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 允许消费的Topic名称数组
+	AllowConsumeTopicList *string `required:"false"`
+
+	// 允许生产的Topic名称数组
+	AllowProduceTopicList *string `required:"false"`
+
+	// 实例ID
+	ServiceId *string `required:"true"`
+
+	// 令牌ID
+	TokenId *string `required:"true"`
+
+	// Topic消费权限
+	TopicConsumePerm *string `required:"true"`
+
+	// Topic生产权限
+	TopicProducePerm *string `required:"true"`
+}
+
+// UpdateURocketMQTokenResponse is response schema for UpdateURocketMQToken action
+type UpdateURocketMQTokenResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpdateURocketMQTokenRequest will create request of UpdateURocketMQToken action.
+func (c *URocketMQClient) NewUpdateURocketMQTokenRequest() *UpdateURocketMQTokenRequest {
+	req := &UpdateURocketMQTokenRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateURocketMQToken
+
+修改拥有对于实例下Topic进行细粒度管控的公私钥配置。
+*/
+func (c *URocketMQClient) UpdateURocketMQToken(req *UpdateURocketMQTokenRequest) (*UpdateURocketMQTokenResponse, error) {
+	var err error
+	var res UpdateURocketMQTokenResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateURocketMQToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateURocketMQTopicRequest is request schema for UpdateURocketMQTopic action
+type UpdateURocketMQTopicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// Topic 描述
+	Remark *string `required:"false"`
+
+	// Service ID
+	ServiceId *string `required:"true"`
+
+	// Topic 名称
+	TopicName *string `required:"true"`
+}
+
+// UpdateURocketMQTopicResponse is response schema for UpdateURocketMQTopic action
+type UpdateURocketMQTopicResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewUpdateURocketMQTopicRequest will create request of UpdateURocketMQTopic action.
+func (c *URocketMQClient) NewUpdateURocketMQTopicRequest() *UpdateURocketMQTopicRequest {
+	req := &UpdateURocketMQTopicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateURocketMQTopic
+
+当前仅支持修改 Topic 的描述
+*/
+func (c *URocketMQClient) UpdateURocketMQTopic(req *UpdateURocketMQTopicRequest) (*UpdateURocketMQTopicResponse, error) {
+	var err error
+	var res UpdateURocketMQTopicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateURocketMQTopic", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
