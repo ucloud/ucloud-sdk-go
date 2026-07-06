@@ -3,6 +3,126 @@
 package urocketmq
 
 /*
+ServiceDetail - Service 详情
+*/
+type ServiceDetail struct {
+
+	// 自动续费 1 自动续费，0 不自动续费
+	AutoRenew string
+
+	// 付费类型 参考link
+	ChargeType string
+
+	// 资源有效期 unix timestamp, 单位秒, 对应 PurchaseValue
+	ExpireTime int
+
+	// 名称
+	Name string
+
+	// 购买时长
+	Quantity int
+
+	// 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	Region string
+
+	// 描述
+	Remark string
+
+	// Service ID
+	ServiceId string
+
+	// 服务状态: Unknown:未知, Available: 可用, Initializing, Deleting:删除中,CreateFailed:创建失败
+	State string
+
+	// 存储空间, 单位 GB
+	Storage int
+
+	// subnet id
+	SubnetId string
+
+	// Topic 限额
+	TopicLimit int
+
+	// 规格, 具体枚举值待定
+	Tps int
+
+	// vpc id
+	VpcId string
+}
+
+/*
+PriceSet - 价格信息
+*/
+type PriceSet struct {
+
+	// 支付名称
+	ChargeName string
+
+	// 计费类型。Year，Month，Dynamic
+	ChargeType string
+
+	// 产品列表价。
+	ListPrice float64
+
+	// 限时优惠的折前原价（即列表价乘以商务折扣后的单价）。
+	OriginalPrice float64
+
+	// 价格，单位: 元，保留小数点后两位有效数字
+	Price float64
+}
+
+/*
+AKSK - 密钥
+*/
+type AKSK struct {
+
+	// 公钥
+	AccessKey string
+
+	// 私钥
+	SecretKey string
+}
+
+/*
+Token - 令牌
+*/
+type Token struct {
+
+	// 密钥
+	AKSK AKSK
+
+	// 允许消费的Topic名称数组
+	AllowConsumeTopicList string
+
+	// 允许生产的Topic名称数组
+	AllowProduceTopicList string
+
+	// 创建时间
+	CreateTime int
+
+	// 修改时间
+	ModifyTime int
+
+	// 令牌名称
+	Name string
+
+	// Service ID
+	ServiceId string
+
+	// 令牌ID
+	TokenId string
+
+	// Topic消费权限
+	TopicConsumePerm string
+
+	// Topic生产权限
+	TopicProducePerm string
+
+	// 令牌类型
+	Type string
+}
+
+/*
 GroupBaseInfo - Group基础信息
 */
 type GroupBaseInfo struct {
@@ -18,4 +138,181 @@ type GroupBaseInfo struct {
 
 	// Group 描述
 	Remark string
+}
+
+/*
+ServiceBaseInfo - Service基础信息
+*/
+type ServiceBaseInfo struct {
+
+	// Service 内网接入地址
+	Address string
+
+	// Service 外网接入地址
+	AddressExtranet string
+
+	// 是否自动续费。枚举值为：Yes：是；No：否。
+	AutoRenew string
+
+	// 计费模式。枚举值为：Year：按年付费；Month，按月付费；Dynamic，按小时预付费。
+	ChargeType string
+
+	// Service 创建时间, Unix timestamp 秒
+	CreateTime int
+
+	// 版本类别。枚举值为：Unknown：未知；Beta：测试版；Enterprise：企业版。
+	Edition string
+
+	// 资源有效期, Unix timestamp 秒
+	ExpireTime int
+
+	// 消息存储时长，单位：天
+	FileReservedTime int
+
+	// 资源是否过期。枚举值为：Yes：已过期；No：未过期
+	IsExpire string
+
+	// 网络模式。枚举值为：Unknown：未知；PrivateNet：内网；PublicNet：外网。
+	Mode string
+
+	// Service Name
+	Name string
+
+	// 购买时长
+	Quantity int
+
+	// Service 所在地域
+	Region string
+
+	// 描述
+	Remark string
+
+	// Service Id
+	ServiceId string
+
+	// 服务状态:。枚举值为：Unknown：未知；Available：可用；Initializing：初始化；Deleting：删除中；CreateFailed：创建失败；Closing：停服中；Closed：已停服；Recovering：停服恢复中；CloseFailed：停服失败；RecoverFailed：停服恢复失败；Upgrading：升级中；UpgradeFailed：升级失败；DeleteFailed：删除失败。
+	State string
+
+	// 消息队列存储空间, 单位：GB
+	Storage int
+
+	// subnet id
+	SubnetId string
+
+	// 业务组。Default：未分组
+	Tag string
+
+	// Topic 配额
+	TopicLimit int
+
+	// 实例规格 Tps
+	Tps int
+
+	// vpc id
+	VpcId string
+}
+
+/*
+TokenDetail - 令牌详情
+*/
+type TokenDetail struct {
+
+	// 密钥
+	AKSK AKSK
+
+	// 创建时间
+	CreateTime int
+
+	// 修改时间
+	ModifyTime int
+
+	// 令牌名称
+	Name string
+
+	// Service ID
+	ServiceId string
+
+	// 令牌ID
+	TokenId string
+
+	// Topic消费权限
+	TopicConsumePerm string
+
+	// Topic生产权限
+	TopicProducePerm string
+
+	// 令牌类型
+	Type string
+}
+
+/*
+TopicInfo - Topic信息
+*/
+type TopicInfo struct {
+
+	// Topic 创建时间
+	CreateTime int
+
+	// 消息类型
+	MessageType string
+
+	// Topic 描述
+	Remark string
+
+	// Topic ID
+	TopicId string
+
+	// Topic 名称
+	TopicName string
+}
+
+/*
+MessageProperties - message属性
+*/
+type MessageProperties struct {
+
+	// Message 的 Key
+	KEYS string
+
+	// Message 的 Tag
+	TAGS string
+}
+
+/*
+MessageDetail - message详细信息
+*/
+type MessageDetail struct {
+
+	// Message 的 Body
+	MessageBody string
+
+	// Message 的 ID
+	MsgId string
+
+	// Message属性
+	Properties MessageProperties
+
+	// Message 的落盘时间, Unix 毫秒
+	StoreTimestamp int
+
+	// Topic名称
+	Topic string
+}
+
+/*
+MessageBaseInfo - message基础信息
+*/
+type MessageBaseInfo struct {
+
+	// MessageID
+	MsgId string
+
+	// Message属性
+	Properties MessageProperties
+
+	// 保存时间戳
+	StoreTimestamp int
+
+	// Topic名称
+	Topic string
 }
