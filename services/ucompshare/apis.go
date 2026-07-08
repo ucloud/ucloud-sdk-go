@@ -728,7 +728,7 @@ type DeleteCompShareStopSchedulerRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
+	// ProjectId *string `required:"true"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
@@ -5059,7 +5059,7 @@ type UpdateCompShareStopSchedulerRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
+	// ProjectId *string `required:"true"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
