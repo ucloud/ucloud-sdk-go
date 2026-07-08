@@ -728,7 +728,7 @@ type DeleteCompShareStopSchedulerRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
+	// ProjectId *string `required:"true"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
@@ -5054,12 +5054,74 @@ func (c *UCompShareClient) UpdateCompShareImage(req *UpdateCompShareImageRequest
 	return &res, nil
 }
 
+// UpdateCompShareInstancePortsRequest is request schema for UpdateCompShareInstancePorts action
+type UpdateCompShareInstancePortsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// Http 端口列表，eg：HttpPorts.0:8188
+	HttpPorts []int `required:"false"`
+
+	// Tcp 端口列表，eg：TcpPorts.0:23
+	TcpPorts []int `required:"false"`
+
+	// 实例Id
+	UHostId *string `required:"false"`
+}
+
+// UpdateCompShareInstancePortsResponse is response schema for UpdateCompShareInstancePorts action
+type UpdateCompShareInstancePortsResponse struct {
+	response.CommonBase
+
+	// Pod 实例Id
+	UHostId string
+}
+
+// NewUpdateCompShareInstancePortsRequest will create request of UpdateCompShareInstancePorts action.
+func (c *UCompShareClient) NewUpdateCompShareInstancePortsRequest() *UpdateCompShareInstancePortsRequest {
+	req := &UpdateCompShareInstancePortsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCompShareInstancePorts
+
+更改Pod实例的端口信息
+*/
+func (c *UCompShareClient) UpdateCompShareInstancePorts(req *UpdateCompShareInstancePortsRequest) (*UpdateCompShareInstancePortsResponse, error) {
+	var err error
+	var res UpdateCompShareInstancePortsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCompShareInstancePorts", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UpdateCompShareStopSchedulerRequest is request schema for UpdateCompShareStopScheduler action
 type UpdateCompShareStopSchedulerRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
+	// ProjectId *string `required:"true"`
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`

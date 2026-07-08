@@ -39,57 +39,6 @@ type DataDiskInfo struct {
 }
 
 /*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
-}
-
-/*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
 Disks - 磁盘信息
 */
 type Disks struct {
@@ -132,6 +81,45 @@ type Features struct {
 }
 
 /*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -144,6 +132,18 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
 }
 
 /*
@@ -315,6 +315,54 @@ type CompShareImage struct {
 }
 
 /*
+DiskPriceInfo - 磁盘价格信息列表
+*/
+type DiskPriceInfo struct {
+
+	// 计费类型
+	ChargeType string
+
+	// 是否为系统盘
+	IsBoot bool
+
+	// 磁盘价格
+	Price float64
+}
+
+/*
+UHostDiskSet -
+*/
+type UHostDiskSet struct {
+
+	//
+	BackupType string `deprecated:"true"`
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
 UHostIPSet -
 */
 type UHostIPSet struct {
@@ -354,48 +402,6 @@ type UHostIPSet struct {
 }
 
 /*
-GpuMonitorInfo - GPU卡监控信息
-*/
-type GpuMonitorInfo struct {
-
-	// GPU卡名称
-	GPU string
-
-	// GPU卡使用率
-	GpuUsageRate string
-
-	// GPU显存使用率
-	MemoryUsageRate string
-}
-
-/*
-MonitorMessage - 监控信息
-*/
-type MonitorMessage struct {
-
-	// CPU使用率
-	CpuUsageRate string
-
-	// GPU卡监控信息
-	GpuInfo []GpuMonitorInfo
-
-	// 内存使用率
-	MemUsageRate string
-}
-
-/*
-SoftwareAddr -
-*/
-type SoftwareAddr struct {
-
-	// 软件名称
-	Name string
-
-	// 软件地址
-	URL string
-}
-
-/*
 WithoutGpuSpec - 无卡云主机规格信息
 */
 type WithoutGpuSpec struct {
@@ -411,51 +417,45 @@ type WithoutGpuSpec struct {
 }
 
 /*
-UHostDiskSet -
+GpuMonitorInfo - GPU卡监控信息
 */
-type UHostDiskSet struct {
+type GpuMonitorInfo struct {
 
-	//
-	BackupType string `deprecated:"true"`
+	// GPU卡名称
+	GPU string
 
-	// 磁盘ID
-	DiskId string
+	// GPU卡使用率
+	GpuUsageRate string
 
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
+	// GPU显存使用率
+	MemoryUsageRate string
 }
 
 /*
-DiskPriceInfo - 磁盘价格信息列表
+SoftwareAddr -
 */
-type DiskPriceInfo struct {
+type SoftwareAddr struct {
 
-	// 计费类型
-	ChargeType string
+	// 软件名称
+	Name string
 
-	// 是否为系统盘
-	IsBoot bool
+	// 软件地址
+	URL string
+}
 
-	// 磁盘价格
-	Price float64
+/*
+MonitorMessage - 监控信息
+*/
+type MonitorMessage struct {
+
+	// CPU使用率
+	CpuUsageRate string
+
+	// GPU卡监控信息
+	GpuInfo []GpuMonitorInfo
+
+	// 内存使用率
+	MemUsageRate string
 }
 
 /*
