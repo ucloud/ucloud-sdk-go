@@ -3,6 +3,18 @@
 package ucompshare
 
 /*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
 BootDiskInfo - 系统盘信息
 */
 type BootDiskInfo struct {
@@ -39,57 +51,6 @@ type DataDiskInfo struct {
 }
 
 /*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
-}
-
-/*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
 Disks - 磁盘信息
 */
 type Disks struct {
@@ -117,6 +78,45 @@ type FeatureModes struct {
 
 	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
 	RelatedToImageFeature []string
+}
+
+/*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
 }
 
 /*
@@ -189,18 +189,6 @@ type AvailableInstanceTypes struct {
 }
 
 /*
-Projects - 项目详情
-*/
-type Projects struct {
-
-	// 账号Id
-	AccountId string
-
-	// 账号昵称
-	AccountName string
-}
-
-/*
 Software -
 */
 type Software struct {
@@ -216,6 +204,18 @@ type Software struct {
 
 	// 框架版本
 	FrameworkVersion string
+}
+
+/*
+Projects - 项目详情
+*/
+type Projects struct {
+
+	// 账号Id
+	AccountId string
+
+	// 账号昵称
+	AccountName string
 }
 
 /*
@@ -315,45 +315,6 @@ type CompShareImage struct {
 }
 
 /*
-UHostIPSet -
-*/
-type UHostIPSet struct {
-
-	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// 外网IP资源ID 。(内网IP无对应的资源ID)
-	IPId string
-
-	// IPv4/IPv6；
-	IPMode string
-
-	// 内网 Private 类型下，当前网卡的Mac。
-	Mac string
-
-	// 弹性网卡为默认网卡时，返回对应的 ID 值
-	NetworkInterfaceId string
-
-	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
-	VPCId string
-
-	// 当前EIP的权重。权重最大的为当前的出口IP。
-	Weight int
-}
-
-/*
 GpuMonitorInfo - GPU卡监控信息
 */
 type GpuMonitorInfo struct {
@@ -381,18 +342,6 @@ type MonitorMessage struct {
 
 	// 内存使用率
 	MemUsageRate string
-}
-
-/*
-SoftwareAddr -
-*/
-type SoftwareAddr struct {
-
-	// 软件名称
-	Name string
-
-	// 软件地址
-	URL string
 }
 
 /*
@@ -456,6 +405,57 @@ type DiskPriceInfo struct {
 
 	// 磁盘价格
 	Price float64
+}
+
+/*
+SoftwareAddr -
+*/
+type SoftwareAddr struct {
+
+	// 软件名称
+	Name string
+
+	// 软件地址
+	URL string
+}
+
+/*
+UHostIPSet -
+*/
+type UHostIPSet struct {
+
+	// IP对应的带宽, 单位: Mb  (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 内网 Private 类型下，表示是否为默认网卡。true: 是默认网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// 外网IP资源ID 。(内网IP无对应的资源ID)
+	IPId string
+
+	// IPv4/IPv6；
+	IPMode string
+
+	// 内网 Private 类型下，当前网卡的Mac。
+	Mac string
+
+	// 弹性网卡为默认网卡时，返回对应的 ID 值
+	NetworkInterfaceId string
+
+	// IP地址对应的子网 ID。（北京一不支持，字段返回为空）
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP地址对应的VPC ID。（北京一不支持，字段返回为空）
+	VPCId string
+
+	// 当前EIP的权重。权重最大的为当前的出口IP。
+	Weight int
 }
 
 /*
@@ -720,18 +720,6 @@ type CompshareImageGroup struct {
 }
 
 /*
-ResourceTagItem - 资源标识
-*/
-type ResourceTagItem struct {
-
-	// 标识名称
-	KeyId string
-
-	// 标识信息
-	Value string
-}
-
-/*
 OrderDetailItem - 配置详情
 */
 type OrderDetailItem struct {
@@ -740,6 +728,18 @@ type OrderDetailItem struct {
 	ProductName string
 
 	// 配置
+	Value string
+}
+
+/*
+ResourceTagItem - 资源标识
+*/
+type ResourceTagItem struct {
+
+	// 标识名称
+	KeyId string
+
+	// 标识信息
 	Value string
 }
 
