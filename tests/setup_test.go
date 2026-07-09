@@ -81,7 +81,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uphone"
 	"github.com/ucloud/ucloud-sdk-go/services/uslk"
 	"github.com/ucloud/ucloud-sdk-go/services/usms"
-	"github.com/ucloud/ucloud-sdk-go/services/usnap"
 	"github.com/ucloud/ucloud-sdk-go/services/utsdb"
 	"github.com/ucloud/ucloud-sdk-go/services/uvms"
 )
@@ -281,9 +280,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("USMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return usms.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("USnap", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return usnap.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UTSDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return utsdb.NewClient(&cfg, &credential), nil

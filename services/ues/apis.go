@@ -85,7 +85,7 @@ type CreateUESInstanceRequest struct {
 	// 安全组ID，开启安全组必填，至多可以同时绑定5个安全组
 	SecGroupIds []string `required:"false"`
 
-	// 服务用户密码，默认为changeme
+	// 服务用户密码，默认为changeme.密码长度限8-30个字符，必须同时包含⼤写字⺟，⼩写字⺟和数字。⽆特殊字符。用户密码Base64加密。
 	ServicePasswd *string `required:"false"`
 
 	// elasticsearch 服务用户名称，默认为elastic；OpenSearch 服务用户名称，固定为admin
@@ -314,66 +314,6 @@ func (c *UESClient) ExpandUESInstance(req *ExpandUESInstanceRequest) (*ExpandUES
 	return &res, nil
 }
 
-// GetUESAppVersionRequest is request schema for GetUESAppVersion action
-type GetUESAppVersionRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Region *string `required:"true"`
-
-	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	// Zone *string `required:"true"`
-
-}
-
-// GetUESAppVersionResponse is response schema for GetUESAppVersion action
-type GetUESAppVersionResponse struct {
-	response.CommonBase
-
-	// 服务应用版本列表
-	AppVersionList []AppVersion
-
-	// 错误信息
-	Message string
-
-	// 服务应用版本个数
-	TotalCount int
-}
-
-// NewGetUESAppVersionRequest will create request of GetUESAppVersion action.
-func (c *UESClient) NewGetUESAppVersionRequest() *GetUESAppVersionRequest {
-	req := &GetUESAppVersionRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: GetUESAppVersion
-
-获取服务应用版本列表
-*/
-func (c *UESClient) GetUESAppVersion(req *GetUESAppVersionRequest) (*GetUESAppVersionResponse, error) {
-	var err error
-	var res GetUESAppVersionResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("GetUESAppVersion", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // GetUESDiskSizeLimitationRequest is request schema for GetUESDiskSizeLimitation action
 type GetUESDiskSizeLimitationRequest struct {
 	request.CommonBase
@@ -444,6 +384,8 @@ type GetUESNodeConfRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
+	// 应用服务版本号，支持的类型通过GetUESAppVersion AppVersionList[].AppVersion
+	AppVersion *string `required:"true"`
 }
 
 // GetUESNodeConfResponse is response schema for GetUESNodeConf action
@@ -664,7 +606,7 @@ func (c *UESClient) NewRestartUESInstanceRequest() *RestartUESInstanceRequest {
 /*
 API: RestartUESInstance
 
-重启实例
+重启实例。\\重启实例前需要确认当前实例状态为运行中。
 */
 func (c *UESClient) RestartUESInstance(req *RestartUESInstanceRequest) (*RestartUESInstanceResponse, error) {
 	var err error

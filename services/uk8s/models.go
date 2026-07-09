@@ -3,6 +3,27 @@
 package uk8s
 
 /*
+IPSet - 节点的IP信息
+*/
+type IPSet struct {
+
+	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// IP资源ID (内网IP无对应的资源ID)
+	IPId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+}
+
+/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -36,36 +57,6 @@ type DiskSet struct {
 
 	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
-}
-
-/*
-IPSet - 节点的IP信息
-*/
-type IPSet struct {
-
-	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// IP资源ID (内网IP无对应的资源ID)
-	IPId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
 }
 
 /*
@@ -111,6 +102,15 @@ type UhostInfo struct {
 }
 
 /*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
+}
+
+/*
 ImageInfo - UK8S 可用镜像信息
 */
 type ImageInfo struct {
@@ -153,12 +153,27 @@ type K8SNodeCondition struct {
 }
 
 /*
+UK8SVersionData - UK8S版本信息
+*/
+type UK8SVersionData struct {
+
+	// Containerd 版本
+	ContainerdVersion string
+
+	// K8S 版本
+	K8sVersion string
+}
+
+/*
 UHostIPSet - 云主机IP信息
 */
 type UHostIPSet struct {
 
 	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
 	Bandwidth int
+
+	//
+	Default string `deprecated:"true"`
 
 	// IP地址
 	IP string
