@@ -10,8 +10,14 @@ type ClusterV2Info struct {
 	// 项目组ID标识
 	BusinessId string
 
+	// 服务集群创建时间
+	CreateTime int
+
 	// 地域
 	Region string
+
+	// 服务集群运行时间
+	RunTime int
 
 	// 服务版本号
 	ServiceVersion string
@@ -90,21 +96,6 @@ type ClusterNodeV2Info struct {
 }
 
 /*
-AppVersion - ES可选版本详情
-*/
-type AppVersion struct {
-
-	// 应用名称，默认值为elasticsearch
-	AppName string
-
-	// 应用版本号
-	AppVersion string
-
-	// 是否支持多区部署，默认为false
-	IsMultiZone bool
-}
-
-/*
 DiskSizeLimitation -
 */
 type DiskSizeLimitation struct {
@@ -133,6 +124,9 @@ type NodeConf struct {
 	// 磁盘类型[RSSD|SSD]
 	DiskType string
 
+	// 节点系列标识
+	HostFamilyLabel string
+
 	// 是否支持安全组[true|false]
 	IsSecGroup bool
 
@@ -141,6 +135,9 @@ type NodeConf struct {
 
 	// 节点配置标识
 	NodeConf string
+
+	// 节点配置版本
+	Version string
 }
 
 /*
