@@ -69,7 +69,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/udns"
 	"github.com/ucloud/ucloud-sdk-go/services/udts"
 	"github.com/ucloud/ucloud-sdk-go/services/uec"
-	"github.com/ucloud/ucloud-sdk-go/services/ues"
 	"github.com/ucloud/ucloud-sdk-go/services/ufs"
 	"github.com/ucloud/ucloud-sdk-go/services/ugn"
 	"github.com/ucloud/ucloud-sdk-go/services/uhub"
@@ -227,9 +226,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UEC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uec.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UES", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ues.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UFS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ufs.NewClient(&cfg, &credential), nil

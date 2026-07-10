@@ -158,6 +158,9 @@ type CreateScanHotBigKeysRequest struct {
 	// 是否要重试任务，如果是的话，TaskId必填
 	IsRetry *bool `required:"false"`
 
+	// 分布式资源ID
+	SpaceId *string `required:"false"`
+
 	// 要重试的任务id
 	TaskId *string `required:"false"`
 
@@ -201,17 +204,85 @@ func (c *UMemClient) CreateScanHotBigKeys(req *CreateScanHotBigKeysRequest) (*Cr
 	return &res, nil
 }
 
+// CreateUDRedisUhproxyRequest is request schema for CreateUDRedisUhproxy action
+type CreateUDRedisUhproxyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 代理核数
+	CPU *int `required:"true"`
+
+	// 使用的代金券id
+	CouponId *string `required:"false"`
+
+	// 代理端口, 默认为 6379
+	Port *int `required:"false"`
+
+	// 代理个数
+	ProxyCnt *int `required:"false"`
+
+	// UMem内存空间ID
+	SpaceId *string `required:"true"`
+}
+
+// CreateUDRedisUhproxyResponse is response schema for CreateUDRedisUhproxy action
+type CreateUDRedisUhproxyResponse struct {
+	response.CommonBase
+
+	// 代理资源id
+	ResourceId string
+}
+
+// NewCreateUDRedisUhproxyRequest will create request of CreateUDRedisUhproxy action.
+func (c *UMemClient) NewCreateUDRedisUhproxyRequest() *CreateUDRedisUhproxyRequest {
+	req := &CreateUDRedisUhproxyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUDRedisUhproxy
+
+添加分布式Redis代理
+*/
+func (c *UMemClient) CreateUDRedisUhproxy(req *CreateUDRedisUhproxyRequest) (*CreateUDRedisUhproxyResponse, error) {
+	var err error
+	var res CreateUDRedisUhproxyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUDRedisUhproxy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUMemBackupRequest is request schema for CreateUMemBackup action
 type CreateUMemBackupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 请求创建备份的名称 (范围[6-63],只能包含英文、数字以及符号-和_)
@@ -477,13 +548,13 @@ func (c *UMemClient) CreateUMemcacheGroup(req *CreateUMemcacheGroupRequest) (*Cr
 type CreateURedisBackupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 请求创建组的名称 (范围[6-63],只能包含英文、数字以及符号-和_)
@@ -659,18 +730,74 @@ func (c *UMemClient) CreateURedisGroup(req *CreateURedisGroupRequest) (*CreateUR
 	return &res, nil
 }
 
+// DeleteUDRedisProxyRequest is request schema for DeleteUDRedisProxy action
+type DeleteUDRedisProxyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 代理id
+	ProxyId *string `required:"true"`
+
+	// 分布式Redis资源ID
+	SpaceId *string `required:"true"`
+}
+
+// DeleteUDRedisProxyResponse is response schema for DeleteUDRedisProxy action
+type DeleteUDRedisProxyResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteUDRedisProxyRequest will create request of DeleteUDRedisProxy action.
+func (c *UMemClient) NewDeleteUDRedisProxyRequest() *DeleteUDRedisProxyRequest {
+	req := &DeleteUDRedisProxyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUDRedisProxy
+
+删除分布式Redis代理
+*/
+func (c *UMemClient) DeleteUDRedisProxy(req *DeleteUDRedisProxyRequest) (*DeleteUDRedisProxyResponse, error) {
+	var err error
+	var res DeleteUDRedisProxyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUDRedisProxy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteUMemSpaceRequest is request schema for DeleteUMemSpace action
 type DeleteUMemSpaceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
 	// UMem内存空间ID
 	SpaceId *string `required:"true"`
@@ -716,13 +843,13 @@ func (c *UMemClient) DeleteUMemSpace(req *DeleteUMemSpaceRequest) (*DeleteUMemSp
 type DeleteUMemcacheGroupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 组ID
@@ -769,10 +896,10 @@ func (c *UMemClient) DeleteUMemcacheGroup(req *DeleteUMemcacheGroupRequest) (*De
 type DeleteURedisGroupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 组ID
@@ -892,6 +1019,9 @@ type DescribeUDRedisSlowlogRequest struct {
 
 	// 代理Id
 	ProxyId *string `required:"false"`
+
+	// 分布式资源Id
+	SpaceId *string `required:"false"`
 }
 
 // DescribeUDRedisSlowlogResponse is response schema for DescribeUDRedisSlowlog action
@@ -1076,13 +1206,13 @@ func (c *UMemClient) DescribeUMemBackup(req *DescribeUMemBackupRequest) (*Descri
 type DescribeUMemBackupURLRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 备份Id
@@ -1224,14 +1354,14 @@ type DescribeUMemPriceRequest struct {
 	// 实例类型是否为性能增强型。默认为false，或者不填，true为性能增强型。
 	HighPerformance *bool `required:"false"`
 
+	// umem 代理个数
+	ProxyCnt *int `required:"false"`
+
 	// umem 代理CPU核心数
 	ProxySize *int `required:"false"`
 
 	// 购买UMem的时长，默认值为1
 	Quantity *int `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	RegionFlag *bool `required:"false" deprecated:"true"`
 
 	// 购买umem大小,单位:GB,范围[1~1024]
 	Size *int `required:"true"`
@@ -1443,13 +1573,13 @@ func (c *UMemClient) DescribeUMemUpgradePrice(req *DescribeUMemUpgradePriceReque
 type DescribeUMemcacheGroupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 组的ID,如果指定则获取描述，否则为列表操 作,需指定Offset/Limit
@@ -1644,14 +1774,20 @@ type DescribeURedisBackupRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// 组的ID
-	GroupId *string `required:"true"`
+	// 备份Id，若传入，则只返回该BackupId的备份信息
+	BackupId *string `required:"false"`
+
+	// 组的ID，如果不传RegionType,GroupId为必传项
+	GroupId *string `required:"false"`
 
 	// 分页显示的条目数, 默认值为10
 	Limit *int `required:"false"`
 
 	// 分页显示的起始偏移, 默认值为0
 	Offset *int `required:"false"`
+
+	// 用于区分跨可用备份以及普通备份。默认为normal。跨可用则分为(source, target)
+	RegionType *string `required:"false"`
 
 	// 跨机房URedis，slave所在可用区（必须和Zone在同一Region，且不可相同）
 	SlaveZone *string `required:"false"`
@@ -1717,6 +1853,9 @@ type DescribeURedisBackupURLRequest struct {
 
 	// 实例ID
 	GroupId *string `required:"false"`
+
+	// 默认为false,true时代表查询跨地域备份URL
+	IsCrossRegion *bool `required:"false"`
 
 	// 是否是跨机房URedis(默认false)
 	RegionFlag *bool `required:"false"`
@@ -1933,9 +2072,6 @@ type DescribeURedisPriceRequest struct {
 
 	// 量大小,单位:GB  取值范围[1-32]
 	Size *int `required:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
 }
 
 // DescribeURedisPriceResponse is response schema for DescribeURedisPrice action
@@ -1981,13 +2117,13 @@ func (c *UMemClient) DescribeURedisPrice(req *DescribeURedisPriceRequest) (*Desc
 type DescribeURedisSlowlogRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 资源ID
@@ -2052,6 +2188,9 @@ type DescribeURedisUpgradePriceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// 切换类型，执行类型切换时询价需要传入的参数。“HighPerformance”： 表示转换为性能加强型，“Normal”： 表示转换为普通主备版类型
+	ConvertType *string `required:"false"`
+
 	// 要升级的空间的GroupId,请参考DescribeURedisGroup接口
 	GroupId *string `required:"true"`
 
@@ -2060,9 +2199,6 @@ type DescribeURedisUpgradePriceRequest struct {
 
 	// 购买uredis大小,单位:GB,范围是[1-32]
 	Size *int `required:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Type *string `required:"false" deprecated:"true"`
 }
 
 // DescribeURedisUpgradePriceResponse is response schema for DescribeURedisUpgradePrice action
@@ -2168,13 +2304,13 @@ func (c *UMemClient) DescribeURedisVersion(req *DescribeURedisVersionRequest) (*
 type FlushallURedisGroupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 清空的db，FlushType为FlushDb，此项为必传项
@@ -2236,14 +2372,14 @@ func (c *UMemClient) FlushallURedisGroup(req *FlushallURedisGroupRequest) (*Flus
 type GetUMemSpaceStateRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
 	// 内存空间ID
 	SpaceId *string `required:"true"`
@@ -2254,7 +2390,7 @@ type GetUMemSpaceStateResponse struct {
 	response.CommonBase
 
 	// Starting:创建中 Running:运行中 Fail:失败
-	State string
+	State []string
 }
 
 // NewGetUMemSpaceStateRequest will create request of GetUMemSpaceState action.
@@ -2347,18 +2483,74 @@ func (c *UMemClient) ISolationURedisGroup(req *ISolationURedisGroupRequest) (*IS
 	return &res, nil
 }
 
+// ModifyUMemPasswordRequest is request schema for ModifyUMemPassword action
+type ModifyUMemPasswordRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 新密码字符串，要求长度为6~36个字符,且只能包含英文、数字以及-和下划线；并且需要base64加密；如要取消密码，此值为空字符串
+	Password *string `required:"true"`
+
+	// 资源id
+	SpaceId *string `required:"true"`
+}
+
+// ModifyUMemPasswordResponse is response schema for ModifyUMemPassword action
+type ModifyUMemPasswordResponse struct {
+	response.CommonBase
+}
+
+// NewModifyUMemPasswordRequest will create request of ModifyUMemPassword action.
+func (c *UMemClient) NewModifyUMemPasswordRequest() *ModifyUMemPasswordRequest {
+	req := &ModifyUMemPasswordRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ModifyUMemPassword
+
+更改分布式redis密码
+*/
+func (c *UMemClient) ModifyUMemPassword(req *ModifyUMemPasswordRequest) (*ModifyUMemPasswordResponse, error) {
+	var err error
+	var res ModifyUMemPasswordResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ModifyUMemPassword", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ModifyUMemSpaceNameRequest is request schema for ModifyUMemSpaceName action
 type ModifyUMemSpaceNameRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
 	// 新的名称,长度(6<=size<=63)
 	Name *string `required:"true"`
@@ -2472,11 +2664,14 @@ func (c *UMemClient) ModifyURedisConfig(req *ModifyURedisConfigRequest) (*Modify
 type ModifyURedisGroupNameRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
 
 	// 组的ID
 	GroupId *string `required:"true"`
@@ -2525,13 +2720,13 @@ func (c *UMemClient) ModifyURedisGroupName(req *ModifyURedisGroupNameRequest) (*
 type ModifyURedisGroupPasswordRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 组的ID
@@ -2664,13 +2859,13 @@ func (c *UMemClient) RegisterUMemDefrag(req *RegisterUMemDefragRequest) (*Regist
 type RemoveUDRedisDataRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// 实例id
@@ -2778,54 +2973,6 @@ func (c *UMemClient) ResizeUDRedisBlockSize(req *ResizeUDRedisBlockSizeRequest) 
 	return &res, nil
 }
 
-// ResizeUDredisSpaceRequest is request schema for ResizeUDredisSpace action
-type ResizeUDredisSpaceRequest struct {
-	request.CommonBase
-
-	//
-	CouponId *string `required:"false"`
-
-	//
-	Size *int `required:"true"`
-
-	//
-	SpaceId *string `required:"true"`
-}
-
-// ResizeUDredisSpaceResponse is response schema for ResizeUDredisSpace action
-type ResizeUDredisSpaceResponse struct {
-	response.CommonBase
-}
-
-// NewResizeUDredisSpaceRequest will create request of ResizeUDredisSpace action.
-func (c *UMemClient) NewResizeUDredisSpaceRequest() *ResizeUDredisSpaceRequest {
-	req := &ResizeUDredisSpaceRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(false)
-	return req
-}
-
-/*
-API: ResizeUDredisSpace
-*/
-func (c *UMemClient) ResizeUDredisSpace(req *ResizeUDredisSpaceRequest) (*ResizeUDredisSpaceResponse, error) {
-	var err error
-	var res ResizeUDredisSpaceResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("ResizeUDredisSpace", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // ResizeUMemSpaceRequest is request schema for ResizeUMemSpace action
 type ResizeUMemSpaceRequest struct {
 	request.CommonBase
@@ -2838,9 +2985,6 @@ type ResizeUMemSpaceRequest struct {
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	ChargeType *string `required:"false" deprecated:"true"`
 
 	// 使用的代金券Id
 	CouponId *string `required:"false"`
@@ -2884,6 +3028,65 @@ func (c *UMemClient) ResizeUMemSpace(req *ResizeUMemSpaceRequest) (*ResizeUMemSp
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ResizeUMemSpace", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ResizeUMemcacheGroupRequest is request schema for ResizeUMemcacheGroup action
+type ResizeUMemcacheGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 代金券ID
+	CouponId *int `required:"false"`
+
+	// umemcache资源ID
+	GroupId *string `required:"true"`
+
+	// 内存大小, 单位:GB 目前支持1/2/4/8/16/32五种规格(暂时只支持扩容)
+	Size *int `required:"true"`
+}
+
+// ResizeUMemcacheGroupResponse is response schema for ResizeUMemcacheGroup action
+type ResizeUMemcacheGroupResponse struct {
+	response.CommonBase
+}
+
+// NewResizeUMemcacheGroupRequest will create request of ResizeUMemcacheGroup action.
+func (c *UMemClient) NewResizeUMemcacheGroupRequest() *ResizeUMemcacheGroupRequest {
+	req := &ResizeUMemcacheGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ResizeUMemcacheGroup
+
+调整memcache实例的容量
+*/
+func (c *UMemClient) ResizeUMemcacheGroup(req *ResizeUMemcacheGroupRequest) (*ResizeUMemcacheGroupResponse, error) {
+	var err error
+	var res ResizeUMemcacheGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ResizeUMemcacheGroup", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2962,18 +3165,80 @@ func (c *UMemClient) ResizeURedisGroup(req *ResizeURedisGroupRequest) (*ResizeUR
 	return &res, nil
 }
 
+// ResizeUhproxyRequest is request schema for ResizeUhproxy action
+type ResizeUhproxyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 使用的代金券id
+	CouponId *string `required:"false"`
+
+	// 代理目标核数
+	NewCPU *int `required:"true"`
+
+	// 代理id
+	ProxyId *string `required:"true"`
+
+	// 分布式Redis资源ID
+	SpaceId *string `required:"true"`
+}
+
+// ResizeUhproxyResponse is response schema for ResizeUhproxy action
+type ResizeUhproxyResponse struct {
+	response.CommonBase
+}
+
+// NewResizeUhproxyRequest will create request of ResizeUhproxy action.
+func (c *UMemClient) NewResizeUhproxyRequest() *ResizeUhproxyRequest {
+	req := &ResizeUhproxyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ResizeUhproxy
+
+分布式Redis代理规格调整
+*/
+func (c *UMemClient) ResizeUhproxy(req *ResizeUhproxyRequest) (*ResizeUhproxyResponse, error) {
+	var err error
+	var res ResizeUhproxyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ResizeUhproxy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // RestartUMemcacheGroupRequest is request schema for RestartUMemcacheGroup action
 type RestartUMemcacheGroupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
-	// Zone *string `required:"true"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
 
 	// 组的ID
 	GroupId *string `required:"true"`
@@ -3019,13 +3284,13 @@ func (c *UMemClient) RestartUMemcacheGroup(req *RestartUMemcacheGroupRequest) (*
 type RestartURedisGroupRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// 资源ID
@@ -3179,10 +3444,19 @@ type UpdateURedisBackupStrategyRequest struct {
 	AutoBackup *string `required:"false"`
 
 	// 备份时间，默认为0
-	BackupTime *string `required:"true"`
+	BackupTime *string `required:"false"`
+
+	// 跨可用备份目标地域（当Operation为modify时必选）
+	DstRegion *string `required:"false"`
 
 	// 组的ID
 	GroupId *string `required:"true"`
+
+	// 操作类型，不传默认为normal(即操控自动备份打开以及时间)，modify（修改跨地域备份策略）,close(关闭跨地域备份策略)
+	OperationType *string `required:"false"`
+
+	// 保存天数（当Operation为modify时必选）
+	SaveDays *int `required:"false"`
 
 	// 跨机房URedis，slave所在可用区（必须和Zone在同一Region，且不可相同）
 	SlaveZone *string `required:"false"`
