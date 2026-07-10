@@ -7,14 +7,32 @@ UDRedisProxyInfo - udredis代理信息
 */
 type UDRedisProxyInfo struct {
 
+	// 代理CPU核数
+	CPU int
+
 	// 代理id
 	ProxyId string
+
+	// 0 : 物理机版分布式代理, 1: NVME(或SSD)版分布式代理
+	ProxyType int
+
+	// 开启外网状态下的外网IP，否则为空
+	PublicIp string
+
+	// 读写分离策略, "Custom": 用户自定义节点权重， "Uniform": 包括主节点在内的所有节点平均读请求， "ReadOnly": 读请求均分至只读节点
+	ReadMode string
+
+	// 代理是否为只读
+	ReadOnly bool
 
 	// 代理资源id
 	ResourceId string
 
-	// 代理状态
+	// 代理状态 [PROXY_CREATING:创建中, PROXY_NORMAL:正常运行, PROXY_FAILED:创建失败, PROXY_CLOSED:关闭, PROXY_INIT_RESIZE:初始化核数调整, PROXY_WAIT_RESIZE:等待核数调整, PROXY_RESIZING:核数调整中, PROXY_RESIZE_ERROR:核数调整失败]
 	State string
+
+	// 代理是否支持设置为只读
+	SupportReadOnly bool
 
 	// 代理ip
 	Vip string
@@ -42,18 +60,6 @@ type UDRedisSlowlogSet struct {
 }
 
 /*
-UMemSpaceAddressSet - DescribeUMemSpace
-*/
-type UMemSpaceAddressSet struct {
-
-	// UMem实例访问IP
-	IP string
-
-	// UMem实例访问Port
-	Port int
-}
-
-/*
 UMemSlaveDataSet - DescribeUMem
 */
 type UMemSlaveDataSet struct {
@@ -67,6 +73,9 @@ type UMemSlaveDataSet struct {
 	// 创建时间
 	CreateTime int
 
+	// 是否是默认配置文件；true表示默认；false表示非默认
+	DefaultConfigId string
+
 	// 到期时间
 	ExpireTime int
 
@@ -75,6 +84,9 @@ type UMemSlaveDataSet struct {
 
 	// 资源名称
 	GroupName string
+
+	// 实例是否设置密码
+	HasPassword bool
 
 	// 主实例id
 	MasterGroupId string
@@ -112,6 +124,9 @@ type UMemSlaveDataSet struct {
 	// 业务组名称
 	Tag string
 
+	// 实例是否有加入到自治中心
+	UDACEnable bool
+
 	// 使用量单位MB
 	UsedSize int
 
@@ -129,12 +144,33 @@ type UMemSlaveDataSet struct {
 }
 
 /*
+UMemSpaceAddressSet - DescribeUMemSpace
+*/
+type UMemSpaceAddressSet struct {
+
+	// UMem实例内网访问IP
+	IP string
+
+	// UMem实例访问Port
+	Port int
+
+	// UMem实例内网访问域名地址，未开启状态下返回为空
+	PrivateDomain string
+
+	// 开启外网状态下外网IP，否则为空
+	PublicIp string
+}
+
+/*
 UMemDataSet - DescribeUMem
 */
 type UMemDataSet struct {
 
 	// IP端口信息请，参见UMemSpaceAddressSet
 	Address []UMemSpaceAddressSet
+
+	// 实例是否开启了回档
+	AofRollbackEnable bool
 
 	// 是否需要自动备份,enable,disable
 	AutoBackup string
@@ -154,11 +190,23 @@ type UMemDataSet struct {
 	// UMEM实例列表 UMemSlaveDataSet 如果没有slave，则没有该字段
 	DataSet []UMemSlaveDataSet
 
+	// 是否是默认配置文件，true表示默认；false表示非默认
+	DefaultConfigId string
+
 	// 到期时间
 	ExpireTime int
 
+	// 实例是否设置密码
+	HasPassword bool
+
 	// 是否开启高可用,enable,disable
 	HighAvailability string
+
+	// 是否是高性能Redis，true表示是；false表示否
+	IsHighPerformance bool
+
+	// 是否是读写分离
+	IsRWMode bool
 
 	// 资源名称
 	Name string
@@ -166,8 +214,14 @@ type UMemDataSet struct {
 	// 是否拥有只读Slave“Yes” 包含“No” 不包含
 	OwnSlave string
 
+	// 判断后端是否快杰资源（非快杰:  0或者1   快杰:  2或者3）
+	ProductType int
+
 	// 协议类型: memcache, redis
 	Protocol string
+
+	// URedis是否开启读写分离
+	ProxyName string
 
 	// 资源ID
 	ResourceId string
@@ -181,23 +235,41 @@ type UMemDataSet struct {
 	// 表示实例是主库还是从库,master,slave仅主备redis返回该项参数
 	Role string
 
+	// 证书过期时间
+	SSLCertExpireTime int
+
+	// 实例是否开启SSL
+	SSLEnable bool
+
+	// SSL版本
+	SSLVersion string
+
+	// 安全策略。1:内网隔离，2:加密通信，3:内网隔离+加密通信
+	SecPolicy int
+
 	// 容量单位GB
 	Size int
 
 	// 跨机房URedis，slave redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	SlaveZone string
 
-	// 实例状态                                  Starting                  // 创建中       Creating                  // 初始化中     CreateFail                // 创建失败     Fail                      // 创建失败     Deleting                  // 删除中       DeleteFail                // 删除失败     Running                   // 运行         Resizing                  // 容量调整中   ResizeFail                // 容量调整失败 Configing                 // 配置中       ConfigFail                // 配置失败Restarting                // 重启中SetPasswordFail    //设置密码失败
+	// 实例状态Starting                     // 创建中Creating                    // 初始化中Deleting                    // 删除中CreateFail                 // 创建失败DeleteFail                 // 删除失败Resizing                   // 容量调整中ResizeFail                // 容量调整失败Disasting                 // 容灾中Running                   // 运行SetPassword           // 设置密码SetPasswordFail     // 设置密码失败ISolation                  // 关闭Replicating              // 同步中ReplicateDone        //  数据同步完成ExecTimeout           // 待重试SlaveRecovering     // 备库恢复中ReplicateFail           // 同步失败DelayUpgrade         // 待扩容迁移 VersionUpgrading   // 升级中VersionUpgradeFail // 升级失败UpgradeMemInit     // 任务初始化ClusterUpgrading    // 规格调整中SSLSwitching         // 修改TLS中SSLSwitchFail        // 修改TLS失败
 	State string
 
 	// 子网
 	SubnetId string
+
+	// 实例是否支持回档
+	SupportAofRollback bool
 
 	// 业务组名称
 	Tag string
 
 	// 空间类型:single(无热备),double(热备)
 	Type string
+
+	// 实例是否有加入到自治中心
+	UDACEnable bool
 
 	// 使用量单位MB
 	UsedSize int
@@ -286,7 +358,7 @@ type UMemPriceSet struct {
 	// Year， Month， Dynamic，Trial
 	ChargeType string
 
-	// 产品列表价
+	//
 	ListPrice int `deprecated:"true"`
 
 	// 原价
@@ -357,17 +429,17 @@ type UMemSpaceSet struct {
 }
 
 /*
-PriceDataSet - 升降级价格
+PriceDataSet -
 */
 type PriceDataSet struct {
 
-	// 用户折后价
+	//
 	CustomPrice int
 
-	// 资源有效期
+	//
 	PurchaseValue int
 
-	// 升降级资源的价格
+	//
 	TotalPrice int
 }
 
@@ -463,11 +535,23 @@ type URedisBackupSet struct {
 	// 备份类型: Manual 手动 Auto 自动
 	BackupType string
 
+	// 跨地域备份目标地域
+	DstRegionName string
+
 	// 对应的实例ID
 	GroupId string
 
 	// 组名称
 	GroupName string
+
+	// 源实例容量大小
+	MemorySize int
+
+	// 源实例Redis版本
+	RedisVersion string
+
+	// 跨地域备份源地域
+	SrcRegionName string
 
 	// 备份的状态: Backuping 备份中 Success 备份成功 Error 备份失败 Expired 备份过期
 	State string
@@ -597,6 +681,9 @@ type URedisGroupSet struct {
 
 	// 空间类型:single(无热备),double(热备)
 	Type string
+
+	// 实例是否有加入到自治中心
+	UDACEnable bool
 
 	// 使用量单位MB
 	UsedSize int
