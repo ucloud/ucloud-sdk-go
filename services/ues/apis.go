@@ -314,6 +314,63 @@ func (c *UESClient) ExpandUESInstance(req *ExpandUESInstanceRequest) (*ExpandUES
 	return &res, nil
 }
 
+// GetUESAppVersionRequest is request schema for GetUESAppVersion action
+type GetUESAppVersionRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+}
+
+// GetUESAppVersionResponse is response schema for GetUESAppVersion action
+type GetUESAppVersionResponse struct {
+	response.CommonBase
+
+	// 服务应用版本列表
+	AppVersionList []AppVersion
+
+	// 服务应用版本个数
+	TotalCount int
+}
+
+// NewGetUESAppVersionRequest will create request of GetUESAppVersion action.
+func (c *UESClient) NewGetUESAppVersionRequest() *GetUESAppVersionRequest {
+	req := &GetUESAppVersionRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUESAppVersion
+
+获取服务应用版本列表
+*/
+func (c *UESClient) GetUESAppVersion(req *GetUESAppVersionRequest) (*GetUESAppVersionResponse, error) {
+	var err error
+	var res GetUESAppVersionResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUESAppVersion", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUESDiskSizeLimitationRequest is request schema for GetUESDiskSizeLimitation action
 type GetUESDiskSizeLimitationRequest struct {
 	request.CommonBase

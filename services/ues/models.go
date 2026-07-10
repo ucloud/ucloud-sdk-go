@@ -96,6 +96,21 @@ type ClusterNodeV2Info struct {
 }
 
 /*
+AppVersion - ES可选版本详情
+*/
+type AppVersion struct {
+
+	// 应用名称，默认值为elasticsearch
+	AppName string
+
+	// 应用版本号
+	AppVersion string
+
+	// 是否支持多区部署，默认为false
+	IsMultiZone bool
+}
+
+/*
 DiskSizeLimitation -
 */
 type DiskSizeLimitation struct {
