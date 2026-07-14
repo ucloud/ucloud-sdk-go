@@ -24,6 +24,60 @@ type IPSet struct {
 }
 
 /*
+SecGroupId - 安全组
+*/
+type SecGroupId struct {
+
+	// 安全组名称
+	Id string
+
+	// 安全组id
+	Name string
+
+	// 安全组优先级
+	Priority string
+}
+
+/*
+Autoscaler -
+*/
+type Autoscaler struct {
+
+	// 打开/关闭
+	Enabled int
+
+	// 静默时间
+	ScaleDownDelayAfterAdd string
+
+	// GPU缩容阈值
+	ScaleDownGpuUtilizationThreshold string
+
+	// 缩容触发延时
+	ScaleDownUnneededTime string
+
+	// CPU缩容阈值
+	ScaleDownUtilizationThreshold string
+
+	//
+	UpdateTime int
+
+	// 伸缩器版本
+	Version string
+}
+
+/*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
+}
+
+/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -64,6 +118,9 @@ UhostInfo - 机器信息
 */
 type UhostInfo struct {
 
+	// 基础镜像名称
+	BasicImageName string
+
 	// Cpu数量
 	CPU int
 
@@ -76,8 +133,17 @@ type UhostInfo struct {
 	// 到期时间
 	ExpireTime int
 
+	// GPU 数量
+	GPU int
+
+	// GPU 型号
+	GpuType string
+
 	// 节点IP信息
 	IPSet []IPSet
+
+	// 主机机型类别
+	MachineType string
 
 	// 内存
 	Memory int
@@ -94,8 +160,17 @@ type UhostInfo struct {
 	// 镜像信息
 	OsName string
 
+	// 操作系统类型
+	OsType string
+
+	// 节点关联的安全组列表
+	SecGroupId []SecGroupId
+
 	// 主机状态
 	State string
+
+	// 节点总磁盘空间
+	TotalDiskSpace int
 
 	// 所在机房
 	Zone string
@@ -115,14 +190,32 @@ ImageInfo - UK8S 可用镜像信息
 */
 type ImageInfo struct {
 
+	// 镜像支持的特性
+	Features []string
+
 	// 镜像 Id
 	ImageId string
 
 	// 镜像名称
 	ImageName string
 
+	// 镜像大小
+	ImageSize int
+
+	// 集成软件名称, 如NV驱动版本、cuda版本
+	IntegratedSoftware string
+
 	// 该镜像是否支持GPU机型，枚举值[true:不支持，false:支持]。
 	NotSupportGPU bool
+
+	// OS 名称
+	OsName string
+
+	// OS 类型
+	OsType string
+
+	// 支持的GPU机型
+	SupportedGPUTypes []string
 
 	// 可用区 Id
 	ZoneId int
@@ -181,8 +274,14 @@ type UHostIPSet struct {
 	// IP资源ID (内网IP无对应的资源ID)
 	IPId string
 
+	// IP 协议类型
+	IPMode string
+
 	// Mac地址
 	Mac string
+
+	// 网络接口资源 ID
+	NetworkInterfaceId string
 
 	// IP地址对应的子网 ID
 	SubnetId string
@@ -202,11 +301,20 @@ type NodeInfoV2 struct {
 	// 节点所属伸缩组ID，非伸缩组创建出来的节点，伸缩组ID为Default。
 	AsgId string
 
+	// 系统盘大小
+	BootDiskSize int
+
 	// Node节点CPU核数，单位: 个。
 	CPU int
 
+	// CPU平台
+	CPUPlatform string
+
 	// 节点创建时间
 	CreateTime int
+
+	// 数据盘大小，如果有多块数据盘会汇总展示，不包括PVC
+	DataDiskSize int
 
 	// 节点计费到期时间
 	ExpireTime int
@@ -214,8 +322,20 @@ type NodeInfoV2 struct {
 	// 节点的GPU颗数。
 	GPU int
 
+	// 节点GPU型号(如果为GPU机型)
+	GPUType string
+
+	// 边缘机房id
+	IDCId string
+
+	// 边缘机房
+	IDCName string
+
 	// 节点IP信息，详细信息见 UHostIPSet。
 	IPSet []UHostIPSet
+
+	// 是否启用了容器镜像加速
+	ImageAccelable bool
 
 	// 资源ID，如uhost-xxxx，或uphost-xxxxx。
 	InstanceId string
@@ -229,11 +349,32 @@ type NodeInfoV2 struct {
 	// kubeproxy信息，详细信息见KubeProxy。
 	KubeProxy KubeProxy
 
+	// Kubelet版本
+	KubeletVersion string
+
+	// 节点标签
+	Labels []string
+
 	// 机型类别，分别对应Uhost的MachineType或PHost的PHostType。
 	MachineType string
 
+	// CPU最大可用
+	MaxCPU int
+
+	// 内存最大可用
+	MaxMemory int
+
+	// pod最大可用
+	MaxPod int
+
 	// 内存大小，单位: MB。
 	Memory int
+
+	// 节点池id
+	NodeGroupId string
+
+	// 节点所属节点池名称
+	NodeGroupName string
 
 	// NodeId，Node在UK8S处的唯一标示，如uk8s-reewqe5-sdasadsda
 	NodeId string
@@ -253,8 +394,41 @@ type NodeInfoV2 struct {
 	// Node节点的操作系统类别，如Linux或Windows。
 	OsType string
 
+	// Pod CIDR
+	PodCIDR string
+
+	// 节点主机备注信息
+	Remark string
+
+	// 已申请的CPU
+	RequestCPU int
+
+	// 已申请的Memory
+	RequestMemory int
+
+	// 已申请的pod
+	RequestPod int
+
+	// Runtime 名字
+	RuntimeName string
+
+	// Runtime 版本
+	RuntimeVersion string
+
+	// 节点所属业务组
+	Tag string
+
+	// 主机规格族
+	UHostFamily string
+
 	// 是否允许Pod调度到该节点，枚举值为true或false。
 	Unschedulable bool
+
+	// 已使用的CPU
+	UsedCPU string
+
+	// 已使用的Memory
+	UsedMemory string
 
 	// Node所在可用区
 	Zone string
@@ -268,6 +442,9 @@ type ClusterSet struct {
 	// 集群apiserver地址
 	ApiServer string
 
+	// CNI网络模式
+	CNIMode string
+
 	// 集群ID
 	ClusterId string
 
@@ -277,14 +454,23 @@ type ClusterSet struct {
 	// 资源名字
 	ClusterName string
 
+	// 计费/管理形态，区分"专有版"和"托管版"两种售卖形态
+	ClusterType string
+
 	// 创建时间
 	CreateTime int
+
+	// 删除保护开关。0表示不开启，1表示开启。默认不开启
+	DeleteProtection int
 
 	// 集群外部apiserver地址
 	ExternalApiServer string
 
 	// 集群版本
 	K8sVersion string
+
+	// API Server 内部回环客户端证书
+	LoopbackClientCert LoopbackClientCert
 
 	// Master 节点数量
 	MasterCount int
@@ -294,6 +480,12 @@ type ClusterSet struct {
 
 	// Pod网段
 	PodCIDR string
+
+	// 容器运行时名称
+	RuntimeName string
+
+	// 容器运行时版本号，docker 或 containerd 版本
+	RuntimeVersion string
 
 	// 服务网段
 	ServiceCIDR string
@@ -306,6 +498,108 @@ type ClusterSet struct {
 
 	// 所属VPC
 	VPCId string
+}
+
+/*
+EvictionCondition - 驱逐条件或宽限时间
+*/
+type EvictionCondition struct {
+
+	// 镜像文件系统存储相关驱逐条件或宽限时间。
+	ImagefsAvailable string
+
+	// 内存相关驱逐条件或宽限时间。
+	MemoryAvailable string
+
+	// 节点存储余量相关驱逐条件或宽限时间。
+	NodefsAvailable string
+
+	// 节点剩余inodes驱逐条件或宽限时间。
+	NodefsInodesFree string
+}
+
+/*
+ReservedResource - 预留资源
+*/
+type ReservedResource struct {
+
+	// CPU
+	CPU string
+
+	// 存储
+	EphemeralStorage string
+
+	// 内存
+	Memory string
+
+	// Pid
+	Pid string
+}
+
+/*
+KubeletConfiguration - kubelet自定义配置
+*/
+type KubeletConfiguration struct {
+
+	// 最大日志文件数量
+	ContainerLogMaxFiles int
+
+	// 最大日志文件大小
+	ContainerLogMaxSize string
+
+	// 硬性驱逐条件，EvictionCondition类型
+	EvictionHard EvictionCondition
+
+	// 软性驱逐条件，EvictionCondition类型
+	EvictionSoft EvictionCondition
+
+	// 软性驱逐宽限时间，EvictionCondition类型
+	EvictionSoftGracePeriod EvictionCondition
+
+	// 镜像垃圾收集阈值
+	ImageGCHighThresholdPercent int
+
+	// 停止镜像垃圾收集阈值
+	ImageGCLowThresholdPercent int
+
+	// kubelet预留资源，ReservedResource类型
+	KubeReserved ReservedResource
+
+	// 最大Pod数量
+	MaxPods int
+
+	// 系统预留资源，ReservedResource类型
+	SystemReserved ReservedResource
+}
+
+/*
+EIP - 节点EIP
+*/
+type EIP struct {
+
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth int
+
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId string
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International，BGP: Bgp。 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName string
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode string
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId string
+}
+
+/*
+NetworkInterface - 网络接口
+*/
+type NetworkInterface struct {
+
+	// EIP
+	EIP EIP
 }
 
 /*
@@ -325,11 +619,17 @@ type NodeGroupSet struct {
 	// 付费方式
 	ChargeType string
 
+	// 节点池创建时间
+	CreateTime int
+
 	// 数据盘大小
 	DataDiskSize int
 
 	// 数据盘类型
 	DataDiskType string
+
+	// 磁盘列表
+	Disks []DiskSet
 
 	// GPU卡核心数
 	GPU int
@@ -340,14 +640,41 @@ type NodeGroupSet struct {
 	// 镜像ID
 	ImageId string
 
+	// 镜像名称
+	ImageName string
+
+	// 镜像类型
+	ImageType string
+
+	// 用户自定义Shell脚本。与UserData的区别在于InitScript在节点初始化完毕后才执行，UserData则是云主机初始化时执行。
+	InitScript string
+
+	// 硬件隔离组id。可通过DescribeIsolationGroup获取。
+	IsolationGroupId string
+
+	// KubeletConfiguration
+	KubeletConfiguration KubeletConfiguration
+
+	// Node节点标签。key=value形式,多组用”,“隔开，最多5组。 如env=pro,type=game
+	Labels string
+
 	// 机型
 	MachineType string
+
+	// int默认110，生产环境建议小于等于110。
+	MaxPods int
 
 	// 内存大小
 	Mem int
 
 	// cpu平台
 	MinimalCpuPlatform string
+
+	// 网络配置
+	NetCapability string
+
+	// Node节点网卡配置
+	NetworkInterface []NetworkInterface
 
 	// 节点池ID
 	NodeGroupId string
@@ -358,6 +685,48 @@ type NodeGroupSet struct {
 	// 节点id列表
 	NodeList []string
 
+	// 自定义Uhost主机名前缀。完整的自定义Uhost主机名为{NodeNamePrefix}-{NodeIP}。
+	NodeNamePrefix string
+
+	// 操作系统名称
+	OsName string
+
+	// 操作系统类型
+	OsType string
+
+	// 节点池关联的弹性伸缩组ID
+	RelatedAsg []string
+
+	// Node所属的安全组id（最多5个）
+	SecGroupId []SecGroupId
+
+	// 防火墙ID，默认：Web推荐防火墙。如何查询SecurityGroupId请参见 [DescribeFirewall](api/unet-api/describe_firewall.html)。
+	SecurityGroupId string
+
+	// 主机安全模式。Firewall：防火墙；SecGroup：安全组；默认值：Firewall。
+	SecurityMode string
+
+	// 子网 ID。默认为集群创建时填写的子网ID，也可以填写集群同VPC内的子网ID。
+	SubnetId string
+
 	// 业务组
 	Tag string
+
+	// Node节点污点，形式为key=value:effect，多组taints用”,“隔开,最多支持五组。
+	Taints string
+
+	// 主机规格族
+	UHostFamily string
+
+	// 是否启用 UNI 网络特性
+	UNIFeature bool
+
+	// 节点池更新时间
+	UpdateTime int
+
+	// 用户自定义数据。当镜像支持Cloud-init Feature时可填写此字段。注意：1、总数据量大小不超过 16K；2、使用base64编码。
+	UserData string
+
+	// 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Zone string
 }
