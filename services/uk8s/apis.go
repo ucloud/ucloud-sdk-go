@@ -292,33 +292,12 @@ func (c *UK8SClient) AddUK8SPHostNode(req *AddUK8SPHostNodeRequest) (*AddUK8SPHo
 }
 
 /*
-AddUK8SUHostNodeParamNetworkInterfaceEIP is request schema for complex param
+AddUK8SUHostNodeParamKubeletConfiguration is request schema for complex param
 */
-type AddUK8SUHostNodeParamNetworkInterfaceEIP struct {
+type AddUK8SUHostNodeParamKubeletConfiguration struct {
 
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth *int `required:"false"`
-
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId *string `required:"false"`
-
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName *string `required:"false"`
-
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode *string `required:"false"`
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-AddUK8SUHostNodeParamNetworkInterface is request schema for complex param
-*/
-type AddUK8SUHostNodeParamNetworkInterface struct {
-
-	//
-	EIP *AddUK8SUHostNodeParamNetworkInterfaceEIP `required:"false"`
+	// 全量KubeletConfiguration.XXX定义参考AddUK8SNodeGroup接口: https://uxiao.ucloudadmin.com/#/api-manager/api/detail/UK8S/AddUK8SNodeGroup
+	ContainerLogMaxFiles *string `required:"false"`
 }
 
 /*
@@ -334,6 +313,48 @@ type AddUK8SUHostNodeParamSecGroupId struct {
 
 	// 安全组优先级。取值范围[1, 5]
 	Priority *string `required:"false"`
+}
+
+/*
+AddUK8SUHostNodeParamNetworkInterfaceEIP is request schema for complex param
+*/
+type AddUK8SUHostNodeParamNetworkInterfaceEIP struct {
+
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth *int `required:"false"`
+
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId *string `required:"false"`
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International，BGP: Bgp。各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName *string `required:"false"`
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode *string `required:"false"`
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
+AddUK8SUHostNodeParamUserLabels is request schema for complex param
+*/
+type AddUK8SUHostNodeParamUserLabels struct {
+
+	// UK8S用户资源标签的键值
+	Key *string `required:"false"`
+
+	// UK8S用户资源标签的值
+	Value *string `required:"false"`
+}
+
+/*
+AddUK8SUHostNodeParamNetworkInterface is request schema for complex param
+*/
+type AddUK8SUHostNodeParamNetworkInterface struct {
+
+	//
+	EIP *AddUK8SUHostNodeParamNetworkInterfaceEIP `required:"false"`
 }
 
 // AddUK8SUHostNodeRequest is request schema for AddUK8SUHostNode action
@@ -391,6 +412,9 @@ type AddUK8SUHostNodeRequest struct {
 	// 硬件隔离组id。可通过DescribeIsolationGroup获取。
 	IsolationGroup *string `required:"false"`
 
+	//
+	KubeletConfiguration *AddUK8SUHostNodeParamKubeletConfiguration `required:"false"`
+
 	// Node节点标签。key=value形式,多组用”,“隔开，最多5组。 如env=pro,type=game
 	Labels *string `required:"false"`
 
@@ -422,7 +446,7 @@ type AddUK8SUHostNodeRequest struct {
 	NodeGroupId *string `required:"false"`
 
 	// Node节点密码。请遵照[[api:uhost-api:specification|字段规范]]设定密码。密码需使用base64进行编码，如下：# echo -n Password1 | base64
-	Password *string `required:"true"`
+	Password *string `required:"false"`
 
 	// 购买时长。默认: 1。按小时购买(Dynamic)时无需此参数。 月付时，此参数传0，代表了购买至月末。
 	Quantity *int `required:"false"`
@@ -445,14 +469,17 @@ type AddUK8SUHostNodeRequest struct {
 	// Node节点污点，形式为key=value:effect，多组taints用”,“隔开,最多支持五组。
 	Taints *string `required:"false"`
 
+	// 主机规格族
+	UHostFamily *string `required:"false"`
+
 	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
 	UNIFeature *bool `required:"false"`
 
 	// 用户自定义数据。当镜像支持Cloud-init Feature时可填写此字段。注意：1、总数据量大小不超过 16K；2、使用base64编码。
 	UserData *string `required:"false"`
 
-	// UK8S用户标签，key=value形式,多组用”,“隔开，最多5组。 如env=pro,type=game
-	UserLabels *string `required:"false"`
+	//
+	UserLabels []AddUK8SUHostNodeParamUserLabels `required:"false"`
 }
 
 // AddUK8SUHostNodeResponse is response schema for AddUK8SUHostNode action
@@ -516,42 +543,6 @@ type CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMasterSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
-CreateUK8SClusterV2ParamMaster is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMaster struct {
-
-	//
-	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
-
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	Zone *string `required:"true"`
-}
-
-/*
-CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamKubeProxy struct {
-
-	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
-	Mode *string `required:"false"`
 }
 
 /*
@@ -653,6 +644,42 @@ type CreateUK8SClusterV2ParamNodes struct {
 	UNIFeature *string `required:"false"`
 
 	// 一组Nodes节点所属可用区，可创建多组Nodes节点，如一组是CPU Nodes节点，另一组是GPU Nodes节点。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Zone *string `required:"true"`
+}
+
+/*
+CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMasterSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamKubeProxy struct {
+
+	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
+	Mode *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMaster is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMaster struct {
+
+	//
+	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
+
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	Zone *string `required:"true"`
 }
 
@@ -932,8 +959,14 @@ type DescribeUK8SClusterResponse struct {
 	// 集群apiserver地址
 	ApiServer string
 
+	// 集群的节点伸缩(CA)配置
+	Autoscaler Autoscaler
+
 	// 集群CA根证书
 	CACert string
+
+	// CNI模式，可选值VPC/Calico
+	CNIMode string
 
 	// 自定义或者默认的clusterdomain
 	ClusterDomain string
@@ -944,8 +977,20 @@ type DescribeUK8SClusterResponse struct {
 	// 资源名字
 	ClusterName string
 
+	// 集群版本
+	ClusterType string
+
 	// 创建时间
 	CreateTime int
+
+	// Pod是否使用独立子网
+	DedicatedPodSubnet bool
+
+	// 删除保护开关。0表示不开启，1表示开启。默认不开启
+	DeleteProtection int
+
+	// 是否开启了授权管理功能
+	EnableUserAuth bool
 
 	// 集群etcd服务证书
 	EtcdCert string
@@ -956,8 +1001,20 @@ type DescribeUK8SClusterResponse struct {
 	// 集群外部apiserver地址
 	ExternalApiServer string
 
+	// 外部 API Server 负载均衡实例 ID
+	ExternalUlb string
+
+	// 内部 API Server 负载均衡实例 ID
+	InternalUlb string
+
 	// kube-proxy配置
 	KubeProxy KubeProxy
+
+	// 负载均衡类型
+	LbClass string
+
+	// API Server 回环客户端证书
+	LoopbackClientCert LoopbackClientCert
 
 	// Master 节点数量
 	MasterCount int
@@ -968,6 +1025,12 @@ type DescribeUK8SClusterResponse struct {
 	// Master配置预警：Normal正常；Warning 需要升级；Error    需要紧急升级；
 	MasterResourceStatus string
 
+	// 集群的监控类型：no无监控；cloudwatch统一监控平台；prometheus内置监控
+	MonitorType string
+
+	// 节点网段
+	NodeCIDR string
+
 	// Node节点数量
 	NodeCount int
 
@@ -977,6 +1040,18 @@ type DescribeUK8SClusterResponse struct {
 	// Pod网段
 	PodCIDR string
 
+	// Pod使用的独立子网列表
+	PodSubnetIds []string
+
+	// Pod独立子网内的ip使用的安全组
+	PodSubnetSecGroups []string
+
+	// 容器运行时名称
+	RuntimeName string
+
+	// 容器运行时版本
+	RuntimeVersion string
+
 	// 服务网段
 	ServiceCIDR string
 
@@ -985,6 +1060,9 @@ type DescribeUK8SClusterResponse struct {
 
 	// 所属子网
 	SubnetId string
+
+	// 更新时间
+	UpdateTime int
 
 	// 所属VPC
 	VPCId string
@@ -1028,20 +1106,37 @@ func (c *UK8SClient) DescribeUK8SCluster(req *DescribeUK8SClusterRequest) (*Desc
 type DescribeUK8SImageRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// 适用GPU类型，如1080Ti、4090、V100、A800等，MachineType为G时必须提供
+	GPUType *string `required:"false"`
+
+	// k8s集群版本，如1.28.15
+	K8sVersion *string `required:"false"`
+
+	// 适用机型，如O、G、OPRO等，默认为O
+	MachineType *string `required:"false"`
+
+	// 产品类型，可选值uhost、uphost，不填则返回所有
+	ProductType *string `required:"false"`
 }
 
 // DescribeUK8SImageResponse is response schema for DescribeUK8SImage action
 type DescribeUK8SImageResponse struct {
 	response.CommonBase
+
+	// 虚拟机自制可用镜像集合, 详见ImageInfo 数组
+	CustomImageSet []string
+
+	// 裸金属自制可用镜像集合, 详见ImageInfo 数组
+	CustomPHostImageSet []string
 
 	// 虚拟机可用镜像集合, 详见ImageInfo 数组
 	ImageSet []ImageInfo
@@ -1049,7 +1144,7 @@ type DescribeUK8SImageResponse struct {
 	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息。
 	Message string
 
-	// 物理机可用镜像集合, 详见ImageInfo 数组
+	// 裸金属可用镜像集合, 详见ImageInfo 数组
 	PHostImageSet []ImageInfo
 }
 
@@ -1354,6 +1449,9 @@ type ListUK8SClusterNodeV2Request struct {
 
 	// UK8S集群ID
 	ClusterId *string `required:"true"`
+
+	// 可传一个或多个节点id  不传或为空则返回所有节点
+	NodeIds *string `required:"false"`
 }
 
 // ListUK8SClusterNodeV2Response is response schema for ListUK8SClusterNodeV2 action
@@ -1427,6 +1525,9 @@ type ListUK8SClusterV2Response struct {
 
 	// 集群信息，具体参考ClusterSet
 	ClusterSet []ClusterSet
+
+	// 总数
+	TotalCount int
 }
 
 // NewListUK8SClusterV2Request will create request of ListUK8SClusterV2 action.
