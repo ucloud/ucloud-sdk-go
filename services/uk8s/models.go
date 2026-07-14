@@ -3,81 +3,6 @@
 package uk8s
 
 /*
-IPSet - 节点的IP信息
-*/
-type IPSet struct {
-
-	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// IP资源ID (内网IP无对应的资源ID)
-	IPId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-}
-
-/*
-SecGroupId - 安全组
-*/
-type SecGroupId struct {
-
-	// 安全组名称
-	Id string
-
-	// 安全组id
-	Name string
-
-	// 安全组优先级
-	Priority string
-}
-
-/*
-Autoscaler -
-*/
-type Autoscaler struct {
-
-	// 打开/关闭
-	Enabled int
-
-	// 静默时间
-	ScaleDownDelayAfterAdd string
-
-	// GPU缩容阈值
-	ScaleDownGpuUtilizationThreshold string
-
-	// 缩容触发延时
-	ScaleDownUnneededTime string
-
-	// CPU缩容阈值
-	ScaleDownUtilizationThreshold string
-
-	//
-	UpdateTime int
-
-	// 伸缩器版本
-	Version string
-}
-
-/*
-LoopbackClientCert - API Server 回环客户端证书
-*/
-type LoopbackClientCert struct {
-
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
-}
-
-/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -111,6 +36,69 @@ type DiskSet struct {
 
 	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
+}
+
+/*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
+}
+
+/*
+IPSet - 节点的IP信息
+*/
+type IPSet struct {
+
+	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// IP资源ID (内网IP无对应的资源ID)
+	IPId string
+
+	// IP 地址分配模式
+	IPMode string
+
+	// 网卡的 MAC 地址
+	Mac string
+
+	// 虚拟网卡 Id
+	NetworkInterfaceId string
+
+	// IP 所在的 子网 Id
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP 所属的 VPC Id
+	VPCId string
+}
+
+/*
+SecGroupId - 安全组
+*/
+type SecGroupId struct {
+
+	// 安全组名称
+	Id string
+
+	// 安全组id
+	Name string
+
+	// 安全组优先级
+	Priority string
 }
 
 /*
@@ -174,6 +162,33 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
+}
+
+/*
+Autoscaler -
+*/
+type Autoscaler struct {
+
+	// 打开/关闭
+	Enabled int
+
+	// 静默时间
+	ScaleDownDelayAfterAdd string
+
+	// GPU缩容阈值
+	ScaleDownGpuUtilizationThreshold string
+
+	// 缩容触发延时
+	ScaleDownUnneededTime string
+
+	// CPU缩容阈值
+	ScaleDownUtilizationThreshold string
+
+	//
+	UpdateTime int
+
+	// 伸缩器版本
+	Version string
 }
 
 /*
@@ -304,7 +319,7 @@ type NodeInfoV2 struct {
 	// 系统盘大小
 	BootDiskSize int
 
-	// Node节点CPU核数，单位: 个。
+	// Node节点CPU核数，单位: 核。
 	CPU int
 
 	// CPU平台
@@ -425,10 +440,10 @@ type NodeInfoV2 struct {
 	Unschedulable bool
 
 	// 已使用的CPU
-	UsedCPU string
+	UsedCPU int
 
 	// 已使用的Memory
-	UsedMemory string
+	UsedMemory int
 
 	// Node所在可用区
 	Zone string
@@ -501,21 +516,24 @@ type ClusterSet struct {
 }
 
 /*
-EvictionCondition - 驱逐条件或宽限时间
+EIP - 节点EIP
 */
-type EvictionCondition struct {
+type EIP struct {
 
-	// 镜像文件系统存储相关驱逐条件或宽限时间。
-	ImagefsAvailable string
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth int
 
-	// 内存相关驱逐条件或宽限时间。
-	MemoryAvailable string
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId string
 
-	// 节点存储余量相关驱逐条件或宽限时间。
-	NodefsAvailable string
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International，BGP: Bgp。 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName string
 
-	// 节点剩余inodes驱逐条件或宽限时间。
-	NodefsInodesFree string
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode string
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId string
 }
 
 /*
@@ -534,6 +552,33 @@ type ReservedResource struct {
 
 	// Pid
 	Pid string
+}
+
+/*
+EvictionCondition - 驱逐条件或宽限时间
+*/
+type EvictionCondition struct {
+
+	// 镜像文件系统存储相关驱逐条件或宽限时间。
+	ImagefsAvailable string
+
+	// 内存相关驱逐条件或宽限时间。
+	MemoryAvailable string
+
+	// 节点存储余量相关驱逐条件或宽限时间。
+	NodefsAvailable string
+
+	// 节点剩余inodes驱逐条件或宽限时间。
+	NodefsInodesFree string
+}
+
+/*
+NetworkInterface - 网络接口
+*/
+type NetworkInterface struct {
+
+	// EIP
+	EIP EIP
 }
 
 /*
@@ -570,36 +615,6 @@ type KubeletConfiguration struct {
 
 	// 系统预留资源，ReservedResource类型
 	SystemReserved ReservedResource
-}
-
-/*
-EIP - 节点EIP
-*/
-type EIP struct {
-
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth int
-
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId string
-
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International，BGP: Bgp。 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName string
-
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode string
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId string
-}
-
-/*
-NetworkInterface - 网络接口
-*/
-type NetworkInterface struct {
-
-	// EIP
-	EIP EIP
 }
 
 /*

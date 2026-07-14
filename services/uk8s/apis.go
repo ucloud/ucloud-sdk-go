@@ -301,21 +301,6 @@ type AddUK8SUHostNodeParamKubeletConfiguration struct {
 }
 
 /*
-AddUK8SUHostNodeParamSecGroupId is request schema for complex param
-*/
-type AddUK8SUHostNodeParamSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
 AddUK8SUHostNodeParamNetworkInterfaceEIP is request schema for complex param
 */
 type AddUK8SUHostNodeParamNetworkInterfaceEIP struct {
@@ -334,6 +319,21 @@ type AddUK8SUHostNodeParamNetworkInterfaceEIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId *string `required:"false"`
+}
+
+/*
+AddUK8SUHostNodeParamSecGroupId is request schema for complex param
+*/
+type AddUK8SUHostNodeParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
 }
 
 /*
@@ -546,6 +546,33 @@ type CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP struct {
 }
 
 /*
+CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMasterSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMaster is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMaster struct {
+
+	//
+	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
+
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Zone *string `required:"true"`
+}
+
+/*
 CreateUK8SClusterV2ParamNodesNetworkInterface is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodesNetworkInterface struct {
@@ -648,39 +675,12 @@ type CreateUK8SClusterV2ParamNodes struct {
 }
 
 /*
-CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMasterSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
 CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
 */
 type CreateUK8SClusterV2ParamKubeProxy struct {
 
 	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
 	Mode *string `required:"false"`
-}
-
-/*
-CreateUK8SClusterV2ParamMaster is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMaster struct {
-
-	//
-	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
-
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	Zone *string `required:"true"`
 }
 
 // CreateUK8SClusterV2Request is request schema for CreateUK8SClusterV2 action
@@ -1133,10 +1133,10 @@ type DescribeUK8SImageResponse struct {
 	response.CommonBase
 
 	// 虚拟机自制可用镜像集合, 详见ImageInfo 数组
-	CustomImageSet []string
+	CustomImageSet []ImageInfo
 
 	// 裸金属自制可用镜像集合, 详见ImageInfo 数组
-	CustomPHostImageSet []string
+	CustomPHostImageSet []ImageInfo
 
 	// 虚拟机可用镜像集合, 详见ImageInfo 数组
 	ImageSet []ImageInfo
