@@ -81,14 +81,14 @@ type CreateULogServiceTopicRequest struct {
 	// 日志集ID
 	LogSetId *string `required:"true"`
 
-	// 保存时间 1~360 天，-1表示永久保存
+	// 保存时间 1~730 天
 	ReserveAge *int `required:"true"`
 
-	// 主题名称，校验规则"^[\w]{1,23}$"
+	// 主题名称，校验规则"^[\w]{1,64}$"
 	TopicName *string `required:"true"`
 
-	// 分区数量 数字1~20
-	TopicShardNum *int `required:"false"`
+	// 分区数量，固定是2
+	TopicShardNum *int `required:"true"`
 }
 
 // CreateULogServiceTopicResponse is response schema for CreateULogServiceTopic action
@@ -380,7 +380,7 @@ type QueryULogServiceLogRequest struct {
 	// Deprecated. 滚动加载参数ScrollId
 	ScrollId *string `required:"false"`
 
-	// 一次返回条数，默认20
+	// 一次返回条数，默认20。仅当检索分析语句不包含SQL时有效。SQL结果条数方式可以在SQL里使用limit语法。
 	Size *int `required:"false"`
 
 	// 日志时间排序;可选值ASC|DESC

@@ -48,9 +48,27 @@ type TopicInfo struct {
 }
 
 /*
+AnalysisField - 统计分析结果字段头
+*/
+type AnalysisField struct {
+
+	// 字段名
+	Name string
+
+	// 字段类型
+	Type string
+}
+
+/*
 LogContent - 日志内容
 */
 type LogContent struct {
+
+	// 日志文件路径
+	FileName string
+
+	// 日志来源主机
+	HostName string
 
 	// 日志标识ID
 	LogId string
@@ -66,6 +84,12 @@ type LogContent struct {
 LogQueryResult - 日志检索结果
 */
 type LogQueryResult struct {
+
+	// 当使用SQL语句查询时，数据通过该字段返回
+	AnalysisRecords []string
+
+	// 当使用SQL语句查询时，数据通过AnalysisRecords字段返回，Columns字段返回的是字段名和类型
+	Columns []AnalysisField
 
 	// 日志内容
 	Contents LogContent
