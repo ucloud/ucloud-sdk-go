@@ -9,6 +9,113 @@ import (
 
 // UGN API Schema
 
+/*
+AddRoutePolicyParamPolicyDstNetworks is request schema for complex param
+*/
+type AddRoutePolicyParamPolicyDstNetworks struct {
+
+	// 路由策略需要作用的网络实例ID数组，"Direction" 为 "In" 时，该值无效
+	NetworkId *string `required:"false"`
+}
+
+/*
+AddRoutePolicyParamPolicySrcNetworks is request schema for complex param
+*/
+type AddRoutePolicyParamPolicySrcNetworks struct {
+
+	// 路由策略需要匹配的路由的网络实例ID数组
+	NetworkId *string `required:"true"`
+
+	// 路由策略需要匹配的路由的网络实例下的网段数组
+	Prefixes []string `required:"false"`
+}
+
+/*
+AddRoutePolicyParamPolicy is request schema for complex param
+*/
+type AddRoutePolicyParamPolicy struct {
+
+	// 策略方向，限定取值："In"/"Out"
+	Direction *string `required:"true"`
+
+	// 路由策略需要作用的网络实例类型数组，限定取值："VPC" / "UWAN-VRouter"，"Direction" 为 "In" 时，该值无效
+	DstNetworkTypes []string `required:"false"`
+
+	//
+	DstNetworks []AddRoutePolicyParamPolicyDstNetworks `required:"false"`
+
+	// 策略名称，限定长度255
+	Name *string `required:"false"`
+
+	// 策略优先级，范围：[1,255]，数值越小优先级越大，同一方向，策略优先级不可重复
+	Priority *int `required:"true"`
+
+	// 策略执行动作，限定取值："Permit"/"Deny"
+	RouteAction *string `required:"true"`
+
+	// 当执行动作为 "Permit" 时，给匹配中的路由设置路由优先级，范围：[1,255]，数值越小优先级越大
+	RoutePriority *int `required:"false"`
+
+	// 路由策略需要匹配的路由的网络实例类型数组，限定取值："VPC" / "UWAN-VRouter"
+	SrcNetworkTypes []string `required:"false"`
+
+	//
+	SrcNetworks []AddRoutePolicyParamPolicySrcNetworks `required:"false"`
+
+	// 路由策略需要匹配的路由的所在地域数组
+	SrcRegions []string `required:"false"`
+}
+
+// AddRoutePolicyRequest is request schema for AddRoutePolicy action
+type AddRoutePolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	//
+	Policy *AddRoutePolicyParamPolicy `required:"false"`
+
+	// 云联网实例ID
+	UGNID *string `required:"true"`
+}
+
+// AddRoutePolicyResponse is response schema for AddRoutePolicy action
+type AddRoutePolicyResponse struct {
+	response.CommonBase
+}
+
+// NewAddRoutePolicyRequest will create request of AddRoutePolicy action.
+func (c *UGNClient) NewAddRoutePolicyRequest() *AddRoutePolicyRequest {
+	req := &AddRoutePolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddRoutePolicy
+
+新增路由策略
+*/
+func (c *UGNClient) AddRoutePolicy(req *AddRoutePolicyRequest) (*AddRoutePolicyResponse, error) {
+	var err error
+	var res AddRoutePolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddRoutePolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // AttachUGNInstanceRequest is request schema for AttachUGNInstance action
 type AttachUGNInstanceRequest struct {
 	request.CommonBase
@@ -64,6 +171,83 @@ func (c *UGNClient) AttachUGNInstance(req *AttachUGNInstanceRequest) (*AttachUGN
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("AttachUGNInstance", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+AttachUGNNetworksParamNetworks is request schema for complex param
+*/
+type AttachUGNNetworksParamNetworks struct {
+
+	// 网络实例 ID，如 uvnet-xxxx
+	NetworkID *string `required:"true"`
+
+	// 网络实例所属项目名，如 org-xxx
+	OrgName *string `required:"true"`
+
+	// 网络实例所属地域，如 cn-sh2
+	Region *string `required:"true"`
+
+	// 网络实例类型，枚举值：VPC/UCVR/...
+	Type *string `required:"true"`
+}
+
+// AttachUGNNetworksRequest is request schema for AttachUGNNetworks action
+type AttachUGNNetworksRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	//
+	Networks []AttachUGNNetworksParamNetworks `required:"false"`
+
+	// UGN ID
+	UGNID *string `required:"true"`
+}
+
+// AttachUGNNetworksResponse is response schema for AttachUGNNetworks action
+type AttachUGNNetworksResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 数组，数组内每个元素的字段如下： NetworkID：string，网络实例 ID，如 uvnet-xxxx； Type：string，网络实例类型，枚举值：VPC/UCVR/...； Region：string，网络实例所属地域，如 cn-sh2； OrgName：string，网络实例所属项目名，如 org-xxx
+	Networks []Network
+
+	// UGN ID
+	UGNID string
+}
+
+// NewAttachUGNNetworksRequest will create request of AttachUGNNetworks action.
+func (c *UGNClient) NewAttachUGNNetworksRequest() *AttachUGNNetworksRequest {
+	req := &AttachUGNNetworksRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: AttachUGNNetworks
+
+批量关联网络实例
+*/
+func (c *UGNClient) AttachUGNNetworks(req *AttachUGNNetworksRequest) (*AttachUGNNetworksResponse, error) {
+	var err error
+	var res AttachUGNNetworksResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AttachUGNNetworks", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -198,6 +382,219 @@ func (c *UGNClient) CreateInterRegionBandwidth(req *CreateInterRegionBandwidthRe
 	return &res, nil
 }
 
+// CreateSimpleUGNBwPackageRequest is request schema for CreateSimpleUGNBwPackage action
+type CreateSimpleUGNBwPackageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 购买的带宽值
+	BandWidth *int `required:"true"`
+
+	// 付费方式 Month:按月｜Year:按年｜PostPay:后付费｜Count:按量
+	ChargeType *string `required:"true"`
+
+	// 代金券 id
+	CouponId *string `required:"false"`
+
+	// 带宽包名称
+	Name *string `required:"false"`
+
+	// 智能路径 Delay:最低时延｜IGP:普通线路｜TCO:最低成本
+	Path *string `required:"false"`
+
+	// 计费模式 FixedBw:固定带宽｜Max5:第五峰值｜Traffic:流量计费 固定带宽：按月/按年 Max5：后付费 流量计费：后付费
+	PayMode *string `required:"true"`
+
+	// 服务质量 Diamond:钻石｜Platinum:铂金｜Gold:黄金
+	Qos *string `required:"false"`
+
+	// 购买份数，主要用于预付费
+	Quantity *float64 `required:"true"`
+
+	// 地域 A 名称
+	RegionA *string `required:"true"`
+
+	// 地域 B 名称
+	RegionB *string `required:"true"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	// ugn 资源 id
+	UGNID *string `required:"true"`
+}
+
+// CreateSimpleUGNBwPackageResponse is response schema for CreateSimpleUGNBwPackage action
+type CreateSimpleUGNBwPackageResponse struct {
+	response.CommonBase
+
+	// 返回信息
+	Message string
+}
+
+// NewCreateSimpleUGNBwPackageRequest will create request of CreateSimpleUGNBwPackage action.
+func (c *UGNClient) NewCreateSimpleUGNBwPackageRequest() *CreateSimpleUGNBwPackageRequest {
+	req := &CreateSimpleUGNBwPackageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateSimpleUGNBwPackage
+
+云联网简洁版创建带宽包
+*/
+func (c *UGNClient) CreateSimpleUGNBwPackage(req *CreateSimpleUGNBwPackageRequest) (*CreateSimpleUGNBwPackageResponse, error) {
+	var err error
+	var res CreateSimpleUGNBwPackageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateSimpleUGNBwPackage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateUGNParamNetworks is request schema for complex param
+*/
+type CreateUGNParamNetworks struct {
+
+	// 网络实例 ID，如 uvnet-xxxx
+	NetworkID *string `required:"false"`
+
+	// 网络实例所属项目名，如 org-xxx
+	OrgName *string `required:"false"`
+
+	// 网络实例所属地域，如 cn-sh2
+	Region *string `required:"false"`
+
+	// 网络实例类型，枚举值：VPC/UCVR/...
+	Type *string `required:"false"`
+}
+
+// CreateUGNRequest is request schema for CreateUGN action
+type CreateUGNRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// UGN名称
+	Name *string `required:"false"`
+
+	//
+	Networks []CreateUGNParamNetworks `required:"false"`
+
+	// 备注
+	Remark *string `required:"false"`
+}
+
+// CreateUGNResponse is response schema for CreateUGN action
+type CreateUGNResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 网络实例列表
+	Networks []Network
+
+	// UGN ID
+	UGNID string
+}
+
+// NewCreateUGNRequest will create request of CreateUGN action.
+func (c *UGNClient) NewCreateUGNRequest() *CreateUGNRequest {
+	req := &CreateUGNRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUGN
+
+创建云联网
+*/
+func (c *UGNClient) CreateUGN(req *CreateUGNRequest) (*CreateUGNResponse, error) {
+	var err error
+	var res CreateUGNResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUGN", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DelUGNRequest is request schema for DelUGN action
+type DelUGNRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// UGNID
+	UGNID *string `required:"true"`
+}
+
+// DelUGNResponse is response schema for DelUGN action
+type DelUGNResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewDelUGNRequest will create request of DelUGN action.
+func (c *UGNClient) NewDelUGNRequest() *DelUGNRequest {
+	req := &DelUGNRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DelUGN
+
+删除云联网，仅云联网内无带宽包或网络实例时才可以被删除
+*/
+func (c *UGNClient) DelUGN(req *DelUGNRequest) (*DelUGNResponse, error) {
+	var err error
+	var res DelUGNResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DelUGN", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteInterRegionBandwidthRequest is request schema for DeleteInterRegionBandwidth action
 type DeleteInterRegionBandwidthRequest struct {
 	request.CommonBase
@@ -251,6 +648,56 @@ func (c *UGNClient) DeleteInterRegionBandwidth(req *DeleteInterRegionBandwidthRe
 	return &res, nil
 }
 
+// DeleteRoutePolicyRequest is request schema for DeleteRoutePolicy action
+type DeleteRoutePolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 需要删除的路由策略ID数组
+	PolicyIds []string `required:"true"`
+
+	// 云联网实例ID
+	UGNID *string `required:"true"`
+}
+
+// DeleteRoutePolicyResponse is response schema for DeleteRoutePolicy action
+type DeleteRoutePolicyResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteRoutePolicyRequest will create request of DeleteRoutePolicy action.
+func (c *UGNClient) NewDeleteRoutePolicyRequest() *DeleteRoutePolicyRequest {
+	req := &DeleteRoutePolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteRoutePolicy
+
+删除路由策略
+*/
+func (c *UGNClient) DeleteRoutePolicy(req *DeleteRoutePolicyRequest) (*DeleteRoutePolicyResponse, error) {
+	var err error
+	var res DeleteRoutePolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteRoutePolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteUGNRequest is request schema for DeleteUGN action
 type DeleteUGNRequest struct {
 	request.CommonBase
@@ -294,6 +741,59 @@ func (c *UGNClient) DeleteUGN(req *DeleteUGNRequest) (*DeleteUGNResponse, error)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteUGN", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUGNBwPackageRequest is request schema for DeleteUGNBwPackage action
+type DeleteUGNBwPackageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 带宽包ID
+	BwPackageID *string `required:"true"`
+
+	// UGNID
+	UGNID *string `required:"true"`
+}
+
+// DeleteUGNBwPackageResponse is response schema for DeleteUGNBwPackage action
+type DeleteUGNBwPackageResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewDeleteUGNBwPackageRequest will create request of DeleteUGNBwPackage action.
+func (c *UGNClient) NewDeleteUGNBwPackageRequest() *DeleteUGNBwPackageRequest {
+	req := &DeleteUGNBwPackageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUGNBwPackage
+
+删除带宽包，互通地域仅保留默认带宽包
+*/
+func (c *UGNClient) DeleteUGNBwPackage(req *DeleteUGNBwPackageRequest) (*DeleteUGNBwPackageResponse, error) {
+	var err error
+	var res DeleteUGNBwPackageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUGNBwPackage", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -371,7 +871,7 @@ type DescribeSimpleUGNRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
+	// ProjectId *string `required:"true"`
 
 	// UGN ID
 	UGNID *string `required:"true"`
@@ -381,19 +881,22 @@ type DescribeSimpleUGNRequest struct {
 type DescribeSimpleUGNResponse struct {
 	response.CommonBase
 
-	//
+	// 云联网下的带宽基本信息
 	BwPackages []SimpleBwPackage
 
-	//
+	// 返回信息
 	Message string
 
-	//
+	// 加入云联网网络实例基本信息
 	Networks []SimpleNetwork
 
-	//
+	// 云联网的路由策略基本信息
+	Policies []Policy
+
+	// 云联网下的路由基本信息
 	Routes []SimpleRoute
 
-	//
+	// 云联网实例基本信息
 	UGN UGN
 }
 
@@ -665,6 +1168,192 @@ func (c *UGNClient) DetachUGNInstance(req *DetachUGNInstanceRequest) (*DetachUGN
 	return &res, nil
 }
 
+// DetachUGNNetworksRequest is request schema for DetachUGNNetworks action
+type DetachUGNNetworksRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 网络实例 ID
+	Networks []string `required:"true"`
+
+	// UGNID
+	UGNID *string `required:"true"`
+}
+
+// DetachUGNNetworksResponse is response schema for DetachUGNNetworks action
+type DetachUGNNetworksResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 数组，数组内每个元素的字段如下： NetworkID：string，网络实例 ID，如 uvnet-xxxx； Type：string，网络实例类型，枚举值：VPC/UCVR/...； Region：string，网络实例所属地域，如 cn-sh2； OrgName：string，网络实例所属项目名，如 org-xxx
+	Networks []Network
+
+	// UGN ID
+	UGNID string
+}
+
+// NewDetachUGNNetworksRequest will create request of DetachUGNNetworks action.
+func (c *UGNClient) NewDetachUGNNetworksRequest() *DetachUGNNetworksRequest {
+	req := &DetachUGNNetworksRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DetachUGNNetworks
+
+批量解除关联网络实例
+*/
+func (c *UGNClient) DetachUGNNetworks(req *DetachUGNNetworksRequest) (*DetachUGNNetworksResponse, error) {
+	var err error
+	var res DetachUGNNetworksResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DetachUGNNetworks", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// EnableRoutePolicyRequest is request schema for EnableRoutePolicy action
+type EnableRoutePolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 是否启用
+	Enable *bool `required:"true"`
+
+	// 路由策略ID
+	PolicyId *string `required:"true"`
+
+	// 云联网实例ID
+	UGNID *string `required:"true"`
+}
+
+// EnableRoutePolicyResponse is response schema for EnableRoutePolicy action
+type EnableRoutePolicyResponse struct {
+	response.CommonBase
+}
+
+// NewEnableRoutePolicyRequest will create request of EnableRoutePolicy action.
+func (c *UGNClient) NewEnableRoutePolicyRequest() *EnableRoutePolicyRequest {
+	req := &EnableRoutePolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: EnableRoutePolicy
+
+启用\停用路由策略
+*/
+func (c *UGNClient) EnableRoutePolicy(req *EnableRoutePolicyRequest) (*EnableRoutePolicyResponse, error) {
+	var err error
+	var res EnableRoutePolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("EnableRoutePolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetSimpleBuyBwPriceRequest is request schema for GetSimpleBuyBwPrice action
+type GetSimpleBuyBwPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 购买的带宽值，默认为1
+	BandWidth *int `required:"false"`
+
+	// 付费方式 Month:按月｜Year:按年｜PostPay:后付费｜Count:按量
+	ChargeType *string `required:"true"`
+
+	// 智能路径 Delay:最低时延｜IGP:普通线路｜TCO:最低成本
+	Path *string `required:"true"`
+
+	// 计费模式 FixedBw:固定带宽｜Max5:第五峰值｜Traffic:流量计费 固定带宽：按月/按年 Max5：后付费 流量计费：按量付费
+	PayMode *string `required:"true"`
+
+	// 服务质量 Diamond:钻石｜Platinum:铂金｜Gold:黄金
+	Qos *string `required:"true"`
+
+	// 地域 A 名称
+	RegionA *string `required:"true"`
+
+	// 地域 B 名称
+	RegionB *string `required:"true"`
+}
+
+// GetSimpleBuyBwPriceResponse is response schema for GetSimpleBuyBwPrice action
+type GetSimpleBuyBwPriceResponse struct {
+	response.CommonBase
+
+	// 客户折扣价 = 原价 * 用户折扣
+	CustomPrice int
+
+	// 原价
+	OriginalPrice int
+
+	// 最终价格 = 原价 * 用户折扣 * 产品折扣
+	TotalPrice int
+}
+
+// NewGetSimpleBuyBwPriceRequest will create request of GetSimpleBuyBwPrice action.
+func (c *UGNClient) NewGetSimpleBuyBwPriceRequest() *GetSimpleBuyBwPriceRequest {
+	req := &GetSimpleBuyBwPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetSimpleBuyBwPrice
+
+获取简洁版带宽包价格
+*/
+func (c *UGNClient) GetSimpleBuyBwPrice(req *GetSimpleBuyBwPriceRequest) (*GetSimpleBuyBwPriceResponse, error) {
+	var err error
+	var res GetSimpleBuyBwPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetSimpleBuyBwPrice", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetSimpleUGNBwPackagesRequest is request schema for GetSimpleUGNBwPackages action
 type GetSimpleUGNBwPackagesRequest struct {
 	request.CommonBase
@@ -678,7 +1367,10 @@ type GetSimpleUGNBwPackagesRequest struct {
 	// 偏移量，默认0
 	Offset *int `required:"false"`
 
-	//
+	// 带宽包ID列表，不填查询UGN下全部带宽包
+	PackageIds []string `required:"false"`
+
+	// UGN ID
 	UGNID *string `required:"true"`
 }
 
@@ -686,19 +1378,19 @@ type GetSimpleUGNBwPackagesRequest struct {
 type GetSimpleUGNBwPackagesResponse struct {
 	response.CommonBase
 
-	//
+	// 带宽包列表
 	BwPackages []SimpleBwPackage
 
-	//
+	// 分页大小
 	Limit int
 
-	//
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
 
-	//
+	// 偏移量
 	Offset int
 
-	//
+	// 带宽包数量
 	TotalCount int
 }
 
@@ -733,6 +1425,118 @@ func (c *UGNClient) GetSimpleUGNBwPackages(req *GetSimpleUGNBwPackagesRequest) (
 	return &res, nil
 }
 
+// GetSwitchableBillingModesRequest is request schema for GetSwitchableBillingModes action
+type GetSwitchableBillingModesRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 带宽包 id
+	BwPackageID *string `required:"true"`
+}
+
+// GetSwitchableBillingModesResponse is response schema for GetSwitchableBillingModes action
+type GetSwitchableBillingModesResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 支持的计费类型。FixedBw：固定带宽，Traffic：流量计费，Max5：第五峰值。
+	PayModes []string
+}
+
+// NewGetSwitchableBillingModesRequest will create request of GetSwitchableBillingModes action.
+func (c *UGNClient) NewGetSwitchableBillingModesRequest() *GetSwitchableBillingModesRequest {
+	req := &GetSwitchableBillingModesRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetSwitchableBillingModes
+
+获取带宽包可以切换的计费类型
+*/
+func (c *UGNClient) GetSwitchableBillingModes(req *GetSwitchableBillingModesRequest) (*GetSwitchableBillingModesResponse, error) {
+	var err error
+	var res GetSwitchableBillingModesResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetSwitchableBillingModes", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUGNRouteTableRequest is request schema for GetUGNRouteTable action
+type GetUGNRouteTableRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// 路由表类型，分为初始路由表、中阶路由表以及最终路由表，限定取值："Origin"/"Middle"/"Final"
+	Type *string `required:"true"`
+
+	// 云联网实例ID
+	UGNID *string `required:"true"`
+}
+
+// GetUGNRouteTableResponse is response schema for GetUGNRouteTable action
+type GetUGNRouteTableResponse struct {
+	response.CommonBase
+
+	// 路由表，"Origin"/"Middle" 用这个
+	Routes []SimpleRoute
+
+	// 云联网实例ID
+	UGNID string
+
+	// 网络实例对应的路由表，"Final" 用这个
+	VRoutes []VRoute
+}
+
+// NewGetUGNRouteTableRequest will create request of GetUGNRouteTable action.
+func (c *UGNClient) NewGetUGNRouteTableRequest() *GetUGNRouteTableRequest {
+	req := &GetUGNRouteTableRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUGNRouteTable
+
+获取云联网路由表
+*/
+func (c *UGNClient) GetUGNRouteTable(req *GetUGNRouteTableRequest) (*GetUGNRouteTableResponse, error) {
+	var err error
+	var res GetUGNRouteTableResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUGNRouteTable", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListSimpleBwPackageRequest is request schema for ListSimpleBwPackage action
 type ListSimpleBwPackageRequest struct {
 	request.CommonBase
@@ -740,10 +1544,10 @@ type ListSimpleBwPackageRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
-	//
+	// 分页大小，默认20
 	Limit *int `required:"false"`
 
-	//
+	// 偏移量，默认0
 	Offset *int `required:"false"`
 }
 
@@ -751,16 +1555,19 @@ type ListSimpleBwPackageRequest struct {
 type ListSimpleBwPackageResponse struct {
 	response.CommonBase
 
-	//
+	// 带宽包列表
 	BwPackages []SimpleBwPackage
 
-	//
+	// 分页大小
 	Limit int
 
-	//
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 偏移量
 	Offset int
 
-	//
+	// 带宽包数量
 	TotalCount int
 }
 
@@ -813,19 +1620,19 @@ type ListUGNRequest struct {
 type ListUGNResponse struct {
 	response.CommonBase
 
-	//
+	// 分页大小
 	Limit int
 
-	//
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
 
-	//
+	// 偏移量
 	Offset int
 
-	//
+	// UGN数量
 	TotalCount int
 
-	//
+	// UGN 列表
 	UGNs []UGN
 }
 
@@ -853,6 +1660,56 @@ func (c *UGNClient) ListUGN(req *ListUGNRequest) (*ListUGNResponse, error) {
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUGN", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUGNRegionsRequest is request schema for ListUGNRegions action
+type ListUGNRegionsRequest struct {
+	request.CommonBase
+
+	// 数组，已选区域，例如：cn-bj2， cn-wlcb
+	SelectedRegions []string `required:"false"`
+}
+
+// ListUGNRegionsResponse is response schema for ListUGNRegions action
+type ListUGNRegionsResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+
+	// 可加入地域列表
+	RegionLIst []UgnRegion
+}
+
+// NewListUGNRegionsRequest will create request of ListUGNRegions action.
+func (c *UGNClient) NewListUGNRegionsRequest() *ListUGNRegionsRequest {
+	req := &ListUGNRegionsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUGNRegions
+
+获取UGN的可加入地域列表
+*/
+func (c *UGNClient) ListUGNRegions(req *ListUGNRegionsRequest) (*ListUGNRegionsResponse, error) {
+	var err error
+	var res ListUGNRegionsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUGNRegions", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -996,7 +1853,7 @@ type ModifyUGNBandwidthRequest struct {
 type ModifyUGNBandwidthResponse struct {
 	response.CommonBase
 
-	//
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
 	Message string
 }
 
@@ -1158,6 +2015,77 @@ func (c *UGNClient) SDescribeUGN(req *SDescribeUGNRequest) (*SDescribeUGNRespons
 	return &res, nil
 }
 
+// SendUGNApplyNetworkRequest is request schema for SendUGNApplyNetwork action
+type SendUGNApplyNetworkRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 网络实例 ID，如 uvnet-xxxx
+	NetworkID *string `required:"true"`
+
+	// 网络实例所属项目名，如 org-xxx
+	NetworkOrgName *string `required:"true"`
+
+	// 网络实例所属地域，如 cn-sh2
+	NetworkRegion *string `required:"true"`
+
+	// 网络实例类型，枚举值：VPC/UWAN-VRouter/...
+	NetworkType *string `required:"true"`
+
+	// UGN所属公司 id
+	UGNCompanyID *int `required:"true"`
+
+	// UGN id
+	UGNID *string `required:"true"`
+}
+
+// SendUGNApplyNetworkResponse is response schema for SendUGNApplyNetwork action
+type SendUGNApplyNetworkResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewSendUGNApplyNetworkRequest will create request of SendUGNApplyNetwork action.
+func (c *UGNClient) NewSendUGNApplyNetworkRequest() *SendUGNApplyNetworkRequest {
+	req := &SendUGNApplyNetworkRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: SendUGNApplyNetwork
+
+跨账号网络实例申请加入 UGN
+*/
+func (c *UGNClient) SendUGNApplyNetwork(req *SendUGNApplyNetworkRequest) (*SendUGNApplyNetworkResponse, error) {
+	var err error
+	var res SendUGNApplyNetworkResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SendUGNApplyNetwork", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UnpublishUGNRouteRuleRequest is request schema for UnpublishUGNRouteRule action
 type UnpublishUGNRouteRuleRequest struct {
 	request.CommonBase
@@ -1210,6 +2138,218 @@ func (c *UGNClient) UnpublishUGNRouteRule(req *UnpublishUGNRouteRuleRequest) (*U
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UnpublishUGNRouteRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateRoutePolicyParamPolicyDstNetworks is request schema for complex param
+*/
+type UpdateRoutePolicyParamPolicyDstNetworks struct {
+
+	// 路由策略需要作用的网络实例ID数组
+	NetworkId *string `required:"false"`
+}
+
+/*
+UpdateRoutePolicyParamPolicySrcNetworks is request schema for complex param
+*/
+type UpdateRoutePolicyParamPolicySrcNetworks struct {
+
+	// 路由策略需要匹配的路由的网络实例ID数组
+	NetworkId *string `required:"false"`
+
+	// 路由策略需要匹配的路由的网络实例下的网段数组
+	Prefixes []string `required:"false"`
+}
+
+/*
+UpdateRoutePolicyParamPolicy is request schema for complex param
+*/
+type UpdateRoutePolicyParamPolicy struct {
+
+	// 策略方向，限定取值："In"/"Out"
+	Direction *string `required:"false"`
+
+	// 路由策略需要作用的网络实例类型数组，限定取值："VPC" / "UWAN-VRouter"
+	DstNetworkTypes []string `required:"false"`
+
+	//
+	DstNetworks []UpdateRoutePolicyParamPolicyDstNetworks `required:"false"`
+
+	// 策略名称，限定长度 255
+	Name *string `required:"false"`
+
+	// 路由策略ID
+	PolicyId *string `required:"true"`
+
+	// 策略优先级，范围：[1,255]，数值越小优先级越大，同一方向，策略优先级不可重复
+	Priority *int `required:"false"`
+
+	// 策略执行动作，限定取值："Permit"/"Deny"
+	RouteAction *string `required:"false"`
+
+	// 当执行动作为 "Permit" 时，给匹配中的路由设置路由优先级，范围：[1,255]，数值越小优先级越大
+	RoutePriority *int `required:"false"`
+
+	// 路由策略需要匹配的路由的网络实例类型数组，限定取值："VPC" / "UWAN-VRouter"
+	SrcNetworkTypes []string `required:"false"`
+
+	//
+	SrcNetworks []UpdateRoutePolicyParamPolicySrcNetworks `required:"false"`
+
+	// 路由策略需要匹配的路由的所在地域数组
+	SrcRegions []string `required:"false"`
+}
+
+// UpdateRoutePolicyRequest is request schema for UpdateRoutePolicy action
+type UpdateRoutePolicyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	//
+	Policy *UpdateRoutePolicyParamPolicy `required:"false"`
+
+	// 云联网实例ID
+	UGNID *string `required:"true"`
+}
+
+// UpdateRoutePolicyResponse is response schema for UpdateRoutePolicy action
+type UpdateRoutePolicyResponse struct {
+	response.CommonBase
+
+	// 返回错误消息，当 RetCode 非 0 时提供详细的描述信息
+	Message string
+}
+
+// NewUpdateRoutePolicyRequest will create request of UpdateRoutePolicy action.
+func (c *UGNClient) NewUpdateRoutePolicyRequest() *UpdateRoutePolicyRequest {
+	req := &UpdateRoutePolicyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateRoutePolicy
+
+修改路由策略
+*/
+func (c *UGNClient) UpdateRoutePolicy(req *UpdateRoutePolicyRequest) (*UpdateRoutePolicyResponse, error) {
+	var err error
+	var res UpdateRoutePolicyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateRoutePolicy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUGNBwPackageRequest is request schema for UpdateUGNBwPackage action
+type UpdateUGNBwPackageRequest struct {
+	request.CommonBase
+
+	// [公共参数]
+	// ProjectId *string `required:"false"`
+
+	//
+	BwBidRate *float64 `required:"true"`
+
+	//
+	BwULRate *float64 `required:"true"`
+
+	//
+	ChargeType *string `required:"false"`
+
+	//
+	Coupon *string `required:"false"`
+
+	//
+	Name *string `required:"false"`
+
+	//
+	PackageID *string `required:"true"`
+
+	//
+	Path *string `required:"true"`
+
+	//
+	PayMode *string `required:"true"`
+
+	//
+	Qos *string `required:"true"`
+
+	//
+	Quantity *string `required:"false"`
+
+	//
+	RegionA *string `required:"true"`
+
+	//
+	RegionABwMax *int `required:"true"`
+
+	//
+	RegionABwMin *int `required:"true"`
+
+	//
+	RegionB *string `required:"true"`
+
+	//
+	RegionBBwMax *int `required:"true"`
+
+	//
+	RegionBBwMin *int `required:"true"`
+
+	//
+	Remark *string `required:"false"`
+
+	//
+	UGNID *string `required:"true"`
+}
+
+// UpdateUGNBwPackageResponse is response schema for UpdateUGNBwPackage action
+type UpdateUGNBwPackageResponse struct {
+	response.CommonBase
+
+	//
+	Message string
+}
+
+// NewUpdateUGNBwPackageRequest will create request of UpdateUGNBwPackage action.
+func (c *UGNClient) NewUpdateUGNBwPackageRequest() *UpdateUGNBwPackageRequest {
+	req := &UpdateUGNBwPackageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: UpdateUGNBwPackage
+*/
+func (c *UGNClient) UpdateUGNBwPackage(req *UpdateUGNBwPackageRequest) (*UpdateUGNBwPackageResponse, error) {
+	var err error
+	var res UpdateUGNBwPackageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUGNBwPackage", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
