@@ -3,6 +3,42 @@
 package ugn
 
 /*
+Network - 云联网网络实例
+*/
+type Network struct {
+
+	// 网络实例所属公司ID
+	CompanyID int
+
+	// 创建时间
+	InsertTime int
+
+	// 网络实例名称
+	Name string
+
+	// 网络实例的ID，如 vnet-xxxxx
+	NetworkID string
+
+	// 网络实例所在项目的ID
+	OrgID int
+
+	// 网络实例所在项目名
+	OrgName string
+
+	// 网络实例所在地域
+	Region string
+
+	// 网络实例所在地域ID
+	RegionID int
+
+	// 网络实例类型：VPC/UCVR/...
+	Type string
+
+	// 网络实例的唯一标识，如 vpc 的 tunnel_id
+	VNI int
+}
+
+/*
 InterRegionBandwidth - 跨域带宽
 */
 type InterRegionBandwidth struct {
@@ -39,27 +75,78 @@ type InterRegionBandwidth struct {
 }
 
 /*
-SimpleRoute - 简洁版云联网路由条目
+UGN - 云联网信息
 */
-type SimpleRoute struct {
+type UGN struct {
 
-	// 目的网段
-	DstAddr string
+	// 绑定带宽包数量
+	BwPackageCount int
 
-	// 下一跳网络实例 ID
-	NextHopID string
+	// 云联网创建时间
+	CreateTime int
 
-	// 下一跳网络实例所属地域
-	NextHopRegion string
+	// 云联网名称
+	Name string
 
-	// 下一跳网络实例所属地域 id
-	NextHopRegionID int
+	// 关联网络实例数量
+	NetworkCount int
 
-	// 下一跳网络实例类型
-	NextHopType string
+	// 云联网备注
+	Remark string
 
-	// 路由优先级
-	Priority int
+	// 云联网资源 ID
+	UGNID string
+}
+
+/*
+SimpleBwPackage - 简洁版带宽包
+*/
+type SimpleBwPackage struct {
+
+	// 带宽值
+	BandWidth float64
+
+	// 带宽包切换计费类型
+	ChangePayMode string
+
+	// 带宽包切换状态
+	ChangeStatus int
+
+	// 带宽包切换时间
+	ChangeTime int
+
+	// 创建时间
+	CreateTime int
+
+	// 过期时间
+	ExpireTime int
+
+	// 带宽包名称
+	Name string
+
+	// 带宽包 ID
+	PackageID string
+
+	// 智能路径Delay:最低时延｜IGP:普通线路｜TCO:最低成本
+	Path string
+
+	// 计费模式 FixedBw:固定带宽｜Peak95:经典95｜Max5:第五峰值｜Traffic:流量计费
+	PayMode string
+
+	// 服务质量Diamond:钻石｜Platinum:铂金｜Gold:黄金
+	Qos string
+
+	// 地域A名称
+	RegionA string
+
+	// 地域B名称
+	RegionB string
+
+	// 备注
+	Remark string
+
+	// UGN ID
+	UGNID string
 }
 
 /*
@@ -93,78 +180,111 @@ type SimpleNetwork struct {
 }
 
 /*
-SimpleBwPackage - 简洁版带宽包
+NetworkAndPrefix - 网络实例及其上报的网段信息
 */
-type SimpleBwPackage struct {
+type NetworkAndPrefix struct {
 
-	// 带宽值
-	BandWidth float64
+	// 网络实例ID
+	NetworkId string
 
-	// 带宽包切换计费类型
-	ChangePayMode string
+	// 网络实例上报的网段
+	Prefixes []string
+}
 
-	// 带宽包切换状态
-	ChangeStatus int
+/*
+Policy - 路由策略
+*/
+type Policy struct {
 
-	// 带宽包切换时间
-	ChangeTime int
+	// 策略执行动作，限定取值："Permit"/"Deny"
+	Action string
 
 	// 创建时间
 	CreateTime int
 
-	// 过期时间
-	ExpireTime int
+	// 策略方向，限定取值："In"/"Out"
+	Direction string
 
-	//
+	// 路由策略需要作用的网络实例类型数组，限定取值："VPC" / "UWAN-VRouter"
+	DstNetworkTypes []string
+
+	// 路由策略需要作用的网络实例ID
+	DstNetworks []NetworkAndPrefix
+
+	// 是否启用
+	Enabled bool
+
+	// 是否匹配中路由
+	Matched bool
+
+	// 路由策略名称，限定长度255
 	Name string
 
-	//
-	PackageID string
+	// 路由策略ID
+	PolicyId string
 
-	// 智能路径Delay:最低时延｜IGP:普通线路｜TCO:最低成本
-	Path string
+	// 策略优先级，范围：[1,255]，数值越小优先级越大，同一方向，策略优先级不可重复
+	Priority int
 
-	// 计费模式 FixedBw:固定带宽｜Peak95:经典95｜Max5:第五峰值｜Traffic:流量计费
-	PayMode string
+	// 作用地域
+	Region string
 
-	// 服务质量Diamond:钻石｜Platinum:铂金｜Gold:黄金
-	Qos string
+	// 当执行动作为 "Permit" 时，给匹配中的路由设置路由优先级，范围：[1,255]，数值越小优先级越大
+	RoutePriority int
 
-	// 地域A名称
-	RegionA string
+	// 路由策略需要匹配的路由的网络实例类型数组，限定取值："VPC" / "UWAN-VRouter"
+	SrcNetworkTypes []string
 
-	// 地域B名称
-	RegionB string
+	// 路由策略需要匹配的路由的网络实例类型以及该实例下的网段信息
+	SrcNetworks []NetworkAndPrefix
 
-	//
-	Remark string
-
-	//
-	UGNID string
+	// 路由策略需要匹配的路由的所在地域数组
+	SrcRegions []string
 }
 
 /*
-UGN - 云联网信息
+SimpleRoute - 简洁版云联网路由条目
 */
-type UGN struct {
+type SimpleRoute struct {
 
-	// 绑定带宽包数量
-	BwPackageCount int
+	// true: 由于优先级相同但插入数据库的时间比其他前缀相同的路由晚而失效
+	Conflict bool
 
-	// 云联网创建时间
-	CreateTime int
+	// true: 由于命中路由策略而失效
+	Deny bool
 
-	// 云联网名称
-	Name string
+	// 目的网段
+	DstAddr string
 
-	// 关联网络实例数量
-	NetworkCount int
+	// 匹配中的入向路由策略id
+	InPolicyId string
 
-	// 云联网备注
-	Remark string
+	// 匹配中的入向路由策略名称
+	InPolicyName string
 
-	// 云联网资源 ID
-	UGNID string
+	// 下一跳网络实例 ID
+	NextHopID string
+
+	// 下一跳网络实例所属地域
+	NextHopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NextHopRegionID int
+
+	// 下一跳网络实例类型
+	NextHopType string
+
+	// 匹配中的出向路由策略id
+	OutPolicyId string
+
+	// 匹配中的出向路由策略名称
+	OutPolicyName string
+
+	// 路由优先级
+	Priority int
+
+	// true: 由于优先级比其他前缀相同的路由低而失效
+	Restrict bool
 }
 
 /*
@@ -249,57 +369,36 @@ type RouteRule struct {
 }
 
 /*
-Route - 云联网路由条目
+VRoute - 针对单实例的路由表
 */
-type Route struct {
+type VRoute struct {
 
-	// 目的网段
-	DstAddr string
+	// 网络实例ID
+	NetworkId string
 
-	// 下一跳网络实例 ID
-	NexthopID string
-
-	// 下一跳网络实例所属地域
-	NexthopRegion string
-
-	// 下一跳网络实例所属地域 id
-	NexthopRegionID int
-
-	// 下一跳网络实例类型
-	NexthopType string
-
-	// 路由优先级
-	Priority int
+	// 该网络实例对应的路由
+	Routes []SimpleRoute
 }
 
 /*
-SNetwork - 简洁版云联网网络实例
+UgnRegion -
 */
-type SNetwork struct {
+type UgnRegion struct {
 
-	//
-	CreateTime string
+	// 是否上线
+	IsOnline bool
 
-	// 网络实例名称
-	Name string
+	// 是否为海外地域
+	IsOverseas bool
 
-	// 网络实例的ID，如 vnet-xxxxx
-	NetworkID string
+	// 添加region需要做的校验
+	Needs []string
 
-	// 网络实例所在项目的ID
-	OrgID int
+	// 地域ID
+	RegIonId int
 
-	// 网络实例所在项目名
-	OrgName string
-
-	// 网络实例所在地域
+	// 地域名称
 	Region string
-
-	// 网络实例所在地域ID
-	RegionID int
-
-	// 网络实例类型：VPC/HybridGW/...
-	Type string
 }
 
 /*
@@ -354,4 +453,58 @@ type SBwPackage struct {
 
 	//
 	UGNID string
+}
+
+/*
+SNetwork - 简洁版云联网网络实例
+*/
+type SNetwork struct {
+
+	//
+	CreateTime string
+
+	// 网络实例名称
+	Name string
+
+	// 网络实例的ID，如 vnet-xxxxx
+	NetworkID string
+
+	// 网络实例所在项目的ID
+	OrgID int
+
+	// 网络实例所在项目名
+	OrgName string
+
+	// 网络实例所在地域
+	Region string
+
+	// 网络实例所在地域ID
+	RegionID int
+
+	// 网络实例类型：VPC/HybridGW/...
+	Type string
+}
+
+/*
+Route - 云联网路由条目
+*/
+type Route struct {
+
+	// 目的网段
+	DstAddr string
+
+	// 下一跳网络实例 ID
+	NexthopID string
+
+	// 下一跳网络实例所属地域
+	NexthopRegion string
+
+	// 下一跳网络实例所属地域 id
+	NexthopRegionID int
+
+	// 下一跳网络实例类型
+	NexthopType string
+
+	// 路由优先级
+	Priority int
 }
