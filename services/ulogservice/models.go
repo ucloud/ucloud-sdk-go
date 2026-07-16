@@ -31,7 +31,7 @@ type TopicInfo struct {
 	// 是否保留：0 - NORMAL, 1 - RESERVED
 	IsReserved int
 
-	// 保存时间 1~360 天，-1表示永久保存
+	// 保存时间 1~730 天
 	ReserveAge int
 
 	// 主题描述
@@ -43,7 +43,7 @@ type TopicInfo struct {
 	// 主题名称
 	TopicName string
 
-	// 分区数量 数字1~20
+	// 分区数量，固定是2
 	TopicShardNum int
 }
 
