@@ -78,18 +78,6 @@ type DownloadFileData struct {
 }
 
 /*
-FilterOptionString - 字符串类型筛选选项
-*/
-type FilterOptionString struct {
-
-	// 显示名称
-	Name string
-
-	// 值
-	Value string
-}
-
-/*
 FilterOptionInteger - 整数类型筛选选项
 */
 type FilterOptionInteger struct {
@@ -99,6 +87,18 @@ type FilterOptionInteger struct {
 
 	// 值
 	Value int
+}
+
+/*
+FilterOptionString - 字符串类型筛选选项
+*/
+type FilterOptionString struct {
+
+	// 显示名称
+	Name string
+
+	// 值
+	Value string
 }
 
 /*
@@ -120,78 +120,180 @@ type Pricing struct {
 }
 
 /*
-UMinferAPIModel - 可供api调用的model详情
+PriceRate - 该档位下的收费列表（有序数组）
 */
-type UMinferAPIModel struct {
+type PriceRate struct {
+
+	// 收费项：input/output/thinking/tool...
+	ChargeItem string
+
+	// 收费项描述
+	ChargeItemDescription string
+
+	// 收费项描述英文描述
+	ChargeItemDescriptionEn string
+
+	// 货币单位
+	Currency string
+
+	// 价格
+	Price string
+
+	// 计价单位
+	Unit string
+
+	// 计价单位英文
+	UnitEn string
+}
+
+/*
+PriceTier - 价格阶梯
+*/
+type PriceTier struct {
+
+	// 档位/条件（例如 "32k"、"128k"）
+	Condition string
+
+	// 档位描述（例如 "标准上下文 32k"）
+	Description string
+
+	// 档位描述（例如 "标准上下文 32k"）
+	DescriptionEn string
+
+	// 该档位下的收费列表（有序数组）
+	Rates []PriceRate
+}
+
+/*
+SquareModel - 广场模型
+*/
+type SquareModel struct {
 
 	// 创建时间
 	CreateAt int
 
-	// 图标链接
+	// 详细描述
+	Describe string
+
+	// HuggingFace 更新时间
+	HfUpdateTime int
+
+	// 图标
 	Icon string
 
-	// id
+	// 主键
 	Id string
 
 	// 语言
 	Language []string
 
+	// 模型长度
+	MaxModelLen int
+
+	// 模型类型
+	ModelType string
+
 	// 名称
 	Name string
 
-	// 模型价格
+	// 定价策略
 	Pricing Pricing
 
-	// 使用OpenAI接口调用时，填入的 model值
-	ServedModelName string
-
-	// 描述
+	// 简要描述
 	SimpleDescribe string
+
+	// 模型能力
+	SupportedCapabilities []string
 
 	// 更新时间
 	UpdateAt int
 }
 
 /*
-TokenUsageTimestamp - 时间戳级别的token使用量
+ModelPriceGroup - ModelPriceGroup
 */
-type TokenUsageTimestamp struct {
+type ModelPriceGroup struct {
 
-	// 数量
-	Count int
+	// 制造商
+	Manufacturer string
+
+	// ModelId
+	ModelId string
 
 	// 模型名称
-	Model string
+	ModelName string
 
-	// unix时间戳
-	Timestamp int
-
-	// 类型，in输入 out输出 total总  request_count 请求次数 image_generation 生图张数
-	Type string
+	// 价格阶梯（有序数组）
+	Tiers []PriceTier
 }
 
 /*
-TokenUsage - 某个apikey的某个模型的token使用情况
+RequestLogDetail - 请求日志详情
 */
-type TokenUsage struct {
+type RequestLogDetail struct {
 
-	// 生图总张数
-	ImageGenerationNum int
+	// API Key ID
+	ApiKeyId string
 
-	// 输出总token
-	InTotal int
+	// 客户端 IP
+	ClientIp string
 
-	// 输出总token
-	OutTotal int
+	// 错误码
+	ErrorCode string
 
-	// 请求总次数
-	RequestTotal int
+	// 错误信息
+	ErrorMessage string
 
-	// 总token量
-	Total int
+	// 扩展信息，本期返回为空
+	Extras string
 
-	// 每个时间戳的token使用量
-	Usages []TokenUsageTimestamp
+	// 首 Token 延迟，单位毫秒
+	FirstTokenLatency int
+
+	// HTTP 状态码
+	HttpStatusCode int
+
+	// 是否流式请求
+	IsStream bool
+
+	// 请求是否成功
+	IsSuccess bool
+
+	// 请求总延迟，单位毫秒
+	Latency int
+
+	// 模型名称
+	ModelName string
+
+	// 组织 ID
+	OrganizationId string
+
+	// 输出 Token 吞吐
+	OutputTokenThroughput float64
+
+	// 业务地域
+	Region string
+
+	// 请求原文，本期返回为空
+	Request string
+
+	// 请求 ID
+	RequestId string
+
+	// 响应原文，本期返回为空
+	Response string
+
+	// 请求开始时间，Unix 毫秒时间戳
+	StartTime int
+
+	// 请求开始时间，可读格式
+	StartTimeReadable string
+
+	// 顶级组织 ID
+	TopOrganizationId string
+
+	// 模型返回的 usage 原文 JSON
+	Usage string
 }
 
 /*
@@ -384,48 +486,96 @@ type OrderItemDetail struct {
 }
 
 /*
-SquareModel - 广场模型
+RequestLogItem - 请求日志列表项
 */
-type SquareModel struct {
+type RequestLogItem struct {
 
-	// 创建时间
-	CreateAt int
+	// API Key ID
+	ApiKeyId string
 
-	// 详细描述
-	Describe string
+	// API Key 名称
+	ApiKeyName string
 
-	// HuggingFace 更新时间
-	HfUpdateTime int
+	// 1 小时缓存写入 Token 数
+	CacheCreation1hTokens int
 
-	// 图标
-	Icon string
+	// 5 分钟缓存写入 Token 数
+	CacheCreation5mTokens int
 
-	// 主键
-	Id string
+	// 缓存写入 Token 数
+	CacheCreationTokens int
 
-	// 语言
-	Language []string
+	// 缓存命中 Token 数
+	CacheHitTokens int
 
-	// 模型长度
-	MaxModelLen int
+	// 输出 Token 数
+	CompletionTokens int
 
-	// 模型类型
-	ModelType string
+	// 错误码
+	ErrorCode string
 
-	// 名称
-	Name string
+	// 首 Token 延迟，单位毫秒
+	FirstTokenLatency int
 
-	// 定价策略
-	Pricing Pricing
+	// 是否存在推理日志
+	HasInferenceLog bool
 
-	// 简要描述
-	SimpleDescribe string
+	// HTTP 状态码
+	HttpStatusCode int
 
-	// 模型能力
-	SupportedCapabilities []string
+	// 请求是否成功
+	IsSuccess bool
 
-	// 更新时间
-	UpdateAt int
+	// 请求总延迟，单位毫秒
+	Latency int
+
+	// 模型名称
+	ModelName string
+
+	// 输出 Token 吞吐
+	OutputTokenThroughput float64
+
+	// 输入 Token 数
+	PromptTokens int
+
+	// 业务地域
+	Region string
+
+	// 请求 ID
+	RequestId string
+
+	// 请求开始时间，Unix 毫秒时间戳
+	StartTime int
+
+	// 请求开始时间，可读格式
+	StartTimeReadable string
+
+	// 总 Token 数
+	TotalTokens int
+}
+
+/*
+RequestLogSummary - 请求日志汇总
+*/
+type RequestLogSummary struct {
+
+	// 查询条件命中的失败请求数
+	FailedRequests int
+
+	// 查询条件命中的总请求数
+	TotalRequests int
+}
+
+/*
+ListUMInferRequestLogsData - 日志明细列表返回数据
+*/
+type ListUMInferRequestLogsData struct {
+
+	// 日志列表，数组元素为 RequestLogItem
+	Items []RequestLogItem
+
+	// 汇总信息
+	Summary RequestLogSummary
 }
 
 /*
@@ -546,4 +696,19 @@ type UnpaidOrderItem struct {
 
 	// 用户邮箱
 	UserEmail string
+}
+
+/*
+PayResult - 支付结果
+*/
+type PayResult struct {
+
+	// 订单号
+	OrderNo string
+
+	// 失败原因（成功时为空）
+	Reason string
+
+	// 是否支付成功
+	Success bool
 }
