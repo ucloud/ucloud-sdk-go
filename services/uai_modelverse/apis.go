@@ -358,6 +358,80 @@ func (c *UAI_ModelverseClient) DownloadOrderSummary(req *DownloadOrderSummaryReq
 	return &res, nil
 }
 
+// DownloadUMInferRequestLogRequest is request schema for DownloadUMInferRequestLog action
+type DownloadUMInferRequestLogRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。请参考 [GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 业务地域，如 cn-wlcb。可先调用 ListUMInferRegions 获取可选地域
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// API Key ID 列表，用于过滤
+	ApiKeyIds []string `required:"false"`
+
+	// 接收导出结果的邮箱地址
+	Email *string `required:"true"`
+
+	// 导出结束时间，Unix 毫秒时间戳，最长支持 30 天范围
+	EndTime *int `required:"true"`
+
+	// 模型名称列表，用于过滤
+	ModelNames []string `required:"false"`
+
+	// 请求 ID，用于精确过滤
+	RequestId *string `required:"false"`
+
+	// 导出开始时间，Unix 毫秒时间戳
+	StartTime *int `required:"true"`
+}
+
+// DownloadUMInferRequestLogResponse is response schema for DownloadUMInferRequestLog action
+type DownloadUMInferRequestLogResponse struct {
+	response.CommonBase
+
+	// 导出任务 ID
+	TaskId string
+
+	// 本次导出查询命中的日志行数
+	TotalCount int
+}
+
+// NewDownloadUMInferRequestLogRequest will create request of DownloadUMInferRequestLog action.
+func (c *UAI_ModelverseClient) NewDownloadUMInferRequestLogRequest() *DownloadUMInferRequestLogRequest {
+	req := &DownloadUMInferRequestLogRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DownloadUMInferRequestLog
+
+导出推理请求日志。单次导出时间范围最长 30 天，最多导出 2000 万条日志；同一 TopOrganizationID 同一时间仅允许 1 个导出任务在执行，已有任务执行中时请稍后重试。
+*/
+func (c *UAI_ModelverseClient) DownloadUMInferRequestLog(req *DownloadUMInferRequestLogRequest) (*DownloadUMInferRequestLogResponse, error) {
+	var err error
+	var res DownloadUMInferRequestLogResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DownloadUMInferRequestLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetFilterOptionsRequest is request schema for GetFilterOptions action
 type GetFilterOptionsRequest struct {
 	request.CommonBase
@@ -530,34 +604,34 @@ func (c *UAI_ModelverseClient) GetOrderAmount(req *GetOrderAmountRequest) (*GetO
 	return &res, nil
 }
 
-// GetUMInferAPIModelRequest is request schema for GetUMInferAPIModel action
-type GetUMInferAPIModelRequest struct {
+// GetUFSquareModelDetailRequest is request schema for GetUFSquareModelDetail action
+type GetUFSquareModelDetailRequest struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
+	// ProjectId *string `required:"false"`
 
-	// apikey 的id
-	KeyId *string `required:"false"`
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
 
-	// 模型类型，1: 文本生成，2: 图片生成。
-	ModelType *int `required:"false"`
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
-	// 模型广场的id，用来跳转体验中心
-	SquareId *string `required:"false"`
+	// 主键
+	Id *string `required:"true"`
 }
 
-// GetUMInferAPIModelResponse is response schema for GetUMInferAPIModel action
-type GetUMInferAPIModelResponse struct {
+// GetUFSquareModelDetailResponse is response schema for GetUFSquareModelDetail action
+type GetUFSquareModelDetailResponse struct {
 	response.CommonBase
 
-	// 模型名称的字符串列表
-	Data []UMinferAPIModel
+	// 模型
+	SquareModel SquareModel
 }
 
-// NewGetUMInferAPIModelRequest will create request of GetUMInferAPIModel action.
-func (c *UAI_ModelverseClient) NewGetUMInferAPIModelRequest() *GetUMInferAPIModelRequest {
-	req := &GetUMInferAPIModelRequest{}
+// NewGetUFSquareModelDetailRequest will create request of GetUFSquareModelDetail action.
+func (c *UAI_ModelverseClient) NewGetUFSquareModelDetailRequest() *GetUFSquareModelDetailRequest {
+	req := &GetUFSquareModelDetailRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -568,17 +642,17 @@ func (c *UAI_ModelverseClient) NewGetUMInferAPIModelRequest() *GetUMInferAPIMode
 }
 
 /*
-API: GetUMInferAPIModel
+API: GetUFSquareModelDetail
 
-获取该apikey能调用api的模型列表
+获取广场模型详情
 */
-func (c *UAI_ModelverseClient) GetUMInferAPIModel(req *GetUMInferAPIModelRequest) (*GetUMInferAPIModelResponse, error) {
+func (c *UAI_ModelverseClient) GetUFSquareModelDetail(req *GetUFSquareModelDetailRequest) (*GetUFSquareModelDetailResponse, error) {
 	var err error
-	var res GetUMInferAPIModelResponse
+	var res GetUFSquareModelDetailResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("GetUMInferAPIModel", &reqCopier, &res)
+	err = c.Client.InvokeAction("GetUFSquareModelDetail", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -586,37 +660,34 @@ func (c *UAI_ModelverseClient) GetUMInferAPIModel(req *GetUMInferAPIModelRequest
 	return &res, nil
 }
 
-// GetUMInferTokenUsageRequest is request schema for GetUMInferTokenUsage action
-type GetUMInferTokenUsageRequest struct {
+// GetUFSquareModelPricesRequest is request schema for GetUFSquareModelPrices action
+type GetUFSquareModelPricesRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
+	// 模型名称模糊搜索（例：deepseek-r1）
+	Keyword *string `required:"false"`
 
-	// 结束时间戳
-	EndTime *int `required:"true"`
+	// 返回数据长度，默认为20
+	Limit *int `required:"false"`
 
-	// apikey的id
-	KeyId *string `required:"true"`
-
-	// 模型名称
-	Model *string `required:"true"`
-
-	// 开始时间戳
-	StartTime *int `required:"true"`
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
 }
 
-// GetUMInferTokenUsageResponse is response schema for GetUMInferTokenUsage action
-type GetUMInferTokenUsageResponse struct {
+// GetUFSquareModelPricesResponse is response schema for GetUFSquareModelPrices action
+type GetUFSquareModelPricesResponse struct {
 	response.CommonBase
 
-	// token使用详情
-	Data TokenUsage
+	// 匹配模型的价格信息
+	Models []ModelPriceGroup
+
+	// 总条数用于翻页
+	TotalCount int
 }
 
-// NewGetUMInferTokenUsageRequest will create request of GetUMInferTokenUsage action.
-func (c *UAI_ModelverseClient) NewGetUMInferTokenUsageRequest() *GetUMInferTokenUsageRequest {
-	req := &GetUMInferTokenUsageRequest{}
+// NewGetUFSquareModelPricesRequest will create request of GetUFSquareModelPrices action.
+func (c *UAI_ModelverseClient) NewGetUFSquareModelPricesRequest() *GetUFSquareModelPricesRequest {
+	req := &GetUFSquareModelPricesRequest{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -627,17 +698,73 @@ func (c *UAI_ModelverseClient) NewGetUMInferTokenUsageRequest() *GetUMInferToken
 }
 
 /*
-API: GetUMInferTokenUsage
+API: GetUFSquareModelPrices
 
-获取某个key下的某个模型的token使用量
+批量查询模型价格
 */
-func (c *UAI_ModelverseClient) GetUMInferTokenUsage(req *GetUMInferTokenUsageRequest) (*GetUMInferTokenUsageResponse, error) {
+func (c *UAI_ModelverseClient) GetUFSquareModelPrices(req *GetUFSquareModelPricesRequest) (*GetUFSquareModelPricesResponse, error) {
 	var err error
-	var res GetUMInferTokenUsageResponse
+	var res GetUFSquareModelPricesResponse
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("GetUMInferTokenUsage", &reqCopier, &res)
+	err = c.Client.InvokeAction("GetUFSquareModelPrices", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUMInferRequestLogDetailRequest is request schema for GetUMInferRequestLogDetail action
+type GetUMInferRequestLogDetailRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。请参考 [GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 业务地域，如 cn-wlcb。可先调用 ListUMInferRegions 获取可选地域
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 请求 ID
+	RequestId *string `required:"true"`
+}
+
+// GetUMInferRequestLogDetailResponse is response schema for GetUMInferRequestLogDetail action
+type GetUMInferRequestLogDetailResponse struct {
+	response.CommonBase
+
+	// 请求日志详情
+	Data RequestLogDetail
+}
+
+// NewGetUMInferRequestLogDetailRequest will create request of GetUMInferRequestLogDetail action.
+func (c *UAI_ModelverseClient) NewGetUMInferRequestLogDetailRequest() *GetUMInferRequestLogDetailRequest {
+	req := &GetUMInferRequestLogDetailRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUMInferRequestLogDetail
+
+原始日志详情
+*/
+func (c *UAI_ModelverseClient) GetUMInferRequestLogDetail(req *GetUMInferRequestLogDetailRequest) (*GetUMInferRequestLogDetailResponse, error) {
+	var err error
+	var res GetUMInferRequestLogDetailResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUMInferRequestLogDetail", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -891,6 +1018,57 @@ func (c *UAI_ModelverseClient) ListUFSquareModel(req *ListUFSquareModelRequest) 
 	return &res, nil
 }
 
+// ListUFSquareModelFiltersAuthRequest is request schema for ListUFSquareModelFiltersAuth action
+type ListUFSquareModelFiltersAuthRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+}
+
+// ListUFSquareModelFiltersAuthResponse is response schema for ListUFSquareModelFiltersAuth action
+type ListUFSquareModelFiltersAuthResponse struct {
+	response.CommonBase
+}
+
+// NewListUFSquareModelFiltersAuthRequest will create request of ListUFSquareModelFiltersAuth action.
+func (c *UAI_ModelverseClient) NewListUFSquareModelFiltersAuthRequest() *ListUFSquareModelFiltersAuthRequest {
+	req := &ListUFSquareModelFiltersAuthRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUFSquareModelFiltersAuth
+
+登录状态下获取模型广场过滤器中内容
+*/
+func (c *UAI_ModelverseClient) ListUFSquareModelFiltersAuth(req *ListUFSquareModelFiltersAuthRequest) (*ListUFSquareModelFiltersAuthResponse, error) {
+	var err error
+	var res ListUFSquareModelFiltersAuthResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUFSquareModelFiltersAuth", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListUMInferAPIKeyRequest is request schema for ListUMInferAPIKey action
 type ListUMInferAPIKeyRequest struct {
 	request.CommonBase
@@ -943,6 +1121,80 @@ func (c *UAI_ModelverseClient) ListUMInferAPIKey(req *ListUMInferAPIKeyRequest) 
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUMInferAPIKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUMInferRequestLogsRequest is request schema for ListUMInferRequestLogs action
+type ListUMInferRequestLogsRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。请参考 [GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 业务地域，如 cn-wlcb。可先调用 ListUMInferRegions 获取可选地域
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// API Key ID 列表，用于过滤
+	ApiKeyIds []string `required:"false"`
+
+	// 查询结束时间，Unix 毫秒时间戳，必须大于等于 StartTime
+	EndTime *int `required:"true"`
+
+	// 返回数量，默认 20
+	Limit *int `required:"false"`
+
+	// 模型名称列表，用于过滤
+	ModelNames []string `required:"false"`
+
+	// 列表偏移量，默认 0
+	Offset *int `required:"false"`
+
+	// 请求 ID，用于精确过滤
+	RequestId *string `required:"false"`
+
+	// 查询开始时间，Unix 毫秒时间戳
+	StartTime *int `required:"true"`
+}
+
+// ListUMInferRequestLogsResponse is response schema for ListUMInferRequestLogs action
+type ListUMInferRequestLogsResponse struct {
+	response.CommonBase
+
+	// 日志明细列表返回数据
+	Data ListUMInferRequestLogsData
+}
+
+// NewListUMInferRequestLogsRequest will create request of ListUMInferRequestLogs action.
+func (c *UAI_ModelverseClient) NewListUMInferRequestLogsRequest() *ListUMInferRequestLogsRequest {
+	req := &ListUMInferRequestLogsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUMInferRequestLogs
+
+日志明细列表
+*/
+func (c *UAI_ModelverseClient) ListUMInferRequestLogs(req *ListUMInferRequestLogsRequest) (*ListUMInferRequestLogsResponse, error) {
+	var err error
+	var res ListUMInferRequestLogsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUMInferRequestLogs", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1094,6 +1346,59 @@ func (c *UAI_ModelverseClient) ListUnpaidOrders(req *ListUnpaidOrdersRequest) (*
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUnpaidOrders", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// StartPayUnpaidOrdersRequest is request schema for StartPayUnpaidOrders action
+type StartPayUnpaidOrdersRequest struct {
+	request.CommonBase
+
+	// 欠费订单号列表，最多 50 个
+	OrderNos []string `required:"true"`
+}
+
+// StartPayUnpaidOrdersResponse is response schema for StartPayUnpaidOrders action
+type StartPayUnpaidOrdersResponse struct {
+	response.CommonBase
+
+	// 支付失败数量
+	FailureCount int
+
+	// 支付结果
+	Results PayResult
+
+	// 支付成功数量
+	SuccessCount int
+}
+
+// NewStartPayUnpaidOrdersRequest will create request of StartPayUnpaidOrders action.
+func (c *UAI_ModelverseClient) NewStartPayUnpaidOrdersRequest() *StartPayUnpaidOrdersRequest {
+	req := &StartPayUnpaidOrdersRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: StartPayUnpaidOrders
+
+批量支付欠费订单，指定 OrderNos 支付，最多 50 个
+*/
+func (c *UAI_ModelverseClient) StartPayUnpaidOrders(req *StartPayUnpaidOrdersRequest) (*StartPayUnpaidOrdersResponse, error) {
+	var err error
+	var res StartPayUnpaidOrdersResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("StartPayUnpaidOrders", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
