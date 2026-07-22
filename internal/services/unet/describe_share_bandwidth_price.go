@@ -30,7 +30,7 @@ type DescribeShareBandwidthPriceResponse struct {
 	response.CommonBase
 
 	// 共享带宽总价
-	TotalPrice int
+	TotalPrice float64
 }
 
 // NewDescribeShareBandwidthPriceRequest will create request of DescribeShareBandwidthPrice action.
