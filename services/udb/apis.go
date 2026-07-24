@@ -44,6 +44,9 @@ type BackupUDBInstanceRequest struct {
 // BackupUDBInstanceResponse is response schema for BackupUDBInstance action
 type BackupUDBInstanceResponse struct {
 	response.CommonBase
+
+	// 备份记录 ID
+	BackupId int
 }
 
 // NewBackupUDBInstanceRequest will create request of BackupUDBInstance action.
@@ -61,7 +64,7 @@ func (c *UDBClient) NewBackupUDBInstanceRequest() *BackupUDBInstanceRequest {
 /*
 API: BackupUDBInstance
 
-备份UDB实例
+发起实例备份。
 */
 func (c *UDBClient) BackupUDBInstance(req *BackupUDBInstanceRequest) (*BackupUDBInstanceResponse, error) {
 	var err error
@@ -575,7 +578,7 @@ func (c *UDBClient) NewCreateMongoDBReplicaSetRequest() *CreateMongoDBReplicaSet
 /*
 API: CreateMongoDBReplicaSet
 
-一键创建DB副本集
+一键创建DB副本集,本接口适用于物理机MongoDB，该架构即将下线, 若要使用快杰MongoDB，请参考https://docs.ucloud.cn/api/umongodb-api/index
 */
 func (c *UDBClient) CreateMongoDBReplicaSet(req *CreateMongoDBReplicaSetRequest) (*CreateMongoDBReplicaSetResponse, error) {
 	var err error
@@ -896,7 +899,7 @@ type CreateUDBMySQLInstanceRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 管理员密码
+	// 管理员密码。 8-36 位，支持大小写字母、数字、@#$%^*-+=_,?!&()~.|，须包含两类及以上字符
 	AdminPassword *string `required:"true"`
 
 	// 告警模版id
@@ -908,7 +911,7 @@ type CreateUDBMySQLInstanceRequest struct {
 	// 备份策略，备份时间间隔，单位小时计，默认24小时
 	BackupDuration *int `required:"false"`
 
-	// 备份id，如果指定，则表明从备份恢复实例
+	// 备份 ID；指定则从备份恢复。取值见 DescribeUDBBackup。
 	BackupId *int `required:"false"`
 
 	// 备份策略，备份开始时间，单位小时计，默认1点
@@ -932,13 +935,13 @@ type CreateUDBMySQLInstanceRequest struct {
 	// MySQL 小版本号，支持指定小版本进行创建，请通过 DescribeUDBType 接口获取可用版本。
 	DBSubVersion *string `required:"false"`
 
-	// DB类型，mysql按版本细分 mysql-8.4, mysql-8.0,  mysql-5.7, percona-5.7, mysql-5.6, percona-5.6、mysql-5.5
+	// DB类型，mysql按版本细分 mysql-8.4, mysql-8.0,  mysql-5.7, percona-5.7, mysql-5.6, percona-5.6、mysql-5.5。 可以通过 DescribeUDBType 查询
 	DBTypeId *string `required:"true"`
 
 	// 是否开启异步高可用，默认不填，可置为true
 	DisableSemisync *bool `required:"false"`
 
-	// 磁盘空间(GB), 暂时支持20G - 32T
+	// 磁盘空间(GB)，支持约 20G–32T，步长通常为 10；
 	DiskSpace *int `required:"true"`
 
 	// UDB实例模式类型, 可选值如下: "Normal": 普通版UDB实例 "HA": 高可用版UDB实例 默认是"Normal"
@@ -950,10 +953,10 @@ type CreateUDBMySQLInstanceRequest struct {
 	// 规格类型 ID，请通过 ListUDBMachineType 接口获取，返回体中的ID字段为MachineType的值。
 	MachineType *string `required:"true"`
 
-	// 实例名称，至少6位
+	// 实例名称，至少6位,最大63位
 	Name *string `required:"true"`
 
-	// DB实例使用的配置参数组id
+	// DB实例使用的配置参数组id，取值见 DescribeUDBParamGroup 返回的 `GroupId`，且须与 `DBTypeId` 匹配。
 	ParamGroupId *int `required:"true"`
 
 	// 端口号，mysql默认3306
@@ -968,16 +971,16 @@ type CreateUDBMySQLInstanceRequest struct {
 	// 规格类型 O: NVMe型, O2: O2 ,OM: 共享型
 	SpecificationClass *string `required:"true"`
 
-	// 存储类型 CLOUD_RSSD: RSSD 云盘， CLOUD_SSD_ESSENTIAL: SSD Essential云盘 ，该字段和SpecificationClass组合使用，CLOUD_RSSD对应O型，CLOUD_SSD_ESSENTIAL对应OM型(北京2、乌兰察布支持)，注：圣保罗、丹佛、哈萨克斯坦地域仅支持O2机型，CLOUD_RSSD对应O2型
+	// 存储类型 CLOUD_RSSD: RSSD 云盘， CLOUD_SSD_ESSENTIAL: SSD Essential云盘 ，该字段和SpecificationClass组合使用，CLOUD_RSSD对应O型，CLOUD_SSD_ESSENTIAL对应OM型(北京2、乌兰察布支持)，注：圣保罗、丹佛、哈萨克斯坦地域仅支持O2机型，CLOUD_RSSD对应O2型。 可从 ListUDBMachineType 同条规格读取
 	StorageClass *string `required:"true"`
 
-	// 子网ID
+	// 子网 ID。与 `VPCId` 须同属一个 VPC
 	SubnetId *string `required:"false"`
 
 	// 实例所在的业务组名称
 	Tag *string `required:"false"`
 
-	// VPC的ID
+	// VPC ID。与 `SubnetId` 成对使用；取值见 UVPC 相关接口
 	VPCId *string `required:"false"`
 }
 
@@ -1152,7 +1155,7 @@ func (c *UDBClient) NewCreateUDBReplicationInstanceRequest() *CreateUDBReplicati
 /*
 API: CreateUDBReplicationInstance
 
-创建MongoDB的副本节点（包括仲裁）
+创建MongoDB的副本节点（包括仲裁）, 本接口适用于物理机MongoDB，该架构即将下线, 若要使用快杰MongoDB，请参考https://docs.ucloud.cn/api/umongodb-api/index
 */
 func (c *UDBClient) CreateUDBReplicationInstance(req *CreateUDBReplicationInstanceRequest) (*CreateUDBReplicationInstanceResponse, error) {
 	var err error
@@ -1172,13 +1175,13 @@ func (c *UDBClient) CreateUDBReplicationInstance(req *CreateUDBReplicationInstan
 type CreateUDBRouteInstanceRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
 	// Year， Month， Dynamic，Trial，默认: Month
@@ -1238,7 +1241,7 @@ func (c *UDBClient) NewCreateUDBRouteInstanceRequest() *CreateUDBRouteInstanceRe
 /*
 API: CreateUDBRouteInstance
 
-创建mongos实例
+本接口适用于物理机MongoDB，该架构即将下线, 若要使用快杰MongoDB，请参考https://docs.ucloud.cn/api/umongodb-api/index
 */
 func (c *UDBClient) CreateUDBRouteInstance(req *CreateUDBRouteInstanceRequest) (*CreateUDBRouteInstanceResponse, error) {
 	var err error
@@ -1931,6 +1934,74 @@ func (c *UDBClient) DescribeUDBBackupBlacklist(req *DescribeUDBBackupBlacklistRe
 	return &res, nil
 }
 
+// DescribeUDBBackupStrategyRequest is request schema for DescribeUDBBackupStrategy action
+type DescribeUDBBackupStrategyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 实例ID
+	DBId *string `required:"true"`
+}
+
+// DescribeUDBBackupStrategyResponse is response schema for DescribeUDBBackupStrategy action
+type DescribeUDBBackupStrategyResponse struct {
+	response.CommonBase
+
+	// 备份策略，不可修改，开始时间，单位小时计，默认3点
+	BackupBeginTime int
+
+	// 备份日期标记位。共7位,每一位为一周中一天的备份情况 0表示关闭当天备份,1表示打开当天备份。最右边的一位 为星期天的备份开关，其余从右到左依次为星期一到星期 六的备份配置开关，每周必须至少设置两天备份。 例如：1100000 表示打开星期六和星期五的自动备份功能
+	BackupDate string
+
+	// 默认的备份方式，nobackup表示不备份， snapshot 表示使用快照备份，logic 表示使用逻辑备份，xtrabackup表示使用物理备份。ark_snapshot 方舟快照备份
+	BackupMethod string
+
+	// 保留多少天
+	SaveDays int
+
+	// 用户转存备份到自己的UFILE配置, 结构参考UFileDataSet
+	UserUFileData UFileDataSet
+}
+
+// NewDescribeUDBBackupStrategyRequest will create request of DescribeUDBBackupStrategy action.
+func (c *UDBClient) NewDescribeUDBBackupStrategyRequest() *DescribeUDBBackupStrategyRequest {
+	req := &DescribeUDBBackupStrategyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUDBBackupStrategy
+
+获取实例备份策略
+*/
+func (c *UDBClient) DescribeUDBBackupStrategy(req *DescribeUDBBackupStrategyRequest) (*DescribeUDBBackupStrategyResponse, error) {
+	var err error
+	var res DescribeUDBBackupStrategyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUDBBackupStrategy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUDBBinlogBackupRequest is request schema for DescribeUDBBinlogBackup action
 type DescribeUDBBinlogBackupRequest struct {
 	request.CommonBase
@@ -1995,6 +2066,65 @@ func (c *UDBClient) DescribeUDBBinlogBackup(req *DescribeUDBBinlogBackupRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeUDBBinlogBackup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUDBBinlogBackupStrategyRequest is request schema for DescribeUDBBinlogBackupStrategy action
+type DescribeUDBBinlogBackupStrategyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// DB实例Id
+	DBId *string `required:"true"`
+}
+
+// DescribeUDBBinlogBackupStrategyResponse is response schema for DescribeUDBBinlogBackupStrategy action
+type DescribeUDBBinlogBackupStrategyResponse struct {
+	response.CommonBase
+
+	// 远端binlog保存时长(天)
+	BinlogRemoteSaveDays int
+
+	// 是否开启binlog自动备份，false:关闭,true:开启
+	EnableBinlogBackup bool
+}
+
+// NewDescribeUDBBinlogBackupStrategyRequest will create request of DescribeUDBBinlogBackupStrategy action.
+func (c *UDBClient) NewDescribeUDBBinlogBackupStrategyRequest() *DescribeUDBBinlogBackupStrategyRequest {
+	req := &DescribeUDBBinlogBackupStrategyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUDBBinlogBackupStrategy
+
+获取UDB实例binlog自动备份策略
+*/
+func (c *UDBClient) DescribeUDBBinlogBackupStrategy(req *DescribeUDBBinlogBackupStrategyRequest) (*DescribeUDBBinlogBackupStrategyResponse, error) {
+	var err error
+	var res DescribeUDBBinlogBackupStrategyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUDBBinlogBackupStrategy", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2151,19 +2281,19 @@ func (c *UDBClient) DescribeUDBInstance(req *DescribeUDBInstanceRequest) (*Descr
 type DescribeUDBInstanceBackupStateRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 备份记录ID
+	// 备份记录 ID，见 BackupUDBInstance 响应或 DescribeUDBBackup
 	BackupId *int `required:"true"`
 
-	// 跨可用区高可用备库所在可用区，参见［可用区列表］
+	// 跨可用区高可用备库所在可用区，参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	BackupZone *string `required:"false"`
 }
 
@@ -2503,7 +2633,7 @@ type DescribeUDBInstancePriceRequest struct {
 	// 对于快杰机型，请使用最新的 SpecificationClass 和 StorageClass 字段进行创建。目前仅有少量地域支持 SATA_SSD 存储类型；若创建的是 SATA_SSD 机型，可通过该字段指定。字段说明：SATA_SSD：SATA SSD 机型（仅部分地域支持）NVMe_SSD：快杰机型
 	InstanceType *string `required:"false"`
 
-	// 规格类型ID,当SpecificationType为1时有效
+	// 规格类型ID,当SpecificationType为1时有效。取值见 ListUDBMachineType
 	MachineType *string `required:"false"`
 
 	// 内存限制(MB)，单位为MB.目前支持：2000-96000
@@ -3018,10 +3148,10 @@ type DescribeUDBTypeRequest struct {
 	// 返回从备份创建实例时，该小版本号所支持的备份创建小版本。如果没传，则表示不是从备份创建。
 	DBSubVersion *string `required:"false"`
 
-	// 返回支持某种磁盘类型的DB类型，如Normal、SSD、NVMe_SSD。如果没传，则表示任何磁盘类型均可。
+	// 返回支持某种磁盘类型的DB类型，如Normal、SSD、NVMe_SSD,CLOUD_SSD_ESSENTIAL。如果没传，则表示任何磁盘类型均可。
 	DiskType *string `required:"false"`
 
-	// 返回支持某种实例类型的DB类型。如果没传，则表示任何实例类型均可。normal:单点,ha:高可用,sharded_cluster:分片集群
+	// 返回支持某种实例类型的DB类型。如果没传，则表示任何实例类型均可。Normal:单点,HA:高可用,sharded_cluster:分片集群。区分大小写
 	InstanceMode *string `required:"false"`
 }
 
@@ -3031,6 +3161,9 @@ type DescribeUDBTypeResponse struct {
 
 	// DB类型列表 参数见 UDBTypeSet
 	DataSet []UDBTypeSet
+
+	// 推荐DB版本
+	DedaultType UDBTypeSet
 }
 
 // NewDescribeUDBTypeRequest will create request of DescribeUDBType action.
@@ -3459,6 +3592,71 @@ func (c *UDBClient) GetUDBInstanceSSLCertURL(req *GetUDBInstanceSSLCertURLReques
 	return &res, nil
 }
 
+// ListUDBInstanceFailoverRecordRequest is request schema for ListUDBInstanceFailoverRecord action
+type ListUDBInstanceFailoverRecordRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 实例id
+	DBId *string `required:"true"`
+
+	// 结束时间
+	EndTime *int `required:"true"`
+
+	// 开始时间
+	StartTime *int `required:"true"`
+}
+
+// ListUDBInstanceFailoverRecordResponse is response schema for ListUDBInstanceFailoverRecord action
+type ListUDBInstanceFailoverRecordResponse struct {
+	response.CommonBase
+
+	// 容灾记录列表
+	Dataset []FailoverRecord
+
+	// 错误信息
+	Message string
+}
+
+// NewListUDBInstanceFailoverRecordRequest will create request of ListUDBInstanceFailoverRecord action.
+func (c *UDBClient) NewListUDBInstanceFailoverRecordRequest() *ListUDBInstanceFailoverRecordRequest {
+	req := &ListUDBInstanceFailoverRecordRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUDBInstanceFailoverRecord
+
+获取实例容灾记录列表
+*/
+func (c *UDBClient) ListUDBInstanceFailoverRecord(req *ListUDBInstanceFailoverRecordRequest) (*ListUDBInstanceFailoverRecordResponse, error) {
+	var err error
+	var res ListUDBInstanceFailoverRecordResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUDBInstanceFailoverRecord", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListUDBMachineTypeRequest is request schema for ListUDBMachineType action
 type ListUDBMachineTypeRequest struct {
 	request.CommonBase
@@ -3646,7 +3844,7 @@ type ModifyUDBInstancePasswordRequest struct {
 	// 实例的ID,该值可以通过DescribeUDBInstance获取
 	DBId *string `required:"true"`
 
-	// 实例的新密码
+	// 实例的新密码。 8-36 位，支持大小写字母、数字、@#$%^*-+=_,?!&()~.|，须包含两类及以上字符
 	Password *string `required:"true"`
 }
 
@@ -3926,7 +4124,7 @@ type ResizeUDBInstanceRequest struct {
 	// 使用的代金券id
 	CouponId *string `required:"false"`
 
-	// 实例的Id
+	// DB实例Id,该值可以通过DescribeUDBInstance获取
 	DBId *string `required:"true"`
 
 	// 磁盘空间(GB), 暂时支持20G-32T
@@ -3938,7 +4136,7 @@ type ResizeUDBInstanceRequest struct {
 	// UDB数据库机型: "Normal": "标准机型" ,  "SATA_SSD": "SSD机型" , "PCIE_SSD": "SSD高性能机型" ,  "Normal_Volume": "标准大容量机型",  "SATA_SSD_Volume": "SSD大容量机型" ,  "PCIE_SSD_Volume": "SSD高性能大容量机型"，“NVMe_SSD”：“快杰机型”
 	InstanceType *string `required:"false"`
 
-	// 规格类型ID,当SpecificationType为1时有效
+	// 规格类型ID,当SpecificationType为1时有效, 可以通过 ListUDBMachineType 查询。
 	MachineType *string `required:"false"`
 
 	// 内存限制(MB)，目前支持以下几档 2000M/4000M/ 6000M/8000M/ 12000M/16000M/ 24000M/32000M/ 48000M/64000M/96000M/128000M/192000M/256000M/320000M。
