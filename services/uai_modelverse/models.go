@@ -102,6 +102,24 @@ type FilterOptionInteger struct {
 }
 
 /*
+Pricing - 定价策略
+*/
+type Pricing struct {
+
+	// 输出定价
+	Completion float64
+
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+}
+
+/*
 PriceRate - 该档位下的收费列表（有序数组）
 */
 type PriceRate struct {
@@ -144,24 +162,6 @@ type PriceTier struct {
 
 	// 该档位下的收费列表（有序数组）
 	Rates []PriceRate
-}
-
-/*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
 }
 
 /*
@@ -486,6 +486,18 @@ type OrderItemDetail struct {
 }
 
 /*
+RequestLogSummary - 请求日志汇总
+*/
+type RequestLogSummary struct {
+
+	// 查询条件命中的失败请求数
+	FailedRequests int
+
+	// 查询条件命中的总请求数
+	TotalRequests int
+}
+
+/*
 RequestLogItem - 请求日志列表项
 */
 type RequestLogItem struct {
@@ -552,18 +564,6 @@ type RequestLogItem struct {
 
 	// 总 Token 数
 	TotalTokens int
-}
-
-/*
-RequestLogSummary - 请求日志汇总
-*/
-type RequestLogSummary struct {
-
-	// 查询条件命中的失败请求数
-	FailedRequests int
-
-	// 查询条件命中的总请求数
-	TotalRequests int
 }
 
 /*
