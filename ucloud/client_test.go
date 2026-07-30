@@ -2,6 +2,7 @@ package ucloud
 
 import (
 	stdhttp "net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
@@ -33,12 +34,21 @@ func testSetup() {}
 func testTeardown() {}
 
 func TestClientTimeout(t *testing.T) {
+	// the handler never writes a response, so every attempt (including retries)
+	// can only end in the client's own timeout
+	blocked := make(chan struct{})
+	server := httptest.NewServer(stdhttp.HandlerFunc(func(w stdhttp.ResponseWriter, r *stdhttp.Request) {
+		<-blocked
+	}))
+	defer server.Close()
+	defer close(blocked) // release the handlers first, so Close does not wait on them
+
 	req := &MockRequest{}
 	resp := &MockResponse{}
 
 	client := newTestClient()
-	client.config.BaseUrl = "https://httpbin.org/delay/2"
-	client.config.Timeout = 1 * time.Second
+	client.config.BaseUrl = server.URL
+	client.config.Timeout = 200 * time.Millisecond
 	client.config.MaxRetries = 1
 	client.SetupRequest(req)
 
