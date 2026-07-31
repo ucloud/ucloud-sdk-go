@@ -42,69 +42,6 @@ type KeyPair struct {
 }
 
 /*
-CpuPlatforms - CPU平台信息
-*/
-type CpuPlatforms struct {
-
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
-
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
-}
-
-/*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
-DataDiskInfo - 数据盘信息
-*/
-type DataDiskInfo struct {
-
-	// 支持的快照备份策略
-	BackupMode []string
-
-	// 数据盘可支持的服务
-	Features []string
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
-	MinimalSize int
-
-	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
-}
-
-/*
 CpuPlatformWithModels -
 */
 type CpuPlatformWithModels struct {
@@ -116,54 +53,6 @@ type CpuPlatformWithModels struct {
 	CpuModels []string
 
 	// CPU平台
-	Name string
-}
-
-/*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
-BootDiskInfo - 系统盘信息
-*/
-type BootDiskInfo struct {
-
-	// 磁盘可支持的服务
-	Features []string
-
-	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
-	InstantResize bool
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
-}
-
-/*
-Disks - 磁盘信息
-*/
-type Disks struct {
-
-	// 系统盘信息
-	BootDisk []BootDiskInfo
-
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
 }
 
@@ -195,6 +84,54 @@ type GraphicsMemory struct {
 }
 
 /*
+BootDiskInfo - 系统盘信息
+*/
+type BootDiskInfo struct {
+
+	// 磁盘可支持的服务
+	Features []string
+
+	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
+	InstantResize bool
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
 Performance - GPU的性能指标
 */
 type Performance struct {
@@ -207,6 +144,42 @@ type Performance struct {
 }
 
 /*
+DataDiskInfo - 数据盘信息
+*/
+type DataDiskInfo struct {
+
+	// 支持的快照备份策略
+	BackupMode []string
+
+	// 数据盘可支持的服务
+	Features []string
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
+
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	Name string
+}
+
+/*
 Features - 虚机可支持的特性
 */
 type Features struct {
@@ -216,6 +189,33 @@ type Features struct {
 
 	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
 	Name string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+CpuPlatforms - CPU平台信息
+*/
+type CpuPlatforms struct {
+
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
+
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
 }
 
 /*
@@ -267,6 +267,30 @@ type AvailableInstanceTypes struct {
 }
 
 /*
+NameOperationStatus - 名称及标记
+*/
+type NameOperationStatus struct {
+
+	// 名称
+	Name string
+
+	// 标记
+	OperationStatus string
+}
+
+/*
+CpuPlatformStatus -
+*/
+type CpuPlatformStatus struct {
+
+	// CPU平台
+	Name string
+
+	// 运营Commpont Code
+	OperationStatus string
+}
+
+/*
 Frequency - 频率
 */
 type Frequency struct {
@@ -288,18 +312,6 @@ type NameFrequency struct {
 }
 
 /*
-NameOperationStatus - 名称及标记
-*/
-type NameOperationStatus struct {
-
-	// 名称
-	Name string
-
-	// 标记
-	OperationStatus string
-}
-
-/*
 DiskFeature - 磁盘特性
 */
 type DiskFeature struct {
@@ -308,24 +320,6 @@ type DiskFeature struct {
 	Modes []NameOperationStatus
 
 	// 特性名称
-	Name string
-}
-
-/*
-FamiliesBootDiskInfo - 系统盘信息
-*/
-type FamiliesBootDiskInfo struct {
-
-	// 磁盘可支持的服务
-	Features []DiskFeature
-
-	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
-	InstantResize bool
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
 	Name string
 }
 
@@ -348,6 +342,24 @@ type FamiliesDataDiskInfo struct {
 }
 
 /*
+FamiliesBootDiskInfo - 系统盘信息
+*/
+type FamiliesBootDiskInfo struct {
+
+	// 磁盘可支持的服务
+	Features []DiskFeature
+
+	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
+	InstantResize bool
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
 FamiliesDisks - 磁盘信息
 */
 type FamiliesDisks struct {
@@ -362,18 +374,6 @@ type FamiliesDisks struct {
 	Name string
 
 	// 权限位
-	OperationStatus string
-}
-
-/*
-CpuPlatformStatus -
-*/
-type CpuPlatformStatus struct {
-
-	// CPU平台
-	Name string
-
-	// 运营Commpont Code
 	OperationStatus string
 }
 
@@ -576,6 +576,27 @@ type AvailableDiskTypes struct {
 }
 
 /*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
 UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
 type UDSetUDHostAttribute struct {
@@ -588,6 +609,39 @@ type UDSetUDHostAttribute struct {
 
 	// 私有专区
 	UDSetId string
+}
+
+/*
+UHostDiskSet - DescribeUHostInstance
+*/
+type UHostDiskSet struct {
+
+	// 备份方案。若开通了数据方舟，则为DATAARK
+	BackupType string
+
+	// 磁盘ID
+	DiskId string
+
+	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// "true": 加密盘 "false"：非加密盘
+	Encrypted string
+
+	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
 }
 
 /*
@@ -627,60 +681,6 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
-}
-
-/*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
-UHostDiskSet - DescribeUHostInstance
-*/
-type UHostDiskSet struct {
-
-	// 备份方案。若开通了数据方舟，则为DATAARK
-	BackupType string
-
-	// 磁盘ID
-	DiskId string
-
-	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// "true": 加密盘 "false"：非加密盘
-	Encrypted string
-
-	// 是否是系统盘。枚举值：\\ > True，是系统盘 \\ > False，是数据盘（默认）。Disks数组中有且只能有一块盘是系统盘。
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 【建议不再使用】磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
 }
 
 /*
