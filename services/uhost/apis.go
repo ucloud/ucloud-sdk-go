@@ -67,6 +67,15 @@ func (c *UHostClient) AddUHostToIsolationGroup(req *AddUHostToIsolationGroupRequ
 }
 
 /*
+CheckUHostResourceCapacityParamFeatures is request schema for complex param
+*/
+type CheckUHostResourceCapacityParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
+	UNI *bool `required:"false"`
+}
+
+/*
 CheckUHostResourceCapacityParamDisksCustomBackup is request schema for complex param
 */
 type CheckUHostResourceCapacityParamDisksCustomBackup struct {
@@ -109,15 +118,6 @@ type CheckUHostResourceCapacityParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
-}
-
-/*
-CheckUHostResourceCapacityParamFeatures is request schema for complex param
-*/
-type CheckUHostResourceCapacityParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启，仅与 NetCapability Normal 兼容。
-	UNI *bool `required:"false"`
 }
 
 // CheckUHostResourceCapacityRequest is request schema for CheckUHostResourceCapacity action
@@ -435,15 +435,54 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
+CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
-type CreateUHostInstanceParamSecGroupId struct {
+type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth *int `required:"false"`
 
-	// 安全组优先级。取值范围[1, 5]
-	Priority *int `required:"false"`
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId *string `required:"false"`
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName *string `required:"false"`
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode *string `required:"false"`
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+
+	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
+	Address *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Adress *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	ShareBandwidthId *string `required:"false" deprecated:"true"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterface is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterface struct {
+
+	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
+	CreateCernetIp *bool `required:"false"`
+
+	//
+	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
+
+	//
+	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
 }
 
 /*
@@ -498,54 +537,12 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+CreateUHostInstanceParamFeatures is request schema for complex param
 */
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+type CreateUHostInstanceParamFeatures struct {
 
-	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
-	Address *string `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Adress *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	ShareBandwidthId *string `required:"false" deprecated:"true"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceEIP struct {
-
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth *int `required:"false"`
-
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId *string `required:"false"`
-
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International BGP: Bgp 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName *string `required:"false"`
-
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode *string `required:"false"`
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamNetworkInterface is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterface struct {
-
-	// 申请并绑定一个教育网EIP。True为申请并绑定，False为不会申请绑定，默认False。当前只支持具有HPC特性的机型。
-	CreateCernetIp *bool `required:"false"`
-
-	//
-	EIP *CreateUHostInstanceParamNetworkInterfaceEIP `required:"false"`
-
-	//
-	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
+	UNI *bool `required:"false"`
 }
 
 /*
@@ -561,18 +558,21 @@ type CreateUHostInstanceParamLabels struct {
 }
 
 /*
-CreateUHostInstanceParamVolumes is request schema for complex param
+CreateUHostInstanceParamSecGroupId is request schema for complex param
 */
-type CreateUHostInstanceParamVolumes struct {
+type CreateUHostInstanceParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
 }
 
 /*
-CreateUHostInstanceParamFeatures is request schema for complex param
+CreateUHostInstanceParamVolumes is request schema for complex param
 */
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
-	UNI *bool `required:"false"`
+type CreateUHostInstanceParamVolumes struct {
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -1614,12 +1614,6 @@ func (c *UHostClient) GetAttachedDiskUpgradePrice(req *GetAttachedDiskUpgradePri
 }
 
 /*
-GetUHostInstancePriceParamVolumes is request schema for complex param
-*/
-type GetUHostInstancePriceParamVolumes struct {
-}
-
-/*
 getUHostInstancePriceParamDisks is request schema for complex param
 */
 type getUHostInstancePriceParamDisks struct {
@@ -1635,6 +1629,12 @@ type getUHostInstancePriceParamDisks struct {
 
 	// 磁盘类型。请参考[[api:uhost-api:disk_type|磁盘类型]]。
 	Type *string `required:"true"`
+}
+
+/*
+GetUHostInstancePriceParamVolumes is request schema for complex param
+*/
+type GetUHostInstancePriceParamVolumes struct {
 }
 
 // GetUHostInstancePriceRequest is request schema for GetUHostInstancePrice action

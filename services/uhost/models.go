@@ -42,18 +42,15 @@ type KeyPair struct {
 }
 
 /*
-CpuPlatforms - CPU平台信息
+GraphicsMemory - GPU的显存指标
 */
-type CpuPlatforms struct {
+type GraphicsMemory struct {
 
-	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
-	Amd []string
+	// 交互展示参数，可忽略
+	Rate int
 
-	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
-	Ampere []string
-
-	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
-	Intel []string
+	// 值，单位是GB
+	Value int
 }
 
 /*
@@ -84,27 +81,6 @@ type MachineSizes struct {
 }
 
 /*
-DataDiskInfo - 数据盘信息
-*/
-type DataDiskInfo struct {
-
-	// 支持的快照备份策略
-	BackupMode []string
-
-	// 数据盘可支持的服务
-	Features []string
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
-	MinimalSize int
-
-	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
-}
-
-/*
 CpuPlatformWithModels -
 */
 type CpuPlatformWithModels struct {
@@ -116,6 +92,21 @@ type CpuPlatformWithModels struct {
 	CpuModels []string
 
 	// CPU平台
+	Name string
+}
+
+/*
+UHostFamily -
+*/
+type UHostFamily struct {
+
+	// CPU频率信息
+	CpuFrequency string
+
+	// CPU平台信息
+	CpuPlatforms []CpuPlatformWithModels
+
+	// 规格族
 	Name string
 }
 
@@ -153,45 +144,15 @@ type BootDiskInfo struct {
 }
 
 /*
-Disks - 磁盘信息
+Features - 虚机可支持的特性
 */
-type Disks struct {
+type Features struct {
 
-	// 系统盘信息
-	BootDisk []BootDiskInfo
+	// 可以提供的模式类别
+	Modes []FeatureModes
 
-	// 数据盘信息
-	DataDisk []DataDiskInfo
-
-	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
 	Name string
-}
-
-/*
-UHostFamily -
-*/
-type UHostFamily struct {
-
-	// CPU频率信息
-	CpuFrequency string
-
-	// CPU平台信息
-	CpuPlatforms []CpuPlatformWithModels
-
-	// 规格族
-	Name string
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
 }
 
 /*
@@ -207,14 +168,53 @@ type Performance struct {
 }
 
 /*
-Features - 虚机可支持的特性
+CpuPlatforms - CPU平台信息
 */
-type Features struct {
+type CpuPlatforms struct {
 
-	// 可以提供的模式类别
-	Modes []FeatureModes
+	// 返回AMD的CPU平台信息，例如：AMD: ['Amd/Epyc2']
+	Amd []string
 
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	// 返回Arm的CPU平台信息，例如：Ampere: ['Ampere/Altra']
+	Ampere []string
+
+	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
+	Intel []string
+}
+
+/*
+DataDiskInfo - 数据盘信息
+*/
+type DataDiskInfo struct {
+
+	// 支持的快照备份策略
+	BackupMode []string
+
+	// 数据盘可支持的服务
+	Features []string
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 磁盘最小值，如果没有该字段，最小值取基础镜像Size值即可（linux为20G，windows为40G）。
+	MinimalSize int
+
+	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
+Disks - 磁盘信息
+*/
+type Disks struct {
+
+	// 系统盘信息
+	BootDisk []BootDiskInfo
+
+	// 数据盘信息
+	DataDisk []DataDiskInfo
+
+	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
 }
 
@@ -267,6 +267,18 @@ type AvailableInstanceTypes struct {
 }
 
 /*
+NameOperationStatus - 名称及标记
+*/
+type NameOperationStatus struct {
+
+	// 名称
+	Name string
+
+	// 标记
+	OperationStatus string
+}
+
+/*
 Frequency - 频率
 */
 type Frequency struct {
@@ -288,14 +300,14 @@ type NameFrequency struct {
 }
 
 /*
-NameOperationStatus - 名称及标记
+CpuPlatformStatus -
 */
-type NameOperationStatus struct {
+type CpuPlatformStatus struct {
 
-	// 名称
+	// CPU平台
 	Name string
 
-	// 标记
+	// 运营Commpont Code
 	OperationStatus string
 }
 
@@ -362,18 +374,6 @@ type FamiliesDisks struct {
 	Name string
 
 	// 权限位
-	OperationStatus string
-}
-
-/*
-CpuPlatformStatus -
-*/
-type CpuPlatformStatus struct {
-
-	// CPU平台
-	Name string
-
-	// 运营Commpont Code
 	OperationStatus string
 }
 
@@ -576,18 +576,24 @@ type AvailableDiskTypes struct {
 }
 
 /*
-UDSetUDHostAttribute - 私有专区对应的宿主机属性
+UHostKeyPair - 主机密钥信息
 */
-type UDSetUDHostAttribute struct {
+type UHostKeyPair struct {
 
-	// 是否绑定私有专区宿主机
-	HostBinding bool
+	// 密钥对ID
+	KeyPairId string
 
-	// 私有专区宿主机
-	UDHostId string
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
 
-	// 私有专区
-	UDSetId string
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
 }
 
 /*
@@ -630,18 +636,6 @@ type UHostIPSet struct {
 }
 
 /*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -675,12 +669,18 @@ type UHostDiskSet struct {
 }
 
 /*
-SpotAttribute - 竞价实例属性
+UDSetUDHostAttribute - 私有专区对应的宿主机属性
 */
-type SpotAttribute struct {
+type UDSetUDHostAttribute struct {
 
-	// 回收时间
-	RecycleTime int
+	// 是否绑定私有专区宿主机
+	HostBinding bool
+
+	// 私有专区宿主机
+	UDHostId string
+
+	// 私有专区
+	UDSetId string
 }
 
 /*
