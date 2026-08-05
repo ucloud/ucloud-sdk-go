@@ -54,24 +54,90 @@ type BackendSet struct {
 }
 
 /*
-ForwardTargetSet - 转发的后端服务节点
+Certificate - （应用型专用）服务器证书信息
 */
-type ForwardTargetSet struct {
+type Certificate struct {
 
-	// 服务节点的标识ID
+	// 是否为默认证书
+	IsDefault bool
+
+	// 证书ID
+	SSLId string
+}
+
+/*
+RemoveHeaderConfigSet - 删除 header 相关配置
+*/
+type RemoveHeaderConfigSet struct {
+
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key string
+}
+
+/*
+PathConfigSet - 路径相关配置
+*/
+type PathConfigSet struct {
+
+	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
+	Values []string
+}
+
+/*
+Target - 服务节点信息
+*/
+type Target struct {
+
+	// 服务节点是否启用
+	Enabled bool
+
+	// 服务节点的标识ID。为ALB/NLB中使用，与资源自身ID无关，可用于UpdateTargetsAttribute/RemoveTargets
 	Id string
 
-	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
+	// 服务节点是否为备节点
+	IsBackup bool
+
+	// 服务节点的端口
+	Port int
+
+	// 服务节点的IP
+	ResourceIP string
+
+	// 服务节点的资源ID
+	ResourceId string
+
+	// 服务节点的资源名称
+	ResourceName string
+
+	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
+	ResourceType string
+
+	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
+	State string
+
+	// 服务节点的子网资源ID
+	SubnetId string
+
+	// 服务节点的VPC资源ID
+	VPCId string
+
+	// 服务节点的权重。仅在加权轮询算法时有效
 	Weight int
 }
 
 /*
-ForwardConfigSet - 转发服务节点相关配置
+StickinessConfigSet - 会话保持相关配置
 */
-type ForwardConfigSet struct {
+type StickinessConfigSet struct {
 
-	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
-	Targets []ForwardTargetSet
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
 }
 
 /*
@@ -87,15 +153,6 @@ type InsertHeaderConfigSet struct {
 
 	// 头字段内容类型。取值：UserDefined：用户指定。ReferenceHeader：引用用户请求头中的某一个字段。SystemDefined：系统定义。
 	ValueType string
-}
-
-/*
-RemoveHeaderConfigSet - 删除 header 相关配置
-*/
-type RemoveHeaderConfigSet struct {
-
-	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
-	Key string
 }
 
 /*
@@ -135,9 +192,51 @@ type FixedResponseConfigSet struct {
 }
 
 /*
+ForwardTargetSet - 转发的后端服务节点
+*/
+type ForwardTargetSet struct {
+
+	// 服务节点的标识ID
+	Id string
+
+	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
+	Weight int
+}
+
+/*
+ForwardConfigSet - 转发服务节点相关配置
+*/
+type ForwardConfigSet struct {
+
+	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
+	Targets []ForwardTargetSet
+}
+
+/*
+BackendConnectionConfig - 后向连接配置
+*/
+type BackendConnectionConfig struct {
+
+	// 是否开启长连接
+	EnablePersistentConnection bool
+}
+
+/*
+ProxyBufferingConfig - 缓存配置
+*/
+type ProxyBufferingConfig struct {
+
+	// 关闭缓存
+	CloseProxyBuffering bool
+}
+
+/*
 RuleAction - 转发动作
 */
 type RuleAction struct {
+
+	// 开启长连接
+	BackendConnectionConfig BackendConnectionConfig
 
 	// 跨域相关配置，对应 type 值: "Cors"。具体结构详见 CorsConfigSet
 	CorsConfig CorsConfigSet
@@ -154,6 +253,9 @@ type RuleAction struct {
 	// 转发规则动作执行的顺序，取值为1~1000，按值从小到大执行动作。值不能为空，不能重复。Forward、FixedResponse 类型的动作不判断 Order，最后一个执行
 	Order int
 
+	// 关闭缓存
+	ProxyBufferingConfig ProxyBufferingConfig
+
 	// 删除 header 相关配置，对应 type 值: "RemoveHeader"。具体结构详见 RemoveHeaderConfigSet
 	RemoveHeaderConfig RemoveHeaderConfigSet
 
@@ -168,15 +270,6 @@ type HostConfigSet struct {
 
 	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
 	MatchMode string
-
-	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
-	Values []string
-}
-
-/*
-PathConfigSet - 路径相关配置
-*/
-type PathConfigSet struct {
 
 	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
 	Values []string
@@ -223,92 +316,41 @@ HealthCheckConfigSet - 健康检查相关配置
 */
 type HealthCheckConfigSet struct {
 
-	// （应用型专用）HTTP检查域名。 当Type为HTTP时，此字段有意义，代表HTTP检查域名
+	// （应用型专用）HTTP检查域名。 当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查域名
 	Domain string
 
-	// 是否开启健康检查功能。暂时不支持关闭。 默认值为：true
+	// （应用型专用）判定失败的连续次数
+	DownCounts int
+
+	// 是否开启健康检查功能。 默认值为：true
 	Enabled bool
 
-	// （应用型专用）HTTP检查方法。当Type为HTTP时，此字段有意义，代表HTTP检查方法
+	// （应用型专用）检查协议
+	HTTPVersion string
+
+	// （应用型专用）间隔时间，秒，必须大于TimeOut
+	Interval int
+
+	// （应用型专用）HTTP检查方法。当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查方法
 	Method string
 
-	// （应用型专用）HTTP检查路径。当Type为HTTP时，此字段有意义，代表HTTP检查路径
+	// （应用型专用）HTTP检查路径。当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查路径
 	Path string
 
-	// （应用型专用）GRPC检查响应码。当Type为GRPC时，此字段有意义，代表GRPC检查响应码
-	ResponseCode string
-
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查； 默认值：Port
-	Type string
-}
-
-/*
-Certificate - （应用型专用）服务器证书信息
-*/
-type Certificate struct {
-
-	// 是否为默认证书
-	IsDefault bool
-
-	// 证书ID
-	SSLId string
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
-}
-
-/*
-Target - 服务节点信息
-*/
-type Target struct {
-
-	// 服务节点是否启用
-	Enabled bool
-
-	// 服务节点的标识ID。为ALB/NLB中使用，与资源自身ID无关，可用于UpdateTargetsAttribute/RemoveTargets
-	Id string
-
-	// 服务节点是否为备节点
-	IsBackup bool
-
-	// 服务节点的端口
+	// （应用型专用）端口
 	Port int
 
-	// 服务节点的IP
-	ResourceIP string
+	// （应用型专用）检查预期状态码。HTTP时为2xx,3xx格式(逗号分隔)，GRPC时为数字码(逗号分隔)。
+	ResponseCode string
 
-	// 服务节点的资源ID
-	ResourceId string
+	// （应用型专用）超时时间，秒，必须小于Interval
+	TimeOut int
 
-	// 服务节点的资源名称
-	ResourceName string
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查；GRPC -> GRPC检测； 默认值：Port
+	Type string
 
-	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
-	ResourceType string
-
-	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
-	State string
-
-	// 服务节点的子网资源ID
-	SubnetId string
-
-	// 服务节点的VPC资源ID
-	VPCId string
-
-	// 服务节点的权重。仅在加权轮询算法时有效
-	Weight int
+	// （应用型专用）判定成功的连续次数
+	UpCounts int
 }
 
 /*
@@ -367,20 +409,11 @@ type Listener struct {
 	// 会话保持相关配置。具体结构详见 StickinessConfigSet
 	StickinessConfig StickinessConfigSet
 
+	// 后端协议。应用型限定取值：“HTTP,HTTPS,GRPC"，默认值“HTTP”
+	TargetProtocol string
+
 	// 添加的服务节点信息。具体结构详见 Target
 	Targets []Target
-}
-
-/*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
 }
 
 /*
@@ -402,18 +435,15 @@ type SecGroupInfo struct {
 }
 
 /*
-AccessLogConfigSet - （应用型专用）访问日志相关配置
+FirewallSet - ulb防火墙信息
 */
-type AccessLogConfigSet struct {
+type FirewallSet struct {
 
-	// （应用型专用）是否开启访问日志记录功能
-	Enabled bool
+	// 防火墙ID
+	FirewallId string
 
-	// （应用型专用）用于存储访问日志的bucket
-	US3BucketName string
-
-	// （应用型专用）上传访问日志到bucket所需的token
-	US3TokenId string
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -441,6 +471,21 @@ type IPInfo struct {
 
 	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
 	OperatorName string
+}
+
+/*
+AccessLogConfigSet - （应用型专用）访问日志相关配置
+*/
+type AccessLogConfigSet struct {
+
+	// （应用型专用）是否开启访问日志记录功能
+	Enabled bool
+
+	// （应用型专用）用于存储访问日志的bucket
+	US3BucketName string
+
+	// （应用型专用）上传访问日志到bucket所需的token
+	US3TokenId string
 }
 
 /*
@@ -729,42 +774,6 @@ type TLSAndCiphers struct {
 }
 
 /*
-ULBIPSet - DescribeULB
-*/
-type ULBIPSet struct {
-
-	// 弹性IP的带宽值（暂未对外开放）
-	Bandwidth int
-
-	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
-	BandwidthType int
-
-	// 弹性IP地址
-	EIP string
-
-	// 弹性IP的ID
-	EIPId string
-
-	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
-	OperatorName string
-}
-
-/*
-LoggerSet - ulb日志信息
-*/
-type LoggerSet struct {
-
-	// ulb日志上传的bucket
-	BucketName string
-
-	// 上传到bucket使用的token的tokenid
-	TokenID string
-
-	// bucket的token名称
-	TokenName string
-}
-
-/*
 BindSecurityPolicy - VServer绑定的安全策略组信息
 */
 type BindSecurityPolicy struct {
@@ -783,6 +792,57 @@ type BindSecurityPolicy struct {
 
 	// TLS最低版本
 	TLSVersion string
+}
+
+/*
+ULBBackendSet - DescribeULB
+*/
+type ULBBackendSet struct {
+
+	// 后端资源实例的Id
+	BackendId string
+
+	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
+	Enabled int
+
+	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
+	IsBackup int
+
+	// 后端提供服务的端口
+	Port int
+
+	// 后端提供服务的内网IP
+	PrivateIP string
+
+	// 资源实例的资源Id
+	ResourceId string
+
+	// 资源实例的资源名称
+	ResourceName string
+
+	// 资源实例的类型
+	ResourceType string
+
+	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
+	Status int
+
+	// 资源绑定的虚拟网卡实例的资源Id
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡实例的资源名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡实例的类型
+	SubResourceType string
+
+	// 后端提供服务的资源所在的子网的ID
+	SubnetId string
+
+	// 后端服务器所在的VPC
+	VPCId string
+
+	// 后端RS权重（在加权轮询算法下有效）
+	Weight int
 }
 
 /*
@@ -849,57 +909,6 @@ type ULBPolicySet struct {
 
 	// 所属VServerId
 	VServerId string
-}
-
-/*
-ULBBackendSet - DescribeULB
-*/
-type ULBBackendSet struct {
-
-	// 后端资源实例的Id
-	BackendId string
-
-	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
-	Enabled int
-
-	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
-	IsBackup int
-
-	// 后端提供服务的端口
-	Port int
-
-	// 后端提供服务的内网IP
-	PrivateIP string
-
-	// 资源实例的资源Id
-	ResourceId string
-
-	// 资源实例的资源名称
-	ResourceName string
-
-	// 资源实例的类型
-	ResourceType string
-
-	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
-	Status int
-
-	// 资源绑定的虚拟网卡实例的资源Id
-	SubResourceId string
-
-	// 资源绑定的虚拟网卡实例的资源名称
-	SubResourceName string
-
-	// 资源绑定的虚拟网卡实例的类型
-	SubResourceType string
-
-	// 后端提供服务的资源所在的子网的ID
-	SubnetId string
-
-	// 后端服务器所在的VPC
-	VPCId string
-
-	// 后端RS权重（在加权轮询算法下有效）
-	Weight int
 }
 
 /*
@@ -975,6 +984,42 @@ type ULBVServerSet struct {
 
 	// VServer实例的名字
 	VServerName string
+}
+
+/*
+ULBIPSet - DescribeULB
+*/
+type ULBIPSet struct {
+
+	// 弹性IP的带宽值（暂未对外开放）
+	Bandwidth int
+
+	// 弹性IP的带宽类型，枚举值：1 表示是共享带宽，0 普通带宽类型（暂未对外开放）
+	BandwidthType int
+
+	// 弹性IP地址
+	EIP string
+
+	// 弹性IP的ID
+	EIPId string
+
+	// 弹性IP的运营商信息，枚举值为：  Bgp：BGP IP International：国际IP
+	OperatorName string
+}
+
+/*
+LoggerSet - ulb日志信息
+*/
+type LoggerSet struct {
+
+	// ulb日志上传的bucket
+	BucketName string
+
+	// 上传到bucket使用的token的tokenid
+	TokenID string
+
+	// bucket的token名称
+	TokenName string
 }
 
 /*
