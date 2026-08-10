@@ -430,7 +430,7 @@ type DisableKeyRequest struct {
 	// Region *string `required:"true"`
 
 	// 密钥 DB 数字 ID。
-	KeyId *int `required:"true"`
+	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
 	ResourceId *string `required:"false"`
@@ -536,7 +536,7 @@ type EnableKeyRequest struct {
 	// Region *string `required:"true"`
 
 	// 密钥 DB 数字 ID。
-	KeyId *int `required:"true"`
+	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
 	ResourceId *string `required:"false"`
@@ -962,6 +962,9 @@ type GenerateMacRequest struct {
 
 	// 密钥ID
 	KeyId *string `required:"true"`
+
+	// 用于生成消息认证码的 MAC 算法。
+	MacAlgorithm *string `required:"true"`
 
 	// 待哈希的消息。
 	MacMessage *string `required:"true"`
@@ -1453,8 +1456,11 @@ type ScheduleKeyDeletionRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
+	// 删除等待天数，取值范围为 7~30 天；未填写时默认为 30 天。
+	DeleteDay *int `required:"false"`
+
 	// 密钥 DB 数字 ID。
-	KeyId *int `required:"true"`
+	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
 	ResourceId *string `required:"false"`
@@ -1702,7 +1708,7 @@ type VerifyRequest struct {
 	MessageType *string `required:"false"`
 
 	// UKMS 实例资源 ID。
-	ResourceId *string `required:"true"`
+	ResourceId *string `required:"false"`
 
 	// 待验证的签名，Base64 编码。
 	SignatureResult *string `required:"true"`
