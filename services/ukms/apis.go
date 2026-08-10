@@ -1205,6 +1205,9 @@ type ListAliasesRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
+	// 按完整别名（含 alias/ 前缀）进行子串模糊匹配
+	Alias *string `required:"false"`
+
 	// 可选：筛选指定密钥资源长 ID 的别名。
 	KeyId *string `required:"false"`
 
@@ -1214,8 +1217,14 @@ type ListAliasesRequest struct {
 	// 列表起始位置偏移量。
 	Offset *int `required:"false"`
 
+	// 排序字段
+	OrderBy *string `required:"false"`
+
 	// UKMS 实例资源 ID。
 	ResourceId *string `required:"false"`
+
+	// 排序方向，默认 desc
+	Sort *string `required:"false"`
 }
 
 // ListAliasesResponse is response schema for ListAliases action
@@ -1279,8 +1288,17 @@ type ListKeysRequest struct {
 	// 列表起始位置偏移量。
 	Offset *int `required:"false"`
 
+	// 排序字段
+	OrderBy *string `required:"false"`
+
 	// UKMS 实例资源 ID。
 	ResourceId *string `required:"false"`
+
+	// 排序方向，默认 desc
+	Sort *string `required:"false"`
+
+	// 状态筛选：Active、Deactivated、PendingDeletion
+	Status *string `required:"false"`
 }
 
 // ListKeysResponse is response schema for ListKeys action
@@ -1329,8 +1347,11 @@ func (c *UKMSClient) ListKeys(req *ListKeysRequest) (*ListKeysResponse, error) {
 type ListScheduleDeletionKeysRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
+
+	// 按密钥 ID 或别名模糊过滤
+	Alias *string `required:"false"`
 
 	// 输出列表数量，默认返回200个
 	Limit *int `required:"false"`
@@ -1340,6 +1361,12 @@ type ListScheduleDeletionKeysRequest struct {
 
 	// 列表排序方式, 可选项: "-created_time", "created_time","plan_delete_time","-plan_delete_time";默认按-plan_delete_time 计划删除时间升序返回
 	OrderBy *string `required:"false"`
+
+	// UKMS 实例资源 ID
+	ResourceId *string `required:"false"`
+
+	// 排序方向，默认 desc
+	Sort *string `required:"false"`
 }
 
 // ListScheduleDeletionKeysResponse is response schema for ListScheduleDeletionKeys action

@@ -115,24 +115,24 @@ type CMK struct {
 	// 别名，与CMK一一对应
 	Alias string
 
-	// 创建时间 时间戳
+	// 创建时间
 	CreatedTime int
 
 	// 对密钥的描述说明
 	Description string
 
-	// 是否启用
-	Enabled bool
-
 	// CMK 的唯一标识符
 	KeyId string
 
-	// 最后修改时间 时间戳
-	LastModifiedTime int
+	// 密钥类型，如RSA、EC、DES
+	KeyType string
 
 	// 计划删除时间 时间戳
 	PlanDeleteTime int
 
-	// 密钥类型，仅支持UCloudManagedKeys、CustomerManagedKeys。默认值CustomerManagedKeys
-	Type string
+	// 密钥状态 "Pre-Active", "Active", "Deactivated", "Compromised", "Destroyed", "Destroyed Compromised"
+	Status string
+
+	// 更新时间
+	UpdateTime int
 }
