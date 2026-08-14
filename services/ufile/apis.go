@@ -9,18 +9,272 @@ import (
 
 // UFile API Schema
 
+// AddCORSRuleRequest is request schema for AddCORSRule action
+type AddCORSRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 指定允许的跨域请求头（多个Header用‘,’分隔）
+	AllowedHeader *string `required:"false"`
+
+	// 指定允许的跨域请求方法。支持的方法名有：GET、PUT、POST、DELETE、HEAD、OPTIONS（多个Method用‘,’分隔）
+	AllowedMethod *string `required:"true"`
+
+	// 指定允许的跨域请求的来源，使用通配符(*)表示允许所有来源的跨域请求（多个Origin用‘,’分隔）
+	AllowedOrigin *string `required:"true"`
+
+	// Bucket名称
+	BucketName *string `required:"true"`
+
+	// 指定允许用户从应用程序中访问的响应头（多个ExposeHeader用‘,’分隔）
+	ExposeHeader *string `required:"false"`
+}
+
+// AddCORSRuleResponse is response schema for AddCORSRule action
+type AddCORSRuleResponse struct {
+	response.CommonBase
+
+	// 增加一条跨域规则的cors_id
+	CORSId string
+}
+
+// NewAddCORSRuleRequest will create request of AddCORSRule action.
+func (c *UFileClient) NewAddCORSRuleRequest() *AddCORSRuleRequest {
+	req := &AddCORSRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddCORSRule
+
+添加跨域规则
+*/
+func (c *UFileClient) AddCORSRule(req *AddCORSRuleRequest) (*AddCORSRuleResponse, error) {
+	var err error
+	var res AddCORSRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddCORSRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AddUFileSSLCertRequest is request schema for AddUFileSSLCert action
+type AddUFileSSLCertRequest struct {
+	request.CommonBase
+
+	// 存储桶名称，全局唯一
+	BucketName *string `required:"true"`
+
+	// 填写SSL证书文件内容（PEM编码）。证书文件内容填写格式：如果您的业务场景仅需确保服务端证书可信，则证书文件需要包含服务器证书（①）和中间证书（②）。如果您的中间证书和服务器证书是两个文件，您可以在证书链配置项填写中间证书内容即可。
+	Certificate *string `required:"false"`
+
+	// 填写SSL证书私钥内容（PEM编码）。私钥内容填写格式 RSA
+	CertificateKey *string `required:"false"`
+
+	// SSL证书名称
+	CertificateName *string `required:"true"`
+
+	// 域名
+	Domain *string `required:"true"`
+
+	// ussl证书的资源ID
+	USSLId *string `required:"false"`
+}
+
+// AddUFileSSLCertResponse is response schema for AddUFileSSLCert action
+type AddUFileSSLCertResponse struct {
+	response.CommonBase
+
+	// 错误消息返回
+	Message string
+}
+
+// NewAddUFileSSLCertRequest will create request of AddUFileSSLCert action.
+func (c *UFileClient) NewAddUFileSSLCertRequest() *AddUFileSSLCertRequest {
+	req := &AddUFileSSLCertRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddUFileSSLCert
+
+给指定域名添加证书
+*/
+func (c *UFileClient) AddUFileSSLCert(req *AddUFileSSLCertRequest) (*AddUFileSSLCertResponse, error) {
+	var err error
+	var res AddUFileSSLCertResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddUFileSSLCert", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// BindBucketDomainRequest is request schema for BindBucketDomain action
+type BindBucketDomainRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 自定义域名对应的bucket名称
+	BucketName *string `required:"true"`
+
+	// 自定义域名
+	Domain *string `required:"true"`
+}
+
+// BindBucketDomainResponse is response schema for BindBucketDomain action
+type BindBucketDomainResponse struct {
+	response.CommonBase
+
+	// 自定义域名对应的Bucket的Id
+	BucketId string
+
+	// 自定义域名对应的bucket名称
+	BucketName string
+}
+
+// NewBindBucketDomainRequest will create request of BindBucketDomain action.
+func (c *UFileClient) NewBindBucketDomainRequest() *BindBucketDomainRequest {
+	req := &BindBucketDomainRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BindBucketDomain
+
+绑定自定义域名
+*/
+func (c *UFileClient) BindBucketDomain(req *BindBucketDomainRequest) (*BindBucketDomainResponse, error) {
+	var err error
+	var res BindBucketDomainResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BindBucketDomain", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// BuyUFilePkgRequest is request schema for BuyUFilePkg action
+type BuyUFilePkgRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 购买数量
+	Amount *int `required:"true"`
+
+	// 数量单位，如 GB、TB 等
+	AmountUnit *string `required:"true"`
+
+	// 购买时长
+	Duration *int `required:"true"`
+
+	// 时长单位，如 Month、Year 等
+	DurationUnit *string `required:"true"`
+
+	// 资源包名称
+	PkgName *string `required:"true"`
+
+	// 0: 标准存储包，1: 忙时流量包，2: 闲时流量包
+	PkgType *int `required:"true"`
+}
+
+// BuyUFilePkgResponse is response schema for BuyUFilePkg action
+type BuyUFilePkgResponse struct {
+	response.CommonBase
+
+	// 购买成功返回资源包Id
+	ResourceId string
+}
+
+// NewBuyUFilePkgRequest will create request of BuyUFilePkg action.
+func (c *UFileClient) NewBuyUFilePkgRequest() *BuyUFilePkgRequest {
+	req := &BuyUFilePkgRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: BuyUFilePkg
+
+购买流量包或存储包
+*/
+func (c *UFileClient) BuyUFilePkg(req *BuyUFilePkgRequest) (*BuyUFilePkgResponse, error) {
+	var err error
+	var res BuyUFilePkgResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BuyUFilePkg", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateBucketRequest is request schema for CreateBucket action
 type CreateBucketRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
 	// 待创建Bucket的名称，具有全局唯一性
 	BucketName *string `required:"true"`
+
+	// Bucket所属业务组，默认为default
+	Tag *string `required:"false"`
 
 	// Bucket访问类型，public或private; 默认为private
 	Type *string `required:"false"`
@@ -87,11 +341,26 @@ type CreateUFileLifeCycleRequest struct {
 	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动删除；参数范围：[7,36500]，0代表不启用
 	Days *int `required:"false"`
 
+	// 指定一个历史文件过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	HistVerArchivalDays *int `required:"false"`
+
+	// 指定一个历史文件过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	HistVerDeleteDays *int `required:"false"`
+
+	// 指定一个历史文件过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	HistVerIADays *int `required:"false"`
+
 	// 指定一个过期天数N，文件会在其最近更新时间点的N天后，自动变为低频存储类型；参数范围：[7,36500]，0代表不启用
 	IADays *int `required:"false"`
 
 	// 生命周期名称
 	LifeCycleName *string `required:"true"`
+
+	// 文件的最大size
+	MaxSize *int `required:"false"`
+
+	// 文件的最小size
+	MinSize *int `required:"false"`
 
 	// 生命周期所适用的前缀；*为整个存储空间文件；一条规则只支持一个文件前缀；
 	Prefix *string `required:"true"`
@@ -99,7 +368,7 @@ type CreateUFileLifeCycleRequest struct {
 	// Enabled -- 启用，Disabled -- 不启用
 	Status *string `required:"true"`
 
-	// Tag，参数格式"k1=v1&k2=v2"，key的最大长度为128， value最大长度为256byte，单个object的tag的最大数量为10
+	// Tag，参数格式"k1=v1&k2=v2"，key的最大长度为128， value最大长度为256byte，tag的最大数量为10
 	Tags *string `required:"false"`
 }
 
@@ -216,11 +485,94 @@ func (c *UFileClient) CreateUFileToken(req *CreateUFileTokenRequest) (*CreateUFi
 	return &res, nil
 }
 
+// CreateUdsRuleRequest is request schema for CreateUdsRule action
+type CreateUdsRuleRequest struct {
+	request.CommonBase
+
+	// 联系的用户组ID
+	ContactGroupId *string `required:"false"`
+
+	// 目标Bucket名字，全局唯一
+	DstBucket *string `required:"true"`
+
+	// 解压后的目标目录
+	DstDirectory *string `required:"true"`
+
+	// 目标bucket的token之一的tokenId
+	DstTokenId *string `required:"true"`
+
+	// 通知的事件数组
+	Events []string `required:"false"`
+
+	// 是否以压缩文件的前缀为最后一层目录
+	KeepUS3Name *bool `required:"true"`
+
+	// 通知的类型数组
+	NotificationTypes []string `required:"false"`
+
+	// 操作的ops数组，"Ops.0":"unzip"
+	Ops []string `required:"true"`
+
+	// 解压缩触发的前缀
+	Prefixes *string `required:"true"`
+
+	// 规则名称
+	RuleName *string `required:"true"`
+
+	// 源Bucket名字，全局唯一
+	SrcBucket *string `required:"true"`
+
+	// 源bucket的token之一的tokenId
+	SrcTokenId *string `required:"true"`
+}
+
+// CreateUdsRuleResponse is response schema for CreateUdsRule action
+type CreateUdsRuleResponse struct {
+	response.CommonBase
+
+	// 该请求成功或者失败的消息描述
+	Message string
+
+	// 创建规则的规则ID
+	RuleId string
+}
+
+// NewCreateUdsRuleRequest will create request of CreateUdsRule action.
+func (c *UFileClient) NewCreateUdsRuleRequest() *CreateUdsRuleRequest {
+	req := &CreateUdsRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateUdsRule
+
+针对对象存储的文件，进行自动触发解压。
+*/
+func (c *UFileClient) CreateUdsRule(req *CreateUdsRuleRequest) (*CreateUdsRuleResponse, error) {
+	var err error
+	var res CreateUdsRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateUdsRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteBucketRequest is request schema for DeleteBucket action
 type DeleteBucketRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 待删除Bucket的名称
@@ -262,6 +614,56 @@ func (c *UFileClient) DeleteBucket(req *DeleteBucketRequest) (*DeleteBucketRespo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteBucket", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCORSRuleRequest is request schema for DeleteCORSRule action
+type DeleteCORSRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// Bucket名称
+	BucketName *string `required:"true"`
+
+	// 跨域规则ID
+	CORSId *string `required:"true"`
+}
+
+// DeleteCORSRuleResponse is response schema for DeleteCORSRule action
+type DeleteCORSRuleResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteCORSRuleRequest will create request of DeleteCORSRule action.
+func (c *UFileClient) NewDeleteCORSRuleRequest() *DeleteCORSRuleRequest {
+	req := &DeleteCORSRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCORSRule
+
+删除跨域规则
+*/
+func (c *UFileClient) DeleteCORSRule(req *DeleteCORSRuleRequest) (*DeleteCORSRuleResponse, error) {
+	var err error
+	var res DeleteCORSRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCORSRule", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -315,6 +717,109 @@ func (c *UFileClient) DeleteUFileLifeCycle(req *DeleteUFileLifeCycleRequest) (*D
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteUFileLifeCycle", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUFilePkgRequest is request schema for DeleteUFilePkg action
+type DeleteUFilePkgRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 资源ID
+	ResourceId *string `required:"true"`
+}
+
+// DeleteUFilePkgResponse is response schema for DeleteUFilePkg action
+type DeleteUFilePkgResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteUFilePkgRequest will create request of DeleteUFilePkg action.
+func (c *UFileClient) NewDeleteUFilePkgRequest() *DeleteUFilePkgRequest {
+	req := &DeleteUFilePkgRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUFilePkg
+
+删除资源包(退费)
+*/
+func (c *UFileClient) DeleteUFilePkg(req *DeleteUFilePkgRequest) (*DeleteUFilePkgResponse, error) {
+	var err error
+	var res DeleteUFilePkgResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUFilePkg", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteUFileSSLCertRequest is request schema for DeleteUFileSSLCert action
+type DeleteUFileSSLCertRequest struct {
+	request.CommonBase
+
+	// 存储桶名称，全局唯一
+	BucketName *string `required:"true"`
+
+	// 域名
+	Domain *string `required:"true"`
+}
+
+// DeleteUFileSSLCertResponse is response schema for DeleteUFileSSLCert action
+type DeleteUFileSSLCertResponse struct {
+	response.CommonBase
+
+	// 错误消息返回
+	Message string
+}
+
+// NewDeleteUFileSSLCertRequest will create request of DeleteUFileSSLCert action.
+func (c *UFileClient) NewDeleteUFileSSLCertRequest() *DeleteUFileSSLCertRequest {
+	req := &DeleteUFileSSLCertRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUFileSSLCert
+
+删除指定域名添加证书
+*/
+func (c *UFileClient) DeleteUFileSSLCert(req *DeleteUFileSSLCertRequest) (*DeleteUFileSSLCertResponse, error) {
+	var err error
+	var res DeleteUFileSSLCertResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUFileSSLCert", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -376,7 +881,7 @@ func (c *UFileClient) DeleteUFileToken(req *DeleteUFileTokenRequest) (*DeleteUFi
 type DescribeBucketRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// [公共参数] 如果提供此参数，则获取相应地域下所有空间的空间名称(只返回空间名称信息)
@@ -431,6 +936,113 @@ func (c *UFileClient) DescribeBucket(req *DescribeBucketRequest) (*DescribeBucke
 	return &res, nil
 }
 
+// DescribeCORSRuleRequest is request schema for DescribeCORSRule action
+type DescribeCORSRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// Bucket名称
+	BucketName *string `required:"true"`
+
+	// 跨域规则ID，不指定则返回所有跨域规则信息
+	CORSId *string `required:"false"`
+}
+
+// DescribeCORSRuleResponse is response schema for DescribeCORSRule action
+type DescribeCORSRuleResponse struct {
+	response.CommonBase
+
+	// 跨域规则信息集合
+	DataSet []CORSRuleSet
+}
+
+// NewDescribeCORSRuleRequest will create request of DescribeCORSRule action.
+func (c *UFileClient) NewDescribeCORSRuleRequest() *DescribeCORSRuleRequest {
+	req := &DescribeCORSRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCORSRule
+
+获取跨域规则信息
+*/
+func (c *UFileClient) DescribeCORSRule(req *DescribeCORSRuleRequest) (*DescribeCORSRuleResponse, error) {
+	var err error
+	var res DescribeCORSRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCORSRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUFileAvailablePkgRequest is request schema for DescribeUFileAvailablePkg action
+type DescribeUFileAvailablePkgRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+}
+
+// DescribeUFileAvailablePkgResponse is response schema for DescribeUFileAvailablePkg action
+type DescribeUFileAvailablePkgResponse struct {
+	response.CommonBase
+
+	// 可购买的资源包规格
+	PkgList []AvailablePkg
+}
+
+// NewDescribeUFileAvailablePkgRequest will create request of DescribeUFileAvailablePkg action.
+func (c *UFileClient) NewDescribeUFileAvailablePkgRequest() *DescribeUFileAvailablePkgRequest {
+	req := &DescribeUFileAvailablePkgRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFileAvailablePkg
+
+查询可购买的资源包列表
+*/
+func (c *UFileClient) DescribeUFileAvailablePkg(req *DescribeUFileAvailablePkgRequest) (*DescribeUFileAvailablePkgResponse, error) {
+	var err error
+	var res DescribeUFileAvailablePkgResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFileAvailablePkg", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUFileLifeCycleRequest is request schema for DescribeUFileLifeCycle action
 type DescribeUFileLifeCycleRequest struct {
 	request.CommonBase
@@ -453,7 +1065,10 @@ type DescribeUFileLifeCycleResponse struct {
 	response.CommonBase
 
 	// 生命周期信息
-	DateSet []LifeCycleItem
+	DataSet []LifeCycleItem
+
+	// 【该字段已废弃，请谨慎使用】
+	DateSet []LifeCycleItem `deprecated:"true"`
 }
 
 // NewDescribeUFileLifeCycleRequest will create request of DescribeUFileLifeCycle action.
@@ -487,6 +1102,245 @@ func (c *UFileClient) DescribeUFileLifeCycle(req *DescribeUFileLifeCycleRequest)
 	return &res, nil
 }
 
+// DescribeUFilePkgRequest is request schema for DescribeUFilePkg action
+type DescribeUFilePkgRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 默认0表示查询全部已购买的资源包，1表示查询过期的，-1表示查询非过期的
+	Expired *int `required:"false"`
+
+	// 查询指定的资源包，当指定ResourceId查询时，Region是必填的
+	ResourceId *string `required:"false"`
+}
+
+// DescribeUFilePkgResponse is response schema for DescribeUFilePkg action
+type DescribeUFilePkgResponse struct {
+	response.CommonBase
+
+	// 已购买的资源包
+	Pkgs []UFilePkg
+}
+
+// NewDescribeUFilePkgRequest will create request of DescribeUFilePkg action.
+func (c *UFileClient) NewDescribeUFilePkgRequest() *DescribeUFilePkgRequest {
+	req := &DescribeUFilePkgRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFilePkg
+
+查询已购买的资源包列表
+*/
+func (c *UFileClient) DescribeUFilePkg(req *DescribeUFilePkgRequest) (*DescribeUFilePkgResponse, error) {
+	var err error
+	var res DescribeUFilePkgResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFilePkg", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUFilePkgUsageRequest is request schema for DescribeUFilePkgUsage action
+type DescribeUFilePkgUsageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 结束时间，如 2023-09-01
+	EndDate *string `required:"true"`
+
+	// 资源包ID
+	ResourceId *string `required:"true"`
+
+	// 开始时间，如 2023-09-01
+	StartDate *string `required:"true"`
+}
+
+// DescribeUFilePkgUsageResponse is response schema for DescribeUFilePkgUsage action
+type DescribeUFilePkgUsageResponse struct {
+	response.CommonBase
+
+	// 按天返回的使用明细
+	Usage []PkgUsage
+}
+
+// NewDescribeUFilePkgUsageRequest will create request of DescribeUFilePkgUsage action.
+func (c *UFileClient) NewDescribeUFilePkgUsageRequest() *DescribeUFilePkgUsageRequest {
+	req := &DescribeUFilePkgUsageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFilePkgUsage
+
+查询资源包使用明细
+*/
+func (c *UFileClient) DescribeUFilePkgUsage(req *DescribeUFilePkgUsageRequest) (*DescribeUFilePkgUsageResponse, error) {
+	var err error
+	var res DescribeUFilePkgUsageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFilePkgUsage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUFileRefererRequest is request schema for DescribeUFileReferer action
+type DescribeUFileRefererRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// 存储空间名称
+	BucketName *string `required:"true"`
+}
+
+// DescribeUFileRefererResponse is response schema for DescribeUFileReferer action
+type DescribeUFileRefererResponse struct {
+	response.CommonBase
+
+	// 黑名单列表
+	BlackList []string
+
+	// ReferType为白名单时，NullRefer为false代表不允许NULL refer访问，为true代表允许Null refer访问; 未开启referer时不返回此参数
+	NullRefer bool
+
+	// 防盗链Referer规则列表；未开启referer时不返回此参数
+	RefererList []string
+
+	// 防盗链功能是否开启，"on"表示开启，"off"表示关闭
+	RefererStatus string
+
+	// 防盗链Referer类型，支持两种类型，1黑名单，2白名单；未开启referer时不返回此参数
+	RefererType int
+
+	// 白名单列表
+	WhiteList []string
+}
+
+// NewDescribeUFileRefererRequest will create request of DescribeUFileReferer action.
+func (c *UFileClient) NewDescribeUFileRefererRequest() *DescribeUFileRefererRequest {
+	req := &DescribeUFileRefererRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFileReferer
+
+对象存储防盗链列表
+*/
+func (c *UFileClient) DescribeUFileReferer(req *DescribeUFileRefererRequest) (*DescribeUFileRefererResponse, error) {
+	var err error
+	var res DescribeUFileRefererResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFileReferer", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUFileSSLCertRequest is request schema for DescribeUFileSSLCert action
+type DescribeUFileSSLCertRequest struct {
+	request.CommonBase
+
+	// 存储桶名称，全局唯一
+	BucketName *string `required:"true"`
+}
+
+// DescribeUFileSSLCertResponse is response schema for DescribeUFileSSLCert action
+type DescribeUFileSSLCertResponse struct {
+	response.CommonBase
+
+	// 证书列表
+	DataSet []UFileSSLCert
+
+	// 错误消息返回
+	Message string
+}
+
+// NewDescribeUFileSSLCertRequest will create request of DescribeUFileSSLCert action.
+func (c *UFileClient) NewDescribeUFileSSLCertRequest() *DescribeUFileSSLCertRequest {
+	req := &DescribeUFileSSLCertRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUFileSSLCert
+
+查询指定存储桶所有证书
+*/
+func (c *UFileClient) DescribeUFileSSLCert(req *DescribeUFileSSLCertRequest) (*DescribeUFileSSLCertResponse, error) {
+	var err error
+	var res DescribeUFileSSLCertResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUFileSSLCert", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUFileTokenRequest is request schema for DescribeUFileToken action
 type DescribeUFileTokenRequest struct {
 	request.CommonBase
@@ -511,14 +1365,8 @@ type DescribeUFileTokenRequest struct {
 type DescribeUFileTokenResponse struct {
 	response.CommonBase
 
-	// 【该字段已废弃，请谨慎使用】
-	Action string `deprecated:"true"`
-
 	// 令牌描述信息
 	DataSet []UFileTokenSet
-
-	// 【该字段已废弃，请谨慎使用】
-	RetCode int `deprecated:"true"`
 }
 
 // NewDescribeUFileTokenRequest will create request of DescribeUFileToken action.
@@ -545,6 +1393,290 @@ func (c *UFileClient) DescribeUFileToken(req *DescribeUFileTokenRequest) (*Descr
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeUFileToken", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUdsRuleRequest is request schema for DescribeUdsRule action
+type DescribeUdsRuleRequest struct {
+	request.CommonBase
+
+	// 源BucketName
+	BucketName *string `required:"true"`
+
+	// 规则ID，不设置时，查询改bucket的所有规则
+	RuleId *string `required:"false"`
+}
+
+// DescribeUdsRuleResponse is response schema for DescribeUdsRule action
+type DescribeUdsRuleResponse struct {
+	response.CommonBase
+
+	// 规则数组
+	DataSet []string
+
+	// 此次请求成功或者失败的信息
+	Message string
+
+	// 此次删除的规则的ID
+	TotalCount int
+}
+
+// NewDescribeUdsRuleRequest will create request of DescribeUdsRule action.
+func (c *UFileClient) NewDescribeUdsRuleRequest() *DescribeUdsRuleRequest {
+	req := &DescribeUdsRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUdsRule
+
+针对解压缩规则进行查询
+*/
+func (c *UFileClient) DescribeUdsRule(req *DescribeUdsRuleRequest) (*DescribeUdsRuleResponse, error) {
+	var err error
+	var res DescribeUdsRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUdsRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetBucketQuotaRequest is request schema for GetBucketQuota action
+type GetBucketQuotaRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// bucket名称
+	BucketName *string `required:"true"`
+}
+
+// GetBucketQuotaResponse is response schema for GetBucketQuota action
+type GetBucketQuotaResponse struct {
+	response.CommonBase
+
+	// bucket名称
+	BucketName string
+
+	// bucket配额
+	QuotaLimit int
+}
+
+// NewGetBucketQuotaRequest will create request of GetBucketQuota action.
+func (c *UFileClient) NewGetBucketQuotaRequest() *GetBucketQuotaRequest {
+	req := &GetBucketQuotaRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetBucketQuota
+
+获取bucket配额
+*/
+func (c *UFileClient) GetBucketQuota(req *GetBucketQuotaRequest) (*GetBucketQuotaResponse, error) {
+	var err error
+	var res GetBucketQuotaResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetBucketQuota", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetBucketStaticPageRuleRequest is request schema for GetBucketStaticPageRule action
+type GetBucketStaticPageRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 存储桶名称
+	Bucket *string `required:"true"`
+}
+
+// GetBucketStaticPageRuleResponse is response schema for GetBucketStaticPageRule action
+type GetBucketStaticPageRuleResponse struct {
+	response.CommonBase
+
+	// 规则内容
+	Rule BucketStaticPageRule
+}
+
+// NewGetBucketStaticPageRuleRequest will create request of GetBucketStaticPageRule action.
+func (c *UFileClient) NewGetBucketStaticPageRuleRequest() *GetBucketStaticPageRuleRequest {
+	req := &GetBucketStaticPageRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetBucketStaticPageRule
+
+获取bucket静态网页配置
+*/
+func (c *UFileClient) GetBucketStaticPageRule(req *GetBucketStaticPageRuleRequest) (*GetBucketStaticPageRuleResponse, error) {
+	var err error
+	var res GetBucketStaticPageRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetBucketStaticPageRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetProjectRegionQuotaRequest is request schema for GetProjectRegionQuota action
+type GetProjectRegionQuotaRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+}
+
+// GetProjectRegionQuotaResponse is response schema for GetProjectRegionQuota action
+type GetProjectRegionQuotaResponse struct {
+	response.CommonBase
+
+	// 配额数目
+	QuotaLimit int
+
+	// 配额类型
+	QuotaType string
+
+	// 地域
+	Region string
+}
+
+// NewGetProjectRegionQuotaRequest will create request of GetProjectRegionQuota action.
+func (c *UFileClient) NewGetProjectRegionQuotaRequest() *GetProjectRegionQuotaRequest {
+	req := &GetProjectRegionQuotaRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetProjectRegionQuota
+
+获取项目地域配额
+*/
+func (c *UFileClient) GetProjectRegionQuota(req *GetProjectRegionQuotaRequest) (*GetProjectRegionQuotaResponse, error) {
+	var err error
+	var res GetProjectRegionQuotaResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetProjectRegionQuota", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUFileDailyBillRequest is request schema for GetUFileDailyBill action
+type GetUFileDailyBillRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 空间名称。此字段不为空，返回此Bucket日账单,否则，返回这个项目的日账单
+	BucketName *string `required:"false"`
+
+	// 查询结束时间;unix时间戳,单位s
+	EndTime *int `required:"true"`
+
+	// 查询开始时间;unix时间戳，单位s
+	StartTime *int `required:"true"`
+}
+
+// GetUFileDailyBillResponse is response schema for GetUFileDailyBill action
+type GetUFileDailyBillResponse struct {
+	response.CommonBase
+
+	// 消费情况
+	DataSet []BucketBills
+}
+
+// NewGetUFileDailyBillRequest will create request of GetUFileDailyBill action.
+func (c *UFileClient) NewGetUFileDailyBillRequest() *GetUFileDailyBillRequest {
+	req := &GetUFileDailyBillRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUFileDailyBill
+
+获取bucket每日账单
+*/
+func (c *UFileClient) GetUFileDailyBill(req *GetUFileDailyBillRequest) (*GetUFileDailyBillResponse, error) {
+	var err error
+	var res GetUFileDailyBillResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUFileDailyBill", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -604,6 +1736,139 @@ func (c *UFileClient) GetUFileDailyReport(req *GetUFileDailyReportRequest) (*Get
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("GetUFileDailyReport", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUFileMonthlyBillRequest is request schema for GetUFileMonthlyBill action
+type GetUFileMonthlyBillRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 空间名称。此字段不为空，返回此Bucket日账单,否则，返回这个项目的日账单
+	BucketName *string `required:"false"`
+
+	// 查询结束时间;例如"1994-07"
+	EndMonth *string `required:"true"`
+
+	// 查询开始月份;例如"1994-07"
+	StartMonth *string `required:"true"`
+}
+
+// GetUFileMonthlyBillResponse is response schema for GetUFileMonthlyBill action
+type GetUFileMonthlyBillResponse struct {
+	response.CommonBase
+
+	// 消费情况
+	DataSet []BucketMonthlyBills
+}
+
+// NewGetUFileMonthlyBillRequest will create request of GetUFileMonthlyBill action.
+func (c *UFileClient) NewGetUFileMonthlyBillRequest() *GetUFileMonthlyBillRequest {
+	req := &GetUFileMonthlyBillRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUFileMonthlyBill
+
+获取bucket月度账单
+*/
+func (c *UFileClient) GetUFileMonthlyBill(req *GetUFileMonthlyBillRequest) (*GetUFileMonthlyBillResponse, error) {
+	var err error
+	var res GetUFileMonthlyBillResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUFileMonthlyBill", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// GetUFilePkgPriceRequest is request schema for GetUFilePkgPrice action
+type GetUFilePkgPriceRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 新购和升级时必填
+	Amount *int `required:"false"`
+
+	// 新购和升级时必填
+	AmountUnit *string `required:"false"`
+
+	// 新购和续费时必填
+	Duration *int `required:"false"`
+
+	// 新购和续费时必填
+	DurationUnit *string `required:"false"`
+
+	// 操作类型，new:新购,upgrade:升级,renew:续费,delete:退费
+	InquiryType *string `required:"true"`
+
+	// 资源id，升级续费退费时为必填
+	ResourceId *string `required:"false"`
+}
+
+// GetUFilePkgPriceResponse is response schema for GetUFilePkgPrice action
+type GetUFilePkgPriceResponse struct {
+	response.CommonBase
+
+	// 实际价格
+	CustomPrice int
+
+	// 原始价格
+	OriginPrice int
+}
+
+// NewGetUFilePkgPriceRequest will create request of GetUFilePkgPrice action.
+func (c *UFileClient) NewGetUFilePkgPriceRequest() *GetUFilePkgPriceRequest {
+	req := &GetUFilePkgPriceRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUFilePkgPrice
+
+获取对资源进行新购、续费、升级等操作的价格
+*/
+func (c *UFileClient) GetUFilePkgPrice(req *GetUFilePkgPriceRequest) (*GetUFilePkgPriceResponse, error) {
+	var err error
+	var res GetUFilePkgPriceResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUFilePkgPrice", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -826,6 +2091,183 @@ func (c *UFileClient) GetUFileReport(req *GetUFileReportRequest) (*GetUFileRepor
 	return &res, nil
 }
 
+// RenewUFilePkgRequest is request schema for RenewUFilePkg action
+type RenewUFilePkgRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 续费时长
+	Duration *int `required:"true"`
+
+	// 时长单位
+	DurationUnit *string `required:"true"`
+
+	// 资源类型ID
+	PkgType *int `required:"true"`
+
+	// 资源ID
+	ResourceId *string `required:"true"`
+}
+
+// RenewUFilePkgResponse is response schema for RenewUFilePkg action
+type RenewUFilePkgResponse struct {
+	response.CommonBase
+}
+
+// NewRenewUFilePkgRequest will create request of RenewUFilePkg action.
+func (c *UFileClient) NewRenewUFilePkgRequest() *RenewUFilePkgRequest {
+	req := &RenewUFilePkgRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: RenewUFilePkg
+
+资源包续费
+*/
+func (c *UFileClient) RenewUFilePkg(req *RenewUFilePkgRequest) (*RenewUFilePkgResponse, error) {
+	var err error
+	var res RenewUFilePkgResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("RenewUFilePkg", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// SetBucketQuotaRequest is request schema for SetBucketQuota action
+type SetBucketQuotaRequest struct {
+	request.CommonBase
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// bucket名称
+	BucketName *string `required:"true"`
+
+	// bucket配额
+	QuotaLimit *int `required:"true"`
+}
+
+// SetBucketQuotaResponse is response schema for SetBucketQuota action
+type SetBucketQuotaResponse struct {
+	response.CommonBase
+}
+
+// NewSetBucketQuotaRequest will create request of SetBucketQuota action.
+func (c *UFileClient) NewSetBucketQuotaRequest() *SetBucketQuotaRequest {
+	req := &SetBucketQuotaRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: SetBucketQuota
+
+设置bucket配额
+*/
+func (c *UFileClient) SetBucketQuota(req *SetBucketQuotaRequest) (*SetBucketQuotaResponse, error) {
+	var err error
+	var res SetBucketQuotaResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SetBucketQuota", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// SetProjectRegionQuotaRequest is request schema for SetProjectRegionQuota action
+type SetProjectRegionQuotaRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 配额数目(单位是Byte)
+	QuotaLimit *int `required:"true"`
+}
+
+// SetProjectRegionQuotaResponse is response schema for SetProjectRegionQuota action
+type SetProjectRegionQuotaResponse struct {
+	response.CommonBase
+
+	// 配额数目(单位是Byte)
+	QuotaLimit string
+
+	// 配额类型
+	QuotaType string
+
+	// 地域
+	Region string
+}
+
+// NewSetProjectRegionQuotaRequest will create request of SetProjectRegionQuota action.
+func (c *UFileClient) NewSetProjectRegionQuotaRequest() *SetProjectRegionQuotaRequest {
+	req := &SetProjectRegionQuotaRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: SetProjectRegionQuota
+
+设置项目地域配额
+*/
+func (c *UFileClient) SetProjectRegionQuota(req *SetProjectRegionQuotaRequest) (*SetProjectRegionQuotaResponse, error) {
+	var err error
+	var res SetProjectRegionQuotaResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("SetProjectRegionQuota", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // SetUFileRefererRequest is request schema for SetUFileReferer action
 type SetUFileRefererRequest struct {
 	request.CommonBase
@@ -836,6 +2278,9 @@ type SetUFileRefererRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"false"`
 
+	// 黑名单列表中的一项
+	BlackList []string `required:"false"`
+
 	// 存储空间名称
 	BucketName *string `required:"true"`
 
@@ -845,11 +2290,14 @@ type SetUFileRefererRequest struct {
 	// 开启关闭referer防盗链;关闭防盗链会清空防盗链参数设置，开启防盗链必须指定 RefererType、Referers；开启：on， 关闭：off;
 	RefererStatus *string `required:"true"`
 
-	// 防盗链Referer类型，支持两种类型，黑名单和白名单; 1黑名单，2白名单；RefererStatus为"on"时此参数必填；
+	// 防盗链Referer类型，支持三种类型，1代表设置黑名单、2代表设置白名单，3代表同时设置黑白名单; （其中1和2是为了向前兼容，后续调用只应该传递类型3）RefererStatus为"on"时此参数必填；
 	RefererType *int `required:"false"`
 
-	// 防盗链Referer规则，支持正则表达式（不支持符号';')
+	// 防盗链Referer规则，支持正则表达式（不支持符号';')，该字段已弃用，请使用WhiteList.n或BlackList.n
 	Referers []string `required:"false"`
+
+	// 白名单列表中的一项
+	WhiteList []string `required:"false"`
 }
 
 // SetUFileRefererResponse is response schema for SetUFileReferer action
@@ -892,14 +2340,17 @@ func (c *UFileClient) SetUFileReferer(req *SetUFileRefererRequest) (*SetUFileRef
 type UpdateBucketRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
 	// 待修改Bucket的名称
 	BucketName *string `required:"true"`
 
+	// 默认存储类型
+	StorageClass *string `required:"false"`
+
 	// Bucket访问类型;public或private
-	Type *string `required:"true"`
+	Type *string `required:"false"`
 }
 
 // UpdateBucketResponse is response schema for UpdateBucket action
@@ -944,6 +2395,133 @@ func (c *UFileClient) UpdateBucket(req *UpdateBucketRequest) (*UpdateBucketRespo
 	return &res, nil
 }
 
+// UpdateBucketStaticPageRuleRequest is request schema for UpdateBucketStaticPageRule action
+type UpdateBucketStaticPageRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 存储桶名称
+	Bucket *string `required:"true"`
+
+	// 默认首页
+	DefaultIndex *string `required:"false"`
+
+	// 404时的默认页面
+	DefaultPage404 *string `required:"false"`
+
+	// 404规则
+	RuleFor404 *string `required:"false"`
+
+	// 启用状态(enable/disable,只有绑定了自定义域名才能开启)
+	Status *string `required:"false"`
+
+	// 子目录是否启用重定向
+	SubDirRedirect *string `required:"false"`
+}
+
+// UpdateBucketStaticPageRuleResponse is response schema for UpdateBucketStaticPageRule action
+type UpdateBucketStaticPageRuleResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateBucketStaticPageRuleRequest will create request of UpdateBucketStaticPageRule action.
+func (c *UFileClient) NewUpdateBucketStaticPageRuleRequest() *UpdateBucketStaticPageRuleRequest {
+	req := &UpdateBucketStaticPageRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateBucketStaticPageRule
+
+修改bucket静态网页配置
+*/
+func (c *UFileClient) UpdateBucketStaticPageRule(req *UpdateBucketStaticPageRuleRequest) (*UpdateBucketStaticPageRuleResponse, error) {
+	var err error
+	var res UpdateBucketStaticPageRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateBucketStaticPageRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCORSRuleRequest is request schema for UpdateCORSRule action
+type UpdateCORSRuleRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 指定允许的跨域请求头（多个Header用‘,’分隔）
+	AllowedHeader *string `required:"false"`
+
+	// 指定允许的跨域请求方法。支持的方法名有：GET、PUT、POST、DELETE、HEAD、OPTIONS（多个Method用‘,’分隔）
+	AllowedMethod *string `required:"true"`
+
+	// 指定允许的跨域请求的来源，使用通配符(*)表示允许所有来源的跨域请求（多个Origin用‘,’分隔）
+	AllowedOrigin *string `required:"true"`
+
+	// Bucket名称
+	BucketName *string `required:"true"`
+
+	// 跨域规则ID
+	CORSId *string `required:"true"`
+
+	// 指定允许用户从应用程序中访问的响应头（多个ExposeHeader用‘,’分隔）
+	ExposeHeader *string `required:"false"`
+}
+
+// UpdateCORSRuleResponse is response schema for UpdateCORSRule action
+type UpdateCORSRuleResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateCORSRuleRequest will create request of UpdateCORSRule action.
+func (c *UFileClient) NewUpdateCORSRuleRequest() *UpdateCORSRuleRequest {
+	req := &UpdateCORSRuleRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCORSRule
+
+更新跨域规则
+*/
+func (c *UFileClient) UpdateCORSRule(req *UpdateCORSRuleRequest) (*UpdateCORSRuleResponse, error) {
+	var err error
+	var res UpdateCORSRuleResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCORSRule", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UpdateUFileLifeCycleRequest is request schema for UpdateUFileLifeCycle action
 type UpdateUFileLifeCycleRequest struct {
 	request.CommonBase
@@ -963,6 +2541,15 @@ type UpdateUFileLifeCycleRequest struct {
 	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
 	Days *int `required:"false"`
 
+	// 指定一个历史文件过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	HistVerArchivalDays *int `required:"false"`
+
+	// 指定一个历史文件过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	HistVerDeleteDays *int `required:"false"`
+
+	// 指定一个历史文件过期天数N，文件会在其最近更新时间点的N天后过期,自动删除；范围： [7,36500]
+	HistVerIADays *int `required:"false"`
+
 	// 指定一个过期天数N，文件会在其最近更新时间点的N天后过期，自动转换为低频存储类型；范围： [7,36500]，0代表不启用
 	IADays *int `required:"false"`
 
@@ -972,13 +2559,19 @@ type UpdateUFileLifeCycleRequest struct {
 	// 生命周期名称
 	LifeCycleName *string `required:"true"`
 
+	// 文件的最大size
+	MaxSize *string `required:"false"`
+
+	// 文件的最小size
+	MinSize *int `required:"false"`
+
 	// 生命周期所适用的前缀；*为整个存储空间文件；一条规则只支持一个文件前缀；
 	Prefix *string `required:"true"`
 
 	// Enabled -- 启用，Disabled -- 不启用
 	Status *string `required:"true"`
 
-	// Tag，参数格式"k1=v1&k2=v2"，key的最大长度为128， value最大长度为256byte，单个object的tag的最大数量为10
+	// Tag，参数格式"k1=v1&k2=v2"，key的最大长度为128， value最大长度为256byte，tag的最大数量为10
 	Tags *string `required:"false"`
 }
 
@@ -1011,6 +2604,65 @@ func (c *UFileClient) UpdateUFileLifeCycle(req *UpdateUFileLifeCycleRequest) (*U
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateUFileLifeCycle", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateUFileSSLCertRequest is request schema for UpdateUFileSSLCert action
+type UpdateUFileSSLCertRequest struct {
+	request.CommonBase
+
+	// 存储桶名称，全局唯一
+	BucketName *string `required:"true"`
+
+	// 填写SSL证书文件内容（PEM编码）。 证书文件内容填写格式： 如果您的业务场景仅需确保服务端证书可信，则证书文件需要包含服务器证书（①）和中间证书（②）。如果您的中间证书和服务器证书是两个文件，您可以在证书链配置项填写中间证书内容即可。
+	Certificate *string `required:"true"`
+
+	// 填写SSL证书私钥内容（PEM编码）。
+	CertificateKey *string `required:"true"`
+
+	// SSL证书名称
+	CertificateName *string `required:"true"`
+
+	// 域名
+	Domain *string `required:"true"`
+}
+
+// UpdateUFileSSLCertResponse is response schema for UpdateUFileSSLCert action
+type UpdateUFileSSLCertResponse struct {
+	response.CommonBase
+
+	// 错误消息返回
+	Message string
+}
+
+// NewUpdateUFileSSLCertRequest will create request of UpdateUFileSSLCert action.
+func (c *UFileClient) NewUpdateUFileSSLCertRequest() *UpdateUFileSSLCertRequest {
+	req := &UpdateUFileSSLCertRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateUFileSSLCert
+
+更新指定域名证书
+*/
+func (c *UFileClient) UpdateUFileSSLCert(req *UpdateUFileSSLCertRequest) (*UpdateUFileSSLCertResponse, error) {
+	var err error
+	var res UpdateUFileSSLCertResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateUFileSSLCert", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

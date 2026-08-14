@@ -91,11 +91,89 @@ type UFileBucketSet struct {
 	// Bucket所属地域
 	Region string
 
+	// 默认存储类型
+	StorageClass string
+
 	// 所属业务组
 	Tag string
 
 	// Bucket访问类型
 	Type string
+}
+
+/*
+CORSRuleSet - 跨域规则集合
+*/
+type CORSRuleSet struct {
+
+	// 指定允许的跨域请求头（多个Header用‘,’分隔）
+	AllowedHeader string
+
+	// 指定允许的跨域请求方法。支持的方法名有：GET、PUT、POST、DELETE、HEAD、OPTIONS（多个Method用‘,’分隔）
+	AllowedMethod string
+
+	// 指定允许的跨域请求的来源，使用通配符(*)表示允许所有来源的跨域请求（多个Origin用‘,’分隔）
+	AllowedOrigin string
+
+	// 跨域规则id
+	CORSId string
+
+	// 跨域规则创建时间
+	CreateTime int
+
+	// 指定允许用户从应用程序中访问的响应头（多个ExposeHeader用‘,’分隔）
+	ExposeHeader string
+
+	// 跨域规则最新修改时间
+	ModifyTime int
+}
+
+/*
+AvailablePkgDurations - 可购买的资源包时长
+*/
+type AvailablePkgDurations struct {
+
+	// 折扣
+	Discount float64
+
+	// 购买时长
+	Duration int
+
+	// 时长单位，如: Month、Year
+	Unit string
+}
+
+/*
+AvailablePkgSpecs - 可购买的资源包规格
+*/
+type AvailablePkgSpecs struct {
+
+	// 购买数量
+	Amount int
+
+	// 仅针对当前规格生效的durations
+	Durations []AvailablePkgDurations
+
+	// 数量的单位，如：GB，TB
+	Unit string
+}
+
+/*
+AvailablePkg - 可购买的资源包
+*/
+type AvailablePkg struct {
+
+	// 公共支持购买的时长，当一个Spec配了独立的Durations时，就按独立配置Durations生效；否者按CommonDurations生效
+	CommonDurations []AvailablePkgDurations
+
+	// 资源类型名称
+	Name string
+
+	// 支持购买的数量规格
+	Specs []AvailablePkgSpecs
+
+	// 资源类型ID
+	Type int
 }
 
 /*
@@ -121,6 +199,12 @@ type LifeCycleItem struct {
 	// 生命周期名称
 	LifeCycleName string
 
+	// 文件的最大size
+	MaxSize string
+
+	// 文件的最小size
+	MinSize string
+
 	// 生命周期所适用的前缀；*为整个存储空间文件；
 	Prefix string
 
@@ -129,17 +213,203 @@ type LifeCycleItem struct {
 }
 
 /*
+UFilePkg - 已购买的资源包
+*/
+type UFilePkg struct {
+
+	// 资源包容量
+	Amount int
+
+	// 资源包创建时间
+	CreateTime int
+
+	// 资源包失效时间
+	ExpiredTime int
+
+	// 资源包名称
+	PkgName string
+
+	// 资源包类型ID
+	PkgType int
+
+	// 资源包地域
+	Region string
+
+	// 资源包剩余容量（仅支持流量包）
+	RemainAmount string
+
+	// 资源包ID
+	ResourceId string
+}
+
+/*
+PkgUsage - 资源包使用明细
+*/
+type PkgUsage struct {
+
+	// 使用量，单位为B
+	Cost string
+
+	// 日期
+	Date string
+}
+
+/*
+UFileSSLCert - SSL证书
+*/
+type UFileSSLCert struct {
+
+	// SSL证书内容，和域名对应
+	Certificate string
+
+	// SSL证书对应的私钥
+	CertificateKey string
+
+	// SSL证书名称
+	CertificateName string
+
+	// 域名
+	Domain string
+}
+
+/*
+BucketStaticPageRule -
+*/
+type BucketStaticPageRule struct {
+
+	// 默认网页
+	DefaultIndex string
+
+	// 默认404页面在存储桶的路径
+	DefaultPage404 string
+
+	// 404时的处理规则
+	RuleFor404 string
+
+	// 启用状态
+	Status string
+
+	// 子目录重定向功能的启用状态
+	SubDirRedirect string
+}
+
+/*
+BucketLabels -
+*/
+type BucketLabels struct {
+
+	// 标签对应key
+	Key string
+
+	// 标签对应value
+	Value string
+}
+
+/*
+UFileDailyBillItem - 日消费账单
+*/
+type UFileDailyBillItem struct {
+
+	// 归档-高优先级解冻量，即归档文件的解冻类型为高优先级（Expedited）的解冻量费用； 分
+	AcExpeditedRetrievalBill float64
+
+	// 归档-标准解冻量，即归档文件的解冻类型为标准（Strandard）的解冻量费用； 分
+	AcRestoreBill float64
+
+	// 归档-短期存储量，即补足未满最短存储期限的剩余天数的存储量费用；分
+	AcShortStorageBill float64
+
+	// 归档-存储总容量费用；分
+	AcStorageBill float64
+
+	// 忙时流量费用；分；海外无此字段
+	BusyFlowBill float64
+
+	// cdn回源流量费用;分
+	CdnFlowBill float64
+
+	// 配额消费时间，unix时间戳；单位s，精确到日期
+	Date int
+
+	// 下载流量费用：分；国内无此字段
+	FlowBill float64
+
+	// 下载归档存储次数费用；分
+	GetCountAcBill float64
+
+	// 下载标准存储次数费用；分
+	GetCountBill float64
+
+	// 下载低频存储次数费用；分
+	GetCountIaBill float64
+
+	// 低频-数据取回量，即低频文件的数据取回量费用；分
+	IaGetSizeBill float64
+
+	// 低频-短期存储量，即补足未满最短存储期限的剩余天数的存储量费用；分
+	IaShortStorageBill float64
+
+	// 低频-存储总容量费用；分
+	IaStorageBill float64
+
+	// 闲时流量费用；分；海外无此字段
+	IdleFlowBill float64
+
+	// 图片高级压缩次数费用；分
+	ImageCompressCountBill float64
+
+	// 基础图片处理量费用；分
+	ImageHandleFlowBill float64
+
+	// bucket对应的资源系统标签
+	Labels []BucketLabels
+
+	// 对象标签费用: 分
+	ObjectTagCountBill float64
+
+	// 上传归档存储次数费用；分
+	PutCountAcBill float64
+
+	// 上传标准存储次数费用；分
+	PutCountBill float64
+
+	// 上传低频存储次数费用；分
+	PutCountIaBill float64
+
+	// 标准-存储总容量费用；分
+	StorageBill float64
+
+	// 总费用;分
+	TotalBill float64
+}
+
+/*
+BucketBills - bucket账单
+*/
+type BucketBills struct {
+
+	// bucket账单
+	BucketBills []UFileDailyBillItem
+}
+
+/*
 UFileDailyReportItem -
 */
 type UFileDailyReportItem struct {
 
-	// 冷存激活量，即归档数据取回量；单位GB
+	// 归档-高优先级解冻量，即归档文件的解冻类型为高优先级（Expedited）的解冻量；单位GB
+	AcExpeditedRetrieval float64
+
+	// 归档-标准解冻量，即归档文件的解冻类型为标准（Strandard）的解冻量；单位GB
 	AcRestore float64
 
-	// 冷存（归档）存储量；单位GB
+	// 归档-短期存储量，即补足未满最短存储期限的剩余天数的存储量；单位GB
+	AcShortStorage float64
+
+	// 归档-存储总容量；单位GB
 	AcStorage float64
 
-	// API请求次数（万次）
+	// 请求次数；单位万次
 	ApiTimes float64
 
 	// 忙时流量；单位GB；海外无此字段
@@ -148,22 +418,34 @@ type UFileDailyReportItem struct {
 	// cdn回源流量;单位GB
 	CdnFlow float64
 
-	// 配额消费时间，unix时间戳（单位s），精确到日期
+	// 配额消费时间，unix时间戳；单位s，精确到日期
 	Date int
 
 	// 下载流量：单位GB；国内无此字段
 	Flow float64
 
-	// 低频数据取回量；单位GB
+	// 低频-数据取回量，即低频文件的数据取回量；单位GB
 	IaGetSize float64
 
-	// 低频存储量；单位GB
+	// 低频-短期存储量，即补足未满最短存储期限的剩余天数的存储量；单位GB
+	IaShortStorage float64
+
+	// 低频-存储总容量；单位GB
 	IaStorage float64
 
 	// 闲时流量；单位GB；海外无此字段
 	IdleFlow float64
 
-	// 标准存储量；单位GB
+	// 图片高级压缩次数；单位千次
+	ImageCompressCount float64
+
+	// 基础图片处理量；单位GB
+	ImageHandleFlow float64
+
+	// 对象标签个数; 单位万个
+	ObjectTagCount float64
+
+	// 标准-存储总容量；单位GB
 	Storage float64
 }
 
@@ -198,6 +480,93 @@ type UFileReportItem struct {
 
 	// 总消费情况
 	Total []UFileTotalReportItem
+}
+
+/*
+UFileMonthlyBillItem - 月消费账单
+*/
+type UFileMonthlyBillItem struct {
+
+	// 归档-高优先级解冻量，即归档文件的解冻类型为高优先级（Expedited）的解冻量费用； 分
+	AcExpeditedRetrievalBill float64
+
+	// 归档-标准解冻量，即归档文件的解冻类型为标准（Strandard）的解冻量费用； 分
+	AcRestoreBill float64
+
+	// 归档-短期存储量，即补足未满最短存储期限的剩余天数的存储量费用；分
+	AcShortStorageBill float64
+
+	// 归档-存储总容量费用；分
+	AcStorageBill float64
+
+	// 忙时流量费用；分；海外无此字段
+	BusyFlowBill float64
+
+	// cdn回源流量费用;分
+	CdnFlowBill float64
+
+	// 下载流量费用：分；国内无此字段
+	FlowBill float64
+
+	// 下载归档存储次数费用；分
+	GetCountAcBill float64
+
+	// 下载标准存储次数费用；分
+	GetCountBill float64
+
+	// 下载低频存储次数费用；分
+	GetCountIaBill float64
+
+	// 低频-数据取回量，即低频文件的数据取回量费用；分
+	IaGetSizeBill float64
+
+	// 低频-短期存储量，即补足未满最短存储期限的剩余天数的存储量费用；分
+	IaShortStorageBill float64
+
+	// 低频-存储总容量费用；分
+	IaStorageBill float64
+
+	// 闲时流量费用；分；海外无此字段
+	IdleFlowBill float64
+
+	// 图片高级压缩次数费用；分
+	ImageCompressCountBill float64
+
+	// 基础图片处理量费用；分
+	ImageHandleFlowBill float64
+
+	// bucket对应的资源系统标签
+	Labels []BucketLabels
+
+	// 配额消费月份
+	Month string
+
+	// 对象标签费用: 分
+	ObjectTagCountBill float64
+
+	// 上传归档存储次数费用；分
+	PutCountAcBill float64
+
+	// 上传标准存储次数费用；分
+	PutCountBill float64
+
+	// 上传低频存储次数费用；分
+	PutCountIaBill float64
+
+	// 标准-存储总容量费用；分
+	StorageBill float64
+
+	// 总费用;分
+	TotalBill float64
+}
+
+/*
+BucketMonthlyBills - bucket月度账单
+*/
+type BucketMonthlyBills struct {
+
+	// bucket账单
+	BucketBills []UFileMonthlyBillItem
 }
 
 /*
