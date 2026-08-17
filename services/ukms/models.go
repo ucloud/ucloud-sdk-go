@@ -14,7 +14,7 @@ type KeyMetadata struct {
 	DeletionDate int
 
 	// 是否开启删除保护。取值：true、false。
-	DeletionProtection string
+	DeletionProtection bool
 
 	// 密钥描述。
 	Description string

@@ -3,6 +3,129 @@
 package uhadoop
 
 /*
+DiskInfo - 磁盘信息
+*/
+type DiskInfo struct {
+
+	// 磁盘数量
+	DiskNum int
+
+	// 磁盘角色，一般分Boot和Data两种
+	DiskRole string
+
+	// 磁盘大小，单位为GB
+	DiskSize int
+
+	// 磁盘类型，分为CLOUD_RSSD(云盘RSSD)、CLOUD_SSD(云盘SSD)、LOCAL_SSD（本地SSD盘）、LOCAL_NORMAL（本地普通盘）、SATA（SATA盘）
+	DiskType string
+}
+
+/*
+SecurityGroupConfig - 防火墙详情
+*/
+type SecurityGroupConfig struct {
+
+	// 放火墙组创建时间，格式为Unix Timestamp
+	CreateTime int
+
+	// 防火墙ID
+	GroupId string
+
+	// 防火墙组的名称
+	GroupName string
+
+	// 防火墙组类型，枚举值为： 0：用户自定义防火墙； 1：默认 Web防火墙； 2：默认非Web防火墙
+	Type string
+}
+
+/*
+AppConfig - 应用配置详情
+*/
+type AppConfig struct {
+
+	// 需要安装的应用如：Hive,HBase, Spark,Hue,Pig等其他组件
+	AppName string
+
+	// 应用的状态(运行中)'Running'｜(已停止)'Stopped'｜(启动中)'Starting'｜(停止中)'Stopping'|(启动失败)'StartFailed'|(停止失败)'StopFailed'|(安装中)'Installing'|(安装失败)'InstallFailed'|(未安装)'NotInstalled',
+	AppStatus string
+
+	// 应用的版本号(0.13.1,0.98.6 等等)
+	AppVersion string
+}
+
+/*
+IPSet - IPSet
+*/
+type IPSet struct {
+
+	// IP
+	IP string
+
+	// 类别
+	Type string
+}
+
+/*
+NodeDetail - Host详情
+*/
+type NodeDetail struct {
+
+	// CPU数量
+	CPU int
+
+	// 创建时间戳
+	CreateTime int
+
+	// 磁盘信息集合
+	DiskSet []DiskInfo
+
+	// 节点的到期时间(下次扣款时间)
+	ExpireTime int
+
+	// 防火墙 信息
+	FirewallGroupConfig []SecurityGroupConfig
+
+	// 机型种类，可选OutStanding(快杰机型)|Genenal(普通机型)|BareMetal(裸金属机型)三种类型
+	HostType string
+
+	// IP 信息
+	IPSet []IPSet
+
+	// 实例ID
+	InstanceId string
+
+	// 是否是新机型,快杰机型，GPU机型，云盘裸金属机型为新机型
+	IsNewType bool
+
+	// 内存大小，单位为MB
+	Memory int
+
+	// 节点ID
+	NodeId string
+
+	// 节点名称
+	NodeName string
+
+	// 节点在集群中的⻆色(有Master,Core,Task 3种)
+	NodeRole string
+
+	// 机型
+	NodeType string
+
+	// 备注
+	Remark string
+
+	// 资源ID
+	ResourceId string
+
+	// 是否是弹性伸缩节点
+	Scaling bool
+
+	// 运行：Running； 创建中：Creating； 删除中：Deleting； 创建失败：CreateFailed； 不可用：Unavailable； 删除失败：DeleteFailed； 已删除：Deleted； 部署中： Deploying
+	State string
+}
+
+/*
 ClusterInfo - 集群信息
 */
 type ClusterInfo struct {
@@ -11,7 +134,7 @@ type ClusterInfo struct {
 	AppConfigCount string
 
 	// 组件集合
-	AppConfigSet string
+	AppConfigSet []AppConfig
 
 	// 业务组ID
 	BusinessId string
@@ -24,6 +147,9 @@ type ClusterInfo struct {
 
 	// 创建时间
 	CreateTime string
+
+	// 集群磁盘加密密钥ID
+	DataDiskKmsKeyId string
 
 	// 到期时间
 	ExpireTime string
@@ -50,7 +176,7 @@ type ClusterInfo struct {
 	NodeCount string
 
 	// 节点集合
-	NodeSet string
+	NodeSet []NodeDetail
 
 	// Uhadoop版本，值为 uhadoop 3.0|uhadoop 2.2|uhadoop 3.1
 	ReleaseVersion string
@@ -147,21 +273,6 @@ type InstanceType struct {
 
 	// 可用的节点类型，值为core|task|master之一
 	SuitableRole []string
-}
-
-/*
-AppConfig - 应用配置详情
-*/
-type AppConfig struct {
-
-	// 需要安装的应用如：Hive,HBase, Spark,Hue,Pig等其他组件
-	AppName string
-
-	// 应用的状态(运行中)'Running'｜(已停止)'Stopped'｜(启动中)'Starting'｜(停止中)'Stopping'|(启动失败)'StartFailed'|(停止失败)'StopFailed'|(安装中)'Installing'|(安装失败)'InstallFailed'|(未安装)'NotInstalled',
-	AppStatus string
-
-	// 应用的版本号(0.13.1,0.98.6 等等)
-	AppVersion string
 }
 
 /*
