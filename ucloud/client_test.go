@@ -2,6 +2,7 @@ package ucloud
 
 import (
 	stdhttp "net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
@@ -32,12 +33,32 @@ func testSetup() {}
 
 func testTeardown() {}
 
+// newSlowServer 起一个本地慢响应服务，用于触发客户端超时。
+//
+// 此前这里打的是 https://httpbin.org/delay/2 —— 一个第三方公网服务。
+// 那样单元测试就挂在了外部可用性上：实测该服务返回 503 时断言直接失败，
+// 在任何 CI 里都会间歇性红，且没有 testing.Short() 守卫，-short 也跳不掉。
+//
+// handler 同时监听 r.Context()：客户端超时断开后立即返回，
+// 这样 srv.Close() 不会阻塞等待剩余的 sleep。
+func newSlowServer(delay time.Duration) *httptest.Server {
+	return httptest.NewServer(stdhttp.HandlerFunc(func(w stdhttp.ResponseWriter, r *stdhttp.Request) {
+		select {
+		case <-time.After(delay):
+		case <-r.Context().Done():
+		}
+	}))
+}
+
 func TestClientTimeout(t *testing.T) {
+	srv := newSlowServer(2 * time.Second)
+	defer srv.Close()
+
 	req := &MockRequest{}
 	resp := &MockResponse{}
 
 	client := newTestClient()
-	client.config.BaseUrl = "https://httpbin.org/delay/2"
+	client.config.BaseUrl = srv.URL
 	client.config.Timeout = 1 * time.Second
 	client.config.MaxRetries = 1
 	client.SetupRequest(req)
@@ -99,8 +120,14 @@ func Test_errorHandler(t *testing.T) {
 		{
 			name: "server timeout error",
 			step: func() error {
+				// 同样改用本地服务，不再依赖外部站点。
+				// 注意 Timeout 是 1 纳秒，请求必定在建连阶段就超时，
+				// 服务端实际不会被访问到——这里只需要一个可解析的地址。
+				srv := newSlowServer(time.Second)
+				defer srv.Close()
+
 				httpClient := &stdhttp.Client{Timeout: time.Duration(1)}
-				httpReq, err := stdhttp.NewRequest("GET", "https://httpbin.org/delay/2", nil)
+				httpReq, err := stdhttp.NewRequest("GET", srv.URL, nil)
 				if err != nil {
 					return err
 				}

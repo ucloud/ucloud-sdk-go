@@ -1,0 +1,70 @@
+name: CI
+
+# PR 门禁。只保两件事（详见 Makefile 的 ci-syntax）：
+#   G1 生成的代码能被编译/调用
+#   G2 生成的代码没有重复项
+# 代码风格不进门禁：风格问题不影响 SDK 能否使用。
+#
+# 分支保护只需把 `ci-gate` 配成 required check，其余 job 增删都不影响它。
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  ci-syntax:
+    name: ci-syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.25'
+      - run: make ci-syntax
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.25'
+      # go vet 查的是真实 bug 模式（printf 参数不匹配、锁值拷贝等），
+      # 不是代码风格，故保留在门禁内。
+      - run: make lint
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.25'
+      - run: make test-cov
+      - name: Upload coverage
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          fail_ci_if_error: false
+
+  ci-gate:
+    name: ci-gate
+    needs: [ci-syntax, lint, test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" \
+             || "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "ci-gate: 有 job 失败或被取消"
+            exit 1
+          fi
+          echo "ci-gate: 全部通过"
