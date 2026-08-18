@@ -62,56 +62,6 @@ func (c *UKMSClient) CancelKeyDeletion(req *CancelKeyDeletionRequest) (*CancelKe
 	return &res, nil
 }
 
-// CancelScheduleKeyDeletionRequest is request schema for CancelScheduleKeyDeletion action
-type CancelScheduleKeyDeletionRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// 需要查看的主密钥对应的 KeyId
-	KeyId *string `required:"true"`
-
-	// 资源id
-	ResourceId *string `required:"false"`
-}
-
-// CancelScheduleKeyDeletionResponse is response schema for CancelScheduleKeyDeletion action
-type CancelScheduleKeyDeletionResponse struct {
-	response.CommonBase
-}
-
-// NewCancelScheduleKeyDeletionRequest will create request of CancelScheduleKeyDeletion action.
-func (c *UKMSClient) NewCancelScheduleKeyDeletionRequest() *CancelScheduleKeyDeletionRequest {
-	req := &CancelScheduleKeyDeletionRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: CancelScheduleKeyDeletion
-
-取消计划删除密钥
-*/
-func (c *UKMSClient) CancelScheduleKeyDeletion(req *CancelScheduleKeyDeletionRequest) (*CancelScheduleKeyDeletionResponse, error) {
-	var err error
-	var res CancelScheduleKeyDeletionResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("CancelScheduleKeyDeletion", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
 // CreateAliasRequest is request schema for CreateAlias action
 type CreateAliasRequest struct {
 	request.CommonBase
@@ -715,7 +665,7 @@ type GenerateDataKeyRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 加密上下文，JSON Object。
+	// 加密上下文，JSON Object。该参数内容会记录在日志中，请勿传入密码、密钥、令牌等敏感信息。
 	EncryptionContext *string `required:"false"`
 
 	// 密钥资源长 ID、ARN 或别名。
