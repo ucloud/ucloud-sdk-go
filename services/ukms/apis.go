@@ -923,6 +923,12 @@ type GenerateMacRequest struct {
 // GenerateMacResponse is response schema for GenerateMac action
 type GenerateMacResponse struct {
 	response.CommonBase
+
+	// 针对指定消息生成的基于哈希的消息认证码 (HMAC)、HMAC KMS 密钥和 MAC 算法。
+	Mac string
+
+	// 用于生成 HMAC 的 MAC 算法。
+	MacAlgorithm string
 }
 
 // NewGenerateMacRequest will create request of GenerateMac action.
@@ -1768,6 +1774,15 @@ type VerifyMacRequest struct {
 // VerifyMacResponse is response schema for VerifyMac action
 type VerifyMacResponse struct {
 	response.CommonBase
+
+	// 密钥ID
+	KeyId string
+
+	// 验证中使用的 MAC 算法。
+	MacAlgorithm string
+
+	// 一个布尔值，表示 HMAC 是否已验证。
+	MacValid bool
 }
 
 // NewVerifyMacRequest will create request of VerifyMac action.
