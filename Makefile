@@ -16,6 +16,16 @@ fmt:
 fmtcheck:
 	@bash $(CURDIR)/scripts/gofmtcheck.sh
 
+# CI 门禁：生成代码必须能编译、且无重复项。
+#   G1 `go build ./...` 覆盖 services/ 下全部产品包（生成代码），语法/类型错误即失败。
+#   G2 重复 import 与重复声明在 Go 是编译错误，已被 G1 覆盖，无需额外检测。
+#      （其它语言不然：php/js/python 的编译器对重复声明一律放行。）
+#   另加 gofmtcheck 拦格式漂移——全仓重生成后出现纯空白 diff 的历史问题。
+.PHONY: ci-syntax
+ci-syntax:
+	go build ./...
+	@bash $(CURDIR)/scripts/gofmtcheck.sh
+
 .PHONY: lint
 lint:
 	go vet ./...
