@@ -1,0 +1,55 @@
+name: Compat
+
+# 兼容矩阵，回答一个 PR 门禁（ci.yml）不回答的问题：go.mod 里那行 `go 1.13` 今天还算数吗。
+# 门禁只在 1.25 上跑，所以生成代码哪天用上了高版本才有的写法，声明的下界会悄悄失效而没人发现。
+#
+# 只挂 schedule 与 workflow_dispatch，**不挂 pull_request / push**：
+# 这样 codegen PR 上不会多出任何 check。兼容性是巡检结果，红了要人来看，
+# 不该参与「这个 PR 能不能合」的判定——否则一个陈年的旧版本问题会把日常发布卡死。
+
+on:
+  schedule:
+    - cron: '0 18 * * *'   # UTC，避开工作时段
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compat:
+    name: go ${{ matrix.go }}
+    runs-on: ubuntu-latest
+    strategy:
+      # 要的是「哪些版本还行」的完整答案，不是「第一个红的是谁」。
+      fail-fast: false
+      matrix:
+        # 下界 1.13 = go.mod 的声明值，且**实测确认它今天仍然成立**，不是照抄声明。
+        #
+        # 实测环境：2026-08-18，官方 golang:<v> 镜像（linux/amd64）挂载整仓跑。
+        # 三个版本各跑四项，全部 exit 0：
+        #
+        #   版本       go build ./...   go vet ./...   make ci-syntax   make test-cov
+        #   1.13.15         0               0              0                0
+        #   1.16.15         0               0              0                —
+        #   1.21.13         0               0              0                —
+        #
+        # 特别验过 gofmt 的跨版本漂移：`make ci-syntax` 里含 gofmtcheck，而 gofmt 在 1.19
+        # 改过 doc comment 的排版，老版本有可能把现代格式判为不合格、让整个矩阵开局就红。
+        # 实测 `gofmt -l`（排除 vendor）在 1.13 / 1.16 / 1.21 上**命中数均为 0**，
+        # 说明本仓的格式在这个区间是稳定的，这条腿不会因格式问题假红。
+        #
+        # 另一条支持证据：除 vendor/ 外，仓内代码未使用任何 1.13 之后才有的 stdlib 符号。
+        #
+        # 选这三个中间点的理由：1.16 是 -mod=readonly 成为默认的那一版，
+        # 1.21 引入 toolchain 自动切换，两者都会改变构建行为——坏了能定位到哪一段。
+        # 上界 1.25 与 ci.yml 的门禁版本对齐。
+        go: ['1.13', '1.16', '1.21', '1.25']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ matrix.go }}
+      # 两个 target 缺一不可：ci-syntax 编译 services/（每天重生成的代码），
+      # test-cov 跑手写 core 的运行期行为——`go build` 不编译 _test.go，只跑前者会漏掉后者。
+      - run: make ci-syntax
+      - run: make test-cov
