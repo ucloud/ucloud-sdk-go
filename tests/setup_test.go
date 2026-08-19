@@ -61,6 +61,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/sts"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
 	"github.com/ucloud/ucloud-sdk-go/services/uads"
+	"github.com/ucloud/ucloud-sdk-go/services/uai_modelverse"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/ucompshare"
 	"github.com/ucloud/ucloud-sdk-go/services/udbproxy"
@@ -73,7 +74,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/ugn"
 	"github.com/ucloud/ucloud-sdk-go/services/uhub"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
-	"github.com/ucloud/ucloud-sdk-go/services/ukms"
 	"github.com/ucloud/ucloud-sdk-go/services/ulighthost"
 	"github.com/ucloud/ucloud-sdk-go/services/umongodb"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
@@ -189,6 +189,9 @@ func testSetup() {
 	spec.AddFixture("UADS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uads.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("UAI_Modelverse", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return uai_modelverse.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("UAccount", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uaccount.NewClient(&cfg, &credential), nil
 	}))
@@ -245,9 +248,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UK8S", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uk8s.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UKMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return ukms.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("ULB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ulb.NewClient(&cfg, &credential), nil
