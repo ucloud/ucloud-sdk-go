@@ -3,6 +3,189 @@
 package uwsc
 
 /*
+VPNInfo - CE客户网关信息
+*/
+type VPNInfo struct {
+
+	// 创建时间
+	CreateTime int
+
+	// CE网关的接入方式：静态IP（Static）,动态IP（Dynamic）
+	IpType string
+
+	// CE 名称
+	Name string
+
+	// UWAN 实例 ID
+	PopGwId string
+
+	// UWAN 资源名称
+	PopGwName string
+
+	// 客户自有外网 IP
+	PublicIp string
+
+	// 地域
+	Region string
+
+	// CE备注
+	Remark string
+
+	// 状态（默认为空）
+	Status string
+
+	// CE 网关 ID
+	VPNId string
+
+	// 子隧道 ID
+	VPNTunnelIds []string
+}
+
+/*
+DPDConf - DPD 配置
+*/
+type DPDConf struct {
+
+	// DPD 行为
+	Action string
+
+	// DPD 探测间隔时间
+	Delay int
+
+	// 是否开启 DPD
+	Enabled int
+
+	// DPD 探测超时时间
+	Timeout int
+}
+
+/*
+IKEConf - IKE配置信息
+*/
+type IKEConf struct {
+
+	// 认证算法
+	AuthenticationAlgorithm string
+
+	// 分组信息
+	DhGroup string
+
+	// 加密算法
+	EncryptionAlgorithm string
+
+	// 协商模式
+	ExchangeMode string
+
+	// 本端标识
+	LocalId string
+
+	// 预共享密钥
+	PreSharedKey string
+
+	// 对端标识
+	RemoteId string
+
+	// IKE SA的生存周期
+	SALifeTime string
+
+	// 版本
+	Version string
+}
+
+/*
+BGPConf - CE隧道 BGP配置
+*/
+type BGPConf struct {
+
+	// 本端自治系统号
+	LocalAsn int
+
+	// 云端BGP地址
+	LocalIp string
+
+	// 对端自治系统号
+	PeerAsn int
+
+	// 用户端BGP地址
+	PeerIp string
+
+	// BGP隧道网段
+	TunnelCidr string
+}
+
+/*
+IPSecConf - IPSec配置信息
+*/
+type IPSecConf struct {
+
+	// 认证算法
+	AuthenticationAlgorithm string
+
+	// 客户网段
+	CENetwork []string
+
+	// 加密算法
+	EncryptionAlgorithm string
+
+	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法
+	PFSDhGroup string
+
+	// 安全协议
+	Protocol string
+
+	// 第二阶段的 SA 的生存周期
+	SALifeTime string
+
+	// 第二阶段的 SA 的生存周期
+	SALifetimeBytes string
+}
+
+/*
+VPNTunnelInfo - 隧道信息
+*/
+type VPNTunnelInfo struct {
+
+	// BGP 配置信息
+	BGPConf BGPConf
+
+	// 隧道关闭后动作
+	CloseAction string
+
+	// 创建时间
+	CreateTime int
+
+	// DPD 配置信息
+	DPDConf DPDConf
+
+	// IKE 配置信息
+	IKEConf IKEConf
+
+	// IPSec 配置信息
+	IPSecConf IPSecConf
+
+	// 路由模式
+	Mode string
+
+	// 隧道名称
+	Name string
+
+	// 地域
+	Region string
+
+	// 备注
+	Remark string
+
+	// 隧道协商动作
+	StartAction string
+
+	// CE 网关 ID
+	VPNId string
+
+	// 隧道 ID
+	VPNTunnelId string
+}
+
+/*
 CPEInfo - CPE信息
 */
 type CPEInfo struct {
@@ -150,4 +333,109 @@ type WhiteListInfo struct {
 
 	//
 	RuleType string
+}
+
+/*
+UGNBWInfo - UGN带宽包信息
+*/
+type UGNBWInfo struct {
+
+	// UGN带宽包ID
+	UGNBWId string
+
+	// UGN带宽包名称
+	UGNBWName string
+}
+
+/*
+BWPackageInfo - UWAN虚拟路由器带宽包信息
+*/
+type BWPackageInfo struct {
+
+	// 最大带宽值
+	BandWidth float64
+
+	// UWAN 网关带宽 ID
+	BwId string
+
+	// 付费方式eg:(Month)
+	ChargeType string
+
+	// 过期时间
+	DueTime int
+
+	// 带宽包名称
+	Name string
+
+	// 计费方式eg:(固定带宽)
+	PayMode string
+
+	// 网关外网 IP
+	PublicIp string
+
+	// 备注
+	Remark string
+}
+
+/*
+UGNInfo - UGN信息
+*/
+type UGNInfo struct {
+
+	// UGN 带宽包信息
+	UGNBWInfos []UGNBWInfo
+
+	// 云联网 ID
+	UGNId string
+
+	// 云联网名称
+	UGNName string
+}
+
+/*
+POPGWInfo - UWAN虚拟路由器信息
+*/
+type POPGWInfo struct {
+
+	// 带宽包信息
+	BWPackageInfo BWPackageInfo
+
+	// 客户网关数量
+	CENum int
+
+	// CPE数量
+	CPENum int
+
+	// 付费类型
+	ChargeType string
+
+	// 创建时间
+	CreateTime int
+
+	// 过期时间
+	DueTime int
+
+	// 网关名称
+	Name string
+
+	// 网关实例 ID
+	PopGwId string
+
+	// 地域信息
+	Region string
+
+	// 备注
+	Remark string
+
+	// 规格：IPSec、SSL
+	Type string
+
+	// 云联网信息
+	UGNInfo UGNInfo
+
+	// VCPE 数量
+	VCPENum int
+
+	// 唯一标识
+	VNI int
 }

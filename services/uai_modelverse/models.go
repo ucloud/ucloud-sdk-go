@@ -102,6 +102,33 @@ type FilterOptionInteger struct {
 }
 
 /*
+Pricing - 定价策略
+*/
+type Pricing struct {
+
+	// 输出定价
+	Completion float64
+
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+
+	// 单位（中文），如“次” “百万”
+	Unit string
+
+	// 单位（English），如“Time” “Million”
+	UnitEn string
+
+	// 生视频定价
+	Video string
+}
+
+/*
 PriceRate - 该档位下的收费列表（有序数组）
 */
 type PriceRate struct {
@@ -147,27 +174,15 @@ type PriceTier struct {
 }
 
 /*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
-}
-
-/*
 SquareModel - 广场模型
 */
 type SquareModel struct {
+
+	// 关联的 batch 模型名称
+	BatchName string
+
+	// 关联的 batch 模型广场id
+	BatchSquareModelId string
 
 	// 创建时间
 	CreateAt int
@@ -184,8 +199,14 @@ type SquareModel struct {
 	// 主键
 	Id string
 
+	// 是否关联有可用 batch 模型
+	IsHasBatch bool
+
 	// 语言
 	Language []string
+
+	// 制造商
+	Manufacturer string
 
 	// 模型长度
 	MaxModelLen int
@@ -204,6 +225,9 @@ type SquareModel struct {
 
 	// 模型能力
 	SupportedCapabilities []string
+
+	// 价格阶梯（有序数组）
+	Tiers []PriceTier
 
 	// 更新时间
 	UpdateAt int
@@ -486,6 +510,18 @@ type OrderItemDetail struct {
 }
 
 /*
+RequestLogSummary - 请求日志汇总
+*/
+type RequestLogSummary struct {
+
+	// 查询条件命中的失败请求数
+	FailedRequests int
+
+	// 查询条件命中的总请求数
+	TotalRequests int
+}
+
+/*
 RequestLogItem - 请求日志列表项
 */
 type RequestLogItem struct {
@@ -552,18 +588,6 @@ type RequestLogItem struct {
 
 	// 总 Token 数
 	TotalTokens int
-}
-
-/*
-RequestLogSummary - 请求日志汇总
-*/
-type RequestLogSummary struct {
-
-	// 查询条件命中的失败请求数
-	FailedRequests int
-
-	// 查询条件命中的总请求数
-	TotalRequests int
 }
 
 /*

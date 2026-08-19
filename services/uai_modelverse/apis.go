@@ -28,6 +28,9 @@ type CreateUMInferAPIKeyRequest struct {
 	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:192.168.1.1192.168.1.10-192.168.1.100192.168.1.10/24
 	IPWhitelist *string `required:"false"`
 
+	// 是否开启推理日志
+	InferenceLogEnabled *int `required:"false"`
+
 	// 是否modelverse可用 0: 启用 1: 禁用
 	ModelverseDisabled *int `required:"false"`
 
@@ -951,6 +954,9 @@ type ListUFSquareModelRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// 模型特性，可选值来源于ListUFSquareModelFilters枚举接口。可多选
+	Capabilities []string `required:"false"`
+
 	// 关键字
 	Keyword *string `required:"false"`
 
@@ -959,6 +965,9 @@ type ListUFSquareModelRequest struct {
 
 	// 每页数量
 	Limit *int `required:"false"`
+
+	// 制造商，可选值来源于ListUFSquareModelFilters枚举接口。可多选
+	Manufacturer []string `required:"false"`
 
 	// 上下文长度，数组类型，可选值 [0,4096,16384,32768,131072,256000,262144,1048576]
 	MaxModelLen []int `required:"false"`
@@ -1424,6 +1433,9 @@ type UpdateUMInferAPIKeyRequest struct {
 
 	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:  192.168.1.1 192.168.1.10-192.168.1.100 192.168.1.10/24
 	IPWhitelist *string `required:"false"`
+
+	// 是否开启推理日志
+	InferenceLogEnabled *int `required:"false"`
 
 	// apikey的id
 	KeyId *string `required:"true"`

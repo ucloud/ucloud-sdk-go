@@ -115,6 +115,262 @@ func (c *UWSCClient) BindCPE(req *BindCPERequest) (*BindCPEResponse, error) {
 	return &res, nil
 }
 
+// CreateCEGatewayRequest is request schema for CreateCEGateway action
+type CreateCEGatewayRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// IP类型 枚举值：静态IP(Static) | 动态IP(Dynamic)
+	IpType *string `required:"true"`
+
+	// 资源名称
+	Name *string `required:"false"`
+
+	// 所属UWAN虚拟路由器资源ID
+	PopGwId *string `required:"true"`
+
+	// 客户自有公网IP
+	PublicIp *string `required:"true"`
+
+	// 备注
+	Remark *string `required:"false"`
+}
+
+// CreateCEGatewayResponse is response schema for CreateCEGateway action
+type CreateCEGatewayResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+
+	// 客户网关资源 ID
+	VPNId string
+}
+
+// NewCreateCEGatewayRequest will create request of CreateCEGateway action.
+func (c *UWSCClient) NewCreateCEGatewayRequest() *CreateCEGatewayRequest {
+	req := &CreateCEGatewayRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateCEGateway
+
+创建CE客户网关
+*/
+func (c *UWSCClient) CreateCEGateway(req *CreateCEGatewayRequest) (*CreateCEGatewayResponse, error) {
+	var err error
+	var res CreateCEGatewayResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCEGateway", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateCETunnelParamIKEConf is request schema for complex param
+*/
+type CreateCETunnelParamIKEConf struct {
+
+	// IKE 认证算法，取值："md5", "sha1", "sha2-256"
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// DH group，指定IKE交换密钥时使用的DH组。取值："1", "2", "5", "14", "15", "16"
+	DhGroup *string `required:"true"`
+
+	// IKE 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// IKE 协商模式，主模式(main)/野蛮模式(aggressive)，IKE V2时不使用该参数
+	ExchangeMode *string `required:"true"`
+
+	// 本端标识，取值：“auto”，“<ip-address>”
+	LocalId *string `required:"true"`
+
+	// IKE 共享密钥
+	PreSharedKey *string `required:"true"`
+
+	// 对端标识，取值：“auto”，“<ip-address>”
+	RemoteId *string `required:"true"`
+
+	// IKE SA的生存周期，取值范围：600-604800
+	SALifeTime *string `required:"true"`
+
+	// IKE 版本，取值： "ike v1"，"ike v2"
+	Version *string `required:"true"`
+}
+
+/*
+CreateCETunnelParamBGPConf is request schema for complex param
+*/
+type CreateCETunnelParamBGPConf struct {
+
+	// Ucloud侧的自治系统号。
+	LocalAsn *string `required:"false"`
+
+	// 云端BGP地址。必须从BGP隧道网段内分配。
+	LocalIp *string `required:"false"`
+
+	// 对端BGP ASN号。
+	PeerAsn *string `required:"false"`
+
+	// 用户端BGP地址。必须从BGP隧道网段内分配。
+	PeerIp *string `required:"false"`
+
+	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
+	TunnelCidr *string `required:"false"`
+}
+
+/*
+CreateCETunnelParamIPSecConf is request schema for complex param
+*/
+type CreateCETunnelParamIPSecConf struct {
+
+	// 第二阶段协商的认证算法。取值：md5、sha1、sha2-256。
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// 需要和 VPC 互通的本地数据中心侧的网段，用于第二阶段协商。
+	CENetwork []string `required:"true"`
+
+	// IPSec 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法。取值：disabled、1、2、5、14、15、16。
+	PFSDhGroup *string `required:"true"`
+
+	// IPSec 安全协议，取值：“esp”，“ah”
+	Protocol *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：秒。取值范围：1200~604800
+	SALifeTime *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：字节 KB。取值范围：8000 – 20000000，默认使用SA超时时间
+	SALifetimeBytes *string `required:"false"`
+}
+
+/*
+CreateCETunnelParamDPDConf is request schema for complex param
+*/
+type CreateCETunnelParamDPDConf struct {
+
+	// DPD超时后的动作,Enable为1（开启）时有效。可取值为clear（断开）、restart（重试）和 trap（流量触发）
+	Action *string `required:"false"`
+
+	// DPD探测间隔时间。dpdEnable为1（开启）时有效。单位为秒，默认为 10
+	Delay *int `required:"false"`
+
+	// 是否开启 DPD（对等体存活检测）功能。取值：0（关闭）、1（开启）
+	Enabled *int `required:"true"`
+
+	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。单位为秒。取值范围为 30-60（IKEv2 默认为 0）
+	Timeout *int `required:"false"`
+}
+
+// CreateCETunnelRequest is request schema for CreateCETunnel action
+type CreateCETunnelRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	//
+	BGPConf *CreateCETunnelParamBGPConf `required:"false"`
+
+	// IPSec 关闭后动作，枚举值：restart、trap、none
+	CloseAction *string `required:"true"`
+
+	//
+	DPDConf *CreateCETunnelParamDPDConf `required:"false"`
+
+	//
+	IKEConf *CreateCETunnelParamIKEConf `required:"false"`
+
+	//
+	IPSecConf *CreateCETunnelParamIPSecConf `required:"false"`
+
+	// 路由模式，枚举值：感兴趣流(FLow) | BGP(BGP)
+	Mode *string `required:"true"`
+
+	// 资源名称
+	Name *string `required:"false"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	// 所属CE网关资源ID
+	VPNId *string `required:"true"`
+}
+
+// CreateCETunnelResponse is response schema for CreateCETunnel action
+type CreateCETunnelResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// VPN 隧道 ID
+	VPNTunnelId string
+}
+
+// NewCreateCETunnelRequest will create request of CreateCETunnel action.
+func (c *UWSCClient) NewCreateCETunnelRequest() *CreateCETunnelRequest {
+	req := &CreateCETunnelRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateCETunnel
+
+创建隧道
+*/
+func (c *UWSCClient) CreateCETunnel(req *CreateCETunnelRequest) (*CreateCETunnelResponse, error) {
+	var err error
+	var res CreateCETunnelResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateCETunnel", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateCPERequest is request schema for CreateCPE action
 type CreateCPERequest struct {
 	request.CommonBase
@@ -272,6 +528,237 @@ func (c *UWSCClient) CreateExportLine(req *CreateExportLineRequest) (*CreateExpo
 	return &res, nil
 }
 
+/*
+CreatePOPGWParamBWConf is request schema for complex param
+*/
+type CreatePOPGWParamBWConf struct {
+
+	// UWAN 网关的带宽规格。取值：1-100。单位：Mbps。
+	BwMax *float64 `required:"true"`
+
+	// 带宽类型，默认为空字符串
+	BwType *string `required:"false"`
+
+	// 付费方式，枚举值：- Month：月付；- Year：年付；- Postpadi：后付费（仅支持流量计费方式）
+	ChargeType *string `required:"true"`
+
+	// 优惠券 ID
+	CouponId *string `required:"false"`
+
+	// 带宽的名称
+	Name *string `required:"true"`
+
+	// 带宽的计费方式，取值：- fixed-bw：固定带宽计费；- traffic：流量计费。
+	PayMode *string `required:"true"`
+
+	// 产品 ID
+	ProductId *int `required:"false"`
+
+	// 带宽购买时长，默认为 0，代表有效期至月底
+	Quantity *float64 `required:"false"`
+
+	// 带宽包备注信息
+	Remark *string `required:"false"`
+}
+
+// CreatePOPGWRequest is request schema for CreatePOPGW action
+type CreatePOPGWRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	//
+	BWConf *CreatePOPGWParamBWConf `required:"false"`
+
+	// 付费方式, 枚举值为: - Year：按年付费; - Month:  按月付费；(月付非必填，默认为 0；年付必填。)
+	ChargeType *string `required:"false"`
+
+	// 代金券ID, 默认不使用
+	CouponId *string `required:"false"`
+
+	// 资源名称
+	Name *string `required:"true"`
+
+	// UWAN 网关的购买时长，默认为 0，代表有效期至月底。(保持和BWConf.Quantity 相同)
+	Quantity *int `required:"true"`
+
+	// 资源备注信息
+	Remark *string `required:"false"`
+
+	// 入网类型，仅支持“IPSec”
+	Type *string `required:"false"`
+}
+
+// CreatePOPGWResponse is response schema for CreatePOPGW action
+type CreatePOPGWResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// UWAN 网关实例 ID
+	PopGwId string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewCreatePOPGWRequest will create request of CreatePOPGW action.
+func (c *UWSCClient) NewCreatePOPGWRequest() *CreatePOPGWRequest {
+	req := &CreatePOPGWRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreatePOPGW
+
+创建UWAN虚拟路由器
+*/
+func (c *UWSCClient) CreatePOPGW(req *CreatePOPGWRequest) (*CreatePOPGWResponse, error) {
+	var err error
+	var res CreatePOPGWResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreatePOPGW", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCEGatewayRequest is request schema for DeleteCEGateway action
+type DeleteCEGatewayRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// CE 实例 ID
+	VPNId *string `required:"true"`
+}
+
+// DeleteCEGatewayResponse is response schema for DeleteCEGateway action
+type DeleteCEGatewayResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewDeleteCEGatewayRequest will create request of DeleteCEGateway action.
+func (c *UWSCClient) NewDeleteCEGatewayRequest() *DeleteCEGatewayRequest {
+	req := &DeleteCEGatewayRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCEGateway
+
+删除CE网关
+*/
+func (c *UWSCClient) DeleteCEGateway(req *DeleteCEGatewayRequest) (*DeleteCEGatewayResponse, error) {
+	var err error
+	var res DeleteCEGatewayResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCEGateway", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteCETunnelRequest is request schema for DeleteCETunnel action
+type DeleteCETunnelRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 资源ID
+	VPNTunnelId *string `required:"true"`
+}
+
+// DeleteCETunnelResponse is response schema for DeleteCETunnel action
+type DeleteCETunnelResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewDeleteCETunnelRequest will create request of DeleteCETunnel action.
+func (c *UWSCClient) NewDeleteCETunnelRequest() *DeleteCETunnelRequest {
+	req := &DeleteCETunnelRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteCETunnel
+
+删除隧道
+*/
+func (c *UWSCClient) DeleteCETunnel(req *DeleteCETunnelRequest) (*DeleteCETunnelResponse, error) {
+	var err error
+	var res DeleteCETunnelResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteCETunnel", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteExportLineRequest is request schema for DeleteExportLine action
 type DeleteExportLineRequest struct {
 	request.CommonBase
@@ -368,6 +855,213 @@ func (c *UWSCClient) DeleteExportLineRules(req *DeleteExportLineRulesRequest) (*
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteExportLineRules", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeletePOPGWRequest is request schema for DeletePOPGW action
+type DeletePOPGWRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// UWAN虚拟路由器资源ID
+	PopGwId *string `required:"true"`
+}
+
+// DeletePOPGWResponse is response schema for DeletePOPGW action
+type DeletePOPGWResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewDeletePOPGWRequest will create request of DeletePOPGW action.
+func (c *UWSCClient) NewDeletePOPGWRequest() *DeletePOPGWRequest {
+	req := &DeletePOPGWRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeletePOPGW
+
+删除UWAN虚拟路由器
+*/
+func (c *UWSCClient) DeletePOPGW(req *DeletePOPGWRequest) (*DeletePOPGWResponse, error) {
+	var err error
+	var res DeletePOPGWResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeletePOPGW", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCEGatewayRequest is request schema for DescribeCEGateway action
+type DescribeCEGatewayRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 限制量
+	Limit *int `required:"false"`
+
+	// 偏移量
+	Offset *int `required:"false"`
+
+	// UWAN 实例 ID
+	PopGwId *string `required:"false"`
+
+	// CE 实例 ID
+	VPNId *string `required:"false"`
+}
+
+// DescribeCEGatewayResponse is response schema for DescribeCEGateway action
+type DescribeCEGatewayResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+
+	// 总数
+	TotalCount int
+
+	// CE信息
+	VPNInfos []VPNInfo
+}
+
+// NewDescribeCEGatewayRequest will create request of DescribeCEGateway action.
+func (c *UWSCClient) NewDescribeCEGatewayRequest() *DescribeCEGatewayRequest {
+	req := &DescribeCEGatewayRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCEGateway
+
+查询CE网关，优先级 Region > PopGwId > VPNId
+*/
+func (c *UWSCClient) DescribeCEGateway(req *DescribeCEGatewayRequest) (*DescribeCEGatewayResponse, error) {
+	var err error
+	var res DescribeCEGatewayResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCEGateway", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeCETunnelRequest is request schema for DescribeCETunnel action
+type DescribeCETunnelRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 返回数据长度，默认为20，最大100
+	Limit *int `required:"false"`
+
+	// 列表起始位置偏移量，默认为0
+	Offset *int `required:"false"`
+
+	// CE 网关 ID
+	VPNId *string `required:"false"`
+
+	// 隧道 ID
+	VPNTunnelId *string `required:"false"`
+}
+
+// DescribeCETunnelResponse is response schema for DescribeCETunnel action
+type DescribeCETunnelResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+
+	// 总数
+	TotalCount int
+
+	// 隧道信息
+	VPNTunnelInfos []VPNTunnelInfo
+}
+
+// NewDescribeCETunnelRequest will create request of DescribeCETunnel action.
+func (c *UWSCClient) NewDescribeCETunnelRequest() *DescribeCETunnelRequest {
+	req := &DescribeCETunnelRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeCETunnel
+
+查询隧道
+*/
+func (c *UWSCClient) DescribeCETunnel(req *DescribeCETunnelRequest) (*DescribeCETunnelResponse, error) {
+	var err error
+	var res DescribeCETunnelResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeCETunnel", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -543,6 +1237,493 @@ func (c *UWSCClient) DescribeExportLineRules(req *DescribeExportLineRulesRequest
 	return &res, nil
 }
 
+// DescribePOPGWRequest is request schema for DescribePOPGW action
+type DescribePOPGWRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 限制量
+	Limit *int `required:"false"`
+
+	// 偏移量
+	Offset *int `required:"false"`
+
+	// UWAN 实例 ID
+	PopGwId *string `required:"true"`
+}
+
+// DescribePOPGWResponse is response schema for DescribePOPGW action
+type DescribePOPGWResponse struct {
+	response.CommonBase
+
+	// 消息
+	Message string
+
+	// UWAN 实例信息
+	POPGWInfos []POPGWInfo
+
+	// 请求 ID
+	RequestId string
+
+	// 总数
+	TotalCount int
+}
+
+// NewDescribePOPGWRequest will create request of DescribePOPGW action.
+func (c *UWSCClient) NewDescribePOPGWRequest() *DescribePOPGWRequest {
+	req := &DescribePOPGWRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribePOPGW
+
+查询UWAN虚拟路由器
+*/
+func (c *UWSCClient) DescribePOPGW(req *DescribePOPGWRequest) (*DescribePOPGWResponse, error) {
+	var err error
+	var res DescribePOPGWResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribePOPGW", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListAvailableRegionRequest is request schema for ListAvailableRegion action
+type ListAvailableRegionRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+}
+
+// ListAvailableRegionResponse is response schema for ListAvailableRegion action
+type ListAvailableRegionResponse struct {
+	response.CommonBase
+
+	// 消息
+	Message string
+
+	// 可用地域
+	Region []string
+}
+
+// NewListAvailableRegionRequest will create request of ListAvailableRegion action.
+func (c *UWSCClient) NewListAvailableRegionRequest() *ListAvailableRegionRequest {
+	req := &ListAvailableRegionRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListAvailableRegion
+
+获取可用地域
+*/
+func (c *UWSCClient) ListAvailableRegion(req *ListAvailableRegionRequest) (*ListAvailableRegionResponse, error) {
+	var err error
+	var res ListAvailableRegionResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListAvailableRegion", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateBWPackageRequest is request schema for UpdateBWPackage action
+type UpdateBWPackageRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 带宽包资源ID
+	BwId *string `required:"true"`
+
+	// 带宽峰值
+	BwMax *float64 `required:"true"`
+}
+
+// UpdateBWPackageResponse is response schema for UpdateBWPackage action
+type UpdateBWPackageResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewUpdateBWPackageRequest will create request of UpdateBWPackage action.
+func (c *UWSCClient) NewUpdateBWPackageRequest() *UpdateBWPackageRequest {
+	req := &UpdateBWPackageRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateBWPackage
+
+更新UWSC带宽包
+*/
+func (c *UWSCClient) UpdateBWPackage(req *UpdateBWPackageRequest) (*UpdateBWPackageResponse, error) {
+	var err error
+	var res UpdateBWPackageResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateBWPackage", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCEGatewayRequest is request schema for UpdateCEGateway action
+type UpdateCEGatewayRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 资源名称
+	Name *string `required:"false"`
+
+	// 公网IP
+	PublicIp *string `required:"false"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	// CE网关资源ID
+	VPNId *string `required:"true"`
+}
+
+// UpdateCEGatewayResponse is response schema for UpdateCEGateway action
+type UpdateCEGatewayResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewUpdateCEGatewayRequest will create request of UpdateCEGateway action.
+func (c *UWSCClient) NewUpdateCEGatewayRequest() *UpdateCEGatewayRequest {
+	req := &UpdateCEGatewayRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCEGateway
+
+更新CE网关
+*/
+func (c *UWSCClient) UpdateCEGateway(req *UpdateCEGatewayRequest) (*UpdateCEGatewayResponse, error) {
+	var err error
+	var res UpdateCEGatewayResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCEGateway", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateCETunnelParamIKEConf is request schema for complex param
+*/
+type UpdateCETunnelParamIKEConf struct {
+
+	// IKE 认证算法，取值："md5", "sha1", "sha2-256"
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// DH group，指定IKE交换密钥时使用的DH组。取值："1", "2", "5", "14", "15", "16"
+	DhGroup *string `required:"true"`
+
+	// IKE 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// IKE 协商模式，主模式(main)/野蛮模式(aggressive)，IKE V2时不使用该参数
+	ExchangeMode *string `required:"true"`
+
+	// 本端标识，取值：“auto”，“<ip-address>”
+	LocalId *string `required:"true"`
+
+	// IKE 共享密钥
+	PreSharedKey *string `required:"true"`
+
+	// 对端标识，取值：“auto”，“<ip-address>”
+	RemoteId *string `required:"true"`
+
+	// IKE SA的生存周期，取值范围：600-604800
+	SALifeTime *string `required:"true"`
+
+	// IKE 版本，取值： "ike v1"，"ike v2"
+	Version *string `required:"true"`
+}
+
+/*
+UpdateCETunnelParamDPDConf is request schema for complex param
+*/
+type UpdateCETunnelParamDPDConf struct {
+
+	// DPD超时后的动作,Enable为1（开启）时有效。可取值为clear（断开）、restart（重试）和 trap（流量触发）
+	Action *string `required:"false"`
+
+	// DPD探测间隔时间。dpdEnable为1（开启）时有效。单位为秒，默认为 10
+	Delay *string `required:"false"`
+
+	// 是否开启 DPD（对等体存活检测）功能。取值：0（关闭）、1（开启）
+	Enabled *string `required:"false"`
+
+	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。单位为秒。取值范围为 30-60（IKEv2 默认为 0）
+	Timeout *string `required:"false"`
+}
+
+/*
+UpdateCETunnelParamIPSecConf is request schema for complex param
+*/
+type UpdateCETunnelParamIPSecConf struct {
+
+	// 第二阶段协商的认证算法。取值：md5、sha1、sha2-256。
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// 需要和 VPC 互通的本地数据中心侧的网段，用于第二阶段协商。
+	CENetwork []string `required:"true"`
+
+	// IPSec 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法。取值：disabled、1、2、5、14、15、16。
+	PFSDhGroup *string `required:"true"`
+
+	// IPSec 安全协议，取值：“esp”，“ah”
+	Protocol *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：秒。取值范围：1200~604800
+	SALifeTime *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：字节 KB。取值范围：8000 – 20000000，默认使用SA超时时间
+	SALifetimeBytes *string `required:"false"`
+}
+
+/*
+UpdateCETunnelParamBGPConf is request schema for complex param
+*/
+type UpdateCETunnelParamBGPConf struct {
+
+	// Ucloud侧的自治系统号。
+	LocalAsn *string `required:"false"`
+
+	// 云端BGP地址。必须从BGP隧道网段内分配。
+	LocalIp *string `required:"false"`
+
+	// 对端BGP ASN号。
+	PeerAsn *string `required:"false"`
+
+	// 用户端BGP地址。必须从BGP隧道网段内分配。
+	PeerIp *string `required:"false"`
+
+	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
+	TunnelCidr *string `required:"false"`
+}
+
+// UpdateCETunnelRequest is request schema for UpdateCETunnel action
+type UpdateCETunnelRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	//
+	BGPConf *UpdateCETunnelParamBGPConf `required:"false"`
+
+	// IPSec 关闭后动作，枚举值：restart、trap、none
+	CloseAction *string `required:"false"`
+
+	//
+	DPDConf *UpdateCETunnelParamDPDConf `required:"false"`
+
+	//
+	IKEConf *UpdateCETunnelParamIKEConf `required:"false"`
+
+	//
+	IPSecConf *UpdateCETunnelParamIPSecConf `required:"false"`
+
+	// 资源ID
+	VPNTunnelId *string `required:"true"`
+}
+
+// UpdateCETunnelResponse is response schema for UpdateCETunnel action
+type UpdateCETunnelResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewUpdateCETunnelRequest will create request of UpdateCETunnel action.
+func (c *UWSCClient) NewUpdateCETunnelRequest() *UpdateCETunnelRequest {
+	req := &UpdateCETunnelRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCETunnel
+
+更新隧道配置
+*/
+func (c *UWSCClient) UpdateCETunnel(req *UpdateCETunnelRequest) (*UpdateCETunnelResponse, error) {
+	var err error
+	var res UpdateCETunnelResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCETunnel", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateCETunnelAttributeRequest is request schema for UpdateCETunnelAttribute action
+type UpdateCETunnelAttributeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 资源名称
+	Name *string `required:"false"`
+
+	// 备注
+	Remark *string `required:"false"`
+
+	// 资源ID
+	VPNTunnelId *string `required:"true"`
+}
+
+// UpdateCETunnelAttributeResponse is response schema for UpdateCETunnelAttribute action
+type UpdateCETunnelAttributeResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewUpdateCETunnelAttributeRequest will create request of UpdateCETunnelAttribute action.
+func (c *UWSCClient) NewUpdateCETunnelAttributeRequest() *UpdateCETunnelAttributeRequest {
+	req := &UpdateCETunnelAttributeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateCETunnelAttribute
+
+更新隧道属性
+*/
+func (c *UWSCClient) UpdateCETunnelAttribute(req *UpdateCETunnelAttributeRequest) (*UpdateCETunnelAttributeResponse, error) {
+	var err error
+	var res UpdateCETunnelAttributeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateCETunnelAttribute", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // UpdateExportLineRequest is request schema for UpdateExportLine action
 type UpdateExportLineRequest struct {
 	request.CommonBase
@@ -589,6 +1770,71 @@ func (c *UWSCClient) UpdateExportLine(req *UpdateExportLineRequest) (*UpdateExpo
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateExportLine", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdatePOPGWAttributeRequest is request schema for UpdatePOPGWAttribute action
+type UpdatePOPGWAttributeRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"false"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"false"`
+
+	// 资源名称
+	Name *string `required:"false"`
+
+	// UWAN虚拟路由器资源ID
+	PopGwId *string `required:"true"`
+
+	// 备注
+	Remark *string `required:"false"`
+}
+
+// UpdatePOPGWAttributeResponse is response schema for UpdatePOPGWAttribute action
+type UpdatePOPGWAttributeResponse struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+
+	// 请求 ID
+	RequestId string
+}
+
+// NewUpdatePOPGWAttributeRequest will create request of UpdatePOPGWAttribute action.
+func (c *UWSCClient) NewUpdatePOPGWAttributeRequest() *UpdatePOPGWAttributeRequest {
+	req := &UpdatePOPGWAttributeRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdatePOPGWAttribute
+
+更新UWAN虚拟路由器属性
+*/
+func (c *UWSCClient) UpdatePOPGWAttribute(req *UpdatePOPGWAttributeRequest) (*UpdatePOPGWAttributeResponse, error) {
+	var err error
+	var res UpdatePOPGWAttributeResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdatePOPGWAttribute", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
