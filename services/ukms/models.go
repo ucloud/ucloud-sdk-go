@@ -37,9 +37,6 @@ type KeyMetadata struct {
 	// 当前密钥版本。
 	KeyVersion int
 
-	// 密钥所属组织的数字 ID，来源于密钥关联的资源交易记录。
-	OrganizationId int
-
 	// 密钥材料来源。取值：UCLOUD_KMS、EXTERNAL；当前 CreateKey 仅支持 UCLOUD_KMS。
 	Origin string
 
@@ -116,35 +113,5 @@ type DEK struct {
 	Status string
 
 	// 更新时间，Unix 时间戳。
-	UpdateTime int
-}
-
-/*
-CMK - 用户主密钥 (Customer Master Key), 用于生成数据密钥 (Data Encryption Key), 加解密数据密钥.
-*/
-type CMK struct {
-
-	// 别名，与CMK一一对应
-	Alias string
-
-	// 创建时间
-	CreatedTime int
-
-	// 对密钥的描述说明
-	Description string
-
-	// CMK 的唯一标识符
-	KeyId string
-
-	// 密钥类型，如RSA、EC、DES
-	KeyType string
-
-	// 计划删除时间 时间戳
-	PlanDeleteTime int
-
-	// 密钥状态 "Pre-Active", "Active", "Deactivated", "Compromised", "Destroyed", "Destroyed Compromised"
-	Status string
-
-	// 更新时间
 	UpdateTime int
 }
