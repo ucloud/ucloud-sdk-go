@@ -78,6 +78,18 @@ type DownloadFileData struct {
 }
 
 /*
+FilterOptionInteger - 整数类型筛选选项
+*/
+type FilterOptionInteger struct {
+
+	// 显示名称
+	Name string
+
+	// 值
+	Value int
+}
+
+/*
 FilterOptionString - 字符串类型筛选选项
 */
 type FilterOptionString struct {
@@ -90,15 +102,30 @@ type FilterOptionString struct {
 }
 
 /*
-FilterOptionInteger - 整数类型筛选选项
+Pricing - 定价策略
 */
-type FilterOptionInteger struct {
+type Pricing struct {
 
-	// 显示名称
-	Name string
+	// 输出定价
+	Completion float64
 
-	// 值
-	Value int
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+
+	// 单位（中文），如“次” “百万”
+	Unit string
+
+	// 单位（English），如“Time” “Million”
+	UnitEn string
+
+	// 生视频定价
+	Video string
 }
 
 /*
@@ -144,33 +171,6 @@ type PriceTier struct {
 
 	// 该档位下的收费列表（有序数组）
 	Rates []PriceRate
-}
-
-/*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
-
-	// 单位（中文），如“次” “百万”
-	Unit string
-
-	// 单位（English），如“Time” “Million”
-	UnitEn string
-
-	// 生视频定价
-	Video string
 }
 
 /*
