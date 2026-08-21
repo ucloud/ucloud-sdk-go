@@ -96,21 +96,6 @@ type MetricUnit struct {
 }
 
 /*
-ConversionRule - 指标单位转换规则
-*/
-type ConversionRule struct {
-
-	// 转换因子
-	ConversionFactor int
-
-	// 来源
-	From string
-
-	// 目标
-	To string
-}
-
-/*
 Metirc - 指标
 */
 type Metirc struct {
@@ -159,6 +144,21 @@ type Metirc struct {
 
 	// 修改者
 	UpdatedBy string
+}
+
+/*
+ConversionRule - 指标单位转换规则
+*/
+type ConversionRule struct {
+
+	// 转换因子
+	ConversionFactor int
+
+	// 来源
+	From string
+
+	// 目标
+	To string
 }
 
 /*
@@ -456,6 +456,18 @@ type ListMonitorProduct struct {
 }
 
 /*
+TagEntry - 标签条目
+*/
+type TagEntry struct {
+
+	// 标签候选值列表
+	KeyList []string
+
+	// 标签名称
+	TagName string
+}
+
+/*
 MetricSample - 指标数据点（代码结构体：MetricPoint）
 */
 type MetricSample struct {
@@ -498,18 +510,6 @@ type MetricResult struct {
 }
 
 /*
-TagEntry - 标签条目
-*/
-type TagEntry struct {
-
-	// 标签候选值列表
-	KeyList []string
-
-	// 标签名称
-	TagName string
-}
-
-/*
 QueryMetricDataRespItem - 单个监控指标的查询结果
 */
 type QueryMetricDataRespItem struct {
@@ -543,6 +543,30 @@ type QueryMetricDataResp struct {
 }
 
 /*
+ResourceExtendAttrItem - 资源扩展属性项
+*/
+type ResourceExtendAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
+}
+
+/*
+LabelAttrItem - 标签扩展属性项
+*/
+type LabelAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
+}
+
+/*
 MetricSingleSample - 指标单个样本点结果
 */
 type MetricSingleSample struct {
@@ -567,30 +591,6 @@ type ResourceMonitorItem struct {
 
 	// 指标数据数组
 	MetricValues []MetricSingleSample
-}
-
-/*
-ResourceExtendAttrItem - 资源扩展属性项
-*/
-type ResourceExtendAttrItem struct {
-
-	// 键
-	Key string
-
-	// 值
-	Value string
-}
-
-/*
-LabelAttrItem - 标签扩展属性项
-*/
-type LabelAttrItem struct {
-
-	// 键
-	Key string
-
-	// 值
-	Value string
 }
 
 /*
