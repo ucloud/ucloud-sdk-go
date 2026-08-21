@@ -102,33 +102,6 @@ type FilterOptionInteger struct {
 }
 
 /*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
-
-	// 单位（中文），如“次” “百万”
-	Unit string
-
-	// 单位（English），如“Time” “Million”
-	UnitEn string
-
-	// 生视频定价
-	Video string
-}
-
-/*
 PriceRate - 该档位下的收费列表（有序数组）
 */
 type PriceRate struct {
@@ -171,6 +144,33 @@ type PriceTier struct {
 
 	// 该档位下的收费列表（有序数组）
 	Rates []PriceRate
+}
+
+/*
+Pricing - 定价策略
+*/
+type Pricing struct {
+
+	// 输出定价
+	Completion float64
+
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+
+	// 单位（中文），如“次” “百万”
+	Unit string
+
+	// 单位（English），如“Time” “Million”
+	UnitEn string
+
+	// 生视频定价
+	Video string
 }
 
 /*

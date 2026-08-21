@@ -3,6 +3,15 @@
 package cloudwatch
 
 /*
+AlertStrategyId - 告警策略id
+*/
+type AlertStrategyId struct {
+
+	// 告警策略id
+	AlertStrategyID int
+}
+
+/*
 AlertTemplate - 告警模板对象
 */
 type AlertTemplate struct {
@@ -18,6 +27,33 @@ type DelAlertTemplate struct {
 
 	// 模板ID
 	TemplateID []int
+}
+
+/*
+MetricDataAggregationMethod - 指标数据聚合方式
+*/
+type MetricDataAggregationMethod struct {
+
+	// 描述
+	Description string
+
+	// 是否是默认方式
+	IsDefault bool
+
+	// 标签
+	Label string
+
+	// 值
+	Value string
+}
+
+/*
+GetMetricDataAggregationMethodResp - 获取指标数据聚合方式返回结构
+*/
+type GetMetricDataAggregationMethodResp struct {
+
+	// 聚合方式列表
+	List []MetricDataAggregationMethod
 }
 
 /*
@@ -75,24 +111,6 @@ type MetricUnit struct {
 }
 
 /*
-MetricUnitConfig - 指标单位配置
-*/
-type MetricUnitConfig struct {
-
-	// 转换因子
-	ConversionFactor int
-
-	// 转换规则
-	ConversionRules []ConversionRule
-
-	// 指标中文名列表
-	UnitCnNames []string
-
-	// 指标英文名列表
-	UnitEnNames []string
-}
-
-/*
 Metirc - 指标
 */
 type Metirc struct {
@@ -144,6 +162,24 @@ type Metirc struct {
 }
 
 /*
+MetricUnitConfig - 指标单位配置
+*/
+type MetricUnitConfig struct {
+
+	// 转换因子
+	ConversionFactor int
+
+	// 转换规则
+	ConversionRules []ConversionRule
+
+	// 指标中文名列表
+	UnitCnNames []string
+
+	// 指标英文名列表
+	UnitEnNames []string
+}
+
+/*
 GetProductMetricsRespData - 产品指标查询结果
 */
 type GetProductMetricsRespData struct {
@@ -163,7 +199,10 @@ AlertRecord - 告警记录模型
 */
 type AlertRecord struct {
 
-	// 告警恢复时间
+	// 产品相关的额外属性列表
+	ContentAttrList []string
+
+	// 告警结束时间
 	EndAt int
 
 	// 告警等级
@@ -215,10 +254,10 @@ type AlertRecord struct {
 	Tag []string
 
 	// 比较符
-	ThresholdCompare string
+	ThresholdCompare int
 
 	// 告警阈值
-	ThresholdValue string
+	ThresholdValue int
 
 	// 指标单位名称
 	UnitName string
@@ -232,10 +271,10 @@ AlertRule - 告警规则
 */
 type AlertRule struct {
 
-	// 告警等级
+	// 告警等级。枚举值：P0,P1,P2,P3
 	Level string
 
-	// 指标ID
+	// 规则指标ID。参考该类型产品下返回的指标列表GetProductMetrics
 	MetricID int
 
 	// 指标名称
@@ -247,20 +286,26 @@ type AlertRule struct {
 	// 发送间隔
 	SendInterval int
 
-	// 触发周期
+	// 触发周期。枚举值：continuous连续 exponent 指数 single 不重复
 	SendPeriodType string
 
-	// 告警状态
+	// 告警状态。枚举值：0-关闭 1-开启
 	Status int
 
-	// 阈值比较方式
+	// 阈值比较方式枚举值比较方式:1->=2-<=3->4-<5-==6-!=
 	ThresholdCompare int
 
-	// 阈值
+	// 触发阈值
 	ThresholdValue float64
 
 	// 触发次数
 	TriggerCount int
+
+	// 单位id
+	UnitID int
+
+	// 单位名称
+	UnitName string
 }
 
 /*
@@ -327,6 +372,33 @@ type AlertStrategy struct {
 }
 
 /*
+ListAlertTemplate -
+*/
+type ListAlertTemplate struct {
+
+	// 公司id
+	CompanyID int
+
+	// 告警模板名称
+	Name string
+
+	// 产品类型(字符型)。参考ListMonitorProduct获取监控对象类型列表
+	ProductKey string
+
+	// 产品类型(数值型)。参考ListMonitorProduct获取监控对象类型列表
+	ProductType int
+
+	// 条件模板备注
+	Remark string
+
+	// 告警条件规则
+	RuleSet []AlertRule
+
+	// 模板Id
+	TemplateID int
+}
+
+/*
 Product - 云产品
 */
 type Product struct {
@@ -372,51 +444,93 @@ type ListMonitorProduct struct {
 }
 
 /*
-MetricSample - 指标样本点模型
+MetricSample - 指标数据点（代码结构体：MetricPoint）
 */
 type MetricSample struct {
 
 	// 时间戳
-	Timestamp float64
+	Timestamp int
 
 	// 样本值
 	Value float64
 }
 
 /*
-MetricResult - 指标查询结果
+MetricResult - 单条时间序列的结果（代码结构体：MetricValues）
 */
 type MetricResult struct {
 
 	// 资源的短id
 	ResourceId string
 
-	// TagMap是一个对象，key和value均为字符串。TagMap返回当前series的所有的tag的key和value。
-	TagMap string
+	// 资源名称
+	ResourceName string
 
-	//
+	// 资源标签列表。每项为 TagListItem：Tag（标签名）和 TagValue（标签值）。
+	TagList []int
+
+	// 指标数据点列表，元素为 MetricPoint
 	Values []MetricSample
 }
 
 /*
-QueryMetricDataRespItem - QueryMetricData接口返回结果集的元素模型
+ObjectType -
+*/
+type ObjectType struct {
+
+	// ID
+	Id int
+
+	// {type: spec|basic, key:string, name: string}[] -> JSON字符串
+	Metas string
+
+	// 资源类型ID
+	ObjectType string
+
+	// 资源类型
+	ObjectTypeKey string
+
+	// 产品中文名称
+	ProductCNName string
+
+	// 产品英文名称
+	ProductENName string
+
+	// 产品名称
+	ProductName string
+
+	// 产品子名称
+	ProductName1 string
+}
+
+/*
+QueryMetricDataRespItem - 单个监控指标的查询结果
 */
 type QueryMetricDataRespItem struct {
+
+	// 该指标查询的处理状态码
+	ErrCode int
+
+	// 该指标查询的状态说明
+	ErrMsg string
 
 	// 指标名
 	Metric string
 
-	//
+	// 查询到的时间序列列表
 	Results []MetricResult
 
-	// 指标查询结果的所有tag的key和对应的所有value数组。Tags格式为，key为tagkey字符串，value为tagValue的字符串数组。
-	Tags string
+	// 标签列表。每项为 TagEntry：TagName（标签名）和 KeyList（该标签的全部候选值）。
+	TagEntries []ObjectType
 }
 
 /*
-QueryMetricDataResp - QueryMetricData接口返回的结果
+QueryMetricDataResp - QueryMetricDataSet 接口返回的结果
 */
 type QueryMetricDataResp struct {
+
+	// 无效或无权限资源的 ID 列表
+	InvalidResourceIds []string
 
 	// 查询的结果集
 	List []QueryMetricDataRespItem
@@ -430,8 +544,8 @@ type MetricSingleSample struct {
 	// 指标名
 	Metric string
 
-	// 指标的tag的k-v对象
-	Tags string
+	// 指标标签列表
+	TagsList []Product
 
 	// 指标单个样本点对象
 	Value MetricSample
@@ -457,7 +571,10 @@ type ResourceSummary struct {
 	// 公司id
 	CompanyId int
 
-	// 资源的各项指标当前值，类型为：map[string][]MetricSingleSamplemap的key为指标名，value为样本点数组。
+	// 资源标签属性列表
+	LabelAttrList []ResourceMonitorItem
+
+	// 资源的各项指标当前值列表
 	MonitorAttr []ResourceMonitorItem
 
 	// 资源名称
@@ -477,6 +594,9 @@ type ResourceSummary struct {
 
 	// 地域中文名
 	RegionCN string
+
+	// 资源扩展属性列表
+	ResourceExtendAttrList []ResourceMonitorItem
 
 	// 资源id
 	ResourceId string
