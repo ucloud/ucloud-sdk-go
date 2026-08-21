@@ -749,6 +749,21 @@ type GenerateDataKeyPairRequest struct {
 // GenerateDataKeyPairResponse is response schema for GenerateDataKeyPair action
 type GenerateDataKeyPairResponse struct {
 	response.CommonBase
+
+	// 公钥（明文）。
+	DataPublicKey string
+
+	// 用于加密私钥的 KMS 密钥
+	KeyId string
+
+	// 生成的数据键对类型。
+	KeyPairSpec string
+
+	// 私钥的加密副本。
+	PrivateKeyCiphertextBlob string
+
+	// 私钥的明文副本。
+	PrivateKeyPlaintext string
 }
 
 // NewGenerateDataKeyPairRequest will create request of GenerateDataKeyPair action.
@@ -792,8 +807,14 @@ type GenerateDataKeyPairWithoutPlaintextRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
+	// 指定加密私钥时使用的加密上下文。
+	EncryptionContext *string `required:"false"`
+
 	// 密钥ID
 	KeyId *string `required:"true"`
+
+	// 指定生成的数据密钥对类型。
+	KeyPairSpec *string `required:"true"`
 }
 
 // GenerateDataKeyPairWithoutPlaintextResponse is response schema for GenerateDataKeyPairWithoutPlaintext action
@@ -979,6 +1000,9 @@ type GenerateRandomRequest struct {
 // GenerateRandomResponse is response schema for GenerateRandom action
 type GenerateRandomResponse struct {
 	response.CommonBase
+
+	// 随机字节串。
+	Plaintext string
 }
 
 // NewGenerateRandomRequest will create request of GenerateRandom action.
@@ -1292,80 +1316,6 @@ func (c *UKMSClient) ListKeys(req *ListKeysRequest) (*ListKeysResponse, error) {
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListKeys", &reqCopier, &res)
-	if err != nil {
-		return &res, err
-	}
-
-	return &res, nil
-}
-
-// ListScheduleDeletionKeysRequest is request schema for ListScheduleDeletionKeys action
-type ListScheduleDeletionKeysRequest struct {
-	request.CommonBase
-
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"false"`
-
-	// 按密钥 ID 或别名模糊过滤
-	Alias *string `required:"false"`
-
-	// 输出列表数量，默认返回200个
-	Limit *int `required:"false"`
-
-	// 输出列表起始位置，默认从0开始
-	Offset *int `required:"false"`
-
-	// 列表排序方式, 可选项: "-created_time", "created_time","plan_delete_time","-plan_delete_time";默认按-plan_delete_time 计划删除时间升序返回
-	OrderBy *string `required:"false"`
-
-	// UKMS 实例资源 ID
-	ResourceId *string `required:"false"`
-
-	// 排序方向，默认 desc
-	Sort *string `required:"false"`
-}
-
-// ListScheduleDeletionKeysResponse is response schema for ListScheduleDeletionKeys action
-type ListScheduleDeletionKeysResponse struct {
-	response.CommonBase
-
-	// 主密钥信息组成的列表
-	Objects []CMK
-
-	// 请求唯一标识符
-	RequestUuid string
-
-	// 操作结果
-	Status string
-
-	// 符合条件的总数, 不同于Limit
-	TotalCount int
-}
-
-// NewListScheduleDeletionKeysRequest will create request of ListScheduleDeletionKeys action.
-func (c *UKMSClient) NewListScheduleDeletionKeysRequest() *ListScheduleDeletionKeysRequest {
-	req := &ListScheduleDeletionKeysRequest{}
-
-	// setup request with client config
-	c.Client.SetupRequest(req)
-
-	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
-	return req
-}
-
-/*
-API: ListScheduleDeletionKeys
-
-获取计划删除密钥列表，调用ScheduleKeyDeletion命令后进入此列表， 默认30天后正式删除。正式删除前可调用CancelScheduleKeyDeletion恢复
-*/
-func (c *UKMSClient) ListScheduleDeletionKeys(req *ListScheduleDeletionKeysRequest) (*ListScheduleDeletionKeysResponse, error) {
-	var err error
-	var res ListScheduleDeletionKeysResponse
-
-	reqCopier := *req
-
-	err = c.Client.InvokeAction("ListScheduleDeletionKeys", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -1800,7 +1750,7 @@ func (c *UKMSClient) NewVerifyMacRequest() *VerifyMacRequest {
 /*
 API: VerifyMac
 
-验证签名
+验证指定消息、HMAC KMS 密钥和 MAC 算法的基于哈希的消息认证码 (HMAC)。为了验证 HMAC，VerifyMac 会使用您指定的消息、HMAC KMS 密钥和 MAC 算法计算 HMAC，并将计算出的 HMAC 与您指定的 HMAC 进行比较。如果两个 HMAC 完全相同，则验证成功；否则，验证失败。  验证结果表明，自计算 HMAC 以来，消息未发生更改，并且使用了指定的密钥来生成和验证 HMAC。
 */
 func (c *UKMSClient) VerifyMac(req *VerifyMacRequest) (*VerifyMacResponse, error) {
 	var err error
