@@ -57,21 +57,6 @@ type GetMetricDataAggregationMethodResp struct {
 }
 
 /*
-ConversionRule - 指标单位转换规则
-*/
-type ConversionRule struct {
-
-	// 转换因子
-	ConversionFactor int
-
-	// 来源
-	From string
-
-	// 目标
-	To string
-}
-
-/*
 MetricUnit - 指标单位
 */
 type MetricUnit struct {
@@ -108,6 +93,21 @@ type MetricUnit struct {
 
 	// 修改人
 	UpdatedBy string
+}
+
+/*
+ConversionRule - 指标单位转换规则
+*/
+type ConversionRule struct {
+
+	// 转换因子
+	ConversionFactor int
+
+	// 来源
+	From string
+
+	// 目标
+	To string
 }
 
 /*
@@ -195,12 +195,24 @@ type GetProductMetricsRespData struct {
 }
 
 /*
+ContentAttrItem - 告警内容属性项
+*/
+type ContentAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
+}
+
+/*
 AlertRecord - 告警记录模型
 */
 type AlertRecord struct {
 
 	// 产品相关的额外属性列表
-	ContentAttrList []string
+	ContentAttrList []ContentAttrItem
 
 	// 告警结束时间
 	EndAt int
@@ -456,6 +468,18 @@ type MetricSample struct {
 }
 
 /*
+TagListItem - 标签键值项
+*/
+type TagListItem struct {
+
+	// 标签名
+	Tag string
+
+	// 标签值
+	TagValue string
+}
+
+/*
 MetricResult - 单条时间序列的结果（代码结构体：MetricValues）
 */
 type MetricResult struct {
@@ -467,40 +491,22 @@ type MetricResult struct {
 	ResourceName string
 
 	// 资源标签列表。每项为 TagListItem：Tag（标签名）和 TagValue（标签值）。
-	TagList []int
+	TagList []TagListItem
 
 	// 指标数据点列表，元素为 MetricPoint
 	Values []MetricSample
 }
 
 /*
-ObjectType -
+TagEntry - 标签条目
 */
-type ObjectType struct {
+type TagEntry struct {
 
-	// ID
-	Id int
+	// 标签候选值列表
+	KeyList []string
 
-	// {type: spec|basic, key:string, name: string}[] -> JSON字符串
-	Metas string
-
-	// 资源类型ID
-	ObjectType string
-
-	// 资源类型
-	ObjectTypeKey string
-
-	// 产品中文名称
-	ProductCNName string
-
-	// 产品英文名称
-	ProductENName string
-
-	// 产品名称
-	ProductName string
-
-	// 产品子名称
-	ProductName1 string
+	// 标签名称
+	TagName string
 }
 
 /*
@@ -521,7 +527,7 @@ type QueryMetricDataRespItem struct {
 	Results []MetricResult
 
 	// 标签列表。每项为 TagEntry：TagName（标签名）和 KeyList（该标签的全部候选值）。
-	TagEntries []ObjectType
+	TagEntries []TagEntry
 }
 
 /*
@@ -545,7 +551,7 @@ type MetricSingleSample struct {
 	Metric string
 
 	// 指标标签列表
-	TagsList []Product
+	TagsList []TagListItem
 
 	// 指标单个样本点对象
 	Value MetricSample
@@ -564,6 +570,30 @@ type ResourceMonitorItem struct {
 }
 
 /*
+ResourceExtendAttrItem - 资源扩展属性项
+*/
+type ResourceExtendAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
+}
+
+/*
+LabelAttrItem - 标签扩展属性项
+*/
+type LabelAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
+}
+
+/*
 ResourceSummary - 单个资源的总览属性指标等信息
 */
 type ResourceSummary struct {
@@ -572,7 +602,7 @@ type ResourceSummary struct {
 	CompanyId int
 
 	// 资源标签属性列表
-	LabelAttrList []ResourceMonitorItem
+	LabelAttrList []LabelAttrItem
 
 	// 资源的各项指标当前值列表
 	MonitorAttr []ResourceMonitorItem
@@ -596,7 +626,7 @@ type ResourceSummary struct {
 	RegionCN string
 
 	// 资源扩展属性列表
-	ResourceExtendAttrList []ResourceMonitorItem
+	ResourceExtendAttrList []ResourceExtendAttrItem
 
 	// 资源id
 	ResourceId string

@@ -2636,7 +2636,7 @@ type DescribeUDBInstancePriceRequest struct {
 	// 规格类型ID,当SpecificationType为1时有效。取值见 ListUDBMachineType
 	MachineType *string `required:"false"`
 
-	// 内存限制(MB)，单位为MB.目前支持：2000-96000
+	// 内存限制(MB)，目前支持2000‑96000，按1000进制(1GB=1000MB)计算
 	MemoryLimit *int `required:"true"`
 
 	// DB购买多少个"计费时间单位"，默认值为1。比如：买2个月，Quantity就是2。如果计费单位是“按月”，并且Quantity为0，表示“购买到月底”
