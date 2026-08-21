@@ -19,6 +19,12 @@ type CreateUMInferAPIKeyRequest struct {
 	// 日限额，单位随用户所在渠道。126渠道单位为美元
 	DailyLimitAmount *string `required:"false"`
 
+	// API Key 禁止访问的模型列表。内容为数组格式。
+	DeniedModels *string `required:"false"`
+
+	// API Key 过期时间，Unix 时间戳，单位为秒。传 -1 表示永不过期。
+	ExpireTime *int `required:"false"`
+
 	// 全部模型访问开关，开启不受 GrantedModels 参数控制，关闭只能访问 GrantedModels 中添加模型
 	GrantAllModels *bool `required:"false"`
 
@@ -30,6 +36,9 @@ type CreateUMInferAPIKeyRequest struct {
 
 	// 是否开启推理日志
 	InferenceLogEnabled *int `required:"false"`
+
+	// 模型访问策略：whitelist 表示白名单模式，blacklist 表示黑名单模式。
+	ModelAccessMode *string `required:"false"`
 
 	// 是否modelverse可用 0: 启用 1: 禁用
 	ModelverseDisabled *int `required:"false"`
@@ -1425,6 +1434,12 @@ type UpdateUMInferAPIKeyRequest struct {
 	// 日限额，单位随用户所在渠道。126渠道单位为美元
 	DailyLimitAmount *string `required:"false"`
 
+	// 禁止访问的模型列表。当 ModelAccessMode=blacklist 时生效。数组类型，示例 ["gpt-4o", "sora-2"]
+	DeniedModels *string `required:"false"`
+
+	// API Key 过期时间，Unix 时间戳，单位为秒。传 -1 表示永不过期。
+	ExpireTime *int `required:"false"`
+
 	// 全部模型访问开关，开启不受 GrantedModels 参数控制，关闭只能访问 GrantedModels 中添加模型
 	GrantAllModels *bool `required:"false"`
 
@@ -1439,6 +1454,9 @@ type UpdateUMInferAPIKeyRequest struct {
 
 	// apikey的id
 	KeyId *string `required:"true"`
+
+	// 模型访问策略。可选值：whitelist（白名单模式，默认）或 blacklist（黑名单模式）。
+	ModelAccessMode *string `required:"false"`
 
 	// 是否modelverse可用 0: 启用 1: 禁用
 	ModelverseDisabled *int `required:"false"`
