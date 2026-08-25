@@ -90,6 +90,24 @@ type BGPConf struct {
 }
 
 /*
+DPDConf - DPD 配置
+*/
+type DPDConf struct {
+
+	// DPD 行为
+	Action string
+
+	// DPD 探测间隔时间
+	Delay int
+
+	// 是否开启 DPD
+	Enabled int
+
+	// DPD 探测超时时间
+	Timeout int
+}
+
+/*
 IKEConf - IKE配置信息
 */
 type IKEConf struct {
@@ -120,24 +138,6 @@ type IKEConf struct {
 
 	// 版本
 	Version string
-}
-
-/*
-DPDConf - DPD 配置
-*/
-type DPDConf struct {
-
-	// DPD 行为
-	Action string
-
-	// DPD 探测间隔时间
-	Delay int
-
-	// 是否开启 DPD
-	Enabled int
-
-	// DPD 探测超时时间
-	Timeout int
 }
 
 /*
