@@ -57,6 +57,39 @@ type GetMetricDataAggregationMethodResp struct {
 }
 
 /*
+ConversionRule - 指标单位转换规则
+*/
+type ConversionRule struct {
+
+	// 转换因子
+	ConversionFactor int
+
+	// 来源
+	From string
+
+	// 目标
+	To string
+}
+
+/*
+MetricUnitConfig - 指标单位配置
+*/
+type MetricUnitConfig struct {
+
+	// 转换因子
+	ConversionFactor int
+
+	// 转换规则
+	ConversionRules []ConversionRule
+
+	// 指标中文名列表
+	UnitCnNames []string
+
+	// 指标英文名列表
+	UnitEnNames []string
+}
+
+/*
 MetricUnit - 指标单位
 */
 type MetricUnit struct {
@@ -144,39 +177,6 @@ type Metirc struct {
 
 	// 修改者
 	UpdatedBy string
-}
-
-/*
-ConversionRule - 指标单位转换规则
-*/
-type ConversionRule struct {
-
-	// 转换因子
-	ConversionFactor int
-
-	// 来源
-	From string
-
-	// 目标
-	To string
-}
-
-/*
-MetricUnitConfig - 指标单位配置
-*/
-type MetricUnitConfig struct {
-
-	// 转换因子
-	ConversionFactor int
-
-	// 转换规则
-	ConversionRules []ConversionRule
-
-	// 指标中文名列表
-	UnitCnNames []string
-
-	// 指标英文名列表
-	UnitEnNames []string
 }
 
 /*
@@ -456,18 +456,6 @@ type ListMonitorProduct struct {
 }
 
 /*
-TagEntry - 标签条目
-*/
-type TagEntry struct {
-
-	// 标签候选值列表
-	KeyList []string
-
-	// 标签名称
-	TagName string
-}
-
-/*
 MetricSample - 指标数据点（代码结构体：MetricPoint）
 */
 type MetricSample struct {
@@ -507,6 +495,18 @@ type MetricResult struct {
 
 	// 指标数据点列表，元素为 MetricPoint
 	Values []MetricSample
+}
+
+/*
+TagEntry - 标签条目
+*/
+type TagEntry struct {
+
+	// 标签候选值列表
+	KeyList []string
+
+	// 标签名称
+	TagName string
 }
 
 /*

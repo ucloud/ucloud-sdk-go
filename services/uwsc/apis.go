@@ -190,27 +190,6 @@ func (c *UWSCClient) CreateCEGateway(req *CreateCEGatewayRequest) (*CreateCEGate
 }
 
 /*
-CreateCETunnelParamBGPConf is request schema for complex param
-*/
-type CreateCETunnelParamBGPConf struct {
-
-	// Ucloud侧的自治系统号。
-	LocalAsn *string `required:"false"`
-
-	// 云端BGP地址。必须从BGP隧道网段内分配。
-	LocalIp *string `required:"false"`
-
-	// 对端BGP ASN号。
-	PeerAsn *string `required:"false"`
-
-	// 用户端BGP地址。必须从BGP隧道网段内分配。
-	PeerIp *string `required:"false"`
-
-	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
-	TunnelCidr *string `required:"false"`
-}
-
-/*
 CreateCETunnelParamIKEConf is request schema for complex param
 */
 type CreateCETunnelParamIKEConf struct {
@@ -259,6 +238,27 @@ type CreateCETunnelParamDPDConf struct {
 
 	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。单位为秒。取值范围为 30-60（IKEv2 默认为 0）
 	Timeout *int `required:"false"`
+}
+
+/*
+CreateCETunnelParamBGPConf is request schema for complex param
+*/
+type CreateCETunnelParamBGPConf struct {
+
+	// Ucloud侧的自治系统号。
+	LocalAsn *string `required:"false"`
+
+	// 云端BGP地址。必须从BGP隧道网段内分配。
+	LocalIp *string `required:"false"`
+
+	// 对端BGP ASN号。
+	PeerAsn *string `required:"false"`
+
+	// 用户端BGP地址。必须从BGP隧道网段内分配。
+	PeerIp *string `required:"false"`
+
+	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
+	TunnelCidr *string `required:"false"`
 }
 
 /*
@@ -1490,33 +1490,6 @@ func (c *UWSCClient) UpdateCEGateway(req *UpdateCEGatewayRequest) (*UpdateCEGate
 }
 
 /*
-UpdateCETunnelParamIPSecConf is request schema for complex param
-*/
-type UpdateCETunnelParamIPSecConf struct {
-
-	// 第二阶段协商的认证算法。取值：md5、sha1、sha2-256。
-	AuthenticationAlgorithm *string `required:"true"`
-
-	// 需要和 VPC 互通的本地数据中心侧的网段，用于第二阶段协商。
-	CENetwork []string `required:"true"`
-
-	// IPSec 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
-	EncryptionAlgorithm *string `required:"true"`
-
-	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法。取值：disabled、1、2、5、14、15、16。
-	PFSDhGroup *string `required:"true"`
-
-	// IPSec 安全协议，取值：“esp”，“ah”
-	Protocol *string `required:"true"`
-
-	// 第二阶段协商出的 SA 的生存周期。单位：秒。取值范围：1200~604800
-	SALifeTime *string `required:"true"`
-
-	// 第二阶段协商出的 SA 的生存周期。单位：字节 KB。取值范围：8000 – 20000000，默认使用SA超时时间
-	SALifetimeBytes *string `required:"false"`
-}
-
-/*
 UpdateCETunnelParamIKEConf is request schema for complex param
 */
 type UpdateCETunnelParamIKEConf struct {
@@ -1547,6 +1520,33 @@ type UpdateCETunnelParamIKEConf struct {
 
 	// IKE 版本，取值： "ike v1"，"ike v2"
 	Version *string `required:"true"`
+}
+
+/*
+UpdateCETunnelParamIPSecConf is request schema for complex param
+*/
+type UpdateCETunnelParamIPSecConf struct {
+
+	// 第二阶段协商的认证算法。取值：md5、sha1、sha2-256。
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// 需要和 VPC 互通的本地数据中心侧的网段，用于第二阶段协商。
+	CENetwork []string `required:"true"`
+
+	// IPSec 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法。取值：disabled、1、2、5、14、15、16。
+	PFSDhGroup *string `required:"true"`
+
+	// IPSec 安全协议，取值：“esp”，“ah”
+	Protocol *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：秒。取值范围：1200~604800
+	SALifeTime *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：字节 KB。取值范围：8000 – 20000000，默认使用SA超时时间
+	SALifetimeBytes *string `required:"false"`
 }
 
 /*
