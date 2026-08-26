@@ -456,15 +456,15 @@ type ListMonitorProduct struct {
 }
 
 /*
-MetricSample - 指标数据点（代码结构体：MetricPoint）
+TagEntry - 标签条目
 */
-type MetricSample struct {
+type TagEntry struct {
 
-	// 时间戳
-	Timestamp int
+	// 标签候选值列表
+	KeyList []string
 
-	// 样本值
-	Value float64
+	// 标签名称
+	TagName string
 }
 
 /*
@@ -477,6 +477,18 @@ type TagListItem struct {
 
 	// 标签值
 	TagValue string
+}
+
+/*
+MetricSample - 指标数据点（代码结构体：MetricPoint）
+*/
+type MetricSample struct {
+
+	// 时间戳
+	Timestamp int
+
+	// 样本值
+	Value float64
 }
 
 /*
@@ -495,18 +507,6 @@ type MetricResult struct {
 
 	// 指标数据点列表，元素为 MetricPoint
 	Values []MetricSample
-}
-
-/*
-TagEntry - 标签条目
-*/
-type TagEntry struct {
-
-	// 标签候选值列表
-	KeyList []string
-
-	// 标签名称
-	TagName string
 }
 
 /*
@@ -540,18 +540,6 @@ type QueryMetricDataResp struct {
 
 	// 查询的结果集
 	List []QueryMetricDataRespItem
-}
-
-/*
-ResourceExtendAttrItem - 资源扩展属性项
-*/
-type ResourceExtendAttrItem struct {
-
-	// 键
-	Key string
-
-	// 值
-	Value string
 }
 
 /*
@@ -591,6 +579,18 @@ type ResourceMonitorItem struct {
 
 	// 指标数据数组
 	MetricValues []MetricSingleSample
+}
+
+/*
+ResourceExtendAttrItem - 资源扩展属性项
+*/
+type ResourceExtendAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
 }
 
 /*

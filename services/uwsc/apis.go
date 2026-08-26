@@ -190,6 +190,72 @@ func (c *UWSCClient) CreateCEGateway(req *CreateCEGatewayRequest) (*CreateCEGate
 }
 
 /*
+CreateCETunnelParamDPDConf is request schema for complex param
+*/
+type CreateCETunnelParamDPDConf struct {
+
+	// DPD超时后的动作,Enable为1（开启）时有效。可取值为clear（断开）、restart（重试）和 trap（流量触发）
+	Action *string `required:"false"`
+
+	// DPD探测间隔时间。dpdEnable为1（开启）时有效。单位为秒，默认为 10
+	Delay *int `required:"false"`
+
+	// 是否开启 DPD（对等体存活检测）功能。取值：0（关闭）、1（开启）
+	Enabled *int `required:"true"`
+
+	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。单位为秒。取值范围为 30-60（IKEv2 默认为 0）
+	Timeout *int `required:"false"`
+}
+
+/*
+CreateCETunnelParamIPSecConf is request schema for complex param
+*/
+type CreateCETunnelParamIPSecConf struct {
+
+	// 第二阶段协商的认证算法。取值：md5、sha1、sha2-256。
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// 需要和 VPC 互通的本地数据中心侧的网段，用于第二阶段协商。
+	CENetwork []string `required:"true"`
+
+	// IPSec 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法。取值：disabled、1、2、5、14、15、16。
+	PFSDhGroup *string `required:"true"`
+
+	// IPSec 安全协议，取值：“esp”，“ah”
+	Protocol *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：秒。取值范围：1200~604800
+	SALifeTime *string `required:"true"`
+
+	// 第二阶段协商出的 SA 的生存周期。单位：字节 KB。取值范围：8000 – 20000000，默认使用SA超时时间
+	SALifetimeBytes *string `required:"false"`
+}
+
+/*
+CreateCETunnelParamBGPConf is request schema for complex param
+*/
+type CreateCETunnelParamBGPConf struct {
+
+	// Ucloud侧的自治系统号。
+	LocalAsn *string `required:"false"`
+
+	// 云端BGP地址。必须从BGP隧道网段内分配。
+	LocalIp *string `required:"false"`
+
+	// 对端BGP ASN号。
+	PeerAsn *string `required:"false"`
+
+	// 用户端BGP地址。必须从BGP隧道网段内分配。
+	PeerIp *string `required:"false"`
+
+	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
+	TunnelCidr *string `required:"false"`
+}
+
+/*
 CreateCETunnelParamIKEConf is request schema for complex param
 */
 type CreateCETunnelParamIKEConf struct {
@@ -220,72 +286,6 @@ type CreateCETunnelParamIKEConf struct {
 
 	// IKE 版本，取值： "ike v1"，"ike v2"
 	Version *string `required:"true"`
-}
-
-/*
-CreateCETunnelParamDPDConf is request schema for complex param
-*/
-type CreateCETunnelParamDPDConf struct {
-
-	// DPD超时后的动作,Enable为1（开启）时有效。可取值为clear（断开）、restart（重试）和 trap（流量触发）
-	Action *string `required:"false"`
-
-	// DPD探测间隔时间。dpdEnable为1（开启）时有效。单位为秒，默认为 10
-	Delay *int `required:"false"`
-
-	// 是否开启 DPD（对等体存活检测）功能。取值：0（关闭）、1（开启）
-	Enabled *int `required:"true"`
-
-	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。单位为秒。取值范围为 30-60（IKEv2 默认为 0）
-	Timeout *int `required:"false"`
-}
-
-/*
-CreateCETunnelParamBGPConf is request schema for complex param
-*/
-type CreateCETunnelParamBGPConf struct {
-
-	// Ucloud侧的自治系统号。
-	LocalAsn *string `required:"false"`
-
-	// 云端BGP地址。必须从BGP隧道网段内分配。
-	LocalIp *string `required:"false"`
-
-	// 对端BGP ASN号。
-	PeerAsn *string `required:"false"`
-
-	// 用户端BGP地址。必须从BGP隧道网段内分配。
-	PeerIp *string `required:"false"`
-
-	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
-	TunnelCidr *string `required:"false"`
-}
-
-/*
-CreateCETunnelParamIPSecConf is request schema for complex param
-*/
-type CreateCETunnelParamIPSecConf struct {
-
-	// 第二阶段协商的认证算法。取值：md5、sha1、sha2-256。
-	AuthenticationAlgorithm *string `required:"true"`
-
-	// 需要和 VPC 互通的本地数据中心侧的网段，用于第二阶段协商。
-	CENetwork []string `required:"true"`
-
-	// IPSec 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
-	EncryptionAlgorithm *string `required:"true"`
-
-	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法。取值：disabled、1、2、5、14、15、16。
-	PFSDhGroup *string `required:"true"`
-
-	// IPSec 安全协议，取值：“esp”，“ah”
-	Protocol *string `required:"true"`
-
-	// 第二阶段协商出的 SA 的生存周期。单位：秒。取值范围：1200~604800
-	SALifeTime *string `required:"true"`
-
-	// 第二阶段协商出的 SA 的生存周期。单位：字节 KB。取值范围：8000 – 20000000，默认使用SA超时时间
-	SALifetimeBytes *string `required:"false"`
 }
 
 // CreateCETunnelRequest is request schema for CreateCETunnel action
@@ -1490,36 +1490,24 @@ func (c *UWSCClient) UpdateCEGateway(req *UpdateCEGatewayRequest) (*UpdateCEGate
 }
 
 /*
-UpdateCETunnelParamIKEConf is request schema for complex param
+UpdateCETunnelParamBGPConf is request schema for complex param
 */
-type UpdateCETunnelParamIKEConf struct {
+type UpdateCETunnelParamBGPConf struct {
 
-	// IKE 认证算法，取值："md5", "sha1", "sha2-256"
-	AuthenticationAlgorithm *string `required:"true"`
+	// Ucloud侧的自治系统号。
+	LocalAsn *string `required:"false"`
 
-	// DH group，指定IKE交换密钥时使用的DH组。取值："1", "2", "5", "14", "15", "16"
-	DhGroup *string `required:"true"`
+	// 云端BGP地址。必须从BGP隧道网段内分配。
+	LocalIp *string `required:"false"`
 
-	// IKE 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
-	EncryptionAlgorithm *string `required:"true"`
+	// 对端BGP ASN号。
+	PeerAsn *string `required:"false"`
 
-	// IKE 协商模式，主模式(main)/野蛮模式(aggressive)，IKE V2时不使用该参数
-	ExchangeMode *string `required:"true"`
+	// 用户端BGP地址。必须从BGP隧道网段内分配。
+	PeerIp *string `required:"false"`
 
-	// 本端标识，取值：“auto”，“<ip-address>”
-	LocalId *string `required:"true"`
-
-	// IKE 共享密钥
-	PreSharedKey *string `required:"true"`
-
-	// 对端标识，取值：“auto”，“<ip-address>”
-	RemoteId *string `required:"true"`
-
-	// IKE SA的生存周期，取值范围：600-604800
-	SALifeTime *string `required:"true"`
-
-	// IKE 版本，取值： "ike v1"，"ike v2"
-	Version *string `required:"true"`
+	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
+	TunnelCidr *string `required:"false"`
 }
 
 /*
@@ -1550,27 +1538,6 @@ type UpdateCETunnelParamIPSecConf struct {
 }
 
 /*
-UpdateCETunnelParamBGPConf is request schema for complex param
-*/
-type UpdateCETunnelParamBGPConf struct {
-
-	// Ucloud侧的自治系统号。
-	LocalAsn *string `required:"false"`
-
-	// 云端BGP地址。必须从BGP隧道网段内分配。
-	LocalIp *string `required:"false"`
-
-	// 对端BGP ASN号。
-	PeerAsn *string `required:"false"`
-
-	// 用户端BGP地址。必须从BGP隧道网段内分配。
-	PeerIp *string `required:"false"`
-
-	// BGP隧道网段。该网段需是一个在 169.254.0.0/16 内的掩码长度为 30 的网段。
-	TunnelCidr *string `required:"false"`
-}
-
-/*
 UpdateCETunnelParamDPDConf is request schema for complex param
 */
 type UpdateCETunnelParamDPDConf struct {
@@ -1586,6 +1553,39 @@ type UpdateCETunnelParamDPDConf struct {
 
 	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。单位为秒。取值范围为 30-60（IKEv2 默认为 0）
 	Timeout *string `required:"false"`
+}
+
+/*
+UpdateCETunnelParamIKEConf is request schema for complex param
+*/
+type UpdateCETunnelParamIKEConf struct {
+
+	// IKE 认证算法，取值："md5", "sha1", "sha2-256"
+	AuthenticationAlgorithm *string `required:"true"`
+
+	// DH group，指定IKE交换密钥时使用的DH组。取值："1", "2", "5", "14", "15", "16"
+	DhGroup *string `required:"true"`
+
+	// IKE 加密算法，取值："aes128", "aes192", "aes256", "aes512", "3des"
+	EncryptionAlgorithm *string `required:"true"`
+
+	// IKE 协商模式，主模式(main)/野蛮模式(aggressive)，IKE V2时不使用该参数
+	ExchangeMode *string `required:"true"`
+
+	// 本端标识，取值：“auto”，“<ip-address>”
+	LocalId *string `required:"true"`
+
+	// IKE 共享密钥
+	PreSharedKey *string `required:"true"`
+
+	// 对端标识，取值：“auto”，“<ip-address>”
+	RemoteId *string `required:"true"`
+
+	// IKE SA的生存周期，取值范围：600-604800
+	SALifeTime *string `required:"true"`
+
+	// IKE 版本，取值： "ike v1"，"ike v2"
+	Version *string `required:"true"`
 }
 
 // UpdateCETunnelRequest is request schema for UpdateCETunnel action

@@ -3,6 +3,141 @@
 package ulogservice
 
 /*
+LogAgent - logagent 信息
+*/
+type LogAgent struct {
+
+	// LogAgent版本
+	AgentVersion string
+
+	// 主机IP
+	HostIp string
+
+	// logagent id
+	InstanceId string
+
+	// 主机标签
+	Label string
+
+	// 离线时间，单位是ms
+	OffLineTime string
+
+	// logagent状态，NORMAL：正常，OFFLINE： 离线
+	Status string
+}
+
+/*
+MachineInfo - 机器信息
+*/
+type MachineInfo struct {
+
+	// 机器组ID
+	Id int
+
+	// 机器组Ip，数组类型
+	Ips string
+
+	// 机器组标签，数组类型
+	Labels []string
+
+	// LogAgent信息，数组类型
+	LogAgents LogAgent
+
+	// 机器组名称
+	Name string
+
+	// 机器组类型，取值有：LABEL和IP
+	Type string
+}
+
+/*
+FilePath - 文件路径
+*/
+type FilePath struct {
+
+	// 文件名
+	File string
+
+	// 路径
+	Path string
+}
+
+/*
+MachineGroup - 机器组
+*/
+type MachineGroup struct {
+
+	// 创建时间
+	CreateTime int
+
+	// 机器组ID
+	Id string
+
+	// 机器组名称
+	Name string
+
+	// 采集器识别类型：LABEL：机器标识，IP：IP类型
+	Type string
+
+	// 修改时间
+	UpdateTime int
+}
+
+/*
+CollectConf - 日志采集配置
+*/
+type CollectConf struct {
+
+	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
+	CollectPolicy string
+
+	// CreateTime
+	CreateTime int
+
+	// 当 LogType 为delimiter 或multi_line_delimiter时可选，支持多字符分隔，需要转换成Base64
+	Delimiter string
+
+	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
+	Encode string
+
+	// 日志提取正则表达式。当 logType 为正则模式 (如 full_regex,multi_line_full_regex) 时，用于从日志中提取字段。需要转换成Base64
+	ExtractRule string
+
+	// FilePaths
+	FilePaths []FilePath
+
+	// Id
+	Id int
+
+	// 索引字段key，是一个数组
+	Keys string
+
+	// 日志解析类型，决定了如何结构化日志。可选值: json:json 格式，delimiter:分隔符，full_regex:完全正则，multi_line_full_regex:多行完全正则，multi_line_delimiter: 多行分隔符正则，minimal_list:单行全文日志,multi_line:多行全文日志
+	LogType string
+
+	// 机器组ID，是一个数组
+	MachineGroups []MachineGroup
+
+	// 行首正则表达式。当 logType 为多行模式 (如 multi_line 或 multi_line_full_regex或multi_line_delimiter) 时，用于标识一条新日志的开始。需要转换成Base64
+	MatchRule string
+
+	// 日志采集配置名称
+	Name string
+
+	// State
+	State int
+
+	// 日志主题ID
+	TopicId int
+
+	// 如果 UnMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
+	UnMatchKey string
+
+	// updateTime
+	UpdateTime int
+}
+
+/*
 LogSetInfo -
 */
 type LogSetInfo struct {

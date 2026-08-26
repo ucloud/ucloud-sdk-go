@@ -74,6 +74,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uhub"
 	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/ulighthost"
+	"github.com/ucloud/ucloud-sdk-go/services/ulogservice"
 	"github.com/ucloud/ucloud-sdk-go/services/umongodb"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
 	"github.com/ucloud/ucloud-sdk-go/services/upfs"
@@ -83,7 +84,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/usms"
 	"github.com/ucloud/ucloud-sdk-go/services/utsdb"
 	"github.com/ucloud/ucloud-sdk-go/services/uvms"
-	"github.com/ucloud/ucloud-sdk-go/services/uwsc"
 )
 
 func TestMain(m *testing.M) {
@@ -252,6 +252,9 @@ func testSetup() {
 	spec.AddFixture("ULightHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ulighthost.NewClient(&cfg, &credential), nil
 	}))
+	spec.AddFixture("ULogService", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return ulogservice.NewClient(&cfg, &credential), nil
+	}))
 	spec.AddFixture("UMem", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return umem.NewClient(&cfg, &credential), nil
 	}))
@@ -287,9 +290,6 @@ func testSetup() {
 	}))
 	spec.AddFixture("UVMS", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uvms.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("UWSC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return uwsc.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil

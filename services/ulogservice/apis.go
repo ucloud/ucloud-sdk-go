@@ -9,6 +9,166 @@ import (
 
 // ULogService API Schema
 
+// BindULogServiceGroupToCollectConfRequest is request schema for BindULogServiceGroupToCollectConf action
+type BindULogServiceGroupToCollectConfRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 采集配置id
+	CollectConfId *int `required:"true"`
+
+	// 机器组ID，是一个数组
+	MachineGroupIds *int `required:"false"`
+
+	// 日志主题ID
+	TopicId *string `required:"true"`
+}
+
+// BindULogServiceGroupToCollectConfResponse is response schema for BindULogServiceGroupToCollectConf action
+type BindULogServiceGroupToCollectConfResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewBindULogServiceGroupToCollectConfRequest will create request of BindULogServiceGroupToCollectConf action.
+func (c *ULogServiceClient) NewBindULogServiceGroupToCollectConfRequest() *BindULogServiceGroupToCollectConfRequest {
+	req := &BindULogServiceGroupToCollectConfRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: BindULogServiceGroupToCollectConf
+
+日志主题采集配置绑定机器组
+*/
+func (c *ULogServiceClient) BindULogServiceGroupToCollectConf(req *BindULogServiceGroupToCollectConfRequest) (*BindULogServiceGroupToCollectConfResponse, error) {
+	var err error
+	var res BindULogServiceGroupToCollectConfResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BindULogServiceGroupToCollectConf", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+CreateULogServiceCollectConfParamFilePaths is request schema for complex param
+*/
+type CreateULogServiceCollectConfParamFilePaths struct {
+
+	// 定义采集路径的文件名，数组类型
+	File *string `required:"false"`
+
+	// 定义采集路径，数组类型
+	Path *string `required:"false"`
+}
+
+// CreateULogServiceCollectConfRequest is request schema for CreateULogServiceCollectConf action
+type CreateULogServiceCollectConfRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
+	CollectPolicy *string `required:"true"`
+
+	// 当 LogType 为delimiter 或multi_line_delimiter时可选，支持多字符分隔，需要转换成Base64
+	Delimiter *string `required:"false"`
+
+	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
+	Encode *string `required:"false"`
+
+	// 日志提取正则表达式。当 logType 为正则模式 (如 full_regex,multi_line_full_regex) 时，用于从日志中提取字段。需要转换成Base64
+	ExtractRule *string `required:"false"`
+
+	//
+	FilePaths []CreateULogServiceCollectConfParamFilePaths `required:"false"`
+
+	// 索引字段key，是一个数组
+	Keys []string `required:"false"`
+
+	// 日志解析类型，决定了如何结构化日志。可选值: json:json 格式，delimiter:分隔符，full_regex:完全正则，multi_line_full_regex:多行完全正则，multi_line_delimiter: 多行分隔符正则，minimal_list:单行全文日志,multi_line:多行全文日志
+	LogType *string `required:"true"`
+
+	// 行首正则表达式。当 logType 为多行模式 (如 multi_line 或 multi_line_full_regex或multi_line_delimiter) 时，用于标识一条新日志的开始。需要转换成Base64
+	MatchRule *string `required:"false"`
+
+	// 配置名称
+	Name *string `required:"true"`
+
+	// 日志主题ID
+	TopicId *string `required:"true"`
+
+	// 如果 UnMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
+	UnMatchKey *string `required:"false"`
+}
+
+// CreateULogServiceCollectConfResponse is response schema for CreateULogServiceCollectConf action
+type CreateULogServiceCollectConfResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewCreateULogServiceCollectConfRequest will create request of CreateULogServiceCollectConf action.
+func (c *ULogServiceClient) NewCreateULogServiceCollectConfRequest() *CreateULogServiceCollectConfRequest {
+	req := &CreateULogServiceCollectConfRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateULogServiceCollectConf
+
+创建日志主题采集配置
+*/
+func (c *ULogServiceClient) CreateULogServiceCollectConf(req *CreateULogServiceCollectConfRequest) (*CreateULogServiceCollectConfResponse, error) {
+	var err error
+	var res CreateULogServiceCollectConfResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateULogServiceCollectConf", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateULogServiceLogSetRequest is request schema for CreateULogServiceLogSet action
 type CreateULogServiceLogSetRequest struct {
 	request.CommonBase
@@ -61,6 +221,74 @@ func (c *ULogServiceClient) CreateULogServiceLogSet(req *CreateULogServiceLogSet
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("CreateULogServiceLogSet", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// CreateULogServiceMachineGroupRequest is request schema for CreateULogServiceMachineGroup action
+type CreateULogServiceMachineGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 日志服务实例资源ID
+	InstanceId *string `required:"true"`
+
+	// 机器IP，如果Type是IP，那么Ips可以填写IP，是一个数组
+	Ips *string `required:"false"`
+
+	// 采集客户端识别标识，是一个数组
+	Labels *string `required:"false"`
+
+	// 机器组名称;格式校验：^[\w]{1,23}$
+	Name *string `required:"true"`
+
+	// 采集客户端识别模式;可选值 LABEL | IP;
+	Type *string `required:"true"`
+}
+
+// CreateULogServiceMachineGroupResponse is response schema for CreateULogServiceMachineGroup action
+type CreateULogServiceMachineGroupResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewCreateULogServiceMachineGroupRequest will create request of CreateULogServiceMachineGroup action.
+func (c *ULogServiceClient) NewCreateULogServiceMachineGroupRequest() *CreateULogServiceMachineGroupRequest {
+	req := &CreateULogServiceMachineGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CreateULogServiceMachineGroup
+
+创建机器组
+*/
+func (c *ULogServiceClient) CreateULogServiceMachineGroup(req *CreateULogServiceMachineGroupRequest) (*CreateULogServiceMachineGroupResponse, error) {
+	var err error
+	var res CreateULogServiceMachineGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CreateULogServiceMachineGroup", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -130,6 +358,65 @@ func (c *ULogServiceClient) CreateULogServiceTopic(req *CreateULogServiceTopicRe
 	return &res, nil
 }
 
+// DeleteULogServiceCollectConfRequest is request schema for DeleteULogServiceCollectConf action
+type DeleteULogServiceCollectConfRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 日志主题采集配置ID
+	CollectConfId *int `required:"true"`
+
+	// 日志主题ID
+	TopicId *string `required:"true"`
+}
+
+// DeleteULogServiceCollectConfResponse is response schema for DeleteULogServiceCollectConf action
+type DeleteULogServiceCollectConfResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewDeleteULogServiceCollectConfRequest will create request of DeleteULogServiceCollectConf action.
+func (c *ULogServiceClient) NewDeleteULogServiceCollectConfRequest() *DeleteULogServiceCollectConfRequest {
+	req := &DeleteULogServiceCollectConfRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteULogServiceCollectConf
+
+删除日志主题采集配置
+*/
+func (c *ULogServiceClient) DeleteULogServiceCollectConf(req *DeleteULogServiceCollectConfRequest) (*DeleteULogServiceCollectConfResponse, error) {
+	var err error
+	var res DeleteULogServiceCollectConfResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteULogServiceCollectConf", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteULogServiceLogSetRequest is request schema for DeleteULogServiceLogSet action
 type DeleteULogServiceLogSetRequest struct {
 	request.CommonBase
@@ -176,6 +463,62 @@ func (c *ULogServiceClient) DeleteULogServiceLogSet(req *DeleteULogServiceLogSet
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteULogServiceLogSet", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteULogServiceMachineGroupRequest is request schema for DeleteULogServiceMachineGroup action
+type DeleteULogServiceMachineGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 删除的机器组ID
+	Id *int `required:"true"`
+}
+
+// DeleteULogServiceMachineGroupResponse is response schema for DeleteULogServiceMachineGroup action
+type DeleteULogServiceMachineGroupResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewDeleteULogServiceMachineGroupRequest will create request of DeleteULogServiceMachineGroup action.
+func (c *ULogServiceClient) NewDeleteULogServiceMachineGroupRequest() *DeleteULogServiceMachineGroupRequest {
+	req := &DeleteULogServiceMachineGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteULogServiceMachineGroup
+
+删除机器组
+*/
+func (c *ULogServiceClient) DeleteULogServiceMachineGroup(req *DeleteULogServiceMachineGroupRequest) (*DeleteULogServiceMachineGroupResponse, error) {
+	var err error
+	var res DeleteULogServiceMachineGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteULogServiceMachineGroup", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -236,6 +579,127 @@ func (c *ULogServiceClient) DeleteULogServiceTopic(req *DeleteULogServiceTopicRe
 	return &res, nil
 }
 
+// DescribeULogServiceMachineGroupRequest is request schema for DescribeULogServiceMachineGroup action
+type DescribeULogServiceMachineGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 机器组ID
+	Id *string `required:"true"`
+}
+
+// DescribeULogServiceMachineGroupResponse is response schema for DescribeULogServiceMachineGroup action
+type DescribeULogServiceMachineGroupResponse struct {
+	response.CommonBase
+
+	// 机器组信息
+	MachineGroup MachineInfo
+
+	// 错误信息
+	Message string
+}
+
+// NewDescribeULogServiceMachineGroupRequest will create request of DescribeULogServiceMachineGroup action.
+func (c *ULogServiceClient) NewDescribeULogServiceMachineGroupRequest() *DescribeULogServiceMachineGroupRequest {
+	req := &DescribeULogServiceMachineGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeULogServiceMachineGroup
+
+查询日志采集机器组
+*/
+func (c *ULogServiceClient) DescribeULogServiceMachineGroup(req *DescribeULogServiceMachineGroupRequest) (*DescribeULogServiceMachineGroupResponse, error) {
+	var err error
+	var res DescribeULogServiceMachineGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeULogServiceMachineGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListULogServiceCollectConfRequest is request schema for ListULogServiceCollectConf action
+type ListULogServiceCollectConfRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 采集配置ID
+	CollectConfId *int `required:"false"`
+
+	// 日志主题ID
+	TopicId *int `required:"true"`
+}
+
+// ListULogServiceCollectConfResponse is response schema for ListULogServiceCollectConf action
+type ListULogServiceCollectConfResponse struct {
+	response.CommonBase
+
+	// 日志采集配置列表
+	CollectConfs CollectConf
+
+	// 错误信息
+	Message string
+}
+
+// NewListULogServiceCollectConfRequest will create request of ListULogServiceCollectConf action.
+func (c *ULogServiceClient) NewListULogServiceCollectConfRequest() *ListULogServiceCollectConfRequest {
+	req := &ListULogServiceCollectConfRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListULogServiceCollectConf
+
+查询日志主题采集配置列表
+*/
+func (c *ULogServiceClient) ListULogServiceCollectConf(req *ListULogServiceCollectConfRequest) (*ListULogServiceCollectConfResponse, error) {
+	var err error
+	var res ListULogServiceCollectConfResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListULogServiceCollectConf", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListULogServiceLogSetRequest is request schema for ListULogServiceLogSet action
 type ListULogServiceLogSetRequest struct {
 	request.CommonBase
@@ -283,6 +747,63 @@ func (c *ULogServiceClient) ListULogServiceLogSet(req *ListULogServiceLogSetRequ
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListULogServiceLogSet", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListULogServiceMachineGroupRequest is request schema for ListULogServiceMachineGroup action
+type ListULogServiceMachineGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+}
+
+// ListULogServiceMachineGroupResponse is response schema for ListULogServiceMachineGroup action
+type ListULogServiceMachineGroupResponse struct {
+	response.CommonBase
+
+	// 机器组信息列表
+	MachineGroups []MachineGroup
+
+	// 错误信息
+	Message string
+}
+
+// NewListULogServiceMachineGroupRequest will create request of ListULogServiceMachineGroup action.
+func (c *ULogServiceClient) NewListULogServiceMachineGroupRequest() *ListULogServiceMachineGroupRequest {
+	req := &ListULogServiceMachineGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListULogServiceMachineGroup
+
+查看机器组列表
+*/
+func (c *ULogServiceClient) ListULogServiceMachineGroup(req *ListULogServiceMachineGroupRequest) (*ListULogServiceMachineGroupResponse, error) {
+	var err error
+	var res ListULogServiceMachineGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListULogServiceMachineGroup", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -425,6 +946,172 @@ func (c *ULogServiceClient) QueryULogServiceLog(req *QueryULogServiceLogRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("QueryULogServiceLog", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateULogServiceCollectConfParamFilePaths is request schema for complex param
+*/
+type UpdateULogServiceCollectConfParamFilePaths struct {
+
+	// 定义采集路径的文件名，数组类型
+	File *string `required:"false"`
+
+	// 定义采集路径，数组类型
+	Path *string `required:"false"`
+}
+
+// UpdateULogServiceCollectConfRequest is request schema for UpdateULogServiceCollectConf action
+type UpdateULogServiceCollectConfRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 日志主题采集配置ID
+	CollectConfId *int `required:"true"`
+
+	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
+	CollectPolicy *string `required:"true"`
+
+	// 当 LogType 为delimiter 或multi_line_delimiter时可选，支持多字符分隔，需要转换成Base64
+	Delimiter *string `required:"false"`
+
+	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
+	Encode *string `required:"false"`
+
+	// 日志提取正则表达式。当 logType 为正则模式 (如 full_regex,multi_line_full_regex) 时，用于从日志中提取字段。需要转换成Base64
+	ExtractRule *string `required:"false"`
+
+	//
+	FilePaths []UpdateULogServiceCollectConfParamFilePaths `required:"false"`
+
+	// 索引字段key，是一个数组
+	Keys []string `required:"false"`
+
+	// 日志解析类型，决定了如何结构化日志。可选值: json:json 格式，delimiter:分隔符，full_regex:完全正则，multi_line_full_regex:多行完全正则，multi_line_delimiter: 多行分隔符正则，minimal_list:单行全文日志,multi_line:多行全文日志
+	LogType *string `required:"true"`
+
+	// 行首正则表达式。当 logType 为多行模式 (如 multi_line 或 multi_line_full_regex或multi_line_delimiter) 时，用于标识一条新日志的开始。需要转换成Base64
+	MatchRule *string `required:"false"`
+
+	// 日志主题ID
+	TopicId *string `required:"true"`
+
+	// 如果 UnMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
+	UnMatchKey *string `required:"false"`
+}
+
+// UpdateULogServiceCollectConfResponse is response schema for UpdateULogServiceCollectConf action
+type UpdateULogServiceCollectConfResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewUpdateULogServiceCollectConfRequest will create request of UpdateULogServiceCollectConf action.
+func (c *ULogServiceClient) NewUpdateULogServiceCollectConfRequest() *UpdateULogServiceCollectConfRequest {
+	req := &UpdateULogServiceCollectConfRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateULogServiceCollectConf
+
+修改日志主题采集配置
+*/
+func (c *ULogServiceClient) UpdateULogServiceCollectConf(req *UpdateULogServiceCollectConfRequest) (*UpdateULogServiceCollectConfResponse, error) {
+	var err error
+	var res UpdateULogServiceCollectConfResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateULogServiceCollectConf", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UpdateULogServiceMachineGroupRequest is request schema for UpdateULogServiceMachineGroup action
+type UpdateULogServiceMachineGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 机器组ID
+	Id *int `required:"true"`
+
+	// 机器IP，如果Type是IP，那么Ips可以填写IP，是一个数组
+	Ips *string `required:"false"`
+
+	// 采集客户端识别标识，数组类型
+	Labels *string `required:"false"`
+
+	// 机器组名称; 格式校验：^[\w]{1,255}$
+	Name *string `required:"true"`
+
+	// 采集客户端识别模式;可选值 LABEL | IP;
+	Type *string `required:"true"`
+}
+
+// UpdateULogServiceMachineGroupResponse is response schema for UpdateULogServiceMachineGroup action
+type UpdateULogServiceMachineGroupResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+}
+
+// NewUpdateULogServiceMachineGroupRequest will create request of UpdateULogServiceMachineGroup action.
+func (c *ULogServiceClient) NewUpdateULogServiceMachineGroupRequest() *UpdateULogServiceMachineGroupRequest {
+	req := &UpdateULogServiceMachineGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateULogServiceMachineGroup
+
+更新日志机器组
+*/
+func (c *ULogServiceClient) UpdateULogServiceMachineGroup(req *UpdateULogServiceMachineGroupRequest) (*UpdateULogServiceMachineGroupResponse, error) {
+	var err error
+	var res UpdateULogServiceMachineGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateULogServiceMachineGroup", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
