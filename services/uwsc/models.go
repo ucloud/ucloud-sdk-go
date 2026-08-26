@@ -42,33 +42,6 @@ type VPNInfo struct {
 }
 
 /*
-IPSecConf - IPSec配置信息
-*/
-type IPSecConf struct {
-
-	// 认证算法
-	AuthenticationAlgorithm string
-
-	// 客户网段
-	CENetwork []string
-
-	// 加密算法
-	EncryptionAlgorithm string
-
-	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法
-	PFSDhGroup string
-
-	// 安全协议
-	Protocol string
-
-	// 第二阶段的 SA 的生存周期
-	SALifeTime string
-
-	// 第二阶段的 SA 的生存周期
-	SALifetimeBytes string
-}
-
-/*
 BGPConf - CE隧道 BGP配置
 */
 type BGPConf struct {
@@ -87,24 +60,6 @@ type BGPConf struct {
 
 	// BGP隧道网段
 	TunnelCidr string
-}
-
-/*
-DPDConf - DPD 配置
-*/
-type DPDConf struct {
-
-	// DPD 行为
-	Action string
-
-	// DPD 探测间隔时间
-	Delay int
-
-	// 是否开启 DPD
-	Enabled int
-
-	// DPD 探测超时时间
-	Timeout int
 }
 
 /*
@@ -138,6 +93,51 @@ type IKEConf struct {
 
 	// 版本
 	Version string
+}
+
+/*
+IPSecConf - IPSec配置信息
+*/
+type IPSecConf struct {
+
+	// 认证算法
+	AuthenticationAlgorithm string
+
+	// 客户网段
+	CENetwork []string
+
+	// 加密算法
+	EncryptionAlgorithm string
+
+	// 第二阶段协商使用的 Diffie-Hellman 密钥交换算法
+	PFSDhGroup string
+
+	// 安全协议
+	Protocol string
+
+	// 第二阶段的 SA 的生存周期
+	SALifeTime string
+
+	// 第二阶段的 SA 的生存周期
+	SALifetimeBytes string
+}
+
+/*
+DPDConf - DPD 配置
+*/
+type DPDConf struct {
+
+	// DPD 行为
+	Action string
+
+	// DPD 探测间隔时间
+	Delay int
+
+	// 是否开启 DPD
+	Enabled int
+
+	// DPD 探测超时时间
+	Timeout int
 }
 
 /*
@@ -336,33 +336,6 @@ type WhiteListInfo struct {
 }
 
 /*
-UGNBWInfo - UGN带宽包信息
-*/
-type UGNBWInfo struct {
-
-	// UGN带宽包ID
-	UGNBWId string
-
-	// UGN带宽包名称
-	UGNBWName string
-}
-
-/*
-UGNInfo - UGN信息
-*/
-type UGNInfo struct {
-
-	// UGN 带宽包信息
-	UGNBWInfos []UGNBWInfo
-
-	// 云联网 ID
-	UGNId string
-
-	// 云联网名称
-	UGNName string
-}
-
-/*
 BWPackageInfo - UWAN虚拟路由器带宽包信息
 */
 type BWPackageInfo struct {
@@ -390,6 +363,33 @@ type BWPackageInfo struct {
 
 	// 备注
 	Remark string
+}
+
+/*
+UGNBWInfo - UGN带宽包信息
+*/
+type UGNBWInfo struct {
+
+	// UGN带宽包ID
+	UGNBWId string
+
+	// UGN带宽包名称
+	UGNBWName string
+}
+
+/*
+UGNInfo - UGN信息
+*/
+type UGNInfo struct {
+
+	// UGN 带宽包信息
+	UGNBWInfos []UGNBWInfo
+
+	// 云联网 ID
+	UGNId string
+
+	// 云联网名称
+	UGNName string
 }
 
 /*
