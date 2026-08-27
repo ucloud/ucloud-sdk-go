@@ -1050,7 +1050,7 @@ type GetKeyRotationStatusRequest struct {
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
-	ResourceId *string `required:"false"`
+	ResourceId *string `required:"true"`
 }
 
 // GetKeyRotationStatusResponse is response schema for GetKeyRotationStatus action
@@ -1062,6 +1062,9 @@ type GetKeyRotationStatusResponse struct {
 
 	// 是否开启自动轮转。取值：true、false。
 	KeyRotationEnabled bool
+
+	// 最后一次轮转时间，Unix 时间戳。
+	LastRotationDate int
 
 	// 下次轮转时间，Unix 时间戳。
 	NextRotationDate int

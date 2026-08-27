@@ -164,6 +164,9 @@ type DescribeUPFSVolumePriceRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
 	// Year， Month默认: Month
 	ChargeType *string `required:"false"`
 
@@ -225,6 +228,9 @@ type DescribeUPFSVolumeUpgradePriceRequest struct {
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
 	// 文件系统大小
 	Size *string `required:"true"`
@@ -341,6 +347,9 @@ type RemoveUPFSVolumeRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
 	// 文件系统ID
 	VolumeId *string `required:"true"`
 }
@@ -390,6 +399,9 @@ type UpdateUPFSVolumeInfoRequest struct {
 
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
 
 	// UPFS文件系统备注（文件系统名称／备注至少传入其中一个）
 	Remark *string `required:"false"`
