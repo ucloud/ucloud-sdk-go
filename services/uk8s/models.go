@@ -3,54 +3,6 @@
 package uk8s
 
 /*
-DiskSet - 节点磁盘信息
-*/
-type DiskSet struct {
-
-	// 备份方案，枚举类型：BASIC_SNAPSHOT,普通快照；DATAARK,方舟。无快照则不返回该字段。
-	BackupType string
-
-	// 磁盘长ID
-	DiskId string
-
-	// LOCAL_NOMAL| CLOUD_NORMAL| LOCAL_SSD| CLOUD_SSD|EXCLUSIVE_LOCAL_DISK
-	DiskType string
-
-	// 磁盘盘符
-	Drive string
-
-	// Yes: 加密 No: 非加密
-	Encrypted string
-
-	// 当前主机的IOPS值
-	IOPS int
-
-	// True| False
-	IsBoot string
-
-	// UDisk名字（仅当磁盘是UDisk时返回）
-	Name string
-
-	// 磁盘大小，单位: GB
-	Size int
-
-	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
-	Type string
-}
-
-/*
-LoopbackClientCert - API Server 回环客户端证书
-*/
-type LoopbackClientCert struct {
-
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
-}
-
-/*
 IPSet - 节点的IP信息
 */
 type IPSet struct {
@@ -87,6 +39,42 @@ type IPSet struct {
 }
 
 /*
+DiskSet - 节点磁盘信息
+*/
+type DiskSet struct {
+
+	// 备份方案，枚举类型：BASIC_SNAPSHOT,普通快照；DATAARK,方舟。无快照则不返回该字段。
+	BackupType string
+
+	// 磁盘长ID
+	DiskId string
+
+	// LOCAL_NOMAL| CLOUD_NORMAL| LOCAL_SSD| CLOUD_SSD|EXCLUSIVE_LOCAL_DISK
+	DiskType string
+
+	// 磁盘盘符
+	Drive string
+
+	// Yes: 加密 No: 非加密
+	Encrypted string
+
+	// 当前主机的IOPS值
+	IOPS int
+
+	// True| False
+	IsBoot string
+
+	// UDisk名字（仅当磁盘是UDisk时返回）
+	Name string
+
+	// 磁盘大小，单位: GB
+	Size int
+
+	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
+	Type string
+}
+
+/*
 SecGroupId - 安全组
 */
 type SecGroupId struct {
@@ -99,6 +87,45 @@ type SecGroupId struct {
 
 	// 安全组优先级
 	Priority string
+}
+
+/*
+Autoscaler -
+*/
+type Autoscaler struct {
+
+	// 打开/关闭
+	Enabled int
+
+	// 静默时间
+	ScaleDownDelayAfterAdd string
+
+	// GPU缩容阈值
+	ScaleDownGpuUtilizationThreshold string
+
+	// 缩容触发延时
+	ScaleDownUnneededTime string
+
+	// CPU缩容阈值
+	ScaleDownUtilizationThreshold string
+
+	//
+	UpdateTime int
+
+	// 伸缩器版本
+	Version string
+}
+
+/*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
 }
 
 /*
@@ -162,33 +189,6 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
-}
-
-/*
-Autoscaler -
-*/
-type Autoscaler struct {
-
-	// 打开/关闭
-	Enabled int
-
-	// 静默时间
-	ScaleDownDelayAfterAdd string
-
-	// GPU缩容阈值
-	ScaleDownGpuUtilizationThreshold string
-
-	// 缩容触发延时
-	ScaleDownUnneededTime string
-
-	// CPU缩容阈值
-	ScaleDownUtilizationThreshold string
-
-	//
-	UpdateTime int
-
-	// 伸缩器版本
-	Version string
 }
 
 /*
@@ -516,6 +516,24 @@ type ClusterSet struct {
 }
 
 /*
+ReservedResource - 预留资源
+*/
+type ReservedResource struct {
+
+	// CPU
+	CPU string
+
+	// 存储
+	EphemeralStorage string
+
+	// 内存
+	Memory string
+
+	// Pid
+	Pid string
+}
+
+/*
 EIP - 节点EIP
 */
 type EIP struct {
@@ -537,24 +555,6 @@ type EIP struct {
 }
 
 /*
-ReservedResource - 预留资源
-*/
-type ReservedResource struct {
-
-	// CPU
-	CPU string
-
-	// 存储
-	EphemeralStorage string
-
-	// 内存
-	Memory string
-
-	// Pid
-	Pid string
-}
-
-/*
 EvictionCondition - 驱逐条件或宽限时间
 */
 type EvictionCondition struct {
@@ -570,15 +570,6 @@ type EvictionCondition struct {
 
 	// 节点剩余inodes驱逐条件或宽限时间。
 	NodefsInodesFree string
-}
-
-/*
-NetworkInterface - 网络接口
-*/
-type NetworkInterface struct {
-
-	// EIP
-	EIP EIP
 }
 
 /*
@@ -615,6 +606,15 @@ type KubeletConfiguration struct {
 
 	// 系统预留资源，ReservedResource类型
 	SystemReserved ReservedResource
+}
+
+/*
+NetworkInterface - 网络接口
+*/
+type NetworkInterface struct {
+
+	// EIP
+	EIP EIP
 }
 
 /*
@@ -744,4 +744,169 @@ type NodeGroupSet struct {
 
 	// 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	Zone string
+}
+
+/*
+ULSLabels - ULSLabels
+*/
+type ULSLabels struct {
+
+	// 要匹配的标签的 Key。
+	Key string
+
+	// 要匹配的标签的值。
+	Value string
+
+	// 标签值的匹配操作符。可选值: in, notin。
+	ValueOperator string
+}
+
+/*
+ULSPodLabelsMatch - ULSPodLabelsMatch
+*/
+type ULSPodLabelsMatch struct {
+
+	// 一个标签选择器数组，用于定义匹配的标签条件。
+	Labels []ULSLabels
+
+	// 要匹配的命名空间。namespaceOperator 存在时必需。
+	Namespace string
+
+	// 命名空间名称的匹配操作符。可选值: in, notin。
+	NamespaceOperator string
+}
+
+/*
+ULSFilePaths - ULS采集文件路径
+*/
+type ULSFilePaths struct {
+
+	// 采集文件
+	File string
+
+	// 定义采集路径
+	Path string
+}
+
+/*
+ULSInputMetadata - ULSInputMetadata
+*/
+type ULSInputMetadata struct {
+
+	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
+	Container string
+
+	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
+	Labels string
+}
+
+/*
+ULSInputDetail - ULSInputDetail
+*/
+type ULSInputDetail struct {
+
+	// 采集路径，数组。
+	FilePaths []ULSFilePaths
+
+	// 定义哪些容器相关的元数据需要附加到日志中。
+	InputMetadata ULSInputMetadata
+
+	// 日志输入类型。当前主要支持 container_file，表示采集容器标准输出或文件。
+	Type string
+}
+
+/*
+ULSWorkloadMatch - ULSWorkloadMatch
+*/
+type ULSWorkloadMatch struct {
+
+	// 工作负载的名称。
+	Name string
+
+	// 工作负载所在的命名空间。
+	Namespace string
+
+	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
+	Type string
+}
+
+/*
+ULSMatchRule - ULSMatchRule
+*/
+type ULSMatchRule struct {
+
+	// 要匹配的容器名称，*表示所有容器，用逗号分隔
+	Container string
+
+	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
+	ContainerOperator string
+
+	// 按 Pod 的标签进行匹配，提供更灵活的选择。
+	PodLabels ULSPodLabelsMatch
+
+	// 按工作负载进行匹配。
+	Workloads []ULSWorkloadMatch
+}
+
+/*
+ULSExtractRule - 定义日志的提取、解析和格式化规则。
+*/
+type ULSExtractRule struct {
+
+	// 行首正则表达式。当 logType 为多行模式 (如 multiline_log 或 multiline_fullregex_log) 时，用于标识一条新日志的开始。
+	BeginningRegex string
+
+	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
+	CollectPolicy string
+
+	// 当 LogType 为delimiter_log 时可选，可选字段 ' ',' ','|',';',','
+	Delimiter string
+
+	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
+	Encode string
+
+	// 日志提取正则表达式。当 logType 为正则模式 (如 fullregex_log 或 multiline_fullregex_log) 时，用于从日志中提取字段。
+	LogRegex string
+
+	// 日志解析类型，决定了如何结构化日志。
+	LogType string
+
+	// timeKey 对应的时间格式。如： %Y-%m-%d %H:%M:%S
+	TimeFormat string
+
+	// 指定时间字段。
+	TimeKey string
+
+	// 如果 unMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
+	UnMatchKey string
+
+	// 是否上传解析失败的日志。true 表示上传，false 表示丢弃。默认为 false。
+	UnMatchUpload string
+}
+
+/*
+ULSLogConfig - ULSLogConfig
+*/
+type ULSLogConfig struct {
+
+	// uk8s集群id
+	ClusterId string
+
+	// 定义日志的提取、解析和格式化规则。见 ULSExtractRule
+	ExtractRule ULSExtractRule
+
+	// 定义日志的输入来源（例如容器文件）。见 ULSInputDetail
+	InputDetail ULSInputDetail
+
+	// 机器组
+	MachineGroup string
+
+	// 定义此采集规则要匹配的目标 Pod 或工作负载。见 ULSMatchRule
+	MatchRule ULSMatchRule
+
+	// 采集配置规则名称
+	Name string
+
+	// 日志服务中用于接收日志的目标 Topic ID。
+	TopicID string
 }
