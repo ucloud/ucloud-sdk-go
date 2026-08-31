@@ -132,7 +132,7 @@ type CreateKeyRequest struct {
 	Alias *string `required:"false"`
 
 	// 是否开启删除保护。可选值：true、false；默认 false。
-	DeletionProtection *string `required:"false"`
+	DeletionProtection *bool `required:"false"`
 
 	// 密钥描述，最多 8192 字符。
 	Description *string `required:"false"`
@@ -143,7 +143,7 @@ type CreateKeyRequest struct {
 	// 密钥用途
 	KeyUsage *string `required:"false"`
 
-	// 密钥材料来源，默认 UCLOUD_KMS。当前仅支持 UCLOUD_KMS；EXTERNAL 为 BYOK 规划值，当前传入会返回 100660。
+	// 密钥材料来源，默认 UCLOUD_KMS。当前仅支持 UCLOUD_KMS；EXTERNAL 为 BYOK 规划值，当前传入会返回 1230。
 	Origin *string `required:"false"`
 
 	// UKMS 实例资源 ID。
@@ -202,7 +202,7 @@ type DecryptRequest struct {
 	// 待解密密文。
 	CiphertextBlob *string `required:"true"`
 
-	// 解密算法。可选值：SYMMETRIC_DEFAULT、RSAES_OAEP_SHA_1、RSAES_OAEP_SHA_256；非对称密钥解密时必填或使用默认 RSAES_OAEP_SHA_256。
+	// 解密算法。可选值：SYMMETRIC_DEFAULT、RSAES_OAEP_SHA_1、RSAES_OAEP_SHA_256；非对称密钥解密时必填。
 	EncryptionAlgorithm *string `required:"false"`
 
 	// 加密上下文，JSON Object。该参数内容会记录在日志中，请勿传入密码、密钥、令牌等敏感信息。
@@ -379,7 +379,7 @@ type DisableKeyRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥 DB 数字 ID。
+	// 密钥资源长 ID
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -436,7 +436,7 @@ type DisableKeyRotationRequest struct {
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
-	ResourceId *string `required:"false"`
+	ResourceId *string `required:"true"`
 }
 
 // DisableKeyRotationResponse is response schema for DisableKeyRotation action
@@ -485,7 +485,7 @@ type EnableKeyRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥 DB 数字 ID。
+	// 密钥资源长 ID
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -1340,7 +1340,7 @@ type RotateKeyOnDemandRequest struct {
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
-	ResourceId *string `required:"false"`
+	ResourceId *string `required:"true"`
 }
 
 // RotateKeyOnDemandResponse is response schema for RotateKeyOnDemand action
@@ -1395,7 +1395,7 @@ type ScheduleKeyDeletionRequest struct {
 	// 删除等待天数，取值范围为 7~30 天；未填写时默认为 30 天。
 	DeleteDay *int `required:"false"`
 
-	// 密钥 DB 数字 ID。
+	// 密钥资源长 ID
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
