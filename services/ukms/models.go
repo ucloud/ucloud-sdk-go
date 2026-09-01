@@ -7,6 +7,9 @@ KeyMetadata - DescribeKey 返回的密钥元数据
 */
 type KeyMetadata struct {
 
+	// ucs:ukms:{Region}:{CompanyId}:key/{KeyId}
+	Arn string
+
 	// 创建时间，Unix 时间戳。
 	CreationDate int
 
@@ -37,10 +40,13 @@ type KeyMetadata struct {
 	// 当前密钥版本。
 	KeyVersion int
 
+	// 所属组织数字 ID
+	OrganizationId int
+
 	// 密钥材料来源。取值：UCLOUD_KMS、EXTERNAL；当前 CreateKey 仅支持 UCLOUD_KMS。
 	Origin string
 
-	// 密钥所属项目的对外别名，格式为 org-xxx。该值由项目数字 ID 解析得到，可能因项目别名查询失败而为空。
+	// 密钥所属项目ID。
 	ProjectId string
 
 	// 密钥所属的 UKMS 实例资源 ID。
@@ -94,7 +100,7 @@ type DEK struct {
 	// 密钥所属组织的数字 ID，来源于密钥关联的资源交易记录。
 	OrganizationId int
 
-	// 密钥来源，由 Origin 派生。取值：ucloud、import。当前 CreateKey 仅支持 ucloud。
+	// 密钥来源，由 Origin 派生。取值：UCLOUD_KMS、EXTERNAL。当前 CreateKey 仅支持 UCLOUD_KMS。
 	Origin string
 
 	// 计划删除时间，Unix 时间戳。
