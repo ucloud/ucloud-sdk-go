@@ -75,7 +75,7 @@ type CreateAliasRequest struct {
 	// 密钥别名，格式为 alias/name。
 	AliasName *string `required:"true"`
 
-	// 密钥 ID、ARN 或别名。
+	// 密钥 ID 或别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -432,7 +432,7 @@ type DisableKeyRotationRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥 ID、ARN 或别名。
+	// 密钥 ID或别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -600,7 +600,7 @@ type EncryptRequest struct {
 	// 加密上下文，JSON Object。该参数内容会记录在日志中，请勿传入密码、密钥、令牌等敏感信息。
 	EncryptionContext *string `required:"false"`
 
-	// 密钥资源长 ID、ARN 或别名。
+	// 密钥资源长 ID 或别名。
 	KeyId *string `required:"true"`
 
 	// 待加密明文，Base64 编码。
@@ -866,7 +866,7 @@ type GenerateDataKeyWithoutPlaintextRequest struct {
 	// 加密上下文，JSON Object。
 	EncryptionContext *string `required:"false"`
 
-	// 密钥资源长 ID、ARN 或别名。
+	// 密钥资源长 ID或别名。
 	KeyId *string `required:"true"`
 
 	// 数据密钥规格。可选值：AES_256、AES_128；默认 AES_256。与 NumberOfBytes 二选一，同时填写时 NumberOfBytes 优先。
@@ -1046,7 +1046,7 @@ type GetKeyRotationStatusRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥资源长 ID、ARN 或别名。
+	// 密钥资源长 ID 或别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -1117,7 +1117,7 @@ type GetPublicKeyRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥 ID、ARN 或别名。
+	// 密钥 ID 或 别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -1336,7 +1336,7 @@ type RotateKeyOnDemandRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥 ID、ARN 或别名。
+	// 密钥 ID 或别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -1448,7 +1448,7 @@ type SignRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥资源长 ID、ARN 或别名。
+	// 密钥资源长 ID 或别名。
 	KeyId *string `required:"true"`
 
 	// 消息类型。可选值：RAW、DIGEST；默认 RAW。
@@ -1522,7 +1522,7 @@ type UpdateAliasRequest struct {
 	// 密钥别名，格式为 alias/name。
 	AliasName *string `required:"true"`
 
-	// 密钥 ID、ARN 或别名。
+	// 密钥 ID 或别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -1578,7 +1578,7 @@ type UpdateKeyDescriptionRequest struct {
 	// 新的密钥描述，最多 8192 字符；空字符串表示清空描述。
 	Description *string `required:"true"`
 
-	// 密钥资源长 ID、ARN 或别名。
+	// 密钥资源长 ID或别名。
 	KeyId *string `required:"true"`
 
 	// UKMS 实例资源 ID。
@@ -1637,7 +1637,7 @@ type VerifyRequest struct {
 	// [公共参数] 地域。参见地域和可用区列表。
 	// Region *string `required:"true"`
 
-	// 密钥 ID、ARN 或别名。
+	// 密钥 ID或别名。
 	KeyId *string `required:"true"`
 
 	// 消息类型。可选值：RAW、DIGEST；默认 RAW。

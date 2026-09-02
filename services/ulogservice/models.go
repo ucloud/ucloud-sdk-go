@@ -51,15 +51,18 @@ type MachineInfo struct {
 }
 
 /*
-FilePath - 文件路径
+TopicField - 索引字段
 */
-type FilePath struct {
+type TopicField struct {
 
-	// 文件名
-	File string
+	// 索引名称
+	FieldName string
 
-	// 路径
-	Path string
+	// 索引类型，可取的值有: long, double, text
+	FieldType string
+
+	// 是否保留字段，true表示保留字段，false表示非保留字段
+	IsReserved bool
 }
 
 /*
@@ -81,6 +84,18 @@ type MachineGroup struct {
 
 	// 修改时间
 	UpdateTime int
+}
+
+/*
+FilePath - 文件路径
+*/
+type FilePath struct {
+
+	// 文件名
+	File string
+
+	// 路径
+	Path string
 }
 
 /*

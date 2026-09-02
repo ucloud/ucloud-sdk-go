@@ -3,39 +3,66 @@
 package uk8s
 
 /*
-IPSet - 节点的IP信息
+SecGroupId - 安全组
 */
-type IPSet struct {
+type SecGroupId struct {
 
-	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
-	Bandwidth int
+	// 安全组名称
+	Id string
 
-	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
-	Default string
+	// 安全组id
+	Name string
 
-	// IP地址
-	IP string
+	// 安全组优先级
+	Priority string
+}
 
-	// IP资源ID (内网IP无对应的资源ID)
-	IPId string
+/*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
 
-	// IP 地址分配模式
-	IPMode string
+	// 证书到期时间
+	ExpireTime int
 
-	// 网卡的 MAC 地址
-	Mac string
+	// 证书是否进入过期告警状态
+	Warn bool
+}
 
-	// 虚拟网卡 Id
-	NetworkInterfaceId string
+/*
+Autoscaler -
+*/
+type Autoscaler struct {
 
-	// IP 所在的 子网 Id
-	SubnetId string
+	// 打开/关闭
+	Enabled int
 
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
+	// 静默时间
+	ScaleDownDelayAfterAdd string
 
-	// IP 所属的 VPC Id
-	VPCId string
+	// GPU缩容阈值
+	ScaleDownGpuUtilizationThreshold string
+
+	// 缩容触发延时
+	ScaleDownUnneededTime string
+
+	// CPU缩容阈值
+	ScaleDownUtilizationThreshold string
+
+	//
+	UpdateTime int
+
+	// 伸缩器版本
+	Version string
+}
+
+/*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
 }
 
 /*
@@ -75,57 +102,39 @@ type DiskSet struct {
 }
 
 /*
-SecGroupId - 安全组
+IPSet - 节点的IP信息
 */
-type SecGroupId struct {
+type IPSet struct {
 
-	// 安全组名称
-	Id string
+	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	Bandwidth int
 
-	// 安全组id
-	Name string
+	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
+	Default string
 
-	// 安全组优先级
-	Priority string
-}
+	// IP地址
+	IP string
 
-/*
-Autoscaler -
-*/
-type Autoscaler struct {
+	// IP资源ID (内网IP无对应的资源ID)
+	IPId string
 
-	// 打开/关闭
-	Enabled int
+	// IP 地址分配模式
+	IPMode string
 
-	// 静默时间
-	ScaleDownDelayAfterAdd string
+	// 网卡的 MAC 地址
+	Mac string
 
-	// GPU缩容阈值
-	ScaleDownGpuUtilizationThreshold string
+	// 虚拟网卡 Id
+	NetworkInterfaceId string
 
-	// 缩容触发延时
-	ScaleDownUnneededTime string
+	// IP 所在的 子网 Id
+	SubnetId string
 
-	// CPU缩容阈值
-	ScaleDownUtilizationThreshold string
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
 
-	//
-	UpdateTime int
-
-	// 伸缩器版本
-	Version string
-}
-
-/*
-LoopbackClientCert - API Server 回环客户端证书
-*/
-type LoopbackClientCert struct {
-
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
+	// IP 所属的 VPC Id
+	VPCId string
 }
 
 /*
@@ -189,15 +198,6 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
 }
 
 /*
@@ -516,24 +516,6 @@ type ClusterSet struct {
 }
 
 /*
-ReservedResource - 预留资源
-*/
-type ReservedResource struct {
-
-	// CPU
-	CPU string
-
-	// 存储
-	EphemeralStorage string
-
-	// 内存
-	Memory string
-
-	// Pid
-	Pid string
-}
-
-/*
 EIP - 节点EIP
 */
 type EIP struct {
@@ -552,6 +534,33 @@ type EIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId string
+}
+
+/*
+NetworkInterface - 网络接口
+*/
+type NetworkInterface struct {
+
+	// EIP
+	EIP EIP
+}
+
+/*
+ReservedResource - 预留资源
+*/
+type ReservedResource struct {
+
+	// CPU
+	CPU string
+
+	// 存储
+	EphemeralStorage string
+
+	// 内存
+	Memory string
+
+	// Pid
+	Pid string
 }
 
 /*
@@ -606,15 +615,6 @@ type KubeletConfiguration struct {
 
 	// 系统预留资源，ReservedResource类型
 	SystemReserved ReservedResource
-}
-
-/*
-NetworkInterface - 网络接口
-*/
-type NetworkInterface struct {
-
-	// EIP
-	EIP EIP
 }
 
 /*
@@ -747,33 +747,39 @@ type NodeGroupSet struct {
 }
 
 /*
-ULSLabels - ULSLabels
+ULSExtractRule - 定义日志的提取、解析和格式化规则。
 */
-type ULSLabels struct {
+type ULSExtractRule struct {
 
-	// 要匹配的标签的 Key。
-	Key string
+	// 行首正则表达式。当 logType 为多行模式 (如 multiline_log 或 multiline_fullregex_log) 时，用于标识一条新日志的开始。
+	BeginningRegex string
 
-	// 要匹配的标签的值。
-	Value string
+	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
+	CollectPolicy string
 
-	// 标签值的匹配操作符。可选值: in, notin。
-	ValueOperator string
-}
+	// 当 LogType 为delimiter_log 时可选，可选字段 ' ',' ','|',';',','
+	Delimiter string
 
-/*
-ULSPodLabelsMatch - ULSPodLabelsMatch
-*/
-type ULSPodLabelsMatch struct {
+	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
+	Encode string
 
-	// 一个标签选择器数组，用于定义匹配的标签条件。
-	Labels []ULSLabels
+	// 日志提取正则表达式。当 logType 为正则模式 (如 fullregex_log 或 multiline_fullregex_log) 时，用于从日志中提取字段。
+	LogRegex string
 
-	// 要匹配的命名空间。namespaceOperator 存在时必需。
-	Namespace string
+	// 日志解析类型，决定了如何结构化日志。
+	LogType string
 
-	// 命名空间名称的匹配操作符。可选值: in, notin。
-	NamespaceOperator string
+	// timeKey 对应的时间格式。如： %Y-%m-%d %H:%M:%S
+	TimeFormat string
+
+	// 指定时间字段。
+	TimeKey string
+
+	// 如果 unMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
+	UnMatchKey string
+
+	// 是否上传解析失败的日志。true 表示上传，false 表示丢弃。默认为 false。
+	UnMatchUpload string
 }
 
 /*
@@ -816,6 +822,36 @@ type ULSInputDetail struct {
 }
 
 /*
+ULSLabels - ULSLabels
+*/
+type ULSLabels struct {
+
+	// 要匹配的标签的 Key。
+	Key string
+
+	// 要匹配的标签的值。
+	Value string
+
+	// 标签值的匹配操作符。可选值: in, notin。
+	ValueOperator string
+}
+
+/*
+ULSPodLabelsMatch - ULSPodLabelsMatch
+*/
+type ULSPodLabelsMatch struct {
+
+	// 一个标签选择器数组，用于定义匹配的标签条件。
+	Labels []ULSLabels
+
+	// 要匹配的命名空间。namespaceOperator 存在时必需。
+	Namespace string
+
+	// 命名空间名称的匹配操作符。可选值: in, notin。
+	NamespaceOperator string
+}
+
+/*
 ULSWorkloadMatch - ULSWorkloadMatch
 */
 type ULSWorkloadMatch struct {
@@ -846,42 +882,6 @@ type ULSMatchRule struct {
 
 	// 按工作负载进行匹配。
 	Workloads []ULSWorkloadMatch
-}
-
-/*
-ULSExtractRule - 定义日志的提取、解析和格式化规则。
-*/
-type ULSExtractRule struct {
-
-	// 行首正则表达式。当 logType 为多行模式 (如 multiline_log 或 multiline_fullregex_log) 时，用于标识一条新日志的开始。
-	BeginningRegex string
-
-	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
-	CollectPolicy string
-
-	// 当 LogType 为delimiter_log 时可选，可选字段 ' ',' ','|',';',','
-	Delimiter string
-
-	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
-	Encode string
-
-	// 日志提取正则表达式。当 logType 为正则模式 (如 fullregex_log 或 multiline_fullregex_log) 时，用于从日志中提取字段。
-	LogRegex string
-
-	// 日志解析类型，决定了如何结构化日志。
-	LogType string
-
-	// timeKey 对应的时间格式。如： %Y-%m-%d %H:%M:%S
-	TimeFormat string
-
-	// 指定时间字段。
-	TimeKey string
-
-	// 如果 unMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
-	UnMatchKey string
-
-	// 是否上传解析失败的日志。true 表示上传，false 表示丢弃。默认为 false。
-	UnMatchUpload string
 }
 
 /*
