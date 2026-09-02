@@ -638,6 +638,62 @@ func (c *ULogServiceClient) DescribeULogServiceMachineGroup(req *DescribeULogSer
 	return &res, nil
 }
 
+// GetULogServiceTopicFieldRequest is request schema for GetULogServiceTopicField action
+type GetULogServiceTopicFieldRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 主题Id
+	TopicId *string `required:"true"`
+}
+
+// GetULogServiceTopicFieldResponse is response schema for GetULogServiceTopicField action
+type GetULogServiceTopicFieldResponse struct {
+	response.CommonBase
+
+	// 索引字段数据，是一个数组
+	Data []TopicField
+}
+
+// NewGetULogServiceTopicFieldRequest will create request of GetULogServiceTopicField action.
+func (c *ULogServiceClient) NewGetULogServiceTopicFieldRequest() *GetULogServiceTopicFieldRequest {
+	req := &GetULogServiceTopicFieldRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetULogServiceTopicField
+
+获取ULogService主题索引字段
+*/
+func (c *ULogServiceClient) GetULogServiceTopicField(req *GetULogServiceTopicFieldRequest) (*GetULogServiceTopicFieldResponse, error) {
+	var err error
+	var res GetULogServiceTopicFieldResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetULogServiceTopicField", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListULogServiceCollectConfRequest is request schema for ListULogServiceCollectConf action
 type ListULogServiceCollectConfRequest struct {
 	request.CommonBase
@@ -1112,6 +1168,74 @@ func (c *ULogServiceClient) UpdateULogServiceMachineGroup(req *UpdateULogService
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateULogServiceMachineGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateULogServiceTopicFieldParamFieldInfos is request schema for complex param
+*/
+type UpdateULogServiceTopicFieldParamFieldInfos struct {
+
+	// 字段名称支持字母、横线(-)、斜杠(/)、特殊符号（@）、数字、下划线（_）和点（.），且不能以下划线开头，长度不超过255个字符
+	FieldName *string `required:"false"`
+
+	// 主题字段类型（text、long、double）
+	FieldType *string `required:"false"`
+}
+
+// UpdateULogServiceTopicFieldRequest is request schema for UpdateULogServiceTopicField action
+type UpdateULogServiceTopicFieldRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	//
+	FieldInfos []UpdateULogServiceTopicFieldParamFieldInfos `required:"false"`
+
+	// 主题Id
+	TopicId *string `required:"true"`
+}
+
+// UpdateULogServiceTopicFieldResponse is response schema for UpdateULogServiceTopicField action
+type UpdateULogServiceTopicFieldResponse struct {
+	response.CommonBase
+}
+
+// NewUpdateULogServiceTopicFieldRequest will create request of UpdateULogServiceTopicField action.
+func (c *ULogServiceClient) NewUpdateULogServiceTopicFieldRequest() *UpdateULogServiceTopicFieldRequest {
+	req := &UpdateULogServiceTopicFieldRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateULogServiceTopicField
+
+更新ULogService主题索引字段
+*/
+func (c *ULogServiceClient) UpdateULogServiceTopicField(req *UpdateULogServiceTopicFieldRequest) (*UpdateULogServiceTopicFieldResponse, error) {
+	var err error
+	var res UpdateULogServiceTopicFieldResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateULogServiceTopicField", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
