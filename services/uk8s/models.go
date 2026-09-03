@@ -3,33 +3,6 @@
 package uk8s
 
 /*
-SecGroupId - 安全组
-*/
-type SecGroupId struct {
-
-	// 安全组名称
-	Id string
-
-	// 安全组id
-	Name string
-
-	// 安全组优先级
-	Priority string
-}
-
-/*
-LoopbackClientCert - API Server 回环客户端证书
-*/
-type LoopbackClientCert struct {
-
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
-}
-
-/*
 Autoscaler -
 */
 type Autoscaler struct {
@@ -57,12 +30,18 @@ type Autoscaler struct {
 }
 
 /*
-KubeProxy - KubeProxy信息
+SecGroupId - 安全组
 */
-type KubeProxy struct {
+type SecGroupId struct {
 
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
+	// 安全组名称
+	Id string
+
+	// 安全组id
+	Name string
+
+	// 安全组优先级
+	Priority string
 }
 
 /*
@@ -138,6 +117,18 @@ type IPSet struct {
 }
 
 /*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
+}
+
+/*
 UhostInfo - 机器信息
 */
 type UhostInfo struct {
@@ -198,6 +189,15 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
+}
+
+/*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
 }
 
 /*
@@ -537,12 +537,21 @@ type EIP struct {
 }
 
 /*
-NetworkInterface - 网络接口
+EvictionCondition - 驱逐条件或宽限时间
 */
-type NetworkInterface struct {
+type EvictionCondition struct {
 
-	// EIP
-	EIP EIP
+	// 镜像文件系统存储相关驱逐条件或宽限时间。
+	ImagefsAvailable string
+
+	// 内存相关驱逐条件或宽限时间。
+	MemoryAvailable string
+
+	// 节点存储余量相关驱逐条件或宽限时间。
+	NodefsAvailable string
+
+	// 节点剩余inodes驱逐条件或宽限时间。
+	NodefsInodesFree string
 }
 
 /*
@@ -564,21 +573,12 @@ type ReservedResource struct {
 }
 
 /*
-EvictionCondition - 驱逐条件或宽限时间
+NetworkInterface - 网络接口
 */
-type EvictionCondition struct {
+type NetworkInterface struct {
 
-	// 镜像文件系统存储相关驱逐条件或宽限时间。
-	ImagefsAvailable string
-
-	// 内存相关驱逐条件或宽限时间。
-	MemoryAvailable string
-
-	// 节点存储余量相关驱逐条件或宽限时间。
-	NodefsAvailable string
-
-	// 节点剩余inodes驱逐条件或宽限时间。
-	NodefsInodesFree string
+	// EIP
+	EIP EIP
 }
 
 /*
@@ -751,47 +751,47 @@ ULSExtractRule - 定义日志的提取、解析和格式化规则。
 */
 type ULSExtractRule struct {
 
-	// 行首正则表达式。当 logType 为多行模式 (如 multiline_log 或 multiline_fullregex_log) 时，用于标识一条新日志的开始。
+	// 行首正则表达式。在 multi_line、multi_line_full_regex 或 multi_line_delimiter 模式下，BeginningRegex 和 BeginningRegexBase64 必须至少填写一个。
 	BeginningRegex string
 
-	// 采集策略。可选值: full (全量采集存量日志), increment (从当前时间点增量采集)。默认为 full。
+	// Base64 编码的行首正则表达式。填写时优先于 BeginningRegex。
+	BeginningRegexBase64 string
+
+	// 采集策略。可选值：full（全量采集存量日志）、increment（从当前时间点增量采集）。默认为 full。
 	CollectPolicy string
 
-	// 当 LogType 为delimiter_log 时可选，可选字段 ' ',' ','|',';',','
+	// 分隔符。适用于 delimiter 或 multi_line_delimiter，可选值：space、tab、|、;、,。
 	Delimiter string
 
-	// 日志原文的编码格式。可选值: utf-8, gbk。默认为 utf-8。
+	// Base64 编码的分隔符。填写时优先于 Delimiter。
+	DelimiterBase64 string
+
+	// 日志原文的编码格式。可选值：utf-8、gbk。默认为 utf-8。
 	Encode string
 
-	// 日志提取正则表达式。当 logType 为正则模式 (如 fullregex_log 或 multiline_fullregex_log) 时，用于从日志中提取字段。
+	// 提取后的字段名列表。仅适用于 delimiter、full_regex、multi_line_full_regex 和 multi_line_delimiter。
+	Keys []string
+
+	// 日志提取正则表达式。在 full_regex 或 multi_line_full_regex 模式下，LogRegex 和 LogRegexBase64 必须至少填写一个。
 	LogRegex string
 
-	// 日志解析类型，决定了如何结构化日志。
+	// Base64 编码的日志提取正则表达式。填写时优先于 LogRegex。
+	LogRegexBase64 string
+
+	// 日志解析类型。可选值：json、delimiter、full_regex、multi_line_full_regex、multi_line_delimiter、minimal_list、multi_line。
 	LogType string
 
-	// timeKey 对应的时间格式。如： %Y-%m-%d %H:%M:%S
+	// TimeKey 对应的时间格式。在 json、full_regex 或 multi_line_full_regex 模式下，填写 TimeKey 时必须同时填写 TimeFormat。
 	TimeFormat string
 
-	// 指定时间字段。
+	// 包含日志时间的字段名。
 	TimeKey string
 
-	// 如果 unMatchUpload 为 true，无法解析的日志原文将被存放在此字段指定的 Key 下。默认为 LogParseFailure。
+	// 存放无法解析的日志原文的 Key。UnMatchUpload 为 true 时必须填写。
 	UnMatchKey string
 
-	// 是否上传解析失败的日志。true 表示上传，false 表示丢弃。默认为 false。
+	// 是否上传解析失败的日志。字符串 true 表示上传，false 表示丢弃。默认为 false。
 	UnMatchUpload string
-}
-
-/*
-ULSFilePaths - ULS采集文件路径
-*/
-type ULSFilePaths struct {
-
-	// 采集文件
-	File string
-
-	// 定义采集路径
-	Path string
 }
 
 /*
@@ -807,17 +807,32 @@ type ULSInputMetadata struct {
 }
 
 /*
-ULSInputDetail - ULSInputDetail
+ULSFilePaths - ULS采集文件路径
+*/
+type ULSFilePaths struct {
+
+	// 采集文件
+	File string
+
+	// 定义采集路径
+	Path string
+}
+
+/*
+ULSInputDetail - 定义日志的输入来源，例如容器文件或容器标准输出。
 */
 type ULSInputDetail struct {
 
-	// 采集路径，数组。
+	// 日志采集路径列表。仅适用于 container_file。
 	FilePaths []ULSFilePaths
 
-	// 定义哪些容器相关的元数据需要附加到日志中。
+	// 定义需要附加到日志中的容器相关元数据。
 	InputMetadata ULSInputMetadata
 
-	// 日志输入类型。当前主要支持 container_file，表示采集容器标准输出或文件。
+	// 容器标准输出流类型。仅适用于 container_stdout，可选值：all、stdout、stderr，默认为 all。
+	Stream string
+
+	// 日志输入类型。可选值：container_file、container_stdout。
 	Type string
 }
 
