@@ -54,24 +54,24 @@ type BackendSet struct {
 }
 
 /*
-Certificate - （应用型专用）服务器证书信息
-*/
-type Certificate struct {
-
-	// 是否为默认证书
-	IsDefault bool
-
-	// 证书ID
-	SSLId string
-}
-
-/*
 RemoveHeaderConfigSet - 删除 header 相关配置
 */
 type RemoveHeaderConfigSet struct {
 
 	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
 	Key string
+}
+
+/*
+HostConfigSet - 域名相关配置
+*/
+type HostConfigSet struct {
+
+	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
+	MatchMode string
+
+	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
+	Values []string
 }
 
 /*
@@ -84,60 +84,93 @@ type PathConfigSet struct {
 }
 
 /*
-Target - 服务节点信息
+RuleCondition - 转发规则匹配条件
 */
-type Target struct {
+type RuleCondition struct {
 
-	// 服务节点是否启用
-	Enabled bool
+	// 域名相关配置。Type为Host时必填。具体结构详见 HostConfigSet
+	HostConfig HostConfigSet
 
-	// 服务节点的标识ID。为ALB/NLB中使用，与资源自身ID无关，可用于UpdateTargetsAttribute/RemoveTargets
+	// 路径相关配置。Type为Path时必填。具体结构详见 PathConfigSet
+	PathConfig PathConfigSet
+
+	// 匹配条件类型。限定枚举值：Host，Path
+	Type string
+}
+
+/*
+BackendConnectionConfig - 后向连接配置
+*/
+type BackendConnectionConfig struct {
+
+	// 是否开启长连接
+	EnablePersistentConnection bool
+}
+
+/*
+FixedResponseConfigSet - 静态返回相关配置
+*/
+type FixedResponseConfigSet struct {
+
+	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
+	Content string
+
+	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
+	HttpCode int
+}
+
+/*
+ForwardTargetSet - 转发的后端服务节点
+*/
+type ForwardTargetSet struct {
+
+	// 服务节点的标识ID
 	Id string
 
-	// 服务节点是否为备节点
-	IsBackup bool
-
-	// 服务节点的端口
-	Port int
-
-	// 服务节点的IP
-	ResourceIP string
-
-	// 服务节点的资源ID
-	ResourceId string
-
-	// 服务节点的资源名称
-	ResourceName string
-
-	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
-	ResourceType string
-
-	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
-	State string
-
-	// 服务节点的子网资源ID
-	SubnetId string
-
-	// 服务节点的VPC资源ID
-	VPCId string
-
-	// 服务节点的权重。仅在加权轮询算法时有效
+	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
 	Weight int
 }
 
 /*
-StickinessConfigSet - 会话保持相关配置
+HealthCheckConfigSet - 健康检查相关配置
 */
-type StickinessConfigSet struct {
+type HealthCheckConfigSet struct {
 
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
+	// （应用型专用）HTTP检查域名。 当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查域名
+	Domain string
 
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	// （应用型专用）判定失败的连续次数
+	DownCounts int
+
+	// 是否开启健康检查功能。 默认值为：true
 	Enabled bool
 
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	// （应用型专用）检查协议
+	HTTPVersion string
+
+	// （应用型专用）间隔时间，秒，必须大于TimeOut
+	Interval int
+
+	// （应用型专用）HTTP检查方法。当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查方法
+	Method string
+
+	// （应用型专用）HTTP检查路径。当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查路径
+	Path string
+
+	// （应用型专用）端口
+	Port int
+
+	// （应用型专用）检查预期状态码。HTTP时为2xx,3xx格式(逗号分隔)，GRPC时为数字码(逗号分隔)。
+	ResponseCode string
+
+	// （应用型专用）超时时间，秒，必须小于Interval
+	TimeOut int
+
+	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查；GRPC -> GRPC检测； 默认值：Port
 	Type string
+
+	// （应用型专用）判定成功的连续次数
+	UpCounts int
 }
 
 /*
@@ -180,45 +213,12 @@ type CorsConfigSet struct {
 }
 
 /*
-FixedResponseConfigSet - 静态返回相关配置
-*/
-type FixedResponseConfigSet struct {
-
-	// 返回的固定内容。最大支持存储 1 KB，只支持 ASCII 码值ch >= 32 && ch < 127范围内、不包括 $ 的可打印字符。
-	Content string
-
-	// 返回的 HTTP 响应码，仅支持 2xx、4xx、5xx 数字，x 为任意数字。
-	HttpCode int
-}
-
-/*
-ForwardTargetSet - 转发的后端服务节点
-*/
-type ForwardTargetSet struct {
-
-	// 服务节点的标识ID
-	Id string
-
-	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
-	Weight int
-}
-
-/*
 ForwardConfigSet - 转发服务节点相关配置
 */
 type ForwardConfigSet struct {
 
 	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
 	Targets []ForwardTargetSet
-}
-
-/*
-BackendConnectionConfig - 后向连接配置
-*/
-type BackendConnectionConfig struct {
-
-	// 是否开启长连接
-	EnablePersistentConnection bool
 }
 
 /*
@@ -264,33 +264,6 @@ type RuleAction struct {
 }
 
 /*
-HostConfigSet - 域名相关配置
-*/
-type HostConfigSet struct {
-
-	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
-	MatchMode string
-
-	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
-	Values []string
-}
-
-/*
-RuleCondition - 转发规则匹配条件
-*/
-type RuleCondition struct {
-
-	// 域名相关配置。Type为Host时必填。具体结构详见 HostConfigSet
-	HostConfig HostConfigSet
-
-	// 路径相关配置。Type为Path时必填。具体结构详见 PathConfigSet
-	PathConfig PathConfigSet
-
-	// 匹配条件类型。限定枚举值：Host，Path
-	Type string
-}
-
-/*
 Rule - （应用型专用）转发规则信息
 */
 type Rule struct {
@@ -312,45 +285,72 @@ type Rule struct {
 }
 
 /*
-HealthCheckConfigSet - 健康检查相关配置
+Target - 服务节点信息
 */
-type HealthCheckConfigSet struct {
+type Target struct {
 
-	// （应用型专用）HTTP检查域名。 当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查域名
-	Domain string
-
-	// （应用型专用）判定失败的连续次数
-	DownCounts int
-
-	// 是否开启健康检查功能。 默认值为：true
+	// 服务节点是否启用
 	Enabled bool
 
-	// （应用型专用）检查协议
-	HTTPVersion string
+	// 服务节点的标识ID。为ALB/NLB中使用，与资源自身ID无关，可用于UpdateTargetsAttribute/RemoveTargets
+	Id string
 
-	// （应用型专用）间隔时间，秒，必须大于TimeOut
-	Interval int
+	// 服务节点是否为备节点
+	IsBackup bool
 
-	// （应用型专用）HTTP检查方法。当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查方法
-	Method string
-
-	// （应用型专用）HTTP检查路径。当Type为HTTP/GRPC时，此字段有意义，代表HTTP检查路径
-	Path string
-
-	// （应用型专用）端口
+	// 服务节点的端口
 	Port int
 
-	// （应用型专用）检查预期状态码。HTTP时为2xx,3xx格式(逗号分隔)，GRPC时为数字码(逗号分隔)。
-	ResponseCode string
+	// 服务节点的IP
+	ResourceIP string
 
-	// （应用型专用）超时时间，秒，必须小于Interval
-	TimeOut int
+	// 服务节点的资源ID
+	ResourceId string
 
-	// 健康检查方式。应用型限定取值： Port -> 端口检查；HTTP -> HTTP检查；GRPC -> GRPC检测； 默认值：Port
+	// 服务节点的资源名称
+	ResourceName string
+
+	// 服务节点的类型。限定枚举值：UHost -> 云主机，UNI -> 虚拟网卡，UPM -> 物理云主机，IP ->  IP类型； 默认值："UHost"； 非IP类型，如果该资源有多个IP，将只能添加主IP； 非IP类型，展示时，会显示相关资源信息，IP类型只展示IP信息。 在相关资源被删除时，非IP类型会把相关资源从lb中剔除，IP类型不保证这个逻辑
+	ResourceType string
+
+	// 服务节点的健康检查状态。限定枚举值：Healthy -> 健康，Unhealthy -> 不健康
+	State string
+
+	// 服务节点的子网资源ID
+	SubnetId string
+
+	// 服务节点的VPC资源ID
+	VPCId string
+
+	// 服务节点的权重。仅在加权轮询算法时有效
+	Weight int
+}
+
+/*
+Certificate - （应用型专用）服务器证书信息
+*/
+type Certificate struct {
+
+	// 是否为默认证书
+	IsDefault bool
+
+	// 证书ID
+	SSLId string
+}
+
+/*
+StickinessConfigSet - 会话保持相关配置
+*/
+type StickinessConfigSet struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
 	Type string
-
-	// （应用型专用）判定成功的连续次数
-	UpCounts int
 }
 
 /*
@@ -435,18 +435,6 @@ type SecGroupInfo struct {
 }
 
 /*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
 IPInfo - 绑定的IP信息
 */
 type IPInfo struct {
@@ -471,6 +459,18 @@ type IPInfo struct {
 
 	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
 	OperatorName string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -774,27 +774,6 @@ type TLSAndCiphers struct {
 }
 
 /*
-BindSecurityPolicy - VServer绑定的安全策略组信息
-*/
-type BindSecurityPolicy struct {
-
-	// 加密套件
-	SSLCiphers []string
-
-	// 安全策略组ID
-	SecurityPolicyId string
-
-	// 安全策略组名称
-	SecurityPolicyName string
-
-	// 安全策略类型 0：预定义 1：自定义
-	SecurityPolicyType int
-
-	// TLS最低版本
-	TLSVersion string
-}
-
-/*
 ULBBackendSet - DescribeULB
 */
 type ULBBackendSet struct {
@@ -909,6 +888,27 @@ type ULBPolicySet struct {
 
 	// 所属VServerId
 	VServerId string
+}
+
+/*
+BindSecurityPolicy - VServer绑定的安全策略组信息
+*/
+type BindSecurityPolicy struct {
+
+	// 加密套件
+	SSLCiphers []string
+
+	// 安全策略组ID
+	SecurityPolicyId string
+
+	// 安全策略组名称
+	SecurityPolicyName string
+
+	// 安全策略类型 0：预定义 1：自定义
+	SecurityPolicyType int
+
+	// TLS最低版本
+	TLSVersion string
 }
 
 /*
