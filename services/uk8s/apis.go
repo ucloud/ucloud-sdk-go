@@ -525,48 +525,6 @@ func (c *UK8SClient) AddUK8SUHostNode(req *AddUK8SUHostNodeRequest) (*AddUK8SUHo
 }
 
 /*
-CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMasterSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
-CreateUK8SClusterV2ParamMaster is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMaster struct {
-
-	//
-	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
-
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	Zone *string `required:"true"`
-}
-
-/*
-CreateUK8SClusterV2ParamNodesSecGroupId is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamNodesSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
 CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP struct {
@@ -594,6 +552,21 @@ type CreateUK8SClusterV2ParamNodesNetworkInterface struct {
 
 	//
 	EIP *CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamNodesSecGroupId is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamNodesSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
 }
 
 /*
@@ -681,6 +654,33 @@ type CreateUK8SClusterV2ParamKubeProxy struct {
 
 	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
 	Mode *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMasterSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMaster is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMaster struct {
+
+	//
+	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
+
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Zone *string `required:"true"`
 }
 
 // CreateUK8SClusterV2Request is request schema for CreateUK8SClusterV2 action
@@ -842,18 +842,45 @@ type CreateUK8SULSConfigParamMatchRulePodLabelsLabels struct {
 }
 
 /*
-CreateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
+CreateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
 */
-type CreateUK8SULSConfigParamMatchRulePodLabels struct {
+type CreateUK8SULSConfigParamInputDetailFilePaths struct {
+
+	// 定义采集路径的文件名
+	File *string `required:"false"`
+
+	// 定义采集路径
+	Path *string `required:"false"`
+}
+
+/*
+CreateUK8SULSConfigParamInputDetailMetadata is request schema for complex param
+*/
+type CreateUK8SULSConfigParamInputDetailMetadata struct {
+
+	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据,可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels字段。
+	Container *string `required:"false"`
+
+	// 定义要采集哪些 Pod 的标签 (Labels)。可选值: * (采集所有标签), "app,version" (仅采集 app 和 version), "" (不采集任何标签)。
+	Labels *string `required:"false"`
+}
+
+/*
+CreateUK8SULSConfigParamInputDetail is request schema for complex param
+*/
+type CreateUK8SULSConfigParamInputDetail struct {
 
 	//
-	Labels []CreateUK8SULSConfigParamMatchRulePodLabelsLabels `required:"false"`
+	FilePaths []CreateUK8SULSConfigParamInputDetailFilePaths `required:"false"`
 
-	// 命名空间名称
-	Namespace *string `required:"false"`
+	//
+	Metadata *CreateUK8SULSConfigParamInputDetailMetadata `required:"false"`
 
-	// 指定/排除命名空间, 可选值: in/notin
-	NamespaceOperator *string `required:"false"`
+	// all、stdout、stderr，默认 all (用于 InputDetail.Type = container_stdout)
+	Stream *string `required:"false"`
+
+	// 日志输入类型。支持 container_file 和 container_stdout
+	Type *string `required:"true"`
 }
 
 /*
@@ -914,6 +941,21 @@ type CreateUK8SULSConfigParamExtractRule struct {
 }
 
 /*
+CreateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
+*/
+type CreateUK8SULSConfigParamMatchRulePodLabels struct {
+
+	//
+	Labels []CreateUK8SULSConfigParamMatchRulePodLabelsLabels `required:"false"`
+
+	// 命名空间名称
+	Namespace *string `required:"false"`
+
+	// 指定/排除命名空间, 可选值: in/notin
+	NamespaceOperator *string `required:"false"`
+}
+
+/*
 CreateUK8SULSConfigParamMatchRuleWorkloads is request schema for complex param
 */
 type CreateUK8SULSConfigParamMatchRuleWorkloads struct {
@@ -944,48 +986,6 @@ type CreateUK8SULSConfigParamMatchRule struct {
 
 	//
 	Workloads []CreateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
-}
-
-/*
-CreateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
-*/
-type CreateUK8SULSConfigParamInputDetailFilePaths struct {
-
-	// 定义采集路径的文件名
-	File *string `required:"false"`
-
-	// 定义采集路径
-	Path *string `required:"false"`
-}
-
-/*
-CreateUK8SULSConfigParamInputDetailMetadata is request schema for complex param
-*/
-type CreateUK8SULSConfigParamInputDetailMetadata struct {
-
-	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据,可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels字段。
-	Container *string `required:"false"`
-
-	// 定义要采集哪些 Pod 的标签 (Labels)。可选值: * (采集所有标签), "app,version" (仅采集 app 和 version), "" (不采集任何标签)。
-	Labels *string `required:"false"`
-}
-
-/*
-CreateUK8SULSConfigParamInputDetail is request schema for complex param
-*/
-type CreateUK8SULSConfigParamInputDetail struct {
-
-	//
-	FilePaths []CreateUK8SULSConfigParamInputDetailFilePaths `required:"false"`
-
-	//
-	Metadata *CreateUK8SULSConfigParamInputDetailMetadata `required:"false"`
-
-	// all、stdout、stderr，默认 all (用于 InputDetail.Type = container_stdout)
-	Stream *string `required:"false"`
-
-	// 日志输入类型。支持 container_file 和 container_stdout
-	Type *string `required:"true"`
 }
 
 // CreateUK8SULSConfigRequest is request schema for CreateUK8SULSConfig action
@@ -2019,33 +2019,6 @@ func (c *UK8SClient) RemoveUK8SNodeGroup(req *RemoveUK8SNodeGroupRequest) (*Remo
 }
 
 /*
-UpdateUK8SULSConfigParamInputDetailMetadata is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamInputDetailMetadata struct {
-
-	// 要附加到日志中的容器元数据字段，多个字段使用逗号分隔。可选字段：container_name、namespace、pod_name、pod_ip、pod_uid、container_id、image_name。留空表示不采集容器元数据。
-	Container *string `required:"false"`
-
-	// 要采集的Pod标签。*表示采集所有标签，app,version表示仅采集指定标签，空字符串表示不采集标签。
-	Labels *string `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamMatchRulePodLabelsLabels is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamMatchRulePodLabelsLabels struct {
-
-	// 按Pod标签匹配时，要匹配的标签Key。
-	Key *string `required:"false"`
-
-	// 要匹配的标签值。
-	Value *string `required:"false"`
-
-	// 标签值匹配操作符。可选值：in、notin。
-	ValueOperator *string `required:"false"`
-}
-
-/*
 UpdateUK8SULSConfigParamExtractRule is request schema for complex param
 */
 type UpdateUK8SULSConfigParamExtractRule struct {
@@ -2094,6 +2067,45 @@ type UpdateUK8SULSConfigParamExtractRule struct {
 }
 
 /*
+UpdateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamInputDetailFilePaths struct {
+
+	// 要采集的文件名。仅适用于container_file。
+	File *string `required:"false"`
+
+	// 日志采集路径。仅适用于container_file。
+	Path *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamInputDetailMetadata is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamInputDetailMetadata struct {
+
+	// 要附加到日志中的容器元数据字段，多个字段使用逗号分隔。可选字段：container_name、namespace、pod_name、pod_ip、pod_uid、container_id、image_name。留空表示不采集容器元数据。
+	Container *string `required:"false"`
+
+	// 要采集的Pod标签。*表示采集所有标签，app,version表示仅采集指定标签，空字符串表示不采集标签。
+	Labels *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamMatchRulePodLabelsLabels is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamMatchRulePodLabelsLabels struct {
+
+	// 按Pod标签匹配时，要匹配的标签Key。
+	Key *string `required:"false"`
+
+	// 要匹配的标签值。
+	Value *string `required:"false"`
+
+	// 标签值匹配操作符。可选值：in、notin。
+	ValueOperator *string `required:"false"`
+}
+
+/*
 UpdateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
 */
 type UpdateUK8SULSConfigParamMatchRulePodLabels struct {
@@ -2124,36 +2136,6 @@ type UpdateUK8SULSConfigParamMatchRuleWorkloads struct {
 }
 
 /*
-UpdateUK8SULSConfigParamMatchRule is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamMatchRule struct {
-
-	// 要匹配的容器名称，*表示所有容器，多个名称使用逗号分隔。
-	Container *string `required:"false"`
-
-	// 容器名称匹配操作符。可选值：in、notin。填写该参数时必须同时填写MatchRule.Container。
-	ContainerOperator *string `required:"false"`
-
-	//
-	PodLabels *UpdateUK8SULSConfigParamMatchRulePodLabels `required:"false"`
-
-	//
-	Workloads []UpdateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamInputDetailFilePaths struct {
-
-	// 要采集的文件名。仅适用于container_file。
-	File *string `required:"false"`
-
-	// 日志采集路径。仅适用于container_file。
-	Path *string `required:"false"`
-}
-
-/*
 UpdateUK8SULSConfigParamInputDetail is request schema for complex param
 */
 type UpdateUK8SULSConfigParamInputDetail struct {
@@ -2169,6 +2151,24 @@ type UpdateUK8SULSConfigParamInputDetail struct {
 
 	// 日志输入类型。可选值：container_file、container_stdout。
 	Type *string `required:"true"`
+}
+
+/*
+UpdateUK8SULSConfigParamMatchRule is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamMatchRule struct {
+
+	// 要匹配的容器名称，*表示所有容器，多个名称使用逗号分隔。
+	Container *string `required:"false"`
+
+	// 容器名称匹配操作符。可选值：in、notin。填写该参数时必须同时填写MatchRule.Container。
+	ContainerOperator *string `required:"false"`
+
+	//
+	PodLabels *UpdateUK8SULSConfigParamMatchRulePodLabels `required:"false"`
+
+	//
+	Workloads []UpdateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
 }
 
 // UpdateUK8SULSConfigRequest is request schema for UpdateUK8SULSConfig action
