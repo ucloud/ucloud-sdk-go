@@ -68,6 +68,145 @@ func (c *VPCClient) AddSnatRule(req *AddSnatRuleRequest) (*AddSnatRuleResponse, 
 	return &res, nil
 }
 
+// AddSubnetIPv6Request is request schema for AddSubnetIPv6 action
+type AddSubnetIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 指定IPv6网段
+	IPv6Network *string `required:"false"`
+
+	// 指定IPv6网段掩码
+	IPv6PrefixLength *int `required:"false"`
+
+	// 子网ID
+	SubnetworkId *string `required:"true"`
+
+	// 所属VPC的IPv6网段，可选，不填默认选择一个VPC IPv6网段进行分配
+	VPCIPv6Network *string `required:"false"`
+
+	// 私有网络 ID
+	VPCId *string `required:"false"`
+}
+
+// AddSubnetIPv6Response is response schema for AddSubnetIPv6 action
+type AddSubnetIPv6Response struct {
+	response.CommonBase
+
+	// IPv6网段
+	IPv6Network string
+
+	// 错误消息
+	Message string
+}
+
+// NewAddSubnetIPv6Request will create request of AddSubnetIPv6 action.
+func (c *VPCClient) NewAddSubnetIPv6Request() *AddSubnetIPv6Request {
+	req := &AddSubnetIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddSubnetIPv6
+
+子网关联IPv6
+*/
+func (c *VPCClient) AddSubnetIPv6(req *AddSubnetIPv6Request) (*AddSubnetIPv6Response, error) {
+	var err error
+	var res AddSubnetIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddSubnetIPv6", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// AddVPCIPv6Request is request schema for AddVPCIPv6 action
+type AddVPCIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 指定IPv6网段
+	IPv6Network *string `required:"false"`
+
+	// Default--默认网段、Custom--客户自带
+	IPv6NetworkType *string `required:"false"`
+
+	// 类型 BGP | Telecom | ChinaMobile | Unicom
+	OperatorName *string `required:"true"`
+
+	// VPC资源ID
+	VPCId *string `required:"true"`
+}
+
+// AddVPCIPv6Response is response schema for AddVPCIPv6 action
+type AddVPCIPv6Response struct {
+	response.CommonBase
+
+	// IPv6网段
+	IPv6Network string
+
+	// 错误消息
+	Message string
+}
+
+// NewAddVPCIPv6Request will create request of AddVPCIPv6 action.
+func (c *VPCClient) NewAddVPCIPv6Request() *AddVPCIPv6Request {
+	req := &AddVPCIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AddVPCIPv6
+
+VPC关联IPv6网段
+*/
+func (c *VPCClient) AddVPCIPv6(req *AddVPCIPv6Request) (*AddVPCIPv6Response, error) {
+	var err error
+	var res AddVPCIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AddVPCIPv6", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // AddVPCNetworkRequest is request schema for AddVPCNetwork action
 type AddVPCNetworkRequest struct {
 	request.CommonBase
@@ -393,6 +532,98 @@ func (c *VPCClient) AllocateVIP(req *AllocateVIPRequest) (*AllocateVIPResponse, 
 	return &res, nil
 }
 
+// AssignIPv6Request is request schema for AssignIPv6 action
+type AssignIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// IP属性：支持开启公网(Normal)、仅支持内网(Private)，默认Normal
+	Attribute *string `required:"false"`
+
+	// 指定数量分配，与IPv6Addresses互斥
+	Count *int `required:"false"`
+
+	// 指定IP分配，与Count互斥
+	IPv6Addresses []string `required:"false"`
+
+	// 实际资源短ID--pass产品实际ID
+	InstanceId *string `required:"false"`
+
+	// 与InstanceID对应，实际资源大类ID--pass产品实际类型
+	InstanceType *int `required:"false"`
+
+	// 选填，资源的Mac
+	Mac *string `required:"false"`
+
+	// 资源短ID
+	ObjectId *string `required:"true"`
+
+	// 指定网段分配IP
+	Segment *string `required:"false"`
+
+	// 子网ID
+	SubnetworkId *string `required:"true"`
+
+	// vpc ID
+	VPCId *string `required:"false"`
+}
+
+// AssignIPv6Response is response schema for AssignIPv6 action
+type AssignIPv6Response struct {
+	response.CommonBase
+
+	// IPv6地址
+	IPv6Addresses []string
+
+	// IPv6网关
+	IPv6Gateway string
+
+	// 掩码
+	Mask int
+
+	// 错误消息
+	Message string
+
+	// IP类型
+	OperatorName string
+}
+
+// NewAssignIPv6Request will create request of AssignIPv6 action.
+func (c *VPCClient) NewAssignIPv6Request() *AssignIPv6Request {
+	req := &AssignIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: AssignIPv6
+
+申请IPv6地址
+*/
+func (c *VPCClient) AssignIPv6(req *AssignIPv6Request) (*AssignIPv6Response, error) {
+	var err error
+	var res AssignIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("AssignIPv6", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // AssociateRouteTableRequest is request schema for AssociateRouteTable action
 type AssociateRouteTableRequest struct {
 	request.CommonBase
@@ -670,6 +901,80 @@ func (c *VPCClient) CloneRouteTable(req *CloneRouteTableRequest) (*CloneRouteTab
 	return &res, nil
 }
 
+// CopySecGroupRequest is request schema for CopySecGroup action
+type CopySecGroupRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 目的安全组名称，最长64个字符
+	DstName *string `required:"false"`
+
+	// 目的项目ID
+	DstProjectId *string `required:"true"`
+
+	// 目的地域
+	DstRegion *string `required:"true"`
+
+	// 目的安全组备注
+	DstRemark *string `required:"false"`
+
+	// 目的VPC ID
+	DstVPCId *string `required:"true"`
+
+	// 源安全组ID
+	SecGroupId *string `required:"true"`
+}
+
+// CopySecGroupResponse is response schema for CopySecGroup action
+type CopySecGroupResponse struct {
+	response.CommonBase
+
+	// 错误信息
+	Message string
+
+	// 复制得到的规则ID
+	RuleID []string
+
+	// 复制得到的安全组ID
+	SecGroupId string
+}
+
+// NewCopySecGroupRequest will create request of CopySecGroup action.
+func (c *VPCClient) NewCopySecGroupRequest() *CopySecGroupRequest {
+	req := &CopySecGroupRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: CopySecGroup
+
+复制安全组
+*/
+func (c *VPCClient) CopySecGroup(req *CopySecGroupRequest) (*CopySecGroupResponse, error) {
+	var err error
+	var res CopySecGroupResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("CopySecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateNATGWRequest is request schema for CreateNATGW action
 type CreateNATGWRequest struct {
 	request.CommonBase
@@ -894,9 +1199,6 @@ type CreateNetworkAclAssociationRequest struct {
 // CreateNetworkAclAssociationResponse is response schema for CreateNetworkAclAssociation action
 type CreateNetworkAclAssociationResponse struct {
 	response.CommonBase
-
-	// 【该字段已废弃，请谨慎使用】
-	AclId string `deprecated:"true"`
 
 	// 创建的绑定关系的ID
 	AssociationId string
@@ -2266,6 +2568,62 @@ func (c *VPCClient) DeleteSubnet(req *DeleteSubnetRequest) (*DeleteSubnetRespons
 	return &res, nil
 }
 
+// DeleteSubnetIPv6Request is request schema for DeleteSubnetIPv6 action
+type DeleteSubnetIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 子网ID
+	SubnetworkId *string `required:"true"`
+}
+
+// DeleteSubnetIPv6Response is response schema for DeleteSubnetIPv6 action
+type DeleteSubnetIPv6Response struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDeleteSubnetIPv6Request will create request of DeleteSubnetIPv6 action.
+func (c *VPCClient) NewDeleteSubnetIPv6Request() *DeleteSubnetIPv6Request {
+	req := &DeleteSubnetIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteSubnetIPv6
+
+子网取消关联IPv6
+*/
+func (c *VPCClient) DeleteSubnetIPv6(req *DeleteSubnetIPv6Request) (*DeleteSubnetIPv6Response, error) {
+	var err error
+	var res DeleteSubnetIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteSubnetIPv6", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DeleteVPCRequest is request schema for DeleteVPC action
 type DeleteVPCRequest struct {
 	request.CommonBase
@@ -2309,6 +2667,65 @@ func (c *VPCClient) DeleteVPC(req *DeleteVPCRequest) (*DeleteVPCResponse, error)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DeleteVPC", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DeleteVPCIPv6Request is request schema for DeleteVPCIPv6 action
+type DeleteVPCIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// IPv6网段
+	IPv6Network *string `required:"true"`
+
+	// VPC资源ID
+	VPCId *string `required:"true"`
+}
+
+// DeleteVPCIPv6Response is response schema for DeleteVPCIPv6 action
+type DeleteVPCIPv6Response struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDeleteVPCIPv6Request will create request of DeleteVPCIPv6 action.
+func (c *VPCClient) NewDeleteVPCIPv6Request() *DeleteVPCIPv6Request {
+	req := &DeleteVPCIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteVPCIPv6
+
+VPC取消关联IPv6网段
+*/
+func (c *VPCClient) DeleteVPCIPv6(req *DeleteVPCIPv6Request) (*DeleteVPCIPv6Response, error) {
+	var err error
+	var res DeleteVPCIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteVPCIPv6", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -2868,6 +3285,9 @@ type DescribeNetworkInterfaceRequest struct {
 
 	// 所属VPC
 	VPCId *string `required:"false"`
+
+	// 是否展示安全组信息
+	WithSecGroup *bool `required:"false"`
 }
 
 // DescribeNetworkInterfaceResponse is response schema for DescribeNetworkInterface action
@@ -3721,8 +4141,14 @@ type DescribeWhiteListResourceRequest struct {
 	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
+	// 【该字段已废弃，请谨慎使用】
+	Limit *int `required:"false" deprecated:"true"`
+
 	// NAT网关的Id
 	NATGWIds []string `required:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Offset *int `required:"false" deprecated:"true"`
 }
 
 // DescribeWhiteListResourceResponse is response schema for DescribeWhiteListResource action
@@ -3872,6 +4298,62 @@ func (c *VPCClient) DisableUniEipDirectMode(req *DisableUniEipDirectModeRequest)
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DisableUniEipDirectMode", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DisableVPCIPv6Request is request schema for DisableVPCIPv6 action
+type DisableVPCIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// VPC资源ID
+	VPCId *string `required:"true"`
+}
+
+// DisableVPCIPv6Response is response schema for DisableVPCIPv6 action
+type DisableVPCIPv6Response struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewDisableVPCIPv6Request will create request of DisableVPCIPv6 action.
+func (c *VPCClient) NewDisableVPCIPv6Request() *DisableVPCIPv6Request {
+	req := &DisableVPCIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DisableVPCIPv6
+
+VPC关闭IPv6
+*/
+func (c *VPCClient) DisableVPCIPv6(req *DisableVPCIPv6Request) (*DisableVPCIPv6Response, error) {
+	var err error
+	var res DisableVPCIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DisableVPCIPv6", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -4677,6 +5159,62 @@ func (c *VPCClient) SwitchToSecGroup(req *SwitchToSecGroupRequest) (*SwitchToSec
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("SwitchToSecGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// UnassignIPv6Request is request schema for UnassignIPv6 action
+type UnassignIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// IPv6地址
+	IPv6Addresses []string `required:"true"`
+
+	// 资源ID
+	ObjectId *string `required:"true"`
+}
+
+// UnassignIPv6Response is response schema for UnassignIPv6 action
+type UnassignIPv6Response struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewUnassignIPv6Request will create request of UnassignIPv6 action.
+func (c *VPCClient) NewUnassignIPv6Request() *UnassignIPv6Request {
+	req := &UnassignIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UnassignIPv6
+
+释放IPv6地址
+*/
+func (c *VPCClient) UnassignIPv6(req *UnassignIPv6Request) (*UnassignIPv6Response, error) {
+	var err error
+	var res UnassignIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UnassignIPv6", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
@@ -5549,6 +6087,80 @@ func (c *VPCClient) UpdateVIPAttribute(req *UpdateVIPAttributeRequest) (*UpdateV
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("UpdateVIPAttribute", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+UpdateVPCIPv6ParamIPv6NetworkConfig is request schema for complex param
+*/
+type UpdateVPCIPv6ParamIPv6NetworkConfig struct {
+
+	// 需要保留的所有网段
+	IPv6Network *string `required:"true"`
+
+	// 网段对应的运营商类型
+	OperatorName *string `required:"true"`
+
+	// 网段分类：Default--默认网段、Custom--客户自带网段
+	Type *string `required:"false"`
+}
+
+// UpdateVPCIPv6Request is request schema for UpdateVPCIPv6 action
+type UpdateVPCIPv6Request struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	//
+	IPv6NetworkConfig []UpdateVPCIPv6ParamIPv6NetworkConfig `required:"false"`
+
+	// VPC资源ID
+	VPCId *string `required:"true"`
+}
+
+// UpdateVPCIPv6Response is response schema for UpdateVPCIPv6 action
+type UpdateVPCIPv6Response struct {
+	response.CommonBase
+
+	// 错误消息
+	Message string
+}
+
+// NewUpdateVPCIPv6Request will create request of UpdateVPCIPv6 action.
+func (c *VPCClient) NewUpdateVPCIPv6Request() *UpdateVPCIPv6Request {
+	req := &UpdateVPCIPv6Request{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: UpdateVPCIPv6
+
+更新VPC IPv6网段
+*/
+func (c *VPCClient) UpdateVPCIPv6(req *UpdateVPCIPv6Request) (*UpdateVPCIPv6Response, error) {
+	var err error
+	var res UpdateVPCIPv6Response
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("UpdateVPCIPv6", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
