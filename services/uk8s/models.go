@@ -3,6 +3,18 @@
 package uk8s
 
 /*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
+}
+
+/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -90,6 +102,42 @@ type SecGroupId struct {
 }
 
 /*
+Autoscaler -
+*/
+type Autoscaler struct {
+
+	// 打开/关闭
+	Enabled int
+
+	// 静默时间
+	ScaleDownDelayAfterAdd string
+
+	// GPU缩容阈值
+	ScaleDownGpuUtilizationThreshold string
+
+	// 缩容触发延时
+	ScaleDownUnneededTime string
+
+	// CPU缩容阈值
+	ScaleDownUtilizationThreshold string
+
+	//
+	UpdateTime int
+
+	// 伸缩器版本
+	Version string
+}
+
+/*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
+}
+
+/*
 UhostInfo - 机器信息
 */
 type UhostInfo struct {
@@ -150,54 +198,6 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
-}
-
-/*
-Autoscaler -
-*/
-type Autoscaler struct {
-
-	// 打开/关闭
-	Enabled int
-
-	// 静默时间
-	ScaleDownDelayAfterAdd string
-
-	// GPU缩容阈值
-	ScaleDownGpuUtilizationThreshold string
-
-	// 缩容触发延时
-	ScaleDownUnneededTime string
-
-	// CPU缩容阈值
-	ScaleDownUtilizationThreshold string
-
-	//
-	UpdateTime int
-
-	// 伸缩器版本
-	Version string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
-}
-
-/*
-LoopbackClientCert - API Server 回环客户端证书
-*/
-type LoopbackClientCert struct {
-
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
 }
 
 /*
@@ -516,6 +516,27 @@ type ClusterSet struct {
 }
 
 /*
+EIP - 节点EIP
+*/
+type EIP struct {
+
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth int
+
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId string
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International，BGP: Bgp。 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName string
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode string
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId string
+}
+
+/*
 EvictionCondition - 驱逐条件或宽限时间
 */
 type EvictionCondition struct {
@@ -552,24 +573,12 @@ type ReservedResource struct {
 }
 
 /*
-EIP - 节点EIP
+NetworkInterface - 网络接口
 */
-type EIP struct {
+type NetworkInterface struct {
 
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth int
-
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId string
-
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International，BGP: Bgp。 各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName string
-
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode string
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId string
+	// EIP
+	EIP EIP
 }
 
 /*
@@ -606,15 +615,6 @@ type KubeletConfiguration struct {
 
 	// 系统预留资源，ReservedResource类型
 	SystemReserved ReservedResource
-}
-
-/*
-NetworkInterface - 网络接口
-*/
-type NetworkInterface struct {
-
-	// EIP
-	EIP EIP
 }
 
 /*
@@ -759,66 +759,6 @@ type ULSFilePaths struct {
 }
 
 /*
-ULSInputMetadata - ULSInputMetadata
-*/
-type ULSInputMetadata struct {
-
-	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
-	Container string
-
-	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
-	Labels string
-}
-
-/*
-ULSInputDetail - 定义日志的输入来源，例如容器文件或容器标准输出。
-*/
-type ULSInputDetail struct {
-
-	// 日志采集路径列表。仅适用于 container_file。
-	FilePaths []ULSFilePaths
-
-	// 定义需要附加到日志中的容器相关元数据。
-	InputMetadata ULSInputMetadata
-
-	// 容器标准输出流类型。仅适用于 container_stdout，可选值：all、stdout、stderr，默认为 all。
-	Stream string
-
-	// 日志输入类型。可选值：container_file、container_stdout。
-	Type string
-}
-
-/*
-ULSWorkloadMatch - ULSWorkloadMatch
-*/
-type ULSWorkloadMatch struct {
-
-	// 工作负载的名称。
-	Name string
-
-	// 工作负载所在的命名空间。
-	Namespace string
-
-	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
-	Type string
-}
-
-/*
-ULSLabels - ULSLabels
-*/
-type ULSLabels struct {
-
-	// 要匹配的标签的 Key。
-	Key string
-
-	// 要匹配的标签的值。
-	Value string
-
-	// 标签值的匹配操作符。可选值: in, notin。
-	ValueOperator string
-}
-
-/*
 ULSExtractRule - 定义日志的提取、解析和格式化规则。
 */
 type ULSExtractRule struct {
@@ -867,6 +807,51 @@ type ULSExtractRule struct {
 }
 
 /*
+ULSInputMetadata - ULSInputMetadata
+*/
+type ULSInputMetadata struct {
+
+	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
+	Container string
+
+	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
+	Labels string
+}
+
+/*
+ULSInputDetail - 定义日志的输入来源，例如容器文件或容器标准输出。
+*/
+type ULSInputDetail struct {
+
+	// 日志采集路径列表。仅适用于 container_file。
+	FilePaths []ULSFilePaths
+
+	// 定义需要附加到日志中的容器相关元数据。
+	InputMetadata ULSInputMetadata
+
+	// 容器标准输出流类型。仅适用于 container_stdout，可选值：all、stdout、stderr，默认为 all。
+	Stream string
+
+	// 日志输入类型。可选值：container_file、container_stdout。
+	Type string
+}
+
+/*
+ULSLabels - ULSLabels
+*/
+type ULSLabels struct {
+
+	// 要匹配的标签的 Key。
+	Key string
+
+	// 要匹配的标签的值。
+	Value string
+
+	// 标签值的匹配操作符。可选值: in, notin。
+	ValueOperator string
+}
+
+/*
 ULSPodLabelsMatch - ULSPodLabelsMatch
 */
 type ULSPodLabelsMatch struct {
@@ -879,6 +864,21 @@ type ULSPodLabelsMatch struct {
 
 	// 命名空间名称的匹配操作符。可选值: in, notin。
 	NamespaceOperator string
+}
+
+/*
+ULSWorkloadMatch - ULSWorkloadMatch
+*/
+type ULSWorkloadMatch struct {
+
+	// 工作负载的名称。
+	Name string
+
+	// 工作负载所在的命名空间。
+	Namespace string
+
+	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
+	Type string
 }
 
 /*
