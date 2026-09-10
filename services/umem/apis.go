@@ -942,6 +942,71 @@ func (c *UMemClient) DeleteURedisGroup(req *DeleteURedisGroupRequest) (*DeleteUR
 	return &res, nil
 }
 
+// DescribeUDRedisProxyClientListRequest is request schema for DescribeUDRedisProxyClientList action
+type DescribeUDRedisProxyClientListRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 分布式Redis代理Id
+	ProxyId *string `required:"true"`
+
+	// 分布式Redis集群id
+	SpaceId *string `required:"true"`
+}
+
+// DescribeUDRedisProxyClientListResponse is response schema for DescribeUDRedisProxyClientList action
+type DescribeUDRedisProxyClientListResponse struct {
+	response.CommonBase
+
+	// 连接数
+	Count int
+
+	// 代理连接信息
+	ProxyClientList []ProxyClientList
+
+	// 连接获取时间
+	Time int
+}
+
+// NewDescribeUDRedisProxyClientListRequest will create request of DescribeUDRedisProxyClientList action.
+func (c *UMemClient) NewDescribeUDRedisProxyClientListRequest() *DescribeUDRedisProxyClientListRequest {
+	req := &DescribeUDRedisProxyClientListRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUDRedisProxyClientList
+
+查询分布式代理客户端连接信息
+*/
+func (c *UMemClient) DescribeUDRedisProxyClientList(req *DescribeUDRedisProxyClientListRequest) (*DescribeUDRedisProxyClientListResponse, error) {
+	var err error
+	var res DescribeUDRedisProxyClientListResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUDRedisProxyClientList", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUDRedisProxyInfoRequest is request schema for DescribeUDRedisProxyInfo action
 type DescribeUDRedisProxyInfoRequest struct {
 	request.CommonBase

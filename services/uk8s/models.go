@@ -3,15 +3,18 @@
 package uk8s
 
 /*
-LoopbackClientCert - API Server 回环客户端证书
+SecGroupId - 安全组
 */
-type LoopbackClientCert struct {
+type SecGroupId struct {
 
-	// 证书到期时间
-	ExpireTime int
+	// 安全组名称
+	Id string
 
-	// 证书是否进入过期告警状态
-	Warn bool
+	// 安全组id
+	Name string
+
+	// 安全组优先级
+	Priority string
 }
 
 /*
@@ -87,57 +90,6 @@ type IPSet struct {
 }
 
 /*
-SecGroupId - 安全组
-*/
-type SecGroupId struct {
-
-	// 安全组名称
-	Id string
-
-	// 安全组id
-	Name string
-
-	// 安全组优先级
-	Priority string
-}
-
-/*
-Autoscaler -
-*/
-type Autoscaler struct {
-
-	// 打开/关闭
-	Enabled int
-
-	// 静默时间
-	ScaleDownDelayAfterAdd string
-
-	// GPU缩容阈值
-	ScaleDownGpuUtilizationThreshold string
-
-	// 缩容触发延时
-	ScaleDownUnneededTime string
-
-	// CPU缩容阈值
-	ScaleDownUtilizationThreshold string
-
-	//
-	UpdateTime int
-
-	// 伸缩器版本
-	Version string
-}
-
-/*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
-}
-
-/*
 UhostInfo - 机器信息
 */
 type UhostInfo struct {
@@ -198,6 +150,54 @@ type UhostInfo struct {
 
 	// 所在机房
 	Zone string
+}
+
+/*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
+}
+
+/*
+Autoscaler -
+*/
+type Autoscaler struct {
+
+	// 打开/关闭
+	Enabled int
+
+	// 静默时间
+	ScaleDownDelayAfterAdd string
+
+	// GPU缩容阈值
+	ScaleDownGpuUtilizationThreshold string
+
+	// 缩容触发延时
+	ScaleDownUnneededTime string
+
+	// CPU缩容阈值
+	ScaleDownUtilizationThreshold string
+
+	//
+	UpdateTime int
+
+	// 伸缩器版本
+	Version string
+}
+
+/*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
 }
 
 /*
@@ -516,6 +516,24 @@ type ClusterSet struct {
 }
 
 /*
+ReservedResource - 预留资源
+*/
+type ReservedResource struct {
+
+	// CPU
+	CPU string
+
+	// 存储
+	EphemeralStorage string
+
+	// 内存
+	Memory string
+
+	// Pid
+	Pid string
+}
+
+/*
 EIP - 节点EIP
 */
 type EIP struct {
@@ -537,6 +555,15 @@ type EIP struct {
 }
 
 /*
+NetworkInterface - 网络接口
+*/
+type NetworkInterface struct {
+
+	// EIP
+	EIP EIP
+}
+
+/*
 EvictionCondition - 驱逐条件或宽限时间
 */
 type EvictionCondition struct {
@@ -552,33 +579,6 @@ type EvictionCondition struct {
 
 	// 节点剩余inodes驱逐条件或宽限时间。
 	NodefsInodesFree string
-}
-
-/*
-ReservedResource - 预留资源
-*/
-type ReservedResource struct {
-
-	// CPU
-	CPU string
-
-	// 存储
-	EphemeralStorage string
-
-	// 内存
-	Memory string
-
-	// Pid
-	Pid string
-}
-
-/*
-NetworkInterface - 网络接口
-*/
-type NetworkInterface struct {
-
-	// EIP
-	EIP EIP
 }
 
 /*
@@ -747,15 +747,18 @@ type NodeGroupSet struct {
 }
 
 /*
-ULSFilePaths - ULS采集文件路径
+ULSWorkloadMatch - ULSWorkloadMatch
 */
-type ULSFilePaths struct {
+type ULSWorkloadMatch struct {
 
-	// 采集文件
-	File string
+	// 工作负载的名称。
+	Name string
 
-	// 定义采集路径
-	Path string
+	// 工作负载所在的命名空间。
+	Namespace string
+
+	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
+	Type string
 }
 
 /*
@@ -804,6 +807,18 @@ type ULSExtractRule struct {
 
 	// 是否上传解析失败的日志。字符串 true 表示上传，false 表示丢弃。默认为 false。
 	UnMatchUpload string
+}
+
+/*
+ULSFilePaths - ULS采集文件路径
+*/
+type ULSFilePaths struct {
+
+	// 采集文件
+	File string
+
+	// 定义采集路径
+	Path string
 }
 
 /*
@@ -864,21 +879,6 @@ type ULSPodLabelsMatch struct {
 
 	// 命名空间名称的匹配操作符。可选值: in, notin。
 	NamespaceOperator string
-}
-
-/*
-ULSWorkloadMatch - ULSWorkloadMatch
-*/
-type ULSWorkloadMatch struct {
-
-	// 工作负载的名称。
-	Name string
-
-	// 工作负载所在的命名空间。
-	Namespace string
-
-	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
-	Type string
 }
 
 /*

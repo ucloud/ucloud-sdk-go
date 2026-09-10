@@ -98,6 +98,9 @@ type CreateSandboxSiteRequest struct {
 
 	// 站点空间名称
 	Name *string `required:"true"`
+
+	// 站点空间空间模版，格式：site-nc-ng,n为偶数
+	TemplateName *string `required:"true"`
 }
 
 // CreateSandboxSiteResponse is response schema for CreateSandboxSite action

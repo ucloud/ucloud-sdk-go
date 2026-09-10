@@ -3,6 +3,18 @@
 package umem
 
 /*
+ProxyClientList - 代理连接信息
+*/
+type ProxyClientList struct {
+
+	// 该客户端Ip连接数量
+	ConnCnt int
+
+	// 客户端Ip
+	Ip string
+}
+
+/*
 UDRedisProxyInfo - udredis代理信息
 */
 type UDRedisProxyInfo struct {
@@ -57,6 +69,24 @@ type UDRedisSlowlogSet struct {
 
 	// 查询发生的时间
 	StartTime int
+}
+
+/*
+UMemSpaceAddressSet - DescribeUMemSpace
+*/
+type UMemSpaceAddressSet struct {
+
+	// UMem实例内网访问IP
+	IP string
+
+	// UMem实例访问Port
+	Port int
+
+	// UMem实例内网访问域名地址，未开启状态下返回为空
+	PrivateDomain string
+
+	// 开启外网状态下外网IP，否则为空
+	PublicIp string
 }
 
 /*
@@ -141,24 +171,6 @@ type UMemSlaveDataSet struct {
 
 	// 实例所在可用区，或者master redis所在可用区，参见 [可用区列表](../summary/regionlist.html)
 	Zone string
-}
-
-/*
-UMemSpaceAddressSet - DescribeUMemSpace
-*/
-type UMemSpaceAddressSet struct {
-
-	// UMem实例内网访问IP
-	IP string
-
-	// UMem实例访问Port
-	Port int
-
-	// UMem实例内网访问域名地址，未开启状态下返回为空
-	PrivateDomain string
-
-	// 开启外网状态下外网IP，否则为空
-	PublicIp string
 }
 
 /*
