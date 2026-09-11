@@ -42,60 +42,6 @@ type KeyPair struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
-}
-
-/*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
-}
-
-/*
-CpuPlatformWithModels -
-*/
-type CpuPlatformWithModels struct {
-
-	// CPU频率
-	CpuFrequency string
-
-	// CPU Model列表
-	CpuModels []string
-
-	// CPU平台
-	Name string
-}
-
-/*
 GraphicsMemory - GPU的显存指标
 */
 type GraphicsMemory struct {
@@ -105,51 +51,6 @@ type GraphicsMemory struct {
 
 	// 值，单位是GB
 	Value int
-}
-
-/*
-Collection - CPU和内存可支持的规格
-*/
-type Collection struct {
-
-	// CPU规格
-	Cpu int
-
-	// 内存规格
-	Memory []int
-
-	// CPU和内存规格只能在列出来的CPU平台支持
-	MinimalCpuPlatform []string
-}
-
-/*
-MachineSizes - GPU、CPU和内存信息
-*/
-type MachineSizes struct {
-
-	// CPU和内存可支持的规格
-	Collection []Collection
-
-	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
-	Gpu int
-}
-
-/*
-BootDiskInfo - 系统盘信息
-*/
-type BootDiskInfo struct {
-
-	// 磁盘可支持的服务
-	Features []string
-
-	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
-	InstantResize bool
-
-	// MaximalSize为磁盘最大值
-	MaximalSize int
-
-	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
 }
 
 /*
@@ -189,6 +90,24 @@ type CpuPlatforms struct {
 }
 
 /*
+BootDiskInfo - 系统盘信息
+*/
+type BootDiskInfo struct {
+
+	// 磁盘可支持的服务
+	Features []string
+
+	// 系统盘是否允许扩容，如果是本地盘，则不允许扩容，InstantResize为false。
+	InstantResize bool
+
+	// MaximalSize为磁盘最大值
+	MaximalSize int
+
+	// 系统盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
+	Name string
+}
+
+/*
 Disks - 磁盘信息
 */
 type Disks struct {
@@ -200,6 +119,87 @@ type Disks struct {
 	DataDisk []DataDiskInfo
 
 	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
+	Name string
+}
+
+/*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
+Collection - CPU和内存可支持的规格
+*/
+type Collection struct {
+
+	// CPU规格
+	Cpu int
+
+	// 内存规格
+	Memory []int
+
+	// CPU和内存规格只能在列出来的CPU平台支持
+	MinimalCpuPlatform []string
+}
+
+/*
+MachineSizes - GPU、CPU和内存信息
+*/
+type MachineSizes struct {
+
+	// CPU和内存可支持的规格
+	Collection []Collection
+
+	// Gpu为GPU可支持的规格即GPU颗数，非GPU机型，Gpu为0
+	Gpu int
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
+}
+
+/*
+CpuPlatformWithModels -
+*/
+type CpuPlatformWithModels struct {
+
+	// CPU频率
+	CpuFrequency string
+
+	// CPU Model列表
+	CpuModels []string
+
+	// CPU平台
 	Name string
 }
 
@@ -267,18 +267,15 @@ type AvailableInstanceTypes struct {
 }
 
 /*
-FamiliesGpuType -
+CpuPlatformStatus -
 */
-type FamiliesGpuType struct {
+type CpuPlatformStatus struct {
 
-	// 显存信息
-	GraphicsMemory GraphicsMemory
-
-	// 机型名称
+	// CPU平台
 	Name string
 
-	// 性能信息
-	Performance Performance
+	// 运营Commpont Code
+	OperationStatus string
 }
 
 /*
@@ -342,39 +339,6 @@ type FamiliesDataDiskInfo struct {
 }
 
 /*
-Frequency - 频率
-*/
-type Frequency struct {
-
-	// 值
-	Value float64
-}
-
-/*
-NameFrequency - 名称及频率
-*/
-type NameFrequency struct {
-
-	// 频率
-	Frequency Frequency
-
-	// 机型名称
-	Name string
-}
-
-/*
-CpuPlatformStatus -
-*/
-type CpuPlatformStatus struct {
-
-	// CPU平台
-	Name string
-
-	// 运营Commpont Code
-	OperationStatus string
-}
-
-/*
 FamiliesDisks - 磁盘信息
 */
 type FamiliesDisks struct {
@@ -390,6 +354,42 @@ type FamiliesDisks struct {
 
 	// 权限位
 	OperationStatus string
+}
+
+/*
+Frequency - 频率
+*/
+type Frequency struct {
+
+	// 值
+	Value float64
+}
+
+/*
+FamiliesGpuType -
+*/
+type FamiliesGpuType struct {
+
+	// 显存信息
+	GraphicsMemory GraphicsMemory
+
+	// 机型名称
+	Name string
+
+	// 性能信息
+	Performance Performance
+}
+
+/*
+NameFrequency - 名称及频率
+*/
+type NameFrequency struct {
+
+	// 频率
+	Frequency Frequency
+
+	// 机型名称
+	Name string
 }
 
 /*
@@ -576,6 +576,30 @@ type AvailableDiskTypes struct {
 }
 
 /*
+UDSetUDHostAttribute - 私有专区对应的宿主机属性
+*/
+type UDSetUDHostAttribute struct {
+
+	// 是否绑定私有专区宿主机
+	HostBinding bool
+
+	// 私有专区宿主机
+	UDHostId string
+
+	// 私有专区
+	UDSetId string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
+}
+
+/*
 UHostDiskSet - DescribeUHostInstance
 */
 type UHostDiskSet struct {
@@ -609,21 +633,6 @@ type UHostDiskSet struct {
 }
 
 /*
-UDSetUDHostAttribute - 私有专区对应的宿主机属性
-*/
-type UDSetUDHostAttribute struct {
-
-	// 是否绑定私有专区宿主机
-	HostBinding bool
-
-	// 私有专区宿主机
-	UDHostId string
-
-	// 私有专区
-	UDSetId string
-}
-
-/*
 UHostKeyPair - 主机密钥信息
 */
 type UHostKeyPair struct {
@@ -633,15 +642,6 @@ type UHostKeyPair struct {
 
 	// 主机密钥对状态，Normal 正常，Deleted 删除
 	KeyPairState string
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
 }
 
 /*
