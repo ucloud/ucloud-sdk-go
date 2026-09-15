@@ -57,6 +57,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
 	"github.com/ucloud/ucloud-sdk-go/services/iam"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
+	"github.com/ucloud/ucloud-sdk-go/services/sandbox"
 	"github.com/ucloud/ucloud-sdk-go/services/stepflow"
 	"github.com/ucloud/ucloud-sdk-go/services/sts"
 	"github.com/ucloud/ucloud-sdk-go/services/tidb"
@@ -289,6 +290,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("VPC", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return vpc.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("sandbox", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return sandbox.NewClient(&cfg, &credential), nil
 	}))
 
 	// compatible with older test framework
