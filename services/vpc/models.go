@@ -207,21 +207,6 @@ type InstanceNetworkInterface struct {
 }
 
 /*
-NatGatewaySubnetSet - natgw里面的子网信息
-*/
-type NatGatewaySubnetSet struct {
-
-	// 子网网段
-	Subnet string
-
-	// 子网名字
-	SubnetName string
-
-	// 子网id
-	SubnetworkId string
-}
-
-/*
 NatGWIPResInfo - IP信息
 */
 type NatGWIPResInfo struct {
@@ -252,6 +237,21 @@ type NatGatewayIPSet struct {
 
 	// 权重为100的为出口
 	Weight int
+}
+
+/*
+NatGatewaySubnetSet - natgw里面的子网信息
+*/
+type NatGatewaySubnetSet struct {
+
+	// 子网网段
+	Subnet string
+
+	// 子网名字
+	SubnetName string
+
+	// 子网id
+	SubnetworkId string
 }
 
 /*
@@ -432,18 +432,6 @@ type AclInfo struct {
 }
 
 /*
-FwInfo - 防火墙信息
-*/
-type FwInfo struct {
-
-	// 防火墙资源 ID
-	Id string
-
-	// 防火墙资源名称
-	Name string
-}
-
-/*
 UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
 */
 type UNIQuotaInfo struct {
@@ -468,6 +456,21 @@ type UNIIpInfo struct {
 }
 
 /*
+SecGroup - UNI关联的安全组信息
+*/
+type SecGroup struct {
+
+	// 安全组名称
+	Name string
+
+	// 关联优先级
+	Priority int
+
+	// 安全组ID
+	SecGroupId string
+}
+
+/*
 SimpleIPv6AddressInfo -
 */
 type SimpleIPv6AddressInfo struct {
@@ -483,18 +486,15 @@ type SimpleIPv6AddressInfo struct {
 }
 
 /*
-SecGroup - UNI关联的安全组信息
+FwInfo - 防火墙信息
 */
-type SecGroup struct {
+type FwInfo struct {
 
-	// 安全组名称
+	// 防火墙资源 ID
+	Id string
+
+	// 防火墙资源名称
 	Name string
-
-	// 关联优先级
-	Priority int
-
-	// 安全组ID
-	SecGroupId string
 }
 
 /*
@@ -560,7 +560,7 @@ type NetworkInterface struct {
 	PrivateIp []UNIIpInfo
 
 	// 私有 IP 配额
-	PrivateIpLimit []UNIQuotaInfo
+	PrivateIpLimit UNIQuotaInfo
 
 	// 关联内网IP。当前一个网卡仅支持绑定一个内网IP
 	PrivateIpSet []string

@@ -3,6 +3,18 @@
 package sandbox
 
 /*
+SiteResource - 站点资源
+*/
+type SiteResource struct {
+
+	// CPU核心
+	CPU int
+
+	// 内存占用MB
+	MemoryMB int
+}
+
+/*
 SiteIPAccess - 站点空间-访问设置-IP限制
 */
 type SiteIPAccess struct {
