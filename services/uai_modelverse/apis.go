@@ -1054,6 +1054,33 @@ type ListUFSquareModelFiltersAuthRequest struct {
 // ListUFSquareModelFiltersAuthResponse is response schema for ListUFSquareModelFiltersAuth action
 type ListUFSquareModelFiltersAuthResponse struct {
 	response.CommonBase
+
+	// API协议选项
+	ApiProtocols []FilterOption
+
+	// 能力选项
+	Capabilities []FilterOption
+
+	// 推理地域选项
+	InferenceRegions []FilterOption
+
+	// 输入模态选项
+	InputModalities []FilterOption
+
+	// 模型状态选项
+	IsComingOffline []FilterOption
+
+	// 厂商选项
+	Manufacturers []FilterOption
+
+	// 最大上下文长度选项
+	MaxModelLens []FilterOption
+
+	// 模型类型筛选（一级/二级分类树）
+	ModalTypes []FilterOption
+
+	// 输出模态选项
+	OutputModalities []FilterOption
 }
 
 // NewListUFSquareModelFiltersAuthRequest will create request of ListUFSquareModelFiltersAuth action.
