@@ -10,6 +10,18 @@ import (
 // SES API Schema
 
 /*
+SendSESEmailParamHeaders is request schema for complex param
+*/
+type SendSESEmailParamHeaders struct {
+
+	// 邮件头名称，最多 20 个且仅允许字母、数字和 -（正则 ^[A-Za-z0-9-]+$）。禁止使用保留名称：From/To/Cc/Bcc/Subject/Reply-To/Content-Type/Mime-Version，以及 X-SES- 前缀（均不区分大小写）。
+	Name *string `required:"false"`
+
+	// 邮件头值
+	Value *string `required:"false"`
+}
+
+/*
 SendSESEmailParamAttachments is request schema for complex param
 */
 type SendSESEmailParamAttachments struct {
@@ -22,18 +34,6 @@ type SendSESEmailParamAttachments struct {
 
 	// 附件文件名
 	Filename *string `required:"false"`
-}
-
-/*
-SendSESEmailParamHeaders is request schema for complex param
-*/
-type SendSESEmailParamHeaders struct {
-
-	// 邮件头名称，最多 20 个且仅允许字母、数字和 -（正则 ^[A-Za-z0-9-]+$）。禁止使用保留名称：From/To/Cc/Bcc/Subject/Reply-To/Content-Type/Mime-Version，以及 X-SES- 前缀（均不区分大小写）。
-	Name *string `required:"false"`
-
-	// 邮件头值
-	Value *string `required:"false"`
 }
 
 // SendSESEmailRequest is request schema for SendSESEmail action
@@ -129,18 +129,6 @@ func (c *SESClient) SendSESEmail(req *SendSESEmailRequest) (*SendSESEmailRespons
 }
 
 /*
-SendSESEmailTemplateParamHeaders is request schema for complex param
-*/
-type SendSESEmailTemplateParamHeaders struct {
-
-	// 邮件头名称，最多 20 个且仅允许字母、数字和 -（正则 ^[A-Za-z0-9-]+$）。禁止使用保留名称：From/To/Cc/Bcc/Subject/Reply-To/Content-Type/Mime-Version，以及 X-SES- 前缀（均不区分大小写）。
-	Name *string `required:"false"`
-
-	// 邮件头值
-	Value *string `required:"false"`
-}
-
-/*
 SendSESEmailTemplateParamEmailContent is request schema for complex param
 */
 type SendSESEmailTemplateParamEmailContent struct {
@@ -156,6 +144,18 @@ type SendSESEmailTemplateParamEmailContent struct {
 
 	// 收件人，最多100条
 	To *string `required:"false"`
+}
+
+/*
+SendSESEmailTemplateParamHeaders is request schema for complex param
+*/
+type SendSESEmailTemplateParamHeaders struct {
+
+	// 邮件头名称，最多 20 个且仅允许字母、数字和 -（正则 ^[A-Za-z0-9-]+$）。禁止使用保留名称：From/To/Cc/Bcc/Subject/Reply-To/Content-Type/Mime-Version，以及 X-SES- 前缀（均不区分大小写）。
+	Name *string `required:"false"`
+
+	// 邮件头值
+	Value *string `required:"false"`
 }
 
 /*
