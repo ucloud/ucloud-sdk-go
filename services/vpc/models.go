@@ -432,42 +432,15 @@ type AclInfo struct {
 }
 
 /*
-UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
+FwInfo - 防火墙信息
 */
-type UNIQuotaInfo struct {
+type FwInfo struct {
 
-	// 网卡拥有的内网IP数量
-	PrivateIpCount int
+	// 防火墙资源 ID
+	Id string
 
-	// 网卡内网IP配额
-	PrivateIpQuota int
-}
-
-/*
-UNIIpInfo - 虚拟网卡内网IP信息
-*/
-type UNIIpInfo struct {
-
-	// ip 地址
-	IpAddr []string
-
-	// ip类型 SecondaryIp/PrimaryIp
-	IpType string
-}
-
-/*
-SecGroup - UNI关联的安全组信息
-*/
-type SecGroup struct {
-
-	// 安全组名称
+	// 防火墙资源名称
 	Name string
-
-	// 关联优先级
-	Priority int
-
-	// 安全组ID
-	SecGroupId string
 }
 
 /*
@@ -486,15 +459,42 @@ type SimpleIPv6AddressInfo struct {
 }
 
 /*
-FwInfo - 防火墙信息
+UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
 */
-type FwInfo struct {
+type UNIQuotaInfo struct {
 
-	// 防火墙资源 ID
-	Id string
+	// 网卡拥有的内网IP数量
+	PrivateIpCount int
 
-	// 防火墙资源名称
+	// 网卡内网IP配额
+	PrivateIpQuota int
+}
+
+/*
+SecGroup - UNI关联的安全组信息
+*/
+type SecGroup struct {
+
+	// 安全组名称
 	Name string
+
+	// 关联优先级
+	Priority int
+
+	// 安全组ID
+	SecGroupId string
+}
+
+/*
+UNIIpInfo - 虚拟网卡内网IP信息
+*/
+type UNIIpInfo struct {
+
+	// ip 地址
+	IpAddr []string
+
+	// ip类型 SecondaryIp/PrimaryIp
+	IpType string
 }
 
 /*
@@ -1025,18 +1025,6 @@ type VIPDetailSet struct {
 }
 
 /*
-VPCNetworkInfo - vpc地址空间信息
-*/
-type VPCNetworkInfo struct {
-
-	// vpc地址空间
-	Network string
-
-	// 地址空间中子网数量
-	SubnetCount int
-}
-
-/*
 IPv6NetworkInfo -
 */
 type IPv6NetworkInfo struct {
@@ -1049,6 +1037,18 @@ type IPv6NetworkInfo struct {
 
 	// 类型
 	OperatorName string
+}
+
+/*
+VPCNetworkInfo - vpc地址空间信息
+*/
+type VPCNetworkInfo struct {
+
+	// vpc地址空间
+	Network string
+
+	// 地址空间中子网数量
+	SubnetCount int
 }
 
 /*

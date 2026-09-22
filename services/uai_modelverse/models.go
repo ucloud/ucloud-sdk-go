@@ -78,6 +78,18 @@ type DownloadFileData struct {
 }
 
 /*
+FilterOptionInteger - 整数类型筛选选项
+*/
+type FilterOptionInteger struct {
+
+	// 显示名称
+	Name string
+
+	// 值
+	Value int
+}
+
+/*
 FilterOptionString - 字符串类型筛选选项
 */
 type FilterOptionString struct {
@@ -90,15 +102,129 @@ type FilterOptionString struct {
 }
 
 /*
-FilterOptionInteger - 整数类型筛选选项
+InferenceRegionInfo - 地域推理模型信息
 */
-type FilterOptionInteger struct {
+type InferenceRegionInfo struct {
 
-	// 显示名称
-	Name string
+	// 地域模型ID (例如: deepseek-v4-flash-sg)
+	ModelId string
 
-	// 值
-	Value int
+	// 地域代码: sg(新加坡)/us(美国)/hk(香港)
+	RegionCode string
+
+	// 地域名称: 新加坡/美国/香港
+	RegionName string
+
+	// 地域名称(英文): Singapore/United States/Hong Kong
+	RegionNameEn string
+
+	// 广场模型ID (umodel-xxx)
+	SquareModelId string
+
+	// 状态: published(已发布)/unpublished(未发布)
+	Status string
+}
+
+/*
+ModelCapabilities - ModelCapabilities
+*/
+type ModelCapabilities struct {
+
+	// 是否支持批量推理
+	BatchInference bool
+
+	// 是否支持上下文缓存
+	ContextCaching bool
+
+	// 是否支持体验
+	Experience bool
+
+	// 是否支持函数调用
+	FunctionCall bool
+
+	// 是否支持知识库
+	KnowledgeBase bool
+
+	// 是否支持MCP
+	Mcp bool
+
+	// 是否支持结构化输出
+	StructuredOutput bool
+
+	// 是否支持联网搜索
+	WebSearch bool
+}
+
+/*
+ModelTypeMap - ModelTypeMap
+*/
+type ModelTypeMap struct {
+
+	// 图生图模型
+	ImageToImage bool
+
+	// 图生视频模型
+	ImageToVideo bool
+
+	// 微调模型
+	Inference bool
+
+	// 海外模型
+	Sensitive bool
+
+	// 文生文模型，true 表示是文生文模型，下同
+	TextGeneration bool
+
+	// 文生图模型
+	TextToImage bool
+
+	// 文生视频模型
+	TextToVideo bool
+}
+
+/*
+Pricing - 定价策略
+*/
+type Pricing struct {
+
+	// 输出定价
+	Completion float64
+
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+
+	// 单位（中文），如“次” “百万”
+	Unit string
+
+	// 单位（English），如“Time” “Million”
+	UnitEn string
+
+	// 生视频定价
+	Video string
+}
+
+/*
+ApiProtocols - ApiProtocols
+*/
+type ApiProtocols struct {
+
+	// 是否支持Anthropic协议
+	Anthropic bool
+
+	// 是否支持chat协议
+	ChatCompletions bool
+
+	// 是否支持gemini协议
+	Gemini bool
+
+	// 是否支持responses协议
+	Responses bool
 }
 
 /*
@@ -144,132 +270,6 @@ type PriceTier struct {
 
 	// 该档位下的收费列表（有序数组）
 	Rates []PriceRate
-}
-
-/*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
-
-	// 单位（中文），如“次” “百万”
-	Unit string
-
-	// 单位（English），如“Time” “Million”
-	UnitEn string
-
-	// 生视频定价
-	Video string
-}
-
-/*
-InferenceRegionInfo - 地域推理模型信息
-*/
-type InferenceRegionInfo struct {
-
-	// 地域模型ID (例如: deepseek-v4-flash-sg)
-	ModelId string
-
-	// 地域代码: sg(新加坡)/us(美国)/hk(香港)
-	RegionCode string
-
-	// 地域名称: 新加坡/美国/香港
-	RegionName string
-
-	// 地域名称(英文): Singapore/United States/Hong Kong
-	RegionNameEn string
-
-	// 广场模型ID (umodel-xxx)
-	SquareModelId string
-
-	// 状态: published(已发布)/unpublished(未发布)
-	Status string
-}
-
-/*
-ModelTypeMap - ModelTypeMap
-*/
-type ModelTypeMap struct {
-
-	// 图生图模型
-	ImageToImage bool
-
-	// 图生视频模型
-	ImageToVideo bool
-
-	// 微调模型
-	Inference bool
-
-	// 海外模型
-	Sensitive bool
-
-	// 文生文模型，true 表示是文生文模型，下同
-	TextGeneration bool
-
-	// 文生图模型
-	TextToImage bool
-
-	// 文生视频模型
-	TextToVideo bool
-}
-
-/*
-ApiProtocols - ApiProtocols
-*/
-type ApiProtocols struct {
-
-	// 是否支持Anthropic协议
-	Anthropic bool
-
-	// 是否支持chat协议
-	ChatCompletions bool
-
-	// 是否支持gemini协议
-	Gemini bool
-
-	// 是否支持responses协议
-	Responses bool
-}
-
-/*
-ModelCapabilities - ModelCapabilities
-*/
-type ModelCapabilities struct {
-
-	// 是否支持批量推理
-	BatchInference bool
-
-	// 是否支持上下文缓存
-	ContextCaching bool
-
-	// 是否支持体验
-	Experience bool
-
-	// 是否支持函数调用
-	FunctionCall bool
-
-	// 是否支持知识库
-	KnowledgeBase bool
-
-	// 是否支持MCP
-	Mcp bool
-
-	// 是否支持结构化输出
-	StructuredOutput bool
-
-	// 是否支持联网搜索
-	WebSearch bool
 }
 
 /*
