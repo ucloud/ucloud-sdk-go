@@ -432,18 +432,6 @@ type AclInfo struct {
 }
 
 /*
-UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
-*/
-type UNIQuotaInfo struct {
-
-	// 网卡拥有的内网IP数量
-	PrivateIpCount int
-
-	// 网卡内网IP配额
-	PrivateIpQuota int
-}
-
-/*
 UNIIpInfo - 虚拟网卡内网IP信息
 */
 type UNIIpInfo struct {
@@ -453,21 +441,6 @@ type UNIIpInfo struct {
 
 	// ip类型 SecondaryIp/PrimaryIp
 	IpType string
-}
-
-/*
-SecGroup - UNI关联的安全组信息
-*/
-type SecGroup struct {
-
-	// 安全组名称
-	Name string
-
-	// 关联优先级
-	Priority int
-
-	// 安全组ID
-	SecGroupId string
 }
 
 /*
@@ -483,6 +456,33 @@ type SimpleIPv6AddressInfo struct {
 
 	// IPv6 资源 ID
 	IPv6Id string
+}
+
+/*
+UNIQuotaInfo - 虚拟网卡内网IP配额使用情况
+*/
+type UNIQuotaInfo struct {
+
+	// 网卡拥有的内网IP数量
+	PrivateIpCount int
+
+	// 网卡内网IP配额
+	PrivateIpQuota int
+}
+
+/*
+SecGroup - UNI关联的安全组信息
+*/
+type SecGroup struct {
+
+	// 安全组名称
+	Name string
+
+	// 关联优先级
+	Priority int
+
+	// 安全组ID
+	SecGroupId string
 }
 
 /*
@@ -588,6 +588,18 @@ type NetworkInterface struct {
 }
 
 /*
+SecGroupSimpleInfo - 安全组简略信息
+*/
+type SecGroupSimpleInfo struct {
+
+	// 安全组名称
+	Name string
+
+	// 安全组资源ID
+	SecGroupId string
+}
+
+/*
 BindingSecGroupInfo -
 */
 type BindingSecGroupInfo struct {
@@ -603,18 +615,6 @@ type BindingSecGroupInfo struct {
 
 	// 安全组所属 VPC
 	VPCId string
-}
-
-/*
-SecGroupSimpleInfo - 安全组简略信息
-*/
-type SecGroupSimpleInfo struct {
-
-	// 安全组名称
-	Name string
-
-	// 安全组资源ID
-	SecGroupId string
 }
 
 /*

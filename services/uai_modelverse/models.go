@@ -102,6 +102,48 @@ type FilterOptionInteger struct {
 }
 
 /*
+ApiProtocols - ApiProtocols
+*/
+type ApiProtocols struct {
+
+	// 是否支持Anthropic协议
+	Anthropic bool
+
+	// 是否支持chat协议
+	ChatCompletions bool
+
+	// 是否支持gemini协议
+	Gemini bool
+
+	// 是否支持responses协议
+	Responses bool
+}
+
+/*
+InferenceRegionInfo - 地域推理模型信息
+*/
+type InferenceRegionInfo struct {
+
+	// 地域模型ID (例如: deepseek-v4-flash-sg)
+	ModelId string
+
+	// 地域代码: sg(新加坡)/us(美国)/hk(香港)
+	RegionCode string
+
+	// 地域名称: 新加坡/美国/香港
+	RegionName string
+
+	// 地域名称(英文): Singapore/United States/Hong Kong
+	RegionNameEn string
+
+	// 广场模型ID (umodel-xxx)
+	SquareModelId string
+
+	// 状态: published(已发布)/unpublished(未发布)
+	Status string
+}
+
+/*
 PriceRate - 该档位下的收费列表（有序数组）
 */
 type PriceRate struct {
@@ -126,24 +168,6 @@ type PriceRate struct {
 
 	// 计价单位英文
 	UnitEn string
-}
-
-/*
-PriceTier - 价格阶梯
-*/
-type PriceTier struct {
-
-	// 档位/条件（例如 "32k"、"128k"）
-	Condition string
-
-	// 档位描述（例如 "标准上下文 32k"）
-	Description string
-
-	// 档位描述（例如 "标准上下文 32k"）
-	DescriptionEn string
-
-	// 该档位下的收费列表（有序数组）
-	Rates []PriceRate
 }
 
 /*
@@ -174,30 +198,6 @@ type Pricing struct {
 }
 
 /*
-InferenceRegionInfo - 地域推理模型信息
-*/
-type InferenceRegionInfo struct {
-
-	// 地域模型ID (例如: deepseek-v4-flash-sg)
-	ModelId string
-
-	// 地域代码: sg(新加坡)/us(美国)/hk(香港)
-	RegionCode string
-
-	// 地域名称: 新加坡/美国/香港
-	RegionName string
-
-	// 地域名称(英文): Singapore/United States/Hong Kong
-	RegionNameEn string
-
-	// 广场模型ID (umodel-xxx)
-	SquareModelId string
-
-	// 状态: published(已发布)/unpublished(未发布)
-	Status string
-}
-
-/*
 ModelTypeMap - ModelTypeMap
 */
 type ModelTypeMap struct {
@@ -222,24 +222,6 @@ type ModelTypeMap struct {
 
 	// 文生视频模型
 	TextToVideo bool
-}
-
-/*
-ApiProtocols - ApiProtocols
-*/
-type ApiProtocols struct {
-
-	// 是否支持Anthropic协议
-	Anthropic bool
-
-	// 是否支持chat协议
-	ChatCompletions bool
-
-	// 是否支持gemini协议
-	Gemini bool
-
-	// 是否支持responses协议
-	Responses bool
 }
 
 /*
@@ -270,6 +252,24 @@ type ModelCapabilities struct {
 
 	// 是否支持联网搜索
 	WebSearch bool
+}
+
+/*
+PriceTier - 价格阶梯
+*/
+type PriceTier struct {
+
+	// 档位/条件（例如 "32k"、"128k"）
+	Condition string
+
+	// 档位描述（例如 "标准上下文 32k"）
+	Description string
+
+	// 档位描述（例如 "标准上下文 32k"）
+	DescriptionEn string
+
+	// 该档位下的收费列表（有序数组）
+	Rates []PriceRate
 }
 
 /*
@@ -627,6 +627,18 @@ type FilterOption struct {
 }
 
 /*
+RequestLogSummary - 请求日志汇总
+*/
+type RequestLogSummary struct {
+
+	// 查询条件命中的失败请求数
+	FailedRequests int
+
+	// 查询条件命中的总请求数
+	TotalRequests int
+}
+
+/*
 RequestLogItem - 请求日志列表项
 */
 type RequestLogItem struct {
@@ -693,18 +705,6 @@ type RequestLogItem struct {
 
 	// 总 Token 数
 	TotalTokens int
-}
-
-/*
-RequestLogSummary - 请求日志汇总
-*/
-type RequestLogSummary struct {
-
-	// 查询条件命中的失败请求数
-	FailedRequests int
-
-	// 查询条件命中的总请求数
-	TotalRequests int
 }
 
 /*

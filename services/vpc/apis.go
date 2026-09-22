@@ -5729,7 +5729,7 @@ type UpdateSecGroupRequest struct {
 	Remark *string `required:"false"`
 
 	// 安全组资源ID数组。不支持 .n 格式。Type 为 string 数组。
-	SecGroupId *string `required:"true"`
+	SecGroupId []string `required:"true"`
 }
 
 // UpdateSecGroupResponse is response schema for UpdateSecGroup action
