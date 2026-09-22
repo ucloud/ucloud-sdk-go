@@ -66,6 +66,18 @@ type TopicField struct {
 }
 
 /*
+FilePath - 文件路径
+*/
+type FilePath struct {
+
+	// 文件名
+	File string
+
+	// 路径
+	Path string
+}
+
+/*
 MachineGroup - 机器组
 */
 type MachineGroup struct {
@@ -84,18 +96,6 @@ type MachineGroup struct {
 
 	// 修改时间
 	UpdateTime int
-}
-
-/*
-FilePath - 文件路径
-*/
-type FilePath struct {
-
-	// 文件名
-	File string
-
-	// 路径
-	Path string
 }
 
 /*
@@ -153,12 +153,15 @@ type CollectConf struct {
 }
 
 /*
-LogSetInfo -
+LogSetInfo - 日志集信息
 */
 type LogSetInfo struct {
 
 	// 创建时间
 	CreateTime int
+
+	// 日志集ID
+	LogSetId string
 
 	// 日志集名称
 	LogSetName string
