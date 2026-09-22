@@ -777,6 +777,9 @@ type ListULogServiceLogSetResponse struct {
 
 	// 返回日志主题数据，是一个数组
 	Data []LogSetInfo
+
+	// 日志集数量
+	TotalCount int
 }
 
 // NewListULogServiceLogSetRequest will create request of ListULogServiceLogSet action.
