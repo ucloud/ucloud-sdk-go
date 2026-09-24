@@ -456,18 +456,6 @@ type ListMonitorProduct struct {
 }
 
 /*
-TagEntry - 标签条目
-*/
-type TagEntry struct {
-
-	// 标签候选值列表
-	KeyList []string
-
-	// 标签名称
-	TagName string
-}
-
-/*
 TagListItem - 标签键值项
 */
 type TagListItem struct {
@@ -510,6 +498,18 @@ type MetricResult struct {
 }
 
 /*
+TagEntry - 标签条目
+*/
+type TagEntry struct {
+
+	// 标签候选值列表
+	KeyList []string
+
+	// 标签名称
+	TagName string
+}
+
+/*
 QueryMetricDataRespItem - 单个监控指标的查询结果
 */
 type QueryMetricDataRespItem struct {
@@ -543,18 +543,6 @@ type QueryMetricDataResp struct {
 }
 
 /*
-LabelAttrItem - 标签扩展属性项
-*/
-type LabelAttrItem struct {
-
-	// 键
-	Key string
-
-	// 值
-	Value string
-}
-
-/*
 MetricSingleSample - 指标单个样本点结果
 */
 type MetricSingleSample struct {
@@ -579,6 +567,18 @@ type ResourceMonitorItem struct {
 
 	// 指标数据数组
 	MetricValues []MetricSingleSample
+}
+
+/*
+LabelAttrItem - 标签扩展属性项
+*/
+type LabelAttrItem struct {
+
+	// 键
+	Key string
+
+	// 值
+	Value string
 }
 
 /*
