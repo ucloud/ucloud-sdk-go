@@ -430,6 +430,53 @@ func (c *CloudWatchClient) GetMetricDataAggregationMethod(req *GetMetricDataAggr
 	return &res, nil
 }
 
+// GetProductHighPrecisionMetricsRequest is request schema for GetProductHighPrecisionMetrics action
+type GetProductHighPrecisionMetricsRequest struct {
+	request.CommonBase
+
+	// 产品唯一标识，参见 [产品概览](https://docs.ucloud.cn/cloudwatch/metric/intro)
+	ProductKey *string `required:"true"`
+}
+
+// GetProductHighPrecisionMetricsResponse is response schema for GetProductHighPrecisionMetrics action
+type GetProductHighPrecisionMetricsResponse struct {
+	response.CommonBase
+
+	// 返回数据
+	Data GetProductMetricsRespData
+}
+
+// NewGetProductHighPrecisionMetricsRequest will create request of GetProductHighPrecisionMetrics action.
+func (c *CloudWatchClient) NewGetProductHighPrecisionMetricsRequest() *GetProductHighPrecisionMetricsRequest {
+	req := &GetProductHighPrecisionMetricsRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetProductHighPrecisionMetrics
+
+获取云产品关联的高精度指标列表
+*/
+func (c *CloudWatchClient) GetProductHighPrecisionMetrics(req *GetProductHighPrecisionMetricsRequest) (*GetProductHighPrecisionMetricsResponse, error) {
+	var err error
+	var res GetProductHighPrecisionMetricsResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetProductHighPrecisionMetrics", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetProductMetricsRequest is request schema for GetProductMetrics action
 type GetProductMetricsRequest struct {
 	request.CommonBase
@@ -997,6 +1044,95 @@ func (c *CloudWatchClient) QueryMetricDataSummary(req *QueryMetricDataSummaryReq
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("QueryMetricDataSummary", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+/*
+QueryMetricDenseDataParamMetricInfosTags is request schema for complex param
+*/
+type QueryMetricDenseDataParamMetricInfosTags struct {
+
+	// AnyKey：代表任意一个用户自定义的key。Tags是一个用户自定义对象map，是要查询指标的tag的key和value。用户自定义的Tags对象里的key和value，它们分别是要查询的tag的key和value。如："Tags":{  "tag1":"value1",  "tag2":"value2",  "tag3":"value3"}
+	AnyKey *string `required:"false"`
+}
+
+/*
+QueryMetricDenseDataParamMetricInfos is request schema for complex param
+*/
+type QueryMetricDenseDataParamMetricInfos struct {
+
+	// 指标名
+	Metric *string `required:"false"`
+
+	// 资源id
+	ResourceId *string `required:"false"`
+
+	//
+	Tags *QueryMetricDenseDataParamMetricInfosTags `required:"false"`
+}
+
+// QueryMetricDenseDataRequest is request schema for QueryMetricDenseData action
+type QueryMetricDenseDataRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 全局产品可不传，其他类型必传。
+	// Region *string `required:"false"`
+
+	// 截止时间戳
+	EndTime *int `required:"true"`
+
+	//
+	MetricInfos []QueryMetricDenseDataParamMetricInfos `required:"false"`
+
+	// 资源类型
+	ProductKey *string `required:"true"`
+
+	// 开始时间戳
+	StartTime *int `required:"true"`
+}
+
+// QueryMetricDenseDataResponse is response schema for QueryMetricDenseData action
+type QueryMetricDenseDataResponse struct {
+	response.CommonBase
+
+	// 返回高精度指标监控数据
+	Data QueryMetricDataResp
+
+	// 错误信息
+	Message string
+}
+
+// NewQueryMetricDenseDataRequest will create request of QueryMetricDenseData action.
+func (c *CloudWatchClient) NewQueryMetricDenseDataRequest() *QueryMetricDenseDataRequest {
+	req := &QueryMetricDenseDataRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: QueryMetricDenseData
+
+获取高精度指标样本数据
+*/
+func (c *CloudWatchClient) QueryMetricDenseData(req *QueryMetricDenseDataRequest) (*QueryMetricDenseDataResponse, error) {
+	var err error
+	var res QueryMetricDenseDataResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("QueryMetricDenseData", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}
