@@ -54,7 +54,6 @@ import (
 	iuphost "github.com/ucloud/ucloud-sdk-go/internal/services/uphost"
 	ivpc "github.com/ucloud/ucloud-sdk-go/internal/services/vpc"
 
-	"github.com/ucloud/ucloud-sdk-go/services/cloudwatch"
 	"github.com/ucloud/ucloud-sdk-go/services/cube"
 	"github.com/ucloud/ucloud-sdk-go/services/iam"
 	"github.com/ucloud/ucloud-sdk-go/services/isms"
@@ -161,9 +160,6 @@ func testSetup() {
 
 	spec.AddFixture("", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return ucloud.NewClient(&cfg, &credential), nil
-	}))
-	spec.AddFixture("CloudWatch", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return cloudwatch.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("Cube", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return cube.NewClient(&cfg, &credential), nil
