@@ -3,21 +3,6 @@
 package uk8s
 
 /*
-SecGroupId - 安全组
-*/
-type SecGroupId struct {
-
-	// 安全组名称
-	Id string
-
-	// 安全组id
-	Name string
-
-	// 安全组优先级
-	Priority string
-}
-
-/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -51,6 +36,21 @@ type DiskSet struct {
 
 	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
+}
+
+/*
+SecGroupId - 安全组
+*/
+type SecGroupId struct {
+
+	// 安全组名称
+	Id string
+
+	// 安全组id
+	Name string
+
+	// 安全组优先级
+	Priority string
 }
 
 /*
@@ -153,15 +153,12 @@ type UhostInfo struct {
 }
 
 /*
-LoopbackClientCert - API Server 回环客户端证书
+KubeProxy - KubeProxy信息
 */
-type LoopbackClientCert struct {
+type KubeProxy struct {
 
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
 }
 
 /*
@@ -192,12 +189,15 @@ type Autoscaler struct {
 }
 
 /*
-KubeProxy - KubeProxy信息
+LoopbackClientCert - API Server 回环客户端证书
 */
-type KubeProxy struct {
+type LoopbackClientCert struct {
 
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
 }
 
 /*
@@ -534,6 +534,24 @@ type ReservedResource struct {
 }
 
 /*
+EvictionCondition - 驱逐条件或宽限时间
+*/
+type EvictionCondition struct {
+
+	// 镜像文件系统存储相关驱逐条件或宽限时间。
+	ImagefsAvailable string
+
+	// 内存相关驱逐条件或宽限时间。
+	MemoryAvailable string
+
+	// 节点存储余量相关驱逐条件或宽限时间。
+	NodefsAvailable string
+
+	// 节点剩余inodes驱逐条件或宽限时间。
+	NodefsInodesFree string
+}
+
+/*
 EIP - 节点EIP
 */
 type EIP struct {
@@ -561,24 +579,6 @@ type NetworkInterface struct {
 
 	// EIP
 	EIP EIP
-}
-
-/*
-EvictionCondition - 驱逐条件或宽限时间
-*/
-type EvictionCondition struct {
-
-	// 镜像文件系统存储相关驱逐条件或宽限时间。
-	ImagefsAvailable string
-
-	// 内存相关驱逐条件或宽限时间。
-	MemoryAvailable string
-
-	// 节点存储余量相关驱逐条件或宽限时间。
-	NodefsAvailable string
-
-	// 节点剩余inodes驱逐条件或宽限时间。
-	NodefsInodesFree string
 }
 
 /*
@@ -747,6 +747,36 @@ type NodeGroupSet struct {
 }
 
 /*
+ULSLabels - ULSLabels
+*/
+type ULSLabels struct {
+
+	// 要匹配的标签的 Key。
+	Key string
+
+	// 要匹配的标签的值。
+	Value string
+
+	// 标签值的匹配操作符。可选值: in, notin。
+	ValueOperator string
+}
+
+/*
+ULSPodLabelsMatch - ULSPodLabelsMatch
+*/
+type ULSPodLabelsMatch struct {
+
+	// 一个标签选择器数组，用于定义匹配的标签条件。
+	Labels []ULSLabels
+
+	// 要匹配的命名空间。namespaceOperator 存在时必需。
+	Namespace string
+
+	// 命名空间名称的匹配操作符。可选值: in, notin。
+	NamespaceOperator string
+}
+
+/*
 ULSWorkloadMatch - ULSWorkloadMatch
 */
 type ULSWorkloadMatch struct {
@@ -759,6 +789,24 @@ type ULSWorkloadMatch struct {
 
 	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
 	Type string
+}
+
+/*
+ULSMatchRule - ULSMatchRule
+*/
+type ULSMatchRule struct {
+
+	// 要匹配的容器名称，*表示所有容器，用逗号分隔
+	Container string
+
+	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
+	ContainerOperator string
+
+	// 按 Pod 的标签进行匹配，提供更灵活的选择。
+	PodLabels ULSPodLabelsMatch
+
+	// 按工作负载进行匹配。
+	Workloads []ULSWorkloadMatch
 }
 
 /*
@@ -849,54 +897,6 @@ type ULSInputDetail struct {
 
 	// 日志输入类型。可选值：container_file、container_stdout。
 	Type string
-}
-
-/*
-ULSLabels - ULSLabels
-*/
-type ULSLabels struct {
-
-	// 要匹配的标签的 Key。
-	Key string
-
-	// 要匹配的标签的值。
-	Value string
-
-	// 标签值的匹配操作符。可选值: in, notin。
-	ValueOperator string
-}
-
-/*
-ULSPodLabelsMatch - ULSPodLabelsMatch
-*/
-type ULSPodLabelsMatch struct {
-
-	// 一个标签选择器数组，用于定义匹配的标签条件。
-	Labels []ULSLabels
-
-	// 要匹配的命名空间。namespaceOperator 存在时必需。
-	Namespace string
-
-	// 命名空间名称的匹配操作符。可选值: in, notin。
-	NamespaceOperator string
-}
-
-/*
-ULSMatchRule - ULSMatchRule
-*/
-type ULSMatchRule struct {
-
-	// 要匹配的容器名称，*表示所有容器，用逗号分隔
-	Container string
-
-	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
-	ContainerOperator string
-
-	// 按 Pod 的标签进行匹配，提供更灵活的选择。
-	PodLabels ULSPodLabelsMatch
-
-	// 按工作负载进行匹配。
-	Workloads []ULSWorkloadMatch
 }
 
 /*
