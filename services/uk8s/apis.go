@@ -93,24 +93,6 @@ func (c *UK8SClient) AddUK8SExistingUHost(req *AddUK8SExistingUHostRequest) (*Ad
 }
 
 /*
-AddUK8SNodeGroupParamKubeletConfigurationEvictionHard is request schema for complex param
-*/
-type AddUK8SNodeGroupParamKubeletConfigurationEvictionHard struct {
-
-	// 触发Pod驱逐操作的硬性门限之容器镜像剩余空间: 需以%结尾。控制台展示为evictionHard - imagefs.available
-	ImagefsAvailable *string `required:"false"`
-
-	// 触发Pod驱逐操作的硬性门限之内存用量: 需以Mi或Gi结尾。控制台展示为evictionHard - memory.available
-	MemoryAvailable *string `required:"false"`
-
-	// 触发Pod驱逐操作的硬性门限之节点存储剩余空间: 需以%结尾。控制台展示为evictionHard - nodefs.available
-	NodefsAvailable *string `required:"false"`
-
-	// 触发Pod驱逐操作的硬性门限节点inode剩余量: 需以%结尾。控制台展示为evictionHard - nodefs.inodesFree
-	NodefsInodesFree *string `required:"false"`
-}
-
-/*
 AddUK8SNodeGroupParamKubeletConfigurationEvictionSoft is request schema for complex param
 */
 type AddUK8SNodeGroupParamKubeletConfigurationEvictionSoft struct {
@@ -129,39 +111,6 @@ type AddUK8SNodeGroupParamKubeletConfigurationEvictionSoft struct {
 }
 
 /*
-AddUK8SNodeGroupParamSecGroupId is request schema for complex param
-*/
-type AddUK8SNodeGroupParamSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
-AddUK8SNodeGroupParamKubeletConfigurationKubeReserved is request schema for complex param
-*/
-type AddUK8SNodeGroupParamKubeletConfigurationKubeReserved struct {
-
-	// kubelet预留CPU资源，以m结尾。控制台展示为kubeReserved - cpu
-	CPU *string `required:"false"`
-
-	// kubelet预留存储空间，以Gi结尾。控制台展示为kubeReserved - ephemeral-storage
-	EphemeralStorage *string `required:"false"`
-
-	// kubelet预留内存资源，以Mi结尾。控制台展示为kubeReserved - memory
-	Memory *string `required:"false"`
-
-	// kubelet预留pid数量，必须大于等于500, string方式提供。控制台展示为kubeReserved - pid
-	Pid *string `required:"false"`
-}
-
-/*
 AddUK8SNodeGroupParamKubeletConfigurationEvictionSoftGracePeriod is request schema for complex param
 */
 type AddUK8SNodeGroupParamKubeletConfigurationEvictionSoftGracePeriod struct {
@@ -176,6 +125,24 @@ type AddUK8SNodeGroupParamKubeletConfigurationEvictionSoftGracePeriod struct {
 	NodefsAvailable *string `required:"false"`
 
 	// NodefsInodesFree软性门限的宽限时间，必须以s结尾。控制台展示为evictionSoftGracePeriod - nodefs.inodesFree
+	NodefsInodesFree *string `required:"false"`
+}
+
+/*
+AddUK8SNodeGroupParamKubeletConfigurationEvictionHard is request schema for complex param
+*/
+type AddUK8SNodeGroupParamKubeletConfigurationEvictionHard struct {
+
+	// 触发Pod驱逐操作的硬性门限之容器镜像剩余空间: 需以%结尾。控制台展示为evictionHard - imagefs.available
+	ImagefsAvailable *string `required:"false"`
+
+	// 触发Pod驱逐操作的硬性门限之内存用量: 需以Mi或Gi结尾。控制台展示为evictionHard - memory.available
+	MemoryAvailable *string `required:"false"`
+
+	// 触发Pod驱逐操作的硬性门限之节点存储剩余空间: 需以%结尾。控制台展示为evictionHard - nodefs.available
+	NodefsAvailable *string `required:"false"`
+
+	// 触发Pod驱逐操作的硬性门限节点inode剩余量: 需以%结尾。控制台展示为evictionHard - nodefs.inodesFree
 	NodefsInodesFree *string `required:"false"`
 }
 
@@ -198,24 +165,21 @@ type AddUK8SNodeGroupParamKubeletConfigurationSystemReserved struct {
 }
 
 /*
-AddUK8SNodeGroupParamNetworkInterfaceEIP is request schema for complex param
+AddUK8SNodeGroupParamKubeletConfigurationKubeReserved is request schema for complex param
 */
-type AddUK8SNodeGroupParamNetworkInterfaceEIP struct {
+type AddUK8SNodeGroupParamKubeletConfigurationKubeReserved struct {
 
-	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
-	Bandwidth *int `required:"false"`
+	// kubelet预留CPU资源，以m结尾。控制台展示为kubeReserved - cpu
+	CPU *string `required:"false"`
 
-	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
-	CouponId *string `required:"false"`
+	// kubelet预留存储空间，以Gi结尾。控制台展示为kubeReserved - ephemeral-storage
+	EphemeralStorage *string `required:"false"`
 
-	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International,BGP: Bgp.各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
-	OperatorName *string `required:"false"`
+	// kubelet预留内存资源，以Mi结尾。控制台展示为kubeReserved - memory
+	Memory *string `required:"false"`
 
-	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
-	PayMode *string `required:"false"`
-
-	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
-	ShareBandwidthId *string `required:"false"`
+	// kubelet预留pid数量，必须大于等于500, string方式提供。控制台展示为kubeReserved - pid
+	Pid *string `required:"false"`
 }
 
 /*
@@ -255,12 +219,48 @@ type AddUK8SNodeGroupParamKubeletConfiguration struct {
 }
 
 /*
+AddUK8SNodeGroupParamNetworkInterfaceEIP is request schema for complex param
+*/
+type AddUK8SNodeGroupParamNetworkInterfaceEIP struct {
+
+	// 【若绑定EIP，此参数必填】弹性IP的外网带宽, 单位为Mbps. 共享带宽模式下非必传, 非共享带宽模式必须指定非0Mbps带宽. 各地域非共享带宽的带宽范围如下： 流量计费[1-300]，带宽计费[1-800]
+	Bandwidth *int `required:"false"`
+
+	// 当前EIP代金券id。请通过DescribeCoupon接口查询，或登录用户中心查看。
+	CouponId *string `required:"false"`
+
+	// 【若绑定EIP，此参数必填】弹性IP的线路。枚举值: 国际: International,BGP: Bgp.各地域允许的线路参数如下: cn-sh1: Bgp cn-sh2: Bgp cn-gd: Bgp cn-bj1: Bgp cn-bj2: Bgp hk: International us-ca: International th-bkk: International kr-seoul:International us-ws:International ge-fra:International sg:International tw-kh:International.其他海外线路均为 International
+	OperatorName *string `required:"false"`
+
+	// 弹性IP的计费模式. 枚举值: "Traffic", 流量计费; "Bandwidth", 带宽计费; "ShareBandwidth",共享带宽模式. "Free":免费带宽模式,默认为 "Bandwidth"
+	PayMode *string `required:"false"`
+
+	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
+	ShareBandwidthId *string `required:"false"`
+}
+
+/*
 AddUK8SNodeGroupParamNetworkInterface is request schema for complex param
 */
 type AddUK8SNodeGroupParamNetworkInterface struct {
 
 	//
 	EIP *AddUK8SNodeGroupParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+AddUK8SNodeGroupParamSecGroupId is request schema for complex param
+*/
+type AddUK8SNodeGroupParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
 }
 
 // AddUK8SNodeGroupRequest is request schema for AddUK8SNodeGroup action
@@ -511,21 +511,6 @@ func (c *UK8SClient) AddUK8SPHostNode(req *AddUK8SPHostNodeRequest) (*AddUK8SPHo
 }
 
 /*
-AddUK8SUHostNodeParamSecGroupId is request schema for complex param
-*/
-type AddUK8SUHostNodeParamSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
 AddUK8SUHostNodeParamNetworkInterfaceEIP is request schema for complex param
 */
 type AddUK8SUHostNodeParamNetworkInterfaceEIP struct {
@@ -547,21 +532,27 @@ type AddUK8SUHostNodeParamNetworkInterfaceEIP struct {
 }
 
 /*
-AddUK8SUHostNodeParamKubeletConfiguration is request schema for complex param
-*/
-type AddUK8SUHostNodeParamKubeletConfiguration struct {
-
-	// 全量KubeletConfiguration.XXX定义参考AddUK8SNodeGroup接口: https://uxiao.ucloudadmin.com/#/api-manager/api/detail/UK8S/AddUK8SNodeGroup
-	ContainerLogMaxFiles *string `required:"false"`
-}
-
-/*
 AddUK8SUHostNodeParamNetworkInterface is request schema for complex param
 */
 type AddUK8SUHostNodeParamNetworkInterface struct {
 
 	//
 	EIP *AddUK8SUHostNodeParamNetworkInterfaceEIP `required:"false"`
+}
+
+/*
+AddUK8SUHostNodeParamSecGroupId is request schema for complex param
+*/
+type AddUK8SUHostNodeParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
 }
 
 /*
@@ -574,6 +565,15 @@ type AddUK8SUHostNodeParamUserLabels struct {
 
 	// UK8S用户资源标签的值
 	Value *string `required:"false"`
+}
+
+/*
+AddUK8SUHostNodeParamKubeletConfiguration is request schema for complex param
+*/
+type AddUK8SUHostNodeParamKubeletConfiguration struct {
+
+	// 全量KubeletConfiguration.XXX定义参考AddUK8SNodeGroup接口: https://uxiao.ucloudadmin.com/#/api-manager/api/detail/UK8S/AddUK8SNodeGroup
+	ContainerLogMaxFiles *string `required:"false"`
 }
 
 // AddUK8SUHostNodeRequest is request schema for AddUK8SUHostNode action
@@ -744,33 +744,6 @@ func (c *UK8SClient) AddUK8SUHostNode(req *AddUK8SUHostNodeRequest) (*AddUK8SUHo
 }
 
 /*
-CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMasterSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组名称。
-	Name *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *string `required:"false"`
-}
-
-/*
-CreateUK8SClusterV2ParamMaster is request schema for complex param
-*/
-type CreateUK8SClusterV2ParamMaster struct {
-
-	//
-	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
-
-	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
-	Zone *string `required:"true"`
-}
-
-/*
 CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUK8SClusterV2ParamNodesNetworkInterfaceEIP struct {
@@ -801,12 +774,18 @@ type CreateUK8SClusterV2ParamNodesNetworkInterface struct {
 }
 
 /*
-CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
+CreateUK8SClusterV2ParamNodesSecGroupId is request schema for complex param
 */
-type CreateUK8SClusterV2ParamKubeProxy struct {
+type CreateUK8SClusterV2ParamNodesSecGroupId struct {
 
-	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
-	Mode *string `required:"false"`
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组名称。
+	Name *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *string `required:"false"`
 }
 
 /*
@@ -822,9 +801,18 @@ type CreateUK8SClusterV2ParamUserLabels struct {
 }
 
 /*
-CreateUK8SClusterV2ParamNodesSecGroupId is request schema for complex param
+CreateUK8SClusterV2ParamKubeProxy is request schema for complex param
 */
-type CreateUK8SClusterV2ParamNodesSecGroupId struct {
+type CreateUK8SClusterV2ParamKubeProxy struct {
+
+	// 集群kube-proxy模式。支持iptables和ipvs，默认为iptables。
+	Mode *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMasterSecGroupId is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMasterSecGroupId struct {
 
 	// 安全组 ID。至多可以同时绑定5个安全组。
 	Id *string `required:"false"`
@@ -834,6 +822,18 @@ type CreateUK8SClusterV2ParamNodesSecGroupId struct {
 
 	// 安全组优先级。取值范围[1, 5]
 	Priority *string `required:"false"`
+}
+
+/*
+CreateUK8SClusterV2ParamMaster is request schema for complex param
+*/
+type CreateUK8SClusterV2ParamMaster struct {
+
+	//
+	SecGroupId []CreateUK8SClusterV2ParamMasterSecGroupId `required:"false"`
+
+	// Master节点所属可用区，需要设置 Master.0.Zone、 Master.1.Zone、Master.2.Zone 三个 Master 节点的可用区。 三个节点可部署在不同可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	Zone *string `required:"true"`
 }
 
 /*
@@ -1091,18 +1091,15 @@ func (c *UK8SClient) CreateUK8SClusterV2(req *CreateUK8SClusterV2Request) (*Crea
 }
 
 /*
-CreateUK8SULSConfigParamMatchRuleWorkloads is request schema for complex param
+CreateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
 */
-type CreateUK8SULSConfigParamMatchRuleWorkloads struct {
+type CreateUK8SULSConfigParamInputDetailFilePaths struct {
 
-	// 按工作负载匹配时，工作负载的名称。
-	Name *string `required:"false"`
+	// 定义采集路径的文件名
+	File *string `required:"false"`
 
-	// 按工作负载匹配时，工作负载所在的命名空间。
-	Namespace *string `required:"false"`
-
-	// 按工作负载匹配时，工作负载的类型，例如 deployment, statefulset, daemonset,job, cronjob。
-	Type *string `required:"false"`
+	// 定义采集路径
+	Path *string `required:"false"`
 }
 
 /*
@@ -1121,48 +1118,18 @@ type CreateUK8SULSConfigParamMatchRulePodLabelsLabels struct {
 }
 
 /*
-CreateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
+CreateUK8SULSConfigParamMatchRuleWorkloads is request schema for complex param
 */
-type CreateUK8SULSConfigParamMatchRulePodLabels struct {
+type CreateUK8SULSConfigParamMatchRuleWorkloads struct {
 
-	//
-	Labels []CreateUK8SULSConfigParamMatchRulePodLabelsLabels `required:"false"`
+	// 按工作负载匹配时，工作负载的名称。
+	Name *string `required:"false"`
 
-	// 命名空间名称
+	// 按工作负载匹配时，工作负载所在的命名空间。
 	Namespace *string `required:"false"`
 
-	// 指定/排除命名空间, 可选值: in/notin
-	NamespaceOperator *string `required:"false"`
-}
-
-/*
-CreateUK8SULSConfigParamMatchRule is request schema for complex param
-*/
-type CreateUK8SULSConfigParamMatchRule struct {
-
-	// 要匹配的容器名称，*表示所有容器，用逗号分隔
-	Container *string `required:"false"`
-
-	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
-	ContainerOperator *string `required:"false"`
-
-	//
-	PodLabels *CreateUK8SULSConfigParamMatchRulePodLabels `required:"false"`
-
-	//
-	Workloads []CreateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
-}
-
-/*
-CreateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
-*/
-type CreateUK8SULSConfigParamInputDetailFilePaths struct {
-
-	// 定义采集路径的文件名
-	File *string `required:"false"`
-
-	// 定义采集路径
-	Path *string `required:"false"`
+	// 按工作负载匹配时，工作负载的类型，例如 deployment, statefulset, daemonset,job, cronjob。
+	Type *string `required:"false"`
 }
 
 /*
@@ -1184,24 +1151,6 @@ type CreateUK8SULSConfigParamExtractRuleExtractRule struct {
 
 	// Base64 编码的日志提取正则表达式。
 	LogRegexBase64 *string `required:"false"`
-}
-
-/*
-CreateUK8SULSConfigParamInputDetail is request schema for complex param
-*/
-type CreateUK8SULSConfigParamInputDetail struct {
-
-	//
-	FilePaths []CreateUK8SULSConfigParamInputDetailFilePaths `required:"false"`
-
-	//
-	Metadata *CreateUK8SULSConfigParamInputDetailMetadata `required:"false"`
-
-	// all、stdout、stderr，默认 all (用于 InputDetail.Type = container_stdout)
-	Stream *string `required:"false"`
-
-	// 日志输入类型。支持 container_file 和 container_stdout
-	Type *string `required:"true"`
 }
 
 /*
@@ -1250,6 +1199,57 @@ type CreateUK8SULSConfigParamExtractRule struct {
 
 	// 是否上传解析失败的日志。true 表示上传，false 表示丢弃。默认为 false。
 	UnMatchUpload *string `required:"false"`
+}
+
+/*
+CreateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
+*/
+type CreateUK8SULSConfigParamMatchRulePodLabels struct {
+
+	//
+	Labels []CreateUK8SULSConfigParamMatchRulePodLabelsLabels `required:"false"`
+
+	// 命名空间名称
+	Namespace *string `required:"false"`
+
+	// 指定/排除命名空间, 可选值: in/notin
+	NamespaceOperator *string `required:"false"`
+}
+
+/*
+CreateUK8SULSConfigParamMatchRule is request schema for complex param
+*/
+type CreateUK8SULSConfigParamMatchRule struct {
+
+	// 要匹配的容器名称，*表示所有容器，用逗号分隔
+	Container *string `required:"false"`
+
+	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
+	ContainerOperator *string `required:"false"`
+
+	//
+	PodLabels *CreateUK8SULSConfigParamMatchRulePodLabels `required:"false"`
+
+	//
+	Workloads []CreateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
+}
+
+/*
+CreateUK8SULSConfigParamInputDetail is request schema for complex param
+*/
+type CreateUK8SULSConfigParamInputDetail struct {
+
+	//
+	FilePaths []CreateUK8SULSConfigParamInputDetailFilePaths `required:"false"`
+
+	//
+	Metadata *CreateUK8SULSConfigParamInputDetailMetadata `required:"false"`
+
+	// all、stdout、stderr，默认 all (用于 InputDetail.Type = container_stdout)
+	Stream *string `required:"false"`
+
+	// 日志输入类型。支持 container_file 和 container_stdout
+	Type *string `required:"true"`
 }
 
 // CreateUK8SULSConfigRequest is request schema for CreateUK8SULSConfig action
@@ -2545,18 +2545,6 @@ func (c *UK8SClient) UpdateUK8SNodeGroup(req *UpdateUK8SNodeGroupRequest) (*Upda
 }
 
 /*
-UpdateUK8SULSConfigParamInputDetailMetadata is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamInputDetailMetadata struct {
-
-	// 要附加到日志中的容器元数据字段，多个字段使用逗号分隔。可选字段：container_name、namespace、pod_name、pod_ip、pod_uid、container_id、image_name。留空表示不采集容器元数据。
-	Container *string `required:"false"`
-
-	// 要采集的Pod标签。*表示采集所有标签，app,version表示仅采集指定标签，空字符串表示不采集标签。
-	Labels *string `required:"false"`
-}
-
-/*
 UpdateUK8SULSConfigParamMatchRulePodLabelsLabels is request schema for complex param
 */
 type UpdateUK8SULSConfigParamMatchRulePodLabelsLabels struct {
@@ -2569,6 +2557,96 @@ type UpdateUK8SULSConfigParamMatchRulePodLabelsLabels struct {
 
 	// 标签值匹配操作符。可选值：in、notin。
 	ValueOperator *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamMatchRulePodLabels struct {
+
+	//
+	Labels []UpdateUK8SULSConfigParamMatchRulePodLabelsLabels `required:"false"`
+
+	// 按Pod标签匹配时要匹配的命名空间。
+	Namespace *string `required:"false"`
+
+	// 按Pod标签匹配时，命名空间名称的匹配操作符。可选值：in、notin。填写该参数时必须同时填写MatchRule.PodLabels.Namespace。PodLabels和Workloads不能同时设置。
+	NamespaceOperator *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamMatchRuleWorkloads is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamMatchRuleWorkloads struct {
+
+	// 工作负载名称。
+	Name *string `required:"false"`
+
+	// 按工作负载匹配时，工作负载所在的命名空间。Workloads和PodLabels不能同时设置。
+	Namespace *string `required:"false"`
+
+	// 工作负载类型。可选值：deployment、statefulset、daemonset、job、cronjob。
+	Type *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamInputDetailFilePaths struct {
+
+	// 要采集的文件名。仅适用于container_file。
+	File *string `required:"false"`
+
+	// 日志采集路径。仅适用于container_file。
+	Path *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamInputDetailMetadata is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamInputDetailMetadata struct {
+
+	// 要附加到日志中的容器元数据字段，多个字段使用逗号分隔。可选字段：container_name、namespace、pod_name、pod_ip、pod_uid、container_id、image_name。留空表示不采集容器元数据。
+	Container *string `required:"false"`
+
+	// 要采集的Pod标签。*表示采集所有标签，app,version表示仅采集指定标签，空字符串表示不采集标签。
+	Labels *string `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamMatchRule is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamMatchRule struct {
+
+	// 要匹配的容器名称，*表示所有容器，多个名称使用逗号分隔。
+	Container *string `required:"false"`
+
+	// 容器名称匹配操作符。可选值：in、notin。填写该参数时必须同时填写MatchRule.Container。
+	ContainerOperator *string `required:"false"`
+
+	//
+	PodLabels *UpdateUK8SULSConfigParamMatchRulePodLabels `required:"false"`
+
+	//
+	Workloads []UpdateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
+}
+
+/*
+UpdateUK8SULSConfigParamInputDetail is request schema for complex param
+*/
+type UpdateUK8SULSConfigParamInputDetail struct {
+
+	//
+	FilePaths []UpdateUK8SULSConfigParamInputDetailFilePaths `required:"false"`
+
+	//
+	Metadata *UpdateUK8SULSConfigParamInputDetailMetadata `required:"false"`
+
+	// 容器标准输出流类型。仅适用于container_stdout，可选值：all、stdout、stderr，默认为all。
+	Stream *string `required:"false"`
+
+	// 日志输入类型。可选值：container_file、container_stdout。
+	Type *string `required:"true"`
 }
 
 /*
@@ -2617,84 +2695,6 @@ type UpdateUK8SULSConfigParamExtractRule struct {
 
 	// 是否上传解析失败的日志。字符串true表示上传，false表示丢弃。默认为false。
 	UnMatchUpload *string `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamMatchRulePodLabels is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamMatchRulePodLabels struct {
-
-	//
-	Labels []UpdateUK8SULSConfigParamMatchRulePodLabelsLabels `required:"false"`
-
-	// 按Pod标签匹配时要匹配的命名空间。
-	Namespace *string `required:"false"`
-
-	// 按Pod标签匹配时，命名空间名称的匹配操作符。可选值：in、notin。填写该参数时必须同时填写MatchRule.PodLabels.Namespace。PodLabels和Workloads不能同时设置。
-	NamespaceOperator *string `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamMatchRuleWorkloads is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamMatchRuleWorkloads struct {
-
-	// 工作负载名称。
-	Name *string `required:"false"`
-
-	// 按工作负载匹配时，工作负载所在的命名空间。Workloads和PodLabels不能同时设置。
-	Namespace *string `required:"false"`
-
-	// 工作负载类型。可选值：deployment、statefulset、daemonset、job、cronjob。
-	Type *string `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamMatchRule is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamMatchRule struct {
-
-	// 要匹配的容器名称，*表示所有容器，多个名称使用逗号分隔。
-	Container *string `required:"false"`
-
-	// 容器名称匹配操作符。可选值：in、notin。填写该参数时必须同时填写MatchRule.Container。
-	ContainerOperator *string `required:"false"`
-
-	//
-	PodLabels *UpdateUK8SULSConfigParamMatchRulePodLabels `required:"false"`
-
-	//
-	Workloads []UpdateUK8SULSConfigParamMatchRuleWorkloads `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamInputDetailFilePaths is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamInputDetailFilePaths struct {
-
-	// 要采集的文件名。仅适用于container_file。
-	File *string `required:"false"`
-
-	// 日志采集路径。仅适用于container_file。
-	Path *string `required:"false"`
-}
-
-/*
-UpdateUK8SULSConfigParamInputDetail is request schema for complex param
-*/
-type UpdateUK8SULSConfigParamInputDetail struct {
-
-	//
-	FilePaths []UpdateUK8SULSConfigParamInputDetailFilePaths `required:"false"`
-
-	//
-	Metadata *UpdateUK8SULSConfigParamInputDetailMetadata `required:"false"`
-
-	// 容器标准输出流类型。仅适用于container_stdout，可选值：all、stdout、stderr，默认为all。
-	Stream *string `required:"false"`
-
-	// 日志输入类型。可选值：container_file、container_stdout。
-	Type *string `required:"true"`
 }
 
 // UpdateUK8SULSConfigRequest is request schema for UpdateUK8SULSConfig action
