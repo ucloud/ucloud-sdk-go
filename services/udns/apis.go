@@ -263,6 +263,56 @@ func (c *UDNSClient) DeleteUDNSRecord(req *DeleteUDNSRecordRequest) (*DeleteUDNS
 	return &res, nil
 }
 
+// DeleteUDNSZoneRequest is request schema for DeleteUDNSZone action
+type DeleteUDNSZoneRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 域名资源ID
+	DNSZoneId *string `required:"true"`
+}
+
+// DeleteUDNSZoneResponse is response schema for DeleteUDNSZone action
+type DeleteUDNSZoneResponse struct {
+	response.CommonBase
+}
+
+// NewDeleteUDNSZoneRequest will create request of DeleteUDNSZone action.
+func (c *UDNSClient) NewDeleteUDNSZoneRequest() *DeleteUDNSZoneRequest {
+	req := &DeleteUDNSZoneRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DeleteUDNSZone
+
+删除域名
+*/
+func (c *UDNSClient) DeleteUDNSZone(req *DeleteUDNSZoneRequest) (*DeleteUDNSZoneResponse, error) {
+	var err error
+	var res DeleteUDNSZoneResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DeleteUDNSZone", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeUDNSDomainRequest is request schema for DescribeUDNSDomain action
 type DescribeUDNSDomainRequest struct {
 	request.CommonBase
@@ -464,6 +514,109 @@ func (c *UDNSClient) DescribeUDNSZone(req *DescribeUDNSZoneRequest) (*DescribeUD
 	return &res, nil
 }
 
+// DescribeUDNSZoneByVPCRequest is request schema for DescribeUDNSZoneByVPC action
+type DescribeUDNSZoneByVPCRequest struct {
+	request.CommonBase
+
+	// VPC id
+	VPCId *string `required:"true"`
+}
+
+// DescribeUDNSZoneByVPCResponse is response schema for DescribeUDNSZoneByVPC action
+type DescribeUDNSZoneByVPCResponse struct {
+	response.CommonBase
+}
+
+// NewDescribeUDNSZoneByVPCRequest will create request of DescribeUDNSZoneByVPC action.
+func (c *UDNSClient) NewDescribeUDNSZoneByVPCRequest() *DescribeUDNSZoneByVPCRequest {
+	req := &DescribeUDNSZoneByVPCRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUDNSZoneByVPC
+
+根据VPC id 查询绑定的UDNSZone
+*/
+func (c *UDNSClient) DescribeUDNSZoneByVPC(req *DescribeUDNSZoneByVPCRequest) (*DescribeUDNSZoneByVPCResponse, error) {
+	var err error
+	var res DescribeUDNSZoneByVPCResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUDNSZoneByVPC", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeUDNSZoneForwardRequest is request schema for DescribeUDNSZoneForward action
+type DescribeUDNSZoneForwardRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// 域名ID
+	DNSZoneId *string `required:"true"`
+}
+
+// DescribeUDNSZoneForwardResponse is response schema for DescribeUDNSZoneForward action
+type DescribeUDNSZoneForwardResponse struct {
+	response.CommonBase
+
+	// 转发目标DNS 服务器地址
+	Servers []string
+
+	// 转发目标VPC的ID
+	VPCId string
+
+	// 转发目标VPC所属VPC
+	VPCProjectId string
+
+	// 转发目标VPC所属地域
+	VPCRegion string
+}
+
+// NewDescribeUDNSZoneForwardRequest will create request of DescribeUDNSZoneForward action.
+func (c *UDNSClient) NewDescribeUDNSZoneForwardRequest() *DescribeUDNSZoneForwardRequest {
+	req := &DescribeUDNSZoneForwardRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUDNSZoneForward
+
+获取域名转发配置
+*/
+func (c *UDNSClient) DescribeUDNSZoneForward(req *DescribeUDNSZoneForwardRequest) (*DescribeUDNSZoneForwardResponse, error) {
+	var err error
+	var res DescribeUDNSZoneForwardResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUDNSZoneForward", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DisassociateUDNSZoneVPCRequest is request schema for DisassociateUDNSZoneVPC action
 type DisassociateUDNSZoneVPCRequest struct {
 	request.CommonBase
@@ -601,7 +754,7 @@ type ModifyUDNSZoneRequest struct {
 	// 域名资源ID
 	DNSZoneId *string `required:"true"`
 
-	// 是否支持迭代。枚举值,"enable",支持迭代; "disable",不支持迭代
+	// 是否支持递归。枚举值,"enable",支持; "disable",不支持
 	IsRecursionEnabled *string `required:"false"`
 
 	// 备注
