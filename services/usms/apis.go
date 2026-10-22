@@ -220,6 +220,9 @@ type CreateUSMSSignatureResponse struct {
 	// 返回状态码描述，如果操作成功，默认返回为空
 	Message string
 
+	// 【该字段已废弃，请谨慎使用】
+	SigContent string `deprecated:"true"`
+
 	// 短信签名ID（短信签名申请时的工单ID）
 	SigId string
 }
@@ -261,6 +264,12 @@ type CreateUSMSTemplateRequest struct {
 
 	// [公共参数] 项目ID，不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
+
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Region *string `required:"false" deprecated:"true"`
+
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Zone *string `required:"false" deprecated:"true"`
 
 	// 模板变量属性说明
 	Instruction *string `required:"false"`
@@ -432,6 +441,12 @@ type DeleteUSMSTemplateRequest struct {
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
 	// ProjectId *string `required:"true"`
+
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Region *string `required:"false" deprecated:"true"`
+
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Zone *string `required:"false" deprecated:"true"`
 
 	// 模板ID（也即短信模板申请时的工单ID），支持以数组的方式，举例，以TemplateIds.0、TemplateIds.1...TemplateIds.N方式传入
 	TemplateIds []string `required:"true"`
@@ -1006,6 +1021,12 @@ type SendUSMSMessageRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Region *string `required:"false" deprecated:"true"`
+
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Zone *string `required:"false" deprecated:"true"`
+
 	// 短信扩展码，格式为阿拉伯数字串，默认不开通，如需开通请联系 UCloud技术支持
 	ExtendCode *string `required:"false"`
 
@@ -1255,6 +1276,12 @@ type UpdateUSMSTemplateRequest struct {
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"true"`
 
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Region *string `required:"false" deprecated:"true"`
+
+	// [公共参数] 【该字段已废弃，请谨慎使用】
+	// Zone *string `required:"false" deprecated:"true"`
+
 	// 模板变量属性说明
 	Instruction *string `required:"false"`
 
@@ -1269,6 +1296,9 @@ type UpdateUSMSTemplateRequest struct {
 
 	// 新的模板名称。小于等于32个字，每个中文、英文、数组、符合都计为一个字
 	TemplateName *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	UnsubscribeInfo *string `required:"false" deprecated:"true"`
 }
 
 // UpdateUSMSTemplateResponse is response schema for UpdateUSMSTemplate action
