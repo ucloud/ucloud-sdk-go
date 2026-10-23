@@ -1114,37 +1114,58 @@ func (c *UAI_ModelverseClient) ListUFSquareModelFiltersAuth(req *ListUFSquareMod
 	return &res, nil
 }
 
-// ListUMInferAPIKeyRequest is request schema for ListUMInferAPIKey action
-type ListUMInferAPIKeyRequest struct {
+// ListUMInferAPIKeyV2Request is request schema for ListUMInferAPIKeyV2 action
+type ListUMInferAPIKeyV2Request struct {
 	request.CommonBase
 
 	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
-	// ProjectId *string `required:"true"`
+	// ProjectId *string `required:"false"`
 
-	// 返回数据长度，默认为20，最大100
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 默认 false，排除已删除记录；true 包含已删除记录
+	AllStatus *int `required:"false"`
+
+	// 按 API Key 资源 ID 精确过滤；为空不限制
+	KeyId *string `required:"false"`
+
+	// 每页条数；0 表示不限制条数
 	Limit *int `required:"false"`
 
-	// 是否modelverse可用 0: 启用 1: 禁用
-	ModelverseDisabled *int `required:"false"`
+	// 从 0 开始的页号，默认 0；不是记录偏移量
+	Offset *string `required:"false"`
 
-	// 列表起始位置偏移量，默认为0
-	Offset *int `required:"false"`
+	// 不传不限制；0 启用，1 禁用
+	SandBoxDisabled *string `required:"false"`
 
-	// 是否沙盒可用 0: 启用 1: 禁用(astraflow 沙盒控制未上线，暂时无效)
-	SandBoxDisabled *int `required:"false"`
+	// true 按创建时间升序，false 降序
+	SortByCreateTimeAsc *bool `required:"false"`
+
+	// true 按更新时间升序，false 降序；优先于创建时间排序
+	SortByUpdateTimeAsc *bool `required:"false"`
 }
 
-// ListUMInferAPIKeyResponse is response schema for ListUMInferAPIKey action
-type ListUMInferAPIKeyResponse struct {
+// ListUMInferAPIKeyV2Response is response schema for ListUMInferAPIKeyV2 action
+type ListUMInferAPIKeyV2Response struct {
 	response.CommonBase
 
-	// apikey
+	// data
 	Data []APIKey
+
+	// 时间戳
+	Timestamp int
+
+	// 数据量
+	TotalCount int
 }
 
-// NewListUMInferAPIKeyRequest will create request of ListUMInferAPIKey action.
-func (c *UAI_ModelverseClient) NewListUMInferAPIKeyRequest() *ListUMInferAPIKeyRequest {
-	req := &ListUMInferAPIKeyRequest{}
+// NewListUMInferAPIKeyV2Request will create request of ListUMInferAPIKeyV2 action.
+func (c *UAI_ModelverseClient) NewListUMInferAPIKeyV2Request() *ListUMInferAPIKeyV2Request {
+	req := &ListUMInferAPIKeyV2Request{}
 
 	// setup request with client config
 	c.Client.SetupRequest(req)
@@ -1155,17 +1176,17 @@ func (c *UAI_ModelverseClient) NewListUMInferAPIKeyRequest() *ListUMInferAPIKeyR
 }
 
 /*
-API: ListUMInferAPIKey
+API: ListUMInferAPIKeyV2
 
-列表查询apikey
+获取modelverse apikey，密钥掩码返回
 */
-func (c *UAI_ModelverseClient) ListUMInferAPIKey(req *ListUMInferAPIKeyRequest) (*ListUMInferAPIKeyResponse, error) {
+func (c *UAI_ModelverseClient) ListUMInferAPIKeyV2(req *ListUMInferAPIKeyV2Request) (*ListUMInferAPIKeyV2Response, error) {
 	var err error
-	var res ListUMInferAPIKeyResponse
+	var res ListUMInferAPIKeyV2Response
 
 	reqCopier := *req
 
-	err = c.Client.InvokeAction("ListUMInferAPIKey", &reqCopier, &res)
+	err = c.Client.InvokeAction("ListUMInferAPIKeyV2", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

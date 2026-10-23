@@ -19,6 +19,9 @@ type APIKey struct {
 	// 日已使用额，单位随用户所在渠道。126渠道单位为美元
 	DailyUsedAmount string
 
+	// 禁止访问的模型列表。当 ModelAccessMode=blacklist 时生效。
+	DeniedModels []string
+
 	// 过期时间的unix时间戳，-1 用不过期
 	ExpireTime int
 
@@ -31,11 +34,17 @@ type APIKey struct {
 	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:  192.168.1.1 192.168.1.10-192.168.1.100 192.168.1.10/24
 	IPWhitelist string
 
-	// 密钥值
+	// 是否开启推理日志
+	InferenceLogEnabled int
+
+	// 密钥值，前四后四，中间*掩码展示
 	Key string
 
 	// 资源ID
 	KeyId string
+
+	// 模型访问策略。可选值：whitelist（白名单模式，默认）或 blacklist（黑名单模式）。
+	ModelAccessMode string
 
 	// 是否modelverse可用 0: 启用 1: 禁用
 	ModelverseDisabled int
@@ -78,6 +87,18 @@ type DownloadFileData struct {
 }
 
 /*
+FilterOptionInteger - 整数类型筛选选项
+*/
+type FilterOptionInteger struct {
+
+	// 显示名称
+	Name string
+
+	// 值
+	Value int
+}
+
+/*
 FilterOptionString - 字符串类型筛选选项
 */
 type FilterOptionString struct {
@@ -90,15 +111,132 @@ type FilterOptionString struct {
 }
 
 /*
-FilterOptionInteger - 整数类型筛选选项
+PriceRate - 该档位下的收费列表（有序数组）
 */
-type FilterOptionInteger struct {
+type PriceRate struct {
 
-	// 显示名称
-	Name string
+	// 收费项：input/output/thinking/tool...
+	ChargeItem string
 
-	// 值
-	Value int
+	// 收费项描述
+	ChargeItemDescription string
+
+	// 收费项描述英文描述
+	ChargeItemDescriptionEn string
+
+	// 货币单位
+	Currency string
+
+	// 价格
+	Price string
+
+	// 计价单位
+	Unit string
+
+	// 计价单位英文
+	UnitEn string
+}
+
+/*
+PriceTier - 价格阶梯
+*/
+type PriceTier struct {
+
+	// 档位/条件（例如 "32k"、"128k"）
+	Condition string
+
+	// 档位描述（例如 "标准上下文 32k"）
+	Description string
+
+	// 档位描述（例如 "标准上下文 32k"）
+	DescriptionEn string
+
+	// 该档位下的收费列表（有序数组）
+	Rates []PriceRate
+}
+
+/*
+ModelCapabilities - ModelCapabilities
+*/
+type ModelCapabilities struct {
+
+	// 是否支持批量推理
+	BatchInference bool
+
+	// 是否支持上下文缓存
+	ContextCaching bool
+
+	// 是否支持体验
+	Experience bool
+
+	// 是否支持函数调用
+	FunctionCall bool
+
+	// 是否支持知识库
+	KnowledgeBase bool
+
+	// 是否支持MCP
+	Mcp bool
+
+	// 是否支持结构化输出
+	StructuredOutput bool
+
+	// 是否支持联网搜索
+	WebSearch bool
+}
+
+/*
+ModelTypeMap - ModelTypeMap
+*/
+type ModelTypeMap struct {
+
+	// 图生图模型
+	ImageToImage bool
+
+	// 图生视频模型
+	ImageToVideo bool
+
+	// 微调模型
+	Inference bool
+
+	// 海外模型
+	Sensitive bool
+
+	// 文生文模型，true 表示是文生文模型，下同
+	TextGeneration bool
+
+	// 文生图模型
+	TextToImage bool
+
+	// 文生视频模型
+	TextToVideo bool
+}
+
+/*
+Pricing - 定价策略
+*/
+type Pricing struct {
+
+	// 输出定价
+	Completion float64
+
+	// 币种
+	Currency string
+
+	// 生图定价
+	Image float64
+
+	// 提示词定价
+	Prompt float64
+
+	// 单位（中文），如“次” “百万”
+	Unit string
+
+	// 单位（English），如“Time” “Million”
+	UnitEn string
+
+	// 生视频定价
+	Video string
 }
 
 /*
@@ -141,135 +279,6 @@ type InferenceRegionInfo struct {
 
 	// 状态: published(已发布)/unpublished(未发布)
 	Status string
-}
-
-/*
-PriceRate - 该档位下的收费列表（有序数组）
-*/
-type PriceRate struct {
-
-	// 收费项：input/output/thinking/tool...
-	ChargeItem string
-
-	// 收费项描述
-	ChargeItemDescription string
-
-	// 收费项描述英文描述
-	ChargeItemDescriptionEn string
-
-	// 货币单位
-	Currency string
-
-	// 价格
-	Price string
-
-	// 计价单位
-	Unit string
-
-	// 计价单位英文
-	UnitEn string
-}
-
-/*
-Pricing - 定价策略
-*/
-type Pricing struct {
-
-	// 输出定价
-	Completion float64
-
-	// 币种
-	Currency string
-
-	// 生图定价
-	Image float64
-
-	// 提示词定价
-	Prompt float64
-
-	// 单位（中文），如“次” “百万”
-	Unit string
-
-	// 单位（English），如“Time” “Million”
-	UnitEn string
-
-	// 生视频定价
-	Video string
-}
-
-/*
-ModelTypeMap - ModelTypeMap
-*/
-type ModelTypeMap struct {
-
-	// 图生图模型
-	ImageToImage bool
-
-	// 图生视频模型
-	ImageToVideo bool
-
-	// 微调模型
-	Inference bool
-
-	// 海外模型
-	Sensitive bool
-
-	// 文生文模型，true 表示是文生文模型，下同
-	TextGeneration bool
-
-	// 文生图模型
-	TextToImage bool
-
-	// 文生视频模型
-	TextToVideo bool
-}
-
-/*
-ModelCapabilities - ModelCapabilities
-*/
-type ModelCapabilities struct {
-
-	// 是否支持批量推理
-	BatchInference bool
-
-	// 是否支持上下文缓存
-	ContextCaching bool
-
-	// 是否支持体验
-	Experience bool
-
-	// 是否支持函数调用
-	FunctionCall bool
-
-	// 是否支持知识库
-	KnowledgeBase bool
-
-	// 是否支持MCP
-	Mcp bool
-
-	// 是否支持结构化输出
-	StructuredOutput bool
-
-	// 是否支持联网搜索
-	WebSearch bool
-}
-
-/*
-PriceTier - 价格阶梯
-*/
-type PriceTier struct {
-
-	// 档位/条件（例如 "32k"、"128k"）
-	Condition string
-
-	// 档位描述（例如 "标准上下文 32k"）
-	Description string
-
-	// 档位描述（例如 "标准上下文 32k"）
-	DescriptionEn string
-
-	// 该档位下的收费列表（有序数组）
-	Rates []PriceRate
 }
 
 /*
