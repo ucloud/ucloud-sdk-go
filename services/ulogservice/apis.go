@@ -579,6 +579,65 @@ func (c *ULogServiceClient) DeleteULogServiceTopic(req *DeleteULogServiceTopicRe
 	return &res, nil
 }
 
+// DescribeULogServiceLogSetRequest is request schema for DescribeULogServiceLogSet action
+type DescribeULogServiceLogSetRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 日志集ID
+	LogSetId *string `required:"true"`
+}
+
+// DescribeULogServiceLogSetResponse is response schema for DescribeULogServiceLogSet action
+type DescribeULogServiceLogSetResponse struct {
+	response.CommonBase
+
+	// 日志集信息
+	LogSetInfo LogSetInfo
+
+	// 日志集总数
+	TotalCount int
+}
+
+// NewDescribeULogServiceLogSetRequest will create request of DescribeULogServiceLogSet action.
+func (c *ULogServiceClient) NewDescribeULogServiceLogSetRequest() *DescribeULogServiceLogSetRequest {
+	req := &DescribeULogServiceLogSetRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeULogServiceLogSet
+
+获取日志集信息
+*/
+func (c *ULogServiceClient) DescribeULogServiceLogSet(req *DescribeULogServiceLogSetRequest) (*DescribeULogServiceLogSetResponse, error) {
+	var err error
+	var res DescribeULogServiceLogSetResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeULogServiceLogSet", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // DescribeULogServiceMachineGroupRequest is request schema for DescribeULogServiceMachineGroup action
 type DescribeULogServiceMachineGroupRequest struct {
 	request.CommonBase
@@ -631,6 +690,59 @@ func (c *ULogServiceClient) DescribeULogServiceMachineGroup(req *DescribeULogSer
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("DescribeULogServiceMachineGroup", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// DescribeULogServiceTopicRequest is request schema for DescribeULogServiceTopic action
+type DescribeULogServiceTopicRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// 主题Id
+	TopicId *string `required:"true"`
+}
+
+// DescribeULogServiceTopicResponse is response schema for DescribeULogServiceTopic action
+type DescribeULogServiceTopicResponse struct {
+	response.CommonBase
+
+	// 主题详情
+	Data TopicInfo
+}
+
+// NewDescribeULogServiceTopicRequest will create request of DescribeULogServiceTopic action.
+func (c *ULogServiceClient) NewDescribeULogServiceTopicRequest() *DescribeULogServiceTopicRequest {
+	req := &DescribeULogServiceTopicRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeULogServiceTopic
+
+获取ULogService主题详情
+*/
+func (c *ULogServiceClient) DescribeULogServiceTopic(req *DescribeULogServiceTopicRequest) (*DescribeULogServiceTopicResponse, error) {
+	var err error
+	var res DescribeULogServiceTopicResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeULogServiceTopic", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

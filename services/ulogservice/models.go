@@ -3,6 +3,30 @@
 package ulogservice
 
 /*
+LogSetInfo - 日志集信息
+*/
+type LogSetInfo struct {
+
+	// 创建时间
+	CreateTime int
+
+	// 日志集ID
+	LogSetId string
+
+	// 日志集名称
+	LogSetName string
+
+	// 日志集备注
+	LogSetRemark string
+
+	// 日志集下主题数量
+	TopicCount int
+
+	// 更新时间
+	UpdateTime int
+}
+
+/*
 LogAgent - logagent 信息
 */
 type LogAgent struct {
@@ -48,6 +72,30 @@ type MachineInfo struct {
 
 	// 机器组类型，取值有：LABEL和IP
 	Type string
+}
+
+/*
+TopicInfo - 主题信息
+*/
+type TopicInfo struct {
+
+	// 是否保留：0 - NORMAL, 1 - RESERVED
+	IsReserved int
+
+	// 保存时间 1~730 天
+	ReserveAge int
+
+	// 日志主题状态
+	State string
+
+	// 主题ID
+	TopicId string
+
+	// 主题名称
+	TopicName string
+
+	// 分区数量，固定是2
+	TopicShardNum int
 }
 
 /*
@@ -150,54 +198,6 @@ type CollectConf struct {
 
 	// updateTime
 	UpdateTime int
-}
-
-/*
-LogSetInfo - 日志集信息
-*/
-type LogSetInfo struct {
-
-	// 创建时间
-	CreateTime int
-
-	// 日志集ID
-	LogSetId string
-
-	// 日志集名称
-	LogSetName string
-
-	// 日志集备注
-	LogSetRemark string
-
-	// 日志集下主题数量
-	TopicCount int
-
-	// 更新时间
-	UpdateTime int
-}
-
-/*
-TopicInfo - 主题信息
-*/
-type TopicInfo struct {
-
-	// 是否保留：0 - NORMAL, 1 - RESERVED
-	IsReserved int
-
-	// 保存时间 1~730 天
-	ReserveAge int
-
-	// 主题描述
-	TopicDesc string
-
-	// 主题ID
-	TopicId string
-
-	// 主题名称
-	TopicName string
-
-	// 分区数量，固定是2
-	TopicShardNum int
 }
 
 /*
