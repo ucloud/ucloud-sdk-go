@@ -84,9 +84,6 @@ type CreateSandboxSiteRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
-	// 密钥
-	APIKey *string `required:"true"`
-
 	// 访问码
 	AccessCode *string `required:"true"`
 
@@ -329,9 +326,6 @@ type UpdateSandboxSiteRequest struct {
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
-
-	// 更新站点空间API Key
-	APIKey *string `required:"false"`
 
 	// 访问码
 	AccessCode *string `required:"false"`
