@@ -54,6 +54,27 @@ type BackendSet struct {
 }
 
 /*
+BackendConnectionConfig - 后向连接配置
+*/
+type BackendConnectionConfig struct {
+
+	// 是否开启长连接
+	EnablePersistentConnection bool
+}
+
+/*
+HostConfigSet - 域名相关配置
+*/
+type HostConfigSet struct {
+
+	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
+	MatchMode string
+
+	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
+	Values []string
+}
+
+/*
 FixedResponseConfigSet - 静态返回相关配置
 */
 type FixedResponseConfigSet struct {
@@ -81,51 +102,12 @@ type InsertHeaderConfigSet struct {
 }
 
 /*
-ForwardTargetSet - 转发的后端服务节点
-*/
-type ForwardTargetSet struct {
-
-	// 服务节点的标识ID
-	Id string
-
-	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
-	Weight int
-}
-
-/*
-ForwardConfigSet - 转发服务节点相关配置
-*/
-type ForwardConfigSet struct {
-
-	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
-	Targets []ForwardTargetSet
-}
-
-/*
 ProxyBufferingConfig - 缓存配置
 */
 type ProxyBufferingConfig struct {
 
 	// 关闭缓存
 	CloseProxyBuffering bool
-}
-
-/*
-RemoveHeaderConfigSet - 删除 header 相关配置
-*/
-type RemoveHeaderConfigSet struct {
-
-	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
-	Key string
-}
-
-/*
-BackendConnectionConfig - 后向连接配置
-*/
-type BackendConnectionConfig struct {
-
-	// 是否开启长连接
-	EnablePersistentConnection bool
 }
 
 /*
@@ -150,6 +132,36 @@ type CorsConfigSet struct {
 
 	// 预检请求在浏览器的最大缓存时间，单位：秒。取值范围：-1~172800。
 	MaxAge int
+}
+
+/*
+ForwardTargetSet - 转发的后端服务节点
+*/
+type ForwardTargetSet struct {
+
+	// 服务节点的标识ID
+	Id string
+
+	// 权重。仅监听器负载均衡算法是加权轮询是有效；取值范围[1-100]，默认值为1
+	Weight int
+}
+
+/*
+ForwardConfigSet - 转发服务节点相关配置
+*/
+type ForwardConfigSet struct {
+
+	// 转发的后端服务节点。限定在监听器的服务节点池里；数组长度可以为0。具体结构详见 ForwardTargetSet
+	Targets []ForwardTargetSet
+}
+
+/*
+RemoveHeaderConfigSet - 删除 header 相关配置
+*/
+type RemoveHeaderConfigSet struct {
+
+	// 删除的 header 字段名称，目前只能删除以下几个默认配置的字段: X-Real-IP、X-Forwarded-For、X-Forwarded-Proto、X-Forwarded-SrcPort
+	Key string
 }
 
 /*
@@ -186,15 +198,30 @@ type RuleAction struct {
 }
 
 /*
-HostConfigSet - 域名相关配置
+Certificate - （应用型专用）服务器证书信息
 */
-type HostConfigSet struct {
+type Certificate struct {
 
-	// 匹配方式。限定枚举值：Regular-正则，Wildcard-泛域名； 默认值：Regular
-	MatchMode string
+	// 是否为默认证书
+	IsDefault bool
 
-	// 取值。暂时只支持数组长度为1； 取值需符合相关匹配方式的条件
-	Values []string
+	// 证书ID
+	SSLId string
+}
+
+/*
+StickinessConfigSet - 会话保持相关配置
+*/
+type StickinessConfigSet struct {
+
+	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
+	CookieName string
+
+	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
+	Enabled bool
+
+	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
+	Type string
 }
 
 /*
@@ -240,21 +267,6 @@ type Rule struct {
 
 	// 转发规则的ID
 	RuleId string
-}
-
-/*
-StickinessConfigSet - 会话保持相关配置
-*/
-type StickinessConfigSet struct {
-
-	// （应用型专用）自定义Cookie。当StickinessType取值"UserDefined"时有效
-	CookieName string
-
-	// 是否开启会话保持功能。应用型负载均衡实例基于Cookie实现
-	Enabled bool
-
-	// （应用型专用）Cookie处理方式。限定枚举值： ServerInsert -> 自动生成KEY；UserDefined -> 用户自定义KEY
-	Type string
 }
 
 /*
@@ -342,18 +354,6 @@ type Target struct {
 }
 
 /*
-Certificate - （应用型专用）服务器证书信息
-*/
-type Certificate struct {
-
-	// 是否为默认证书
-	IsDefault bool
-
-	// 证书ID
-	SSLId string
-}
-
-/*
 Listener - 负载均衡监听器信息
 */
 type Listener struct {
@@ -417,33 +417,6 @@ type Listener struct {
 }
 
 /*
-FirewallSet - ulb防火墙信息
-*/
-type FirewallSet struct {
-
-	// 防火墙ID
-	FirewallId string
-
-	// 防火墙名称
-	FirewallName string
-}
-
-/*
-AccessLogConfigSet - （应用型专用）访问日志相关配置
-*/
-type AccessLogConfigSet struct {
-
-	// （应用型专用）是否开启访问日志记录功能
-	Enabled bool
-
-	// （应用型专用）用于存储访问日志的bucket
-	US3BucketName string
-
-	// （应用型专用）上传访问日志到bucket所需的token
-	US3TokenId string
-}
-
-/*
 SecGroupInfo - 安全组详细信息
 */
 type SecGroupInfo struct {
@@ -486,6 +459,33 @@ type IPInfo struct {
 
 	// 外网IP的运营商信息。枚举值为：Telecom -> 电信，Unicom -> 联通，International -> 国际IP，Bgp -> BGP，Duplet -> 双线（电信+联通双线路），BGPPro -> 精品BGP，China-mobile -> 中国移动，Anycast -> AnycastEIP
 	OperatorName string
+}
+
+/*
+AccessLogConfigSet - （应用型专用）访问日志相关配置
+*/
+type AccessLogConfigSet struct {
+
+	// （应用型专用）是否开启访问日志记录功能
+	Enabled bool
+
+	// （应用型专用）用于存储访问日志的bucket
+	US3BucketName string
+
+	// （应用型专用）上传访问日志到bucket所需的token
+	US3TokenId string
+}
+
+/*
+FirewallSet - ulb防火墙信息
+*/
+type FirewallSet struct {
+
+	// 防火墙ID
+	FirewallId string
+
+	// 防火墙名称
+	FirewallName string
 }
 
 /*
@@ -774,57 +774,6 @@ type TLSAndCiphers struct {
 }
 
 /*
-ULBBackendSet - DescribeULB
-*/
-type ULBBackendSet struct {
-
-	// 后端资源实例的Id
-	BackendId string
-
-	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
-	Enabled int
-
-	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
-	IsBackup int
-
-	// 后端提供服务的端口
-	Port int
-
-	// 后端提供服务的内网IP
-	PrivateIP string
-
-	// 资源实例的资源Id
-	ResourceId string
-
-	// 资源实例的资源名称
-	ResourceName string
-
-	// 资源实例的类型
-	ResourceType string
-
-	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
-	Status int
-
-	// 资源绑定的虚拟网卡实例的资源Id
-	SubResourceId string
-
-	// 资源绑定的虚拟网卡实例的资源名称
-	SubResourceName string
-
-	// 资源绑定的虚拟网卡实例的类型
-	SubResourceType string
-
-	// 后端提供服务的资源所在的子网的ID
-	SubnetId string
-
-	// 后端服务器所在的VPC
-	VPCId string
-
-	// 后端RS权重（在加权轮询算法下有效）
-	Weight int
-}
-
-/*
 BindSecurityPolicy - VServer绑定的安全策略组信息
 */
 type BindSecurityPolicy struct {
@@ -909,6 +858,57 @@ type ULBPolicySet struct {
 
 	// 所属VServerId
 	VServerId string
+}
+
+/*
+ULBBackendSet - DescribeULB
+*/
+type ULBBackendSet struct {
+
+	// 后端资源实例的Id
+	BackendId string
+
+	// 后端提供服务的实例启用与否，枚举值：0 禁用 1 启用
+	Enabled int
+
+	// 是否为backup，只有当vserver的Backup属性为1时才会有此字段，说明：0：主rs1：备rs
+	IsBackup int
+
+	// 后端提供服务的端口
+	Port int
+
+	// 后端提供服务的内网IP
+	PrivateIP string
+
+	// 资源实例的资源Id
+	ResourceId string
+
+	// 资源实例的资源名称
+	ResourceName string
+
+	// 资源实例的类型
+	ResourceType string
+
+	// 后端提供服务的实例运行状态，枚举值：0健康检查健康状态 1 健康检查异常
+	Status int
+
+	// 资源绑定的虚拟网卡实例的资源Id
+	SubResourceId string
+
+	// 资源绑定的虚拟网卡实例的资源名称
+	SubResourceName string
+
+	// 资源绑定的虚拟网卡实例的类型
+	SubResourceType string
+
+	// 后端提供服务的资源所在的子网的ID
+	SubnetId string
+
+	// 后端服务器所在的VPC
+	VPCId string
+
+	// 后端RS权重（在加权轮询算法下有效）
+	Weight int
 }
 
 /*
