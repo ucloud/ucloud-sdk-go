@@ -64,6 +64,9 @@ UFileBucketSet - DescribeBucket
 */
 type UFileBucketSet struct {
 
+	// 归档存储量,单位Byte
+	AcStorage int
+
 	// Bucket所属业务, general或vod或udb general: 普通业务； vod: 视频云业务; udb: 云数据库业务
 	Biz string
 
@@ -85,11 +88,17 @@ type UFileBucketSet struct {
 	// 是否存在自定义域名。0不存在，1存在，2错误
 	HasUserDomain int
 
+	// 低频存储量,单位Byte
+	IaStorage int
+
 	// Bucket的修改时间
 	ModifyTime int
 
 	// Bucket所属地域
 	Region string
+
+	// 标准存储量,单位Byte
+	Storage int
 
 	// 默认存储类型
 	StorageClass string
