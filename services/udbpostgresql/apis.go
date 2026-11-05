@@ -148,6 +148,30 @@ func (c *UDBPostgreSQLClient) BackupUPgSQLLog(req *BackupUPgSQLLogRequest) (*Bac
 	return &res, nil
 }
 
+/*
+CreateUPgSQLInstanceParamLabels is request schema for complex param
+*/
+type CreateUPgSQLInstanceParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签的键名
+	Value *string `required:"false"`
+}
+
+/*
+CreateUPgSQLInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUPgSQLInstanceParamSecGroupId struct {
+
+	// 安全组id
+	Id *string `required:"false"`
+
+	// 安全组优先级
+	Priority *int `required:"false"`
+}
+
 // CreateUPgSQLInstanceRequest is request schema for CreateUPgSQLInstance action
 type CreateUPgSQLInstanceRequest struct {
 	request.CommonBase
@@ -164,6 +188,9 @@ type CreateUPgSQLInstanceRequest struct {
 	// 管理员密码
 	AdminPassword *string `required:"true"`
 
+	// 高可用实例的备库可用区
+	BackupZone *string `required:"false"`
+
 	// PostgreSQL的版本，pg10.4:postgresql-10.4，pg13.4:postgresql-13.4
 	DBVersion *string `required:"true"`
 
@@ -172,6 +199,9 @@ type CreateUPgSQLInstanceRequest struct {
 
 	// UDB实例模式类型, 可选值如下: "Normal": 普通版UDB实例 "HA": 高可用版UDB实例 默认是"Normal"
 	InstanceMode *string `required:"false"`
+
+	//
+	Labels []CreateUPgSQLInstanceParamLabels `required:"false"`
 
 	// 机器配置类型，2核4G的机器:o.pgsql2m.medium
 	MachineType *string `required:"true"`
@@ -184,6 +214,9 @@ type CreateUPgSQLInstanceRequest struct {
 
 	// 端口默认为5432
 	Port *int `required:"true"`
+
+	//
+	SecGroupId []CreateUPgSQLInstanceParamSecGroupId `required:"false"`
 
 	// 子网ID
 	SubnetID *string `required:"true"`
@@ -303,18 +336,6 @@ func (c *UDBPostgreSQLClient) CreateUPgSQLParamTemplate(req *CreateUPgSQLParamTe
 }
 
 /*
-CreateUPgSQLReadonlyParamLabels is request schema for complex param
-*/
-type CreateUPgSQLReadonlyParamLabels struct {
-
-	// 用户资源标签的键值
-	Key *string `required:"false"`
-
-	// 用户资源标签值
-	Value *string `required:"false"`
-}
-
-/*
 CreateUPgSQLReadonlyParamSecGroupId is request schema for complex param
 */
 type CreateUPgSQLReadonlyParamSecGroupId struct {
@@ -324,6 +345,18 @@ type CreateUPgSQLReadonlyParamSecGroupId struct {
 
 	// 安全组优先级
 	Priority *int `required:"false"`
+}
+
+/*
+CreateUPgSQLReadonlyParamLabels is request schema for complex param
+*/
+type CreateUPgSQLReadonlyParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签值
+	Value *string `required:"false"`
 }
 
 // CreateUPgSQLReadonlyRequest is request schema for CreateUPgSQLReadonly action
