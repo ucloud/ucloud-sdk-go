@@ -63,7 +63,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uads"
 	"github.com/ucloud/ucloud-sdk-go/services/ucdn"
 	"github.com/ucloud/ucloud-sdk-go/services/ucompshare"
-	"github.com/ucloud/ucloud-sdk-go/services/udbpostgresql"
 	"github.com/ucloud/ucloud-sdk-go/services/udbproxy"
 	"github.com/ucloud/ucloud-sdk-go/services/uddb"
 	"github.com/ucloud/ucloud-sdk-go/services/udi"
@@ -78,6 +77,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/umongodb"
 	"github.com/ucloud/ucloud-sdk-go/services/unvs"
 	"github.com/ucloud/ucloud-sdk-go/services/upfs"
+	"github.com/ucloud/ucloud-sdk-go/services/upgsql"
 	"github.com/ucloud/ucloud-sdk-go/services/uphone"
 	"github.com/ucloud/ucloud-sdk-go/services/uslk"
 	"github.com/ucloud/ucloud-sdk-go/services/usms"
@@ -203,9 +203,6 @@ func testSetup() {
 	spec.AddFixture("UDB", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udb.NewClient(&cfg, &credential), nil
 	}))
-	spec.AddFixture("UDBPostgreSQL", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
-		return udbpostgresql.NewClient(&cfg, &credential), nil
-	}))
 	spec.AddFixture("UDBProxy", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return udbproxy.NewClient(&cfg, &credential), nil
 	}))
@@ -271,6 +268,9 @@ func testSetup() {
 	}))
 	spec.AddFixture("UPHost", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphost.NewClient(&cfg, &credential), nil
+	}))
+	spec.AddFixture("UPgSQL", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
+		return upgsql.NewClient(&cfg, &credential), nil
 	}))
 	spec.AddFixture("UPhone", driver.SetupClientFixture(func() (ucloud.ServiceClient, error) {
 		return uphone.NewClient(&cfg, &credential), nil
