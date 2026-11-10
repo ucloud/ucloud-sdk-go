@@ -3,6 +3,24 @@
 package uk8s
 
 /*
+ReservedResource - 预留资源
+*/
+type ReservedResource struct {
+
+	// CPU
+	CPU string
+
+	// 存储
+	EphemeralStorage string
+
+	// 内存
+	Memory string
+
+	// Pid
+	Pid string
+}
+
+/*
 EIP - 节点EIP
 */
 type EIP struct {
@@ -21,6 +39,21 @@ type EIP struct {
 
 	// 绑定的共享带宽Id，仅当PayMode为ShareBandwidth时有效
 	ShareBandwidthId string
+}
+
+/*
+SecGroupId - 安全组
+*/
+type SecGroupId struct {
+
+	// 安全组名称
+	Id string
+
+	// 安全组id
+	Name string
+
+	// 安全组优先级
+	Priority string
 }
 
 /*
@@ -48,24 +81,6 @@ type EvictionCondition struct {
 
 	// 节点剩余inodes驱逐条件或宽限时间。
 	NodefsInodesFree string
-}
-
-/*
-ReservedResource - 预留资源
-*/
-type ReservedResource struct {
-
-	// CPU
-	CPU string
-
-	// 存储
-	EphemeralStorage string
-
-	// 内存
-	Memory string
-
-	// Pid
-	Pid string
 }
 
 /*
@@ -102,21 +117,6 @@ type KubeletConfiguration struct {
 
 	// 系统预留资源，ReservedResource类型
 	SystemReserved ReservedResource
-}
-
-/*
-SecGroupId - 安全组
-*/
-type SecGroupId struct {
-
-	// 安全组名称
-	Id string
-
-	// 安全组id
-	Name string
-
-	// 安全组优先级
-	Priority string
 }
 
 /*
@@ -303,42 +303,6 @@ type KubeProxy struct {
 }
 
 /*
-IPSet - 节点的IP信息
-*/
-type IPSet struct {
-
-	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
-	Bandwidth int
-
-	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
-	Default string
-
-	// IP地址
-	IP string
-
-	// IP资源ID (内网IP无对应的资源ID)
-	IPId string
-
-	// IP 地址分配模式
-	IPMode string
-
-	// 网卡的 MAC 地址
-	Mac string
-
-	// 虚拟网卡 Id
-	NetworkInterfaceId string
-
-	// IP 所在的 子网 Id
-	SubnetId string
-
-	// 国际: Internation，BGP: Bgp，内网: Private
-	Type string
-
-	// IP 所属的 VPC Id
-	VPCId string
-}
-
-/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -372,6 +336,42 @@ type DiskSet struct {
 
 	// 磁盘类型。系统盘: Boot，数据盘: Data,网络盘：Udisk
 	Type string
+}
+
+/*
+IPSet - 节点的IP信息
+*/
+type IPSet struct {
+
+	// IP对应的带宽, 单位: Mb (内网IP不显示带宽信息)
+	Bandwidth int
+
+	// 是否默认的弹性网卡的信息。true: 是默认弹性网卡；其他值：不是。
+	Default string
+
+	// IP地址
+	IP string
+
+	// IP资源ID (内网IP无对应的资源ID)
+	IPId string
+
+	// IP 地址分配模式
+	IPMode string
+
+	// 网卡的 MAC 地址
+	Mac string
+
+	// 虚拟网卡 Id
+	NetworkInterfaceId string
+
+	// IP 所在的 子网 Id
+	SubnetId string
+
+	// 国际: Internation，BGP: Bgp，内网: Private
+	Type string
+
+	// IP 所属的 VPC Id
+	VPCId string
 }
 
 /*
@@ -525,18 +525,6 @@ type InstanceTypeMachineSizeCollection struct {
 }
 
 /*
-InstanceTypeValueRate - 机型数值与评分
-*/
-type InstanceTypeValueRate struct {
-
-	// 评分
-	Rate int
-
-	// 数值
-	Value float64
-}
-
-/*
 InstanceTypeMachineSize - 机型规格组合
 */
 type InstanceTypeMachineSize struct {
@@ -546,51 +534,6 @@ type InstanceTypeMachineSize struct {
 
 	// GPU 数量
 	Gpu int
-}
-
-/*
-InstanceTypeCpuPlatform - 机型 CPU 平台
-*/
-type InstanceTypeCpuPlatform struct {
-
-	// CPU 频率
-	CpuFrequency string
-
-	// CPU 型号列表
-	CpuModels []string
-
-	// CPU 平台名称
-	Name string
-}
-
-/*
-InstanceTypeUHostFamily - 机型规格族
-*/
-type InstanceTypeUHostFamily struct {
-
-	// CPU 频率
-	CpuFrequency string
-
-	// 支持的 CPU 平台
-	CpuPlatforms []InstanceTypeCpuPlatform
-
-	// 规格族名称
-	Name string
-}
-
-/*
-InstanceTypeFeatureMode - 机型特性模式
-*/
-type InstanceTypeFeatureMode struct {
-
-	// 最低 CPU 平台列表
-	MinimalCpuPlatform []string
-
-	// 模式名称
-	Name string
-
-	// 关联的镜像特性
-	RelatedToImageFeature []string
 }
 
 /*
@@ -630,6 +573,36 @@ type InstanceTypeDataDisk struct {
 }
 
 /*
+InstanceTypeCpuPlatform - 机型 CPU 平台
+*/
+type InstanceTypeCpuPlatform struct {
+
+	// CPU 频率
+	CpuFrequency string
+
+	// CPU 型号列表
+	CpuModels []string
+
+	// CPU 平台名称
+	Name string
+}
+
+/*
+InstanceTypeFeatureMode - 机型特性模式
+*/
+type InstanceTypeFeatureMode struct {
+
+	// 最低 CPU 平台列表
+	MinimalCpuPlatform []string
+
+	// 模式名称
+	Name string
+
+	// 关联的镜像特性
+	RelatedToImageFeature []string
+}
+
+/*
 InstanceTypeFeature - 机型特性
 */
 type InstanceTypeFeature struct {
@@ -639,6 +612,18 @@ type InstanceTypeFeature struct {
 
 	// 特性名称
 	Name string
+}
+
+/*
+InstanceTypeValueRate - 机型数值与评分
+*/
+type InstanceTypeValueRate struct {
+
+	// 评分
+	Rate int
+
+	// 数值
+	Value float64
 }
 
 /*
@@ -653,6 +638,21 @@ type InstanceTypeDisk struct {
 	DataDisk []InstanceTypeDataDisk
 
 	// 磁盘配置名称
+	Name string
+}
+
+/*
+InstanceTypeUHostFamily - 机型规格族
+*/
+type InstanceTypeUHostFamily struct {
+
+	// CPU 频率
+	CpuFrequency string
+
+	// 支持的 CPU 平台
+	CpuPlatforms []InstanceTypeCpuPlatform
+
+	// 规格族名称
 	Name string
 }
 
@@ -873,48 +873,6 @@ type NodeGroupSet struct {
 }
 
 /*
-VKNodeInfo - 单个虚拟节点插件信息
-*/
-type VKNodeInfo struct {
-
-	// 节点 ID。
-	Node string
-
-	// 上次插件操作结果：0 无结果，1 查询成功，2 查询失败，3 升级成功，4 升级失败。
-	OperationResult int
-
-	// 插件状态：0 未知，1 正常，2 异常，3 升级中。
-	Status int
-
-	// 更新时间，Unix 时间戳，单位秒。
-	UpdateTime int
-
-	// 插件版本。
-	Version string
-}
-
-/*
-VKNode - 虚拟节点插件信息
-*/
-type VKNode struct {
-
-	// 最新版本
-	AvailableVersion string
-
-	// 插件管理是否开启
-	ManageEnabled bool
-
-	// 插件名称
-	Name string
-
-	// 各虚拟节点的插件信息。
-	PluginInfoSet []VKNodeInfo
-
-	// 发布时间
-	ReleaseTime string
-}
-
-/*
 ClusterUpdateNodeInfo - 集群升级时单个Node节点的状态等信息
 */
 type ClusterUpdateNodeInfo struct {
@@ -966,36 +924,6 @@ type ClusterUpgradeInfo struct {
 }
 
 /*
-CSIInfo - CSI 插件版本与状态
-*/
-type CSIInfo struct {
-
-	// 最新可用插件版本。
-	AvailableVersion string
-
-	// 是否开启插件托管。
-	ManageEnabled bool
-
-	// 插件名称。
-	Name string
-
-	// 上次插件操作结果。
-	OperationResult int
-
-	// 最新可用版本的发布时间。
-	ReleaseTime string
-
-	// 插件状态。
-	Status int
-
-	// 更新时间，Unix 时间戳，单位秒。
-	UpdateTime int
-
-	// 当前插件版本。
-	Version string
-}
-
-/*
 RuntimeConvertInfo - 集群Runtime转换信息
 */
 type RuntimeConvertInfo struct {
@@ -1014,15 +942,6 @@ type RuntimeConvertInfo struct {
 
 	// 运行时转换信息更新时间，Unix 时间戳，单位秒。
 	UpdateTime int
-}
-
-/*
-MonitorInfo - 监控插件信息
-*/
-type MonitorInfo struct {
-
-	// 最新可用监控插件版本。
-	AvailableVersion string
 }
 
 /*
@@ -1074,6 +993,87 @@ type CloudProviderInfo struct {
 
 	// 当前插件版本。
 	Version string
+}
+
+/*
+VKNodeInfo - 单个虚拟节点插件信息
+*/
+type VKNodeInfo struct {
+
+	// 节点 ID。
+	Node string
+
+	// 上次插件操作结果：0 无结果，1 查询成功，2 查询失败，3 升级成功，4 升级失败。
+	OperationResult int
+
+	// 插件状态：0 未知，1 正常，2 异常，3 升级中。
+	Status int
+
+	// 更新时间，Unix 时间戳，单位秒。
+	UpdateTime int
+
+	// 插件版本。
+	Version string
+}
+
+/*
+VKNode - 虚拟节点插件信息
+*/
+type VKNode struct {
+
+	// 最新版本
+	AvailableVersion string
+
+	// 插件管理是否开启
+	ManageEnabled bool
+
+	// 插件名称
+	Name string
+
+	// 各虚拟节点的插件信息。
+	PluginInfoSet []VKNodeInfo
+
+	// 发布时间
+	ReleaseTime string
+}
+
+/*
+CSIInfo - CSI 插件版本与状态
+*/
+type CSIInfo struct {
+
+	// 最新可用插件版本。
+	AvailableVersion string
+
+	// 是否开启插件托管。
+	ManageEnabled bool
+
+	// 插件名称。
+	Name string
+
+	// 上次插件操作结果。
+	OperationResult int
+
+	// 最新可用版本的发布时间。
+	ReleaseTime string
+
+	// 插件状态。
+	Status int
+
+	// 更新时间，Unix 时间戳，单位秒。
+	UpdateTime int
+
+	// 当前插件版本。
+	Version string
+}
+
+/*
+MonitorInfo - 监控插件信息
+*/
+type MonitorInfo struct {
+
+	// 最新可用监控插件版本。
+	AvailableVersion string
 }
 
 /*
@@ -1332,6 +1332,36 @@ type ClusterSet struct {
 }
 
 /*
+ULSLabels - ULSLabels
+*/
+type ULSLabels struct {
+
+	// 要匹配的标签的 Key。
+	Key string
+
+	// 要匹配的标签的值。
+	Value string
+
+	// 标签值的匹配操作符。可选值: in, notin。
+	ValueOperator string
+}
+
+/*
+ULSPodLabelsMatch - ULSPodLabelsMatch
+*/
+type ULSPodLabelsMatch struct {
+
+	// 一个标签选择器数组，用于定义匹配的标签条件。
+	Labels []ULSLabels
+
+	// 要匹配的命名空间。namespaceOperator 存在时必需。
+	Namespace string
+
+	// 命名空间名称的匹配操作符。可选值: in, notin。
+	NamespaceOperator string
+}
+
+/*
 ULSWorkloadMatch - ULSWorkloadMatch
 */
 type ULSWorkloadMatch struct {
@@ -1344,6 +1374,48 @@ type ULSWorkloadMatch struct {
 
 	// 工作负载的类型，例如 deployment, statefulset, daemonset,cronjob,job。
 	Type string
+}
+
+/*
+ULSMatchRule - ULSMatchRule
+*/
+type ULSMatchRule struct {
+
+	// 要匹配的容器名称，*表示所有容器，用逗号分隔
+	Container string
+
+	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
+	ContainerOperator string
+
+	// 按 Pod 的标签进行匹配，提供更灵活的选择。
+	PodLabels ULSPodLabelsMatch
+
+	// 按工作负载进行匹配。
+	Workloads []ULSWorkloadMatch
+}
+
+/*
+ULSFilePaths - ULS采集文件路径
+*/
+type ULSFilePaths struct {
+
+	// 采集文件
+	File string
+
+	// 定义采集路径
+	Path string
+}
+
+/*
+ULSInputMetadata - ULSInputMetadata
+*/
+type ULSInputMetadata struct {
+
+	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
+	Container string
+
+	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
+	Labels string
 }
 
 /*
@@ -1395,30 +1467,6 @@ type ULSExtractRule struct {
 }
 
 /*
-ULSFilePaths - ULS采集文件路径
-*/
-type ULSFilePaths struct {
-
-	// 采集文件
-	File string
-
-	// 定义采集路径
-	Path string
-}
-
-/*
-ULSInputMetadata - ULSInputMetadata
-*/
-type ULSInputMetadata struct {
-
-	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
-	Container string
-
-	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
-	Labels string
-}
-
-/*
 ULSInputDetail - 定义日志的输入来源，例如容器文件或容器标准输出。
 */
 type ULSInputDetail struct {
@@ -1434,54 +1482,6 @@ type ULSInputDetail struct {
 
 	// 日志输入类型。可选值：container_file、container_stdout。
 	Type string
-}
-
-/*
-ULSLabels - ULSLabels
-*/
-type ULSLabels struct {
-
-	// 要匹配的标签的 Key。
-	Key string
-
-	// 要匹配的标签的值。
-	Value string
-
-	// 标签值的匹配操作符。可选值: in, notin。
-	ValueOperator string
-}
-
-/*
-ULSPodLabelsMatch - ULSPodLabelsMatch
-*/
-type ULSPodLabelsMatch struct {
-
-	// 一个标签选择器数组，用于定义匹配的标签条件。
-	Labels []ULSLabels
-
-	// 要匹配的命名空间。namespaceOperator 存在时必需。
-	Namespace string
-
-	// 命名空间名称的匹配操作符。可选值: in, notin。
-	NamespaceOperator string
-}
-
-/*
-ULSMatchRule - ULSMatchRule
-*/
-type ULSMatchRule struct {
-
-	// 要匹配的容器名称，*表示所有容器，用逗号分隔
-	Container string
-
-	// 容器名称匹配操作符。支持：in(包含)，notin(不包含)
-	ContainerOperator string
-
-	// 按 Pod 的标签进行匹配，提供更灵活的选择。
-	PodLabels ULSPodLabelsMatch
-
-	// 按工作负载进行匹配。
-	Workloads []ULSWorkloadMatch
 }
 
 /*
