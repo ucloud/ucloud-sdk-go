@@ -3,24 +3,6 @@
 package uk8s
 
 /*
-ReservedResource - 预留资源
-*/
-type ReservedResource struct {
-
-	// CPU
-	CPU string
-
-	// 存储
-	EphemeralStorage string
-
-	// 内存
-	Memory string
-
-	// Pid
-	Pid string
-}
-
-/*
 EIP - 节点EIP
 */
 type EIP struct {
@@ -57,15 +39,6 @@ type SecGroupId struct {
 }
 
 /*
-NetworkInterface - 网络接口
-*/
-type NetworkInterface struct {
-
-	// EIP
-	EIP EIP
-}
-
-/*
 EvictionCondition - 驱逐条件或宽限时间
 */
 type EvictionCondition struct {
@@ -81,6 +54,24 @@ type EvictionCondition struct {
 
 	// 节点剩余inodes驱逐条件或宽限时间。
 	NodefsInodesFree string
+}
+
+/*
+ReservedResource - 预留资源
+*/
+type ReservedResource struct {
+
+	// CPU
+	CPU string
+
+	// 存储
+	EphemeralStorage string
+
+	// 内存
+	Memory string
+
+	// Pid
+	Pid string
 }
 
 /*
@@ -117,6 +108,15 @@ type KubeletConfiguration struct {
 
 	// 系统预留资源，ReservedResource类型
 	SystemReserved ReservedResource
+}
+
+/*
+NetworkInterface - 网络接口
+*/
+type NetworkInterface struct {
+
+	// EIP
+	EIP EIP
 }
 
 /*
@@ -294,15 +294,6 @@ type Autoscaler struct {
 }
 
 /*
-KubeProxy - KubeProxy信息
-*/
-type KubeProxy struct {
-
-	// KubeProxy模式，枚举值为[ipvs,iptables]
-	Mode string
-}
-
-/*
 DiskSet - 节点磁盘信息
 */
 type DiskSet struct {
@@ -375,18 +366,6 @@ type IPSet struct {
 }
 
 /*
-LoopbackClientCert - API Server 回环客户端证书
-*/
-type LoopbackClientCert struct {
-
-	// 证书到期时间
-	ExpireTime int
-
-	// 证书是否进入过期告警状态
-	Warn bool
-}
-
-/*
 UhostInfo - 机器信息
 */
 type UhostInfo struct {
@@ -450,6 +429,27 @@ type UhostInfo struct {
 }
 
 /*
+KubeProxy - KubeProxy信息
+*/
+type KubeProxy struct {
+
+	// KubeProxy模式，枚举值为[ipvs,iptables]
+	Mode string
+}
+
+/*
+LoopbackClientCert - API Server 回环客户端证书
+*/
+type LoopbackClientCert struct {
+
+	// 证书到期时间
+	ExpireTime int
+
+	// 证书是否进入过期告警状态
+	Warn bool
+}
+
+/*
 ImageInfo - UK8S 可用镜像信息
 */
 type ImageInfo struct {
@@ -510,30 +510,33 @@ type K8SNodeCondition struct {
 }
 
 /*
-InstanceTypeMachineSizeCollection - 机型 CPU 与内存组合
+InstanceTypeCpuPlatform - 机型 CPU 平台
 */
-type InstanceTypeMachineSizeCollection struct {
+type InstanceTypeCpuPlatform struct {
 
-	// CPU 核数
-	Cpu int
+	// CPU 频率
+	CpuFrequency string
 
-	// 可用内存容量列表
-	Memory []int
+	// CPU 型号列表
+	CpuModels []string
 
-	// 最低 CPU 平台列表
-	MinimalCpuPlatform []string
+	// CPU 平台名称
+	Name string
 }
 
 /*
-InstanceTypeMachineSize - 机型规格组合
+InstanceTypeUHostFamily - 机型规格族
 */
-type InstanceTypeMachineSize struct {
+type InstanceTypeUHostFamily struct {
 
-	// CPU 与内存规格组合
-	Collection []InstanceTypeMachineSizeCollection
+	// CPU 频率
+	CpuFrequency string
 
-	// GPU 数量
-	Gpu int
+	// 支持的 CPU 平台
+	CpuPlatforms []InstanceTypeCpuPlatform
+
+	// 规格族名称
+	Name string
 }
 
 /*
@@ -573,18 +576,18 @@ type InstanceTypeDataDisk struct {
 }
 
 /*
-InstanceTypeCpuPlatform - 机型 CPU 平台
+InstanceTypeMachineSizeCollection - 机型 CPU 与内存组合
 */
-type InstanceTypeCpuPlatform struct {
+type InstanceTypeMachineSizeCollection struct {
 
-	// CPU 频率
-	CpuFrequency string
+	// CPU 核数
+	Cpu int
 
-	// CPU 型号列表
-	CpuModels []string
+	// 可用内存容量列表
+	Memory []int
 
-	// CPU 平台名称
-	Name string
+	// 最低 CPU 平台列表
+	MinimalCpuPlatform []string
 }
 
 /*
@@ -603,15 +606,15 @@ type InstanceTypeFeatureMode struct {
 }
 
 /*
-InstanceTypeFeature - 机型特性
+InstanceTypeMachineSize - 机型规格组合
 */
-type InstanceTypeFeature struct {
+type InstanceTypeMachineSize struct {
 
-	// 特性模式列表
-	Modes []InstanceTypeFeatureMode
+	// CPU 与内存规格组合
+	Collection []InstanceTypeMachineSizeCollection
 
-	// 特性名称
-	Name string
+	// GPU 数量
+	Gpu int
 }
 
 /*
@@ -627,6 +630,18 @@ type InstanceTypeValueRate struct {
 }
 
 /*
+InstanceTypeFeature - 机型特性
+*/
+type InstanceTypeFeature struct {
+
+	// 特性模式列表
+	Modes []InstanceTypeFeatureMode
+
+	// 特性名称
+	Name string
+}
+
+/*
 InstanceTypeDisk - 机型磁盘配置能力
 */
 type InstanceTypeDisk struct {
@@ -638,21 +653,6 @@ type InstanceTypeDisk struct {
 	DataDisk []InstanceTypeDataDisk
 
 	// 磁盘配置名称
-	Name string
-}
-
-/*
-InstanceTypeUHostFamily - 机型规格族
-*/
-type InstanceTypeUHostFamily struct {
-
-	// CPU 频率
-	CpuFrequency string
-
-	// 支持的 CPU 平台
-	CpuPlatforms []InstanceTypeCpuPlatform
-
-	// 规格族名称
 	Name string
 }
 
@@ -945,57 +945,6 @@ type RuntimeConvertInfo struct {
 }
 
 /*
-NodePlugin - 节点类插件信息
-*/
-type NodePlugin struct {
-
-	// 最新插件版本
-	AvailableVersion string
-
-	// 插件管理是否开启
-	ManageEnabled bool
-
-	// 插件名称, 如 CNI, CSI, Flexv, CloudProvider
-	Name string
-
-	// 各个节点插件信息, 参照NodePluginInfo
-	PluginInfoSet []NodePluginInfo
-
-	// 最新插件发布时间
-	ReleaseTime string
-}
-
-/*
-CloudProviderInfo - CloudProvider 插件版本与状态
-*/
-type CloudProviderInfo struct {
-
-	// 最新可用插件版本。
-	AvailableVersion string
-
-	// 是否开启插件托管。
-	ManageEnabled bool
-
-	// 插件名称。
-	Name string
-
-	// 上次插件操作结果。
-	OperationResult int
-
-	// 最新可用版本的发布时间。
-	ReleaseTime string
-
-	// 插件状态。
-	Status int
-
-	// 更新时间，Unix 时间戳，单位秒。
-	UpdateTime int
-
-	// 当前插件版本。
-	Version string
-}
-
-/*
 VKNodeInfo - 单个虚拟节点插件信息
 */
 type VKNodeInfo struct {
@@ -1017,24 +966,33 @@ type VKNodeInfo struct {
 }
 
 /*
-VKNode - 虚拟节点插件信息
+NodePlugin - 节点类插件信息
 */
-type VKNode struct {
+type NodePlugin struct {
 
-	// 最新版本
+	// 最新插件版本
 	AvailableVersion string
 
 	// 插件管理是否开启
 	ManageEnabled bool
 
-	// 插件名称
+	// 插件名称, 如 CNI, CSI, Flexv, CloudProvider
 	Name string
 
-	// 各虚拟节点的插件信息。
-	PluginInfoSet []VKNodeInfo
+	// 各个节点插件信息, 参照NodePluginInfo
+	PluginInfoSet []NodePluginInfo
 
-	// 发布时间
+	// 最新插件发布时间
 	ReleaseTime string
+}
+
+/*
+MonitorInfo - 监控插件信息
+*/
+type MonitorInfo struct {
+
+	// 最新可用监控插件版本。
+	AvailableVersion string
 }
 
 /*
@@ -1068,12 +1026,54 @@ type CSIInfo struct {
 }
 
 /*
-MonitorInfo - 监控插件信息
+CloudProviderInfo - CloudProvider 插件版本与状态
 */
-type MonitorInfo struct {
+type CloudProviderInfo struct {
 
-	// 最新可用监控插件版本。
+	// 最新可用插件版本。
 	AvailableVersion string
+
+	// 是否开启插件托管。
+	ManageEnabled bool
+
+	// 插件名称。
+	Name string
+
+	// 上次插件操作结果。
+	OperationResult int
+
+	// 最新可用版本的发布时间。
+	ReleaseTime string
+
+	// 插件状态。
+	Status int
+
+	// 更新时间，Unix 时间戳，单位秒。
+	UpdateTime int
+
+	// 当前插件版本。
+	Version string
+}
+
+/*
+VKNode - 虚拟节点插件信息
+*/
+type VKNode struct {
+
+	// 最新版本
+	AvailableVersion string
+
+	// 插件管理是否开启
+	ManageEnabled bool
+
+	// 插件名称
+	Name string
+
+	// 各虚拟节点的插件信息。
+	PluginInfoSet []VKNodeInfo
+
+	// 发布时间
+	ReleaseTime string
 }
 
 /*
@@ -1332,6 +1332,96 @@ type ClusterSet struct {
 }
 
 /*
+ULSExtractRule - 定义日志的提取、解析和格式化规则。
+*/
+type ULSExtractRule struct {
+
+	// 行首正则表达式。在 multi_line、multi_line_full_regex 或 multi_line_delimiter 模式下，BeginningRegex 和 BeginningRegexBase64 必须至少填写一个。
+	BeginningRegex string
+
+	// Base64 编码的行首正则表达式。填写时优先于 BeginningRegex。
+	BeginningRegexBase64 string
+
+	// 采集策略。可选值：full（全量采集存量日志）、increment（从当前时间点增量采集）。默认为 full。
+	CollectPolicy string
+
+	// 分隔符。适用于 delimiter 或 multi_line_delimiter，可选值：space、tab、|、;、,。
+	Delimiter string
+
+	// Base64 编码的分隔符。填写时优先于 Delimiter。
+	DelimiterBase64 string
+
+	// 日志原文的编码格式。可选值：utf-8、gbk。默认为 utf-8。
+	Encode string
+
+	// 提取后的字段名列表。仅适用于 delimiter、full_regex、multi_line_full_regex 和 multi_line_delimiter。
+	Keys []string
+
+	// 日志提取正则表达式。在 full_regex 或 multi_line_full_regex 模式下，LogRegex 和 LogRegexBase64 必须至少填写一个。
+	LogRegex string
+
+	// Base64 编码的日志提取正则表达式。填写时优先于 LogRegex。
+	LogRegexBase64 string
+
+	// 日志解析类型。可选值：json、delimiter、full_regex、multi_line_full_regex、multi_line_delimiter、minimal_list、multi_line。
+	LogType string
+
+	// TimeKey 对应的时间格式。在 json、full_regex 或 multi_line_full_regex 模式下，填写 TimeKey 时必须同时填写 TimeFormat。
+	TimeFormat string
+
+	// 包含日志时间的字段名。
+	TimeKey string
+
+	// 存放无法解析的日志原文的 Key。UnMatchUpload 为 true 时必须填写。
+	UnMatchKey string
+
+	// 是否上传解析失败的日志。字符串 true 表示上传，false 表示丢弃。默认为 false。
+	UnMatchUpload string
+}
+
+/*
+ULSFilePaths - ULS采集文件路径
+*/
+type ULSFilePaths struct {
+
+	// 采集文件
+	File string
+
+	// 定义采集路径
+	Path string
+}
+
+/*
+ULSInputMetadata - ULSInputMetadata
+*/
+type ULSInputMetadata struct {
+
+	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
+	Container string
+
+	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
+	Labels string
+}
+
+/*
+ULSInputDetail - 定义日志的输入来源，例如容器文件或容器标准输出。
+*/
+type ULSInputDetail struct {
+
+	// 日志采集路径列表。仅适用于 container_file。
+	FilePaths []ULSFilePaths
+
+	// 定义需要附加到日志中的容器相关元数据。
+	InputMetadata ULSInputMetadata
+
+	// 容器标准输出流类型。仅适用于 container_stdout，可选值：all、stdout、stderr，默认为 all。
+	Stream string
+
+	// 日志输入类型。可选值：container_file、container_stdout。
+	Type string
+}
+
+/*
 ULSLabels - ULSLabels
 */
 type ULSLabels struct {
@@ -1392,96 +1482,6 @@ type ULSMatchRule struct {
 
 	// 按工作负载进行匹配。
 	Workloads []ULSWorkloadMatch
-}
-
-/*
-ULSFilePaths - ULS采集文件路径
-*/
-type ULSFilePaths struct {
-
-	// 采集文件
-	File string
-
-	// 定义采集路径
-	Path string
-}
-
-/*
-ULSInputMetadata - ULSInputMetadata
-*/
-type ULSInputMetadata struct {
-
-	// 指定具体要采集元数据的容器名。如果留空，则不采集容器的元数据，可选字段：container_name,namespace,pod_name,pod_ip,pod_uid,container_id,image_name。Pod Label 元数据通过指定 InputDetail.Metadata.Labels 字段。
-	Container string
-
-	// 定义要采集哪些 Pod 的标签 (Labels)。可选值：*：采集所有标签。app,version：仅采集 app 和 version 这两个标签。""（空字符串）：不采集任何标签。
-	Labels string
-}
-
-/*
-ULSExtractRule - 定义日志的提取、解析和格式化规则。
-*/
-type ULSExtractRule struct {
-
-	// 行首正则表达式。在 multi_line、multi_line_full_regex 或 multi_line_delimiter 模式下，BeginningRegex 和 BeginningRegexBase64 必须至少填写一个。
-	BeginningRegex string
-
-	// Base64 编码的行首正则表达式。填写时优先于 BeginningRegex。
-	BeginningRegexBase64 string
-
-	// 采集策略。可选值：full（全量采集存量日志）、increment（从当前时间点增量采集）。默认为 full。
-	CollectPolicy string
-
-	// 分隔符。适用于 delimiter 或 multi_line_delimiter，可选值：space、tab、|、;、,。
-	Delimiter string
-
-	// Base64 编码的分隔符。填写时优先于 Delimiter。
-	DelimiterBase64 string
-
-	// 日志原文的编码格式。可选值：utf-8、gbk。默认为 utf-8。
-	Encode string
-
-	// 提取后的字段名列表。仅适用于 delimiter、full_regex、multi_line_full_regex 和 multi_line_delimiter。
-	Keys []string
-
-	// 日志提取正则表达式。在 full_regex 或 multi_line_full_regex 模式下，LogRegex 和 LogRegexBase64 必须至少填写一个。
-	LogRegex string
-
-	// Base64 编码的日志提取正则表达式。填写时优先于 LogRegex。
-	LogRegexBase64 string
-
-	// 日志解析类型。可选值：json、delimiter、full_regex、multi_line_full_regex、multi_line_delimiter、minimal_list、multi_line。
-	LogType string
-
-	// TimeKey 对应的时间格式。在 json、full_regex 或 multi_line_full_regex 模式下，填写 TimeKey 时必须同时填写 TimeFormat。
-	TimeFormat string
-
-	// 包含日志时间的字段名。
-	TimeKey string
-
-	// 存放无法解析的日志原文的 Key。UnMatchUpload 为 true 时必须填写。
-	UnMatchKey string
-
-	// 是否上传解析失败的日志。字符串 true 表示上传，false 表示丢弃。默认为 false。
-	UnMatchUpload string
-}
-
-/*
-ULSInputDetail - 定义日志的输入来源，例如容器文件或容器标准输出。
-*/
-type ULSInputDetail struct {
-
-	// 日志采集路径列表。仅适用于 container_file。
-	FilePaths []ULSFilePaths
-
-	// 定义需要附加到日志中的容器相关元数据。
-	InputMetadata ULSInputMetadata
-
-	// 容器标准输出流类型。仅适用于 container_stdout，可选值：all、stdout、stderr，默认为 all。
-	Stream string
-
-	// 日志输入类型。可选值：container_file、container_stdout。
-	Type string
 }
 
 /*
