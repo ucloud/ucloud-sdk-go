@@ -3,32 +3,32 @@
 package udisk
 
 /*
-RecycleUDiskSet - 回收站列表
+RecycleUDiskSet -
 */
 type RecycleUDiskSet struct {
 
-	// 销毁倒计时
+	//
 	CountdownTime int
 
-	// 创建时间
+	//
 	CreateTime int
 
-	// 过期时间
+	//
 	ExpiredTime int
 
-	// 磁盘名称
+	//
 	Name string
 
-	// 磁盘容量
+	//
 	Size int
 
-	// 业务组
+	//
 	Tag string
 
-	// 磁盘id
+	//
 	UDiskId string
 
-	// 可用区
+	//
 	Zone string
 }
 
