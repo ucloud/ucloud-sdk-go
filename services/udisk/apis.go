@@ -25,8 +25,11 @@ type AttachUDiskRequest struct {
 	// 是否允许跨pod挂载（Yes：允许跨pod挂载，No：不允许跨pod挂载，不填默认No）
 	EnableCrossPodAttach *string `required:"false"`
 
-	// Host实例ID
+	// Host实例ID。
 	HostId *string `required:"false"`
+
+	// 用户标签
+	Lable *string `required:"false"`
 
 	// 是否允许多点挂载（Yes: 允许多点挂载， No: 不允许多点挂载， 不填默认Yes ）
 	MultiAttach *string `required:"false"`
@@ -616,13 +619,13 @@ func (c *UDiskClient) CreateUDisk(req *CreateUDiskRequest) (*CreateUDiskResponse
 type CreateUDiskSnapshotRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"true"`
 
 	// Year , Month, Dynamic 默认: Dynamic  (已废弃)
@@ -793,19 +796,19 @@ func (c *UDiskClient) DeleteUDiskSnapshot(req *DeleteUDiskSnapshotRequest) (*Del
 type DescribeRecycleUDiskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数]
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数]
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数]
 	// Zone *string `required:"true"`
 
-	// 返回数据长度, 默认为20
+	//
 	Limit *int `required:"false"`
 
-	// 数据偏移量, 默认为0
+	//
 	Offset *int `required:"false"`
 }
 
@@ -813,10 +816,10 @@ type DescribeRecycleUDiskRequest struct {
 type DescribeRecycleUDiskResponse struct {
 	response.CommonBase
 
-	// 回收站磁盘列表
+	//
 	DataSet []RecycleUDiskSet
 
-	// 磁盘数量
+	//
 	TotalCount int
 }
 
@@ -828,14 +831,12 @@ func (c *UDiskClient) NewDescribeRecycleUDiskRequest() *DescribeRecycleUDiskRequ
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
+	req.SetRetryable(false)
 	return req
 }
 
 /*
 API: DescribeRecycleUDisk
-
-拉取回收站中云硬盘列表
 */
 func (c *UDiskClient) DescribeRecycleUDisk(req *DescribeRecycleUDiskRequest) (*DescribeRecycleUDiskResponse, error) {
 	var err error
@@ -1341,22 +1342,22 @@ func (c *UDiskClient) DetachUDisk(req *DetachUDiskRequest) (*DetachUDiskResponse
 type RecoverUDiskRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数]
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数]
 	// Region *string `required:"true"`
 
-	// [公共参数] 可用区。参见 [可用区列表](../summary/regionlist.html)
+	// [公共参数]
 	// Zone *string `required:"true"`
 
-	// Year , Month, Dynamic 默认: Dynamic
+	//
 	ChargeType *string `required:"false"`
 
-	// 购买时长 默认: 1
+	//
 	Quantity *int `required:"false"`
 
-	// 云硬盘资源ID
+	//
 	UDiskId *string `required:"true"`
 }
 
@@ -1373,14 +1374,12 @@ func (c *UDiskClient) NewRecoverUDiskRequest() *RecoverUDiskRequest {
 	c.Client.SetupRequest(req)
 
 	// setup retryable with default retry policy (retry for non-create action and common error)
-	req.SetRetryable(true)
+	req.SetRetryable(false)
 	return req
 }
 
 /*
 API: RecoverUDisk
-
-从回收站中恢复云硬盘
 */
 func (c *UDiskClient) RecoverUDisk(req *RecoverUDiskRequest) (*RecoverUDiskResponse, error) {
 	var err error

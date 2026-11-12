@@ -114,18 +114,6 @@ type TopicField struct {
 }
 
 /*
-FilePath - 文件路径
-*/
-type FilePath struct {
-
-	// 文件名
-	File string
-
-	// 路径
-	Path string
-}
-
-/*
 MachineGroup - 机器组
 */
 type MachineGroup struct {
@@ -144,6 +132,18 @@ type MachineGroup struct {
 
 	// 修改时间
 	UpdateTime int
+}
+
+/*
+FilePath - 文件路径
+*/
+type FilePath struct {
+
+	// 文件名
+	File string
+
+	// 路径
+	Path string
 }
 
 /*
@@ -245,7 +245,7 @@ type LogQueryResult struct {
 	Columns []AnalysisField
 
 	// 日志内容
-	Contents LogContent
+	Contents []LogContent
 
 	// 检索结果是否到底
 	IsOver bool
