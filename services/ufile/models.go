@@ -10,11 +10,14 @@ type UFileTokenSet struct {
 	// 令牌允许操作的bucket
 	AllowedBuckets []string
 
-	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP ]
+	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE 没有权限, TOKEN_ALLOW_READ 下载权限, TOKEN_ALLOW_WRITE 上传权限, TOKEN_ALLOW_DELETE 删除权限, TOKEN_ALLOW_LIST 列表权限, TOKEN_ALLOW_IOP 图片处理权限]
 	AllowedOps []string
 
 	// 令牌允许操作的key前缀
 	AllowedPrefixes []string
+
+	// 令牌黑名单
+	BlackIPList []string
 
 	// 创建时间
 	CreateTime int
@@ -39,6 +42,9 @@ type UFileTokenSet struct {
 
 	// 令牌名称
 	TokenName string
+
+	// 令牌白名单
+	WhiteIPList []string
 }
 
 /*

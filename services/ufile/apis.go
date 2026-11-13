@@ -273,6 +273,9 @@ type CreateBucketRequest struct {
 	// 待创建Bucket的名称，具有全局唯一性
 	BucketName *string `required:"true"`
 
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
+
 	// Bucket所属业务组，默认为default
 	Tag *string `required:"false"`
 
@@ -435,6 +438,9 @@ type CreateUFileTokenRequest struct {
 
 	// Unix 时间戳，精确到秒，为令牌过期时间点。默认过期时间为一天（即当前Unix时间戳+86400）；注意：过期时间不能超过 4102416000
 	ExpireTime *int `required:"false"`
+
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
 
 	// 令牌名称
 	TokenName *string `required:"true"`
@@ -831,11 +837,14 @@ func (c *UFileClient) DeleteUFileSSLCert(req *DeleteUFileSSLCertRequest) (*Delet
 type DeleteUFileTokenRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
+
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
 
 	// 令牌ID
 	TokenId *string `required:"true"`
@@ -889,6 +898,9 @@ type DescribeBucketRequest struct {
 
 	// 待获取Bucket的名称，若不提供，则获取所有Bucket
 	BucketName *string `required:"false"`
+
+	// bucket可用区
+	FakeRegion *string `required:"false"`
 
 	// 获取所有Bucket列表的限制数目，默认为20
 	Limit *int `required:"false"`
@@ -1345,14 +1357,17 @@ func (c *UFileClient) DescribeUFileSSLCert(req *DescribeUFileSSLCertRequest) (*D
 type DescribeUFileTokenRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"false"`
 
 	// 0表示显示部分token信息；不传递和其他情况表示显示全部token信息
 	Display *int `required:"false"`
+
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
 
 	// 令牌ID，只返回指定ID信息，否则拉取所有令牌
 	TokenId *string `required:"false"`
@@ -1578,6 +1593,8 @@ type GetProjectRegionQuotaRequest struct {
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
 
+	// bucket可用区
+	FakeRegion *string `required:"false"`
 }
 
 // GetProjectRegionQuotaResponse is response schema for GetProjectRegionQuota action
@@ -1641,6 +1658,9 @@ type GetUFileDailyBillRequest struct {
 	// 查询结束时间;unix时间戳,单位s
 	EndTime *int `required:"true"`
 
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
+
 	// 查询开始时间;unix时间戳，单位s
 	StartTime *int `required:"true"`
 }
@@ -1700,6 +1720,9 @@ type GetUFileDailyReportRequest struct {
 	// 查询结束时间;unix时间戳,单位s
 	EndTime *int `required:"true"`
 
+	// bucket可用区
+	FakeRegion *string `required:"false"`
+
 	// 查询开始时间;unix时间戳，单位s
 	StartTime *int `required:"true"`
 }
@@ -1758,6 +1781,9 @@ type GetUFileMonthlyBillRequest struct {
 
 	// 查询结束时间;例如"1994-07"
 	EndMonth *string `required:"true"`
+
+	// bucket可用区
+	FakeRegion *string `required:"false"`
 
 	// 查询开始月份;例如"1994-07"
 	StartMonth *string `required:"true"`
@@ -2039,16 +2065,19 @@ func (c *UFileClient) GetUFileQuotaPrice(req *GetUFileQuotaPriceRequest) (*GetUF
 type GetUFileReportRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
 	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"true"`
 
-	// 查询结束时间
+	// 查询结束时间, 单位 s
 	EndTime *int `required:"true"`
 
-	// 查询开始时间
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
+
+	// 查询开始时间，单位 s
 	StartTime *int `required:"true"`
 }
 
@@ -2218,6 +2247,9 @@ type SetProjectRegionQuotaRequest struct {
 
 	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Zone *string `required:"false"`
+
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
 
 	// 配额数目(单位是Byte)
 	QuotaLimit *int `required:"true"`
@@ -2674,29 +2706,38 @@ func (c *UFileClient) UpdateUFileSSLCert(req *UpdateUFileSSLCertRequest) (*Updat
 type UpdateUFileTokenRequest struct {
 	request.CommonBase
 
-	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](../summary/get_project_list.html)
-	// ProjectId *string `required:"true"`
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
 
-	// [公共参数] 地域。 参见 [地域和可用区列表](../summary/regionlist.html)
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
 	// Region *string `required:"false"`
 
 	// 令牌允许操作的bucket
 	AllowedBuckets []string `required:"false"`
 
-	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP ]
+	// 令牌允许执行的操作，[ TOKEN_ALLOW_NONE , TOKEN_ALLOW_READ , TOKEN_ALLOW_WRITE , TOKEN_ALLOW_DELETE , TOKEN_ALLOW_LIST, TOKEN_ALLOW_IOP , TOKEN_ALLOW_DP ，TOKEN_DENY_UPDATE]
 	AllowedOps []string `required:"false"`
 
 	// 令牌允许操作的key前缀
 	AllowedPrefixes []string `required:"false"`
 
+	// 令牌黑名单，支持ipv4，ipv6格式。
+	BlackIPList []string `required:"false"`
+
 	// 令牌的超时时间点（时间戳）;注意：过期时间不能超过 4102416000
 	ExpireTime *int `required:"false"`
+
+	// bucket的可用区
+	FakeRegion *string `required:"false"`
 
 	// 令牌ID
 	TokenId *string `required:"true"`
 
 	// 令牌名称
 	TokenName *string `required:"false"`
+
+	// 令牌黑名单，支持ipv4，ipv6格式。
+	WhiteIPList []string `required:"false"`
 }
 
 // UpdateUFileTokenResponse is response schema for UpdateUFileToken action
