@@ -187,6 +187,9 @@ type UDiskSnapshotSet struct {
 	// 【已废弃】过期时间
 	ExpiredTime int
 
+	// 绑定镜像ID
+	ImageId string
+
 	// 对应磁盘是否处于可用状态
 	IsUDiskAvailable bool
 
