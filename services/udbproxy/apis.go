@@ -9,6 +9,122 @@ import (
 
 // UDBProxy API Schema
 
+// DescribeUDBProxyRequest is request schema for DescribeUDBProxy action
+type DescribeUDBProxyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 读写分离ID
+	UDBProxyID *string `required:"true"`
+}
+
+// DescribeUDBProxyResponse is response schema for DescribeUDBProxy action
+type DescribeUDBProxyResponse struct {
+	response.CommonBase
+
+	// cpu核数
+	CPUCores int
+
+	// 创建时间
+	CreateTime int
+
+	// 延迟阈值(单位s)
+	DelayThreshold int
+
+	// 是否启用事务拆分(1：启用事务拆分，2:关闭事务拆分)
+	EnableTransSplit int
+
+	// 实例版本
+	InstanceVersion string
+
+	// UDB代理服务最大连接数
+	MaxConnection int
+
+	// 内存
+	Memory int
+
+	// 修改时间
+	ModifyTime int
+
+	// 名称
+	Name string
+
+	// 集群实例节点数
+	NodeCount int
+
+	// 集群实例服务节点数据
+	Nodes []Node
+
+	// 代理实例的内网域名及其开关状态，含域名地址、域名开关、域名数据源指向
+	PrivateDomainInfo PrivateDomainInfo
+
+	// 读权重模式:1-主节点模式;2-节点均衡模式;3-从节点均衡(排除主节点);5-用户自定义模式
+	ReadWeightMode int
+
+	// sql限流数量
+	SQLLimitCount int
+
+	// sql路由数量
+	SQLRouterCount int
+
+	// 状态
+	State string
+
+	// UDBProxy实例ID
+	UDBProxyID string
+
+	// UDB代理服务IP
+	UDBProxyIP string
+
+	// UDB代理服务端口
+	UDBProxyPort int
+
+	// UDB集群数据
+	UDBReplicas []Replica
+
+	// 可用区id
+	ZoneId int
+}
+
+// NewDescribeUDBProxyRequest will create request of DescribeUDBProxy action.
+func (c *UDBProxyClient) NewDescribeUDBProxyRequest() *DescribeUDBProxyRequest {
+	req := &DescribeUDBProxyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: DescribeUDBProxy
+
+获取UDB代理服务详细信息
+*/
+func (c *UDBProxyClient) DescribeUDBProxy(req *DescribeUDBProxyRequest) (*DescribeUDBProxyResponse, error) {
+	var err error
+	var res DescribeUDBProxyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("DescribeUDBProxy", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // ListUDBProxyClientRequest is request schema for ListUDBProxyClient action
 type ListUDBProxyClientRequest struct {
 	request.CommonBase
@@ -61,6 +177,65 @@ func (c *UDBProxyClient) ListUDBProxyClient(req *ListUDBProxyClientRequest) (*Li
 	reqCopier := *req
 
 	err = c.Client.InvokeAction("ListUDBProxyClient", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
+// ListUDBProxyInstanceByDBRequest is request schema for ListUDBProxyInstanceByDB action
+type ListUDBProxyInstanceByDBRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 数据库DB资源ID
+	DBID *string `required:"true"`
+}
+
+// ListUDBProxyInstanceByDBResponse is response schema for ListUDBProxyInstanceByDB action
+type ListUDBProxyInstanceByDBResponse struct {
+	response.CommonBase
+
+	// 错误码
+	Message string
+
+	// 代理列表数据
+	UDBProxyBaseItems []UDBProxyBaseItem
+}
+
+// NewListUDBProxyInstanceByDBRequest will create request of ListUDBProxyInstanceByDB action.
+func (c *UDBProxyClient) NewListUDBProxyInstanceByDBRequest() *ListUDBProxyInstanceByDBRequest {
+	req := &ListUDBProxyInstanceByDBRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: ListUDBProxyInstanceByDB
+
+查询DB启用代理数据
+*/
+func (c *UDBProxyClient) ListUDBProxyInstanceByDB(req *ListUDBProxyInstanceByDBRequest) (*ListUDBProxyInstanceByDBResponse, error) {
+	var err error
+	var res ListUDBProxyInstanceByDBResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("ListUDBProxyInstanceByDB", &reqCopier, &res)
 	if err != nil {
 		return &res, err
 	}

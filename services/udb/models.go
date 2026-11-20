@@ -597,6 +597,54 @@ type UDBTypeSet struct {
 }
 
 /*
+ExternalInfo - 实例外网访问信息，含状态、地址、端口、带宽与白名单
+*/
+type ExternalInfo struct {
+
+	// 外网带宽，单位 Mbps，取自 EIP 带宽；无 EIP 时为 0
+	Bindwidth int
+
+	// 外网访问地址；未开通外网访问时为空字符串
+	ExternalAddress string
+
+	// 外网访问端口；未开通时为 0
+	ExternalPort int
+
+	// 外网访问状态，字符串枚举，取值见下表
+	Status string
+
+	// 实例是否支持外网访问能力：1 支持；当前实现恒返回 1
+	Support int
+
+	// 外网访问白名单，多个 IP 以逗号分隔，取自 NLB 白名单
+	WhiteList string
+}
+
+/*
+PrivateInfo - 实例内网访问信息，含 VPC、子网、内网 IP、内网域名与端口
+*/
+type PrivateInfo struct {
+
+	// 实例的内网域名；未开通内网域名时为空字符串
+	PrivateDomain string
+
+	// 实例内网服务端口
+	PrivateDomainStatus string
+
+	// 实例内网服务地址（VIP）
+	PrivateIP string
+
+	// 内网域名状态，字符串枚举，取值与 Status 同源；未开通内网域名时返回NetworkConnectionDisabled
+	PrivatePort int
+
+	// 实例内网所在的子网 ID
+	SubnetId string
+
+	// 实例内网所在的 VPC ID
+	VPCId string
+}
+
+/*
 ConnNumMap - db实例ip和连接数信息
 */
 type ConnNumMap struct {

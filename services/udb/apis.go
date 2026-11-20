@@ -3474,6 +3474,68 @@ func (c *UDBClient) FetchUDBInstanceEarliestRecoverTime(req *FetchUDBInstanceEar
 	return &res, nil
 }
 
+// GetUDBAccessInfoRequest is request schema for GetUDBAccessInfo action
+type GetUDBAccessInfoRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"true"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 实例ID
+	DBId *string `required:"true"`
+}
+
+// GetUDBAccessInfoResponse is response schema for GetUDBAccessInfo action
+type GetUDBAccessInfoResponse struct {
+	response.CommonBase
+
+	// 实例外网访问信息，含状态、地址、端口、带宽与白名单
+	ExternalInfo []ExternalInfo
+
+	// 错误信息
+	Message string
+
+	// 实例内网访问信息，含 VPC、子网、内网 IP、内网域名与端口
+	PrivateInfo []PrivateInfo
+}
+
+// NewGetUDBAccessInfoRequest will create request of GetUDBAccessInfo action.
+func (c *UDBClient) NewGetUDBAccessInfoRequest() *GetUDBAccessInfoRequest {
+	req := &GetUDBAccessInfoRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(true)
+	return req
+}
+
+/*
+API: GetUDBAccessInfo
+
+查询 UDB 实例的内网与外网访问信息，包含外网地址端口、带宽、白名单，以及内网 VPC、子网、内网 IP、内网域名与端口1
+*/
+func (c *UDBClient) GetUDBAccessInfo(req *GetUDBAccessInfoRequest) (*GetUDBAccessInfoResponse, error) {
+	var err error
+	var res GetUDBAccessInfoResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("GetUDBAccessInfo", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // GetUDBClientConnNumRequest is request schema for GetUDBClientConnNum action
 type GetUDBClientConnNumRequest struct {
 	request.CommonBase
