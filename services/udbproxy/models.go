@@ -3,11 +3,74 @@
 package udbproxy
 
 /*
+PrivateDomainInfo - 代理实例的内网域名及其开关状态，含域名地址、域名开关、域名数据源指向
+*/
+type PrivateDomainInfo struct {
+
+	// 内网域名指向的数据源：1 指向主库（可直连数据库），2 指向代理（经 UDBProxy访问）；未开通时返回 2
+	EnableConnectToDB int
+
+	// 内网域名是否已开启：1 已开启，2 已关闭；未开通内网域名时返回 2
+	EnablePrivateDomain int
+
+	// 实例的内网域名地址，形如 xxx.ucloudcs.com；未开通内网域名时为空字符串
+	PrivateDomain string
+}
+
+/*
+Node - UDB代理服务节点数据
+*/
+type Node struct {
+
+	// 服务节点id
+	ID string
+
+	// 服务节点状态
+	State string
+}
+
+/*
+Replica - UDB数据
+*/
+type Replica struct {
+
+	// 创建时间
+	CreateTime int
+
+	// 数据库ID
+	ID string
+
+	// 数据库IP
+	IP string
+
+	// 是否加入代理服务(true:加入，false:未加入)
+	JoinState bool
+
+	// 修改时间
+	ModifyTime int
+
+	// 数据库名称
+	Name string
+
+	// 数据库服务端口
+	Port int
+
+	// 读权重
+	ReadWeight int
+
+	// 角色[master-主库，slave-从库]
+	Role string
+
+	// 状态
+	State string
+}
+
+/*
 ProxyProcesslist - 连接代理信息
 */
 type ProxyProcesslist struct {
 
-	// 代理连接DB地址
+	// 客户端来源IP地址
 	ClientHost string
 
 	// 显示当前连接的执行的命令
@@ -54,4 +117,64 @@ type NodeClientInfo struct {
 
 	// 客户端IP连接信息
 	Records []ProxyProcesslist
+}
+
+/*
+BaseDBData - 加入代理DB基础信息
+*/
+type BaseDBData struct {
+
+	// 数据库ID
+	ID string
+
+	// 数据库名称
+	Name string
+
+	// 权重
+	ReadWeight int
+}
+
+/*
+UDBProxyBaseItem - 代理列表基础信息
+*/
+type UDBProxyBaseItem struct {
+
+	// 加入代理DB信息
+	BaseDBDataArr []BaseDBData
+
+	// 单个代理节点CPU核数
+	CPUCores int
+
+	// 创建时间
+	CreateTime int
+
+	// 代理ID
+	ID string
+
+	// 代理IP
+	IP string
+
+	// 实例版本
+	InstanceVersion string
+
+	// 单个代理内存
+	Memory int
+
+	// 代理名称
+	Name string
+
+	// 代理节点数
+	NodeCount int
+
+	// 代理端口
+	Port int
+
+	// 读权重模式:1-主节点模式;2-节点均衡模式;3-从节点均衡(排除主节点);5-用户自定义模式
+	ReadWeightMode int
+
+	// 状态
+	State string
+
+	// 可用区ID
+	ZoneID int
 }
