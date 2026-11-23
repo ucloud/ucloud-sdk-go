@@ -9,6 +9,131 @@ import (
 
 // UAI_Modelverse API Schema
 
+// BatchCreateUMInferAPIKeyRequest is request schema for BatchCreateUMInferAPIKey action
+type BatchCreateUMInferAPIKeyRequest struct {
+	request.CommonBase
+
+	// [公共参数] 项目ID。不填写为默认项目，子帐号必须填写。 请参考[GetProjectList接口](https://docs.ucloud.cn/api/summary/get_project_list)
+	// ProjectId *string `required:"false"`
+
+	// [公共参数] 地域。 参见 [地域和可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Region *string `required:"true"`
+
+	// [公共参数] 可用区。参见 [可用区列表](https://docs.ucloud.cn/api/summary/regionlist)
+	// Zone *string `required:"true"`
+
+	// 创建个数
+	Count *int `required:"true"`
+
+	// 日限额，单位随用户所在渠道。126渠道单位为美元
+	DailyLimitAmount *string `required:"false"`
+
+	// 日配额告警阈值 0~100（百分比）
+	DailyQuotaAlertThreshold *int `required:"false"`
+
+	// 黑名单模型，仅 blacklist 模式生效，["deepseek-ai/DeepSeek-V3.2-Think"，"gemini-4-neon"]
+	DeniedModels *string `required:"false"`
+
+	// 过期时间（秒级 Unix 时间戳）。缺省 = -1 永不过期；必须为 -1 或未来时间，且 ≤ 253402300799（9999-12-31 23:59:59 UTC）
+	ExpireTime *int `required:"false"`
+
+	// 全部模型访问开关，开启不受 GrantedModels 参数控制，关闭只能访问 GrantedModels 中添加模型
+	GrantAllModels *bool `required:"false"`
+
+	// 授权模型，内容为数组格式。当 GrantAllModels 为false时 当前key只可访问数组中模型。例：["deepseek-ai/DeepSeek-V3.2-Think"]
+	GrantedModels *string `required:"false"`
+
+	// ip黑名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:  192.168.1.1 192.168.1.10-192.168.1.100 192.168.1.10/24
+	IPBlacklist *string `required:"false"`
+
+	// ip白名单，换行分割的多组ip。支持IPv4和网段,输入后回车生效,最多100个, 示例:  192.168.1.1 192.168.1.10-192.168.1.100 192.168.1.10/24
+	IPWhitelist *string `required:"false"`
+
+	// 是否开启推理日志
+	InferenceLogEnabled *int `required:"false"`
+
+	// 访问模式：whitelist（默认）/ blacklist
+	ModelAccessMode *string `required:"false"`
+
+	// 是否modelverse可用 0: 启用 1: 禁用
+	ModelverseDisabled *int `required:"false"`
+
+	// 月限额，单位随用户所在渠道。126渠道单位为美元
+	MonthlyLimitAmount *string `required:"false"`
+
+	// 月配额告警阈值 0~100
+	MonthlyQuotaAlertThreshold *int `required:"false"`
+
+	// 名称前缀
+	Prefix *string `required:"true"`
+
+	// []string；告警渠道：email / sms / phone（去重、转小写）。任一阈值 >0 时必填
+	QuotaAlertChannels *string `required:"false"`
+
+	// 渠道含 email 时必填且需合法邮箱
+	QuotaAlertEmail *string `required:"false"`
+
+	// 启用 email 渠道时必填，需先调验证码接口获取，服务端校验并一次性消费
+	QuotaAlertEmailVerificationToken *string `required:"false"`
+
+	// 渠道含 sms/phone 时必填
+	QuotaAlertPhone *string `required:"false"`
+
+	// 启用 sms/phone 渠道时必填，同上
+	QuotaAlertPhoneVerificationToken *string `required:"false"`
+
+	// 是否沙盒可用 0: 启用 1: 禁用(astraflow 沙盒控制未上线，暂时无效)
+	SandBoxDisabled *int `required:"false"`
+
+	// 开始序号
+	Start *int `required:"true"`
+
+	// 总限额，单位随用户所在渠道。126渠道单位为美元
+	TotalLimitAmount *string `required:"false"`
+
+	// 总配额告警阈值 0~100
+	TotalQuotaAlertThreshold *int `required:"false"`
+}
+
+// BatchCreateUMInferAPIKeyResponse is response schema for BatchCreateUMInferAPIKey action
+type BatchCreateUMInferAPIKeyResponse struct {
+	response.CommonBase
+
+	// 创建的key列表
+	Data []BatchCreateUMInferAPIKey
+}
+
+// NewBatchCreateUMInferAPIKeyRequest will create request of BatchCreateUMInferAPIKey action.
+func (c *UAI_ModelverseClient) NewBatchCreateUMInferAPIKeyRequest() *BatchCreateUMInferAPIKeyRequest {
+	req := &BatchCreateUMInferAPIKeyRequest{}
+
+	// setup request with client config
+	c.Client.SetupRequest(req)
+
+	// setup retryable with default retry policy (retry for non-create action and common error)
+	req.SetRetryable(false)
+	return req
+}
+
+/*
+API: BatchCreateUMInferAPIKey
+
+批量创建api key
+*/
+func (c *UAI_ModelverseClient) BatchCreateUMInferAPIKey(req *BatchCreateUMInferAPIKeyRequest) (*BatchCreateUMInferAPIKeyResponse, error) {
+	var err error
+	var res BatchCreateUMInferAPIKeyResponse
+
+	reqCopier := *req
+
+	err = c.Client.InvokeAction("BatchCreateUMInferAPIKey", &reqCopier, &res)
+	if err != nil {
+		return &res, err
+	}
+
+	return &res, nil
+}
+
 // CreateUMInferAPIKeyRequest is request schema for CreateUMInferAPIKey action
 type CreateUMInferAPIKeyRequest struct {
 	request.CommonBase

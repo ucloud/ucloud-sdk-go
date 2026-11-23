@@ -42,6 +42,33 @@ type KeyPair struct {
 }
 
 /*
+FeatureModes - 可以支持的模式类别
+*/
+type FeatureModes struct {
+
+	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
+	MinimalCpuPlatform []string
+
+	// 模式|特性名称
+	Name string
+
+	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
+	RelatedToImageFeature []string
+}
+
+/*
+Features - 虚机可支持的特性
+*/
+type Features struct {
+
+	// 可以提供的模式类别
+	Modes []FeatureModes
+
+	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
+	Name string
+}
+
+/*
 CpuPlatformWithModels -
 */
 type CpuPlatformWithModels struct {
@@ -72,45 +99,6 @@ type UHostFamily struct {
 }
 
 /*
-FeatureModes - 可以支持的模式类别
-*/
-type FeatureModes struct {
-
-	// 这个特性必须是列出来的CPU平台及以上的CPU才支持
-	MinimalCpuPlatform []string
-
-	// 模式|特性名称
-	Name string
-
-	// 为镜像上支持这个特性的标签。例如DescribeImage返回的字段Features包含HotPlug，说明该镜像支持热升级。
-	RelatedToImageFeature []string
-}
-
-/*
-Features - 虚机可支持的特性
-*/
-type Features struct {
-
-	// 可以提供的模式类别
-	Modes []FeatureModes
-
-	// 可支持的特性名称。目前支持的特性网络增强|NetCapability、热升级|Hotplug
-	Name string
-}
-
-/*
-GraphicsMemory - GPU的显存指标
-*/
-type GraphicsMemory struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是GB
-	Value int
-}
-
-/*
 CpuPlatforms - CPU平台信息
 */
 type CpuPlatforms struct {
@@ -123,18 +111,6 @@ type CpuPlatforms struct {
 
 	// 返回Intel的CPU平台信息，例如：Intel: ['Intel/CascadeLake','Intel/CascadelakeR','Intel/IceLake']
 	Intel []string
-}
-
-/*
-Performance - GPU的性能指标
-*/
-type Performance struct {
-
-	// 交互展示参数，可忽略
-	Rate int
-
-	// 值，单位是TFlops
-	Value float64
 }
 
 /*
@@ -204,6 +180,18 @@ type DataDiskInfo struct {
 }
 
 /*
+GraphicsMemory - GPU的显存指标
+*/
+type GraphicsMemory struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是GB
+	Value int
+}
+
+/*
 Disks - 磁盘信息
 */
 type Disks struct {
@@ -216,6 +204,18 @@ type Disks struct {
 
 	// 磁盘介质类别信息，磁盘主要分类如下：云盘|cloudDisk、普通本地盘|normalLocalDisk和SSD本地盘|ssdLocalDisk。
 	Name string
+}
+
+/*
+Performance - GPU的性能指标
+*/
+type Performance struct {
+
+	// 交互展示参数，可忽略
+	Rate int
+
+	// 值，单位是TFlops
+	Value float64
 }
 
 /*
@@ -267,6 +267,42 @@ type AvailableInstanceTypes struct {
 }
 
 /*
+FamiliesGpuType -
+*/
+type FamiliesGpuType struct {
+
+	// 显存信息
+	GraphicsMemory GraphicsMemory
+
+	// 机型名称
+	Name string
+
+	// 性能信息
+	Performance Performance
+}
+
+/*
+Frequency - 频率
+*/
+type Frequency struct {
+
+	// 值
+	Value float64
+}
+
+/*
+NameFrequency - 名称及频率
+*/
+type NameFrequency struct {
+
+	// 频率
+	Frequency Frequency
+
+	// 机型名称
+	Name string
+}
+
+/*
 NameOperationStatus - 名称及标记
 */
 type NameOperationStatus struct {
@@ -309,18 +345,6 @@ type FamiliesBootDiskInfo struct {
 }
 
 /*
-CpuPlatformStatus -
-*/
-type CpuPlatformStatus struct {
-
-	// CPU平台
-	Name string
-
-	// 运营Commpont Code
-	OperationStatus string
-}
-
-/*
 FamiliesDataDiskInfo - 数据盘信息
 */
 type FamiliesDataDiskInfo struct {
@@ -335,27 +359,6 @@ type FamiliesDataDiskInfo struct {
 	MinimalSize int
 
 	// 数据盘类别，包含普通云盘|CLOUD_NORMAL、SSD云盘|CLOUD_SSD和RSSD云盘|CLOUD_RSSD。普通本地盘只包含普通本地盘|LOCAL_NORMAL一种。SSD本地盘只包含SSD本地盘|LOCAL_SSD一种。
-	Name string
-}
-
-/*
-Frequency - 频率
-*/
-type Frequency struct {
-
-	// 值
-	Value float64
-}
-
-/*
-NameFrequency - 名称及频率
-*/
-type NameFrequency struct {
-
-	// 频率
-	Frequency Frequency
-
-	// 机型名称
 	Name string
 }
 
@@ -378,18 +381,15 @@ type FamiliesDisks struct {
 }
 
 /*
-FamiliesGpuType -
+CpuPlatformStatus -
 */
-type FamiliesGpuType struct {
+type CpuPlatformStatus struct {
 
-	// 显存信息
-	GraphicsMemory GraphicsMemory
-
-	// 机型名称
+	// CPU平台
 	Name string
 
-	// 性能信息
-	Performance Performance
+	// 运营Commpont Code
+	OperationStatus string
 }
 
 /*
@@ -624,27 +624,6 @@ type UHostDiskSet struct {
 }
 
 /*
-UHostKeyPair - 主机密钥信息
-*/
-type UHostKeyPair struct {
-
-	// 密钥对ID
-	KeyPairId string
-
-	// 主机密钥对状态，Normal 正常，Deleted 删除
-	KeyPairState string
-}
-
-/*
-SpotAttribute - 竞价实例属性
-*/
-type SpotAttribute struct {
-
-	// 回收时间
-	RecycleTime int
-}
-
-/*
 UHostIPSet - DescribeUHostInstance
 */
 type UHostIPSet struct {
@@ -681,6 +660,27 @@ type UHostIPSet struct {
 
 	// 当前EIP的权重。权重最大的为当前的出口IP。
 	Weight int
+}
+
+/*
+UHostKeyPair - 主机密钥信息
+*/
+type UHostKeyPair struct {
+
+	// 密钥对ID
+	KeyPairId string
+
+	// 主机密钥对状态，Normal 正常，Deleted 删除
+	KeyPairState string
+}
+
+/*
+SpotAttribute - 竞价实例属性
+*/
+type SpotAttribute struct {
+
+	// 回收时间
+	RecycleTime int
 }
 
 /*

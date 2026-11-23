@@ -435,6 +435,12 @@ func (c *UHostClient) CreateIsolationGroup(req *CreateIsolationGroupRequest) (*C
 }
 
 /*
+CreateUHostInstanceParamVolumes is request schema for complex param
+*/
+type CreateUHostInstanceParamVolumes struct {
+}
+
+/*
 UHostDiskCustomBackup is request schema for complex param
 */
 type UHostDiskCustomBackup struct {
@@ -447,30 +453,6 @@ type UHostDiskCustomBackup struct {
 
 	// Disks.N.BackupMode为"Custom"时，进行设置, 以12小时秒级为基础进行倍数扩增，如12、24、36、48。
 	Journal *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamLabels is request schema for complex param
-*/
-type CreateUHostInstanceParamLabels struct {
-
-	// 用户资源标签的键值
-	Key *string `required:"false"`
-
-	// 用户资源标签的值
-	Value *string `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamSecGroupId is request schema for complex param
-*/
-type CreateUHostInstanceParamSecGroupId struct {
-
-	// 安全组 ID。至多可以同时绑定5个安全组。
-	Id *string `required:"false"`
-
-	// 安全组优先级。取值范围[1, 5]
-	Priority *int `required:"false"`
 }
 
 /*
@@ -510,36 +492,6 @@ type UHostDisk struct {
 }
 
 /*
-CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
-*/
-type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
-
-	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
-	Address *string `required:"false"`
-
-	// 【该字段已废弃，请谨慎使用】
-	Adress *string `required:"false" deprecated:"true"`
-
-	// 【该字段已废弃，请谨慎使用】
-	ShareBandwidthId *string `required:"false" deprecated:"true"`
-}
-
-/*
-CreateUHostInstanceParamFeatures is request schema for complex param
-*/
-type CreateUHostInstanceParamFeatures struct {
-
-	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
-	UNI *bool `required:"false"`
-}
-
-/*
-CreateUHostInstanceParamVolumes is request schema for complex param
-*/
-type CreateUHostInstanceParamVolumes struct {
-}
-
-/*
 CreateUHostInstanceParamNetworkInterfaceEIP is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterfaceEIP struct {
@@ -564,6 +516,33 @@ type CreateUHostInstanceParamNetworkInterfaceEIP struct {
 }
 
 /*
+CreateUHostInstanceParamLabels is request schema for complex param
+*/
+type CreateUHostInstanceParamLabels struct {
+
+	// 用户资源标签的键值
+	Key *string `required:"false"`
+
+	// 用户资源标签的值
+	Value *string `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamNetworkInterfaceIPv6 is request schema for complex param
+*/
+type CreateUHostInstanceParamNetworkInterfaceIPv6 struct {
+
+	// 第N个网卡对应的IPv6地址，默认不分配IPv6，“Auto”自动分配，不为空的其他字符串为实际要分配的IPv6地址。当前仅支持分配一个IPv6地址
+	Address *string `required:"false"`
+
+	// 【该字段已废弃，请谨慎使用】
+	Adress *string `required:"false" deprecated:"true"`
+
+	// 【该字段已废弃，请谨慎使用】
+	ShareBandwidthId *string `required:"false" deprecated:"true"`
+}
+
+/*
 CreateUHostInstanceParamNetworkInterface is request schema for complex param
 */
 type CreateUHostInstanceParamNetworkInterface struct {
@@ -576,6 +555,27 @@ type CreateUHostInstanceParamNetworkInterface struct {
 
 	//
 	IPv6 *CreateUHostInstanceParamNetworkInterfaceIPv6 `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamFeatures is request schema for complex param
+*/
+type CreateUHostInstanceParamFeatures struct {
+
+	// 弹性网卡特性。开启了弹性网卡权限位，此特性才生效，默认 false 未开启，true 开启。
+	UNI *bool `required:"false"`
+}
+
+/*
+CreateUHostInstanceParamSecGroupId is request schema for complex param
+*/
+type CreateUHostInstanceParamSecGroupId struct {
+
+	// 安全组 ID。至多可以同时绑定5个安全组。
+	Id *string `required:"false"`
+
+	// 安全组优先级。取值范围[1, 5]
+	Priority *int `required:"false"`
 }
 
 // CreateUHostInstanceRequest is request schema for CreateUHostInstance action
@@ -594,6 +594,9 @@ type CreateUHostInstanceRequest struct {
 	// 告警模板id，如果传了告警模板id，且告警模板id正确，则绑定告警模板。绑定告警模板失败不会影响创建主机流程。
 	AlarmTemplateId *int `required:"false"`
 
+	// 辅助 IP（UNI）自动配置。True 为开启，False 为未开启，默认 False。
+	AutoConfigUni *bool `required:"false"`
+
 	// 数据盘是否需要自动分区挂载。当镜像支持“Cloud-init”Feature时可填写此字段。取值 >“On” 自动挂载（默认值）> “Off” 不自动挂载。
 	AutoDataDiskInit *string `required:"false"`
 
@@ -602,6 +605,18 @@ type CreateUHostInstanceRequest struct {
 
 	// 虚拟CPU核数。可选参数：1-64（具体机型与CPU的对应关系参照控制台）。默认值: 4。
 	CPU *int `required:"false"`
+
+	// CUDA 安装包标识/名称。当 InstallGpuDriver 为 True 时可填写。
+	CUDAInstaller *string `required:"false"`
+
+	// CUDA 版本。当 InstallGpuDriver 为 True 时可填写。
+	CUDAVersion *string `required:"false"`
+
+	// cuDNN 安装包标识/名称。当 InstallGpuDriver 为 True 时可填写。
+	CUDNNInstaller *string `required:"false"`
+
+	// cuDNN 版本。当 InstallGpuDriver 为 True 时可填写。
+	CUDNNVersion *string `required:"false"`
 
 	// 计费模式。枚举值为： \\ > Year，按年付费； \\ > Month，按月付费；\\ > Dynamic，按小时预付费 \\ > Postpay，按小时后付费（支持关机不收费，目前仅部分可用区支持，请联系您的客户经理） \\ > Spot计费为抢占式实例(内测阶段) \\ 默认为月付
 	ChargeType *string `required:"false"`
@@ -621,11 +636,20 @@ type CreateUHostInstanceRequest struct {
 	//
 	Disks []UHostDisk `required:"false"`
 
+	// GPU 驱动安装包标识/名称。当 InstallGpuDriver 为 True 时可填写。
+	DriverInstaller *string `required:"false"`
+
+	// GPU 驱动版本。当 InstallGpuDriver 为 True 时可填写。
+	DriverVersion *string `required:"false"`
+
 	//
 	Features *CreateUHostInstanceParamFeatures `required:"false"`
 
 	// GPU卡核心数。仅GPU机型支持此字段（可选范围与MachineType+GpuType相关）
 	GPU *int `required:"false"`
+
+	// GPU 驱动安装包标识/名称。当 InstallGpuDriver 为 True 时可填写。
+	GpuDriverConfigId *string `required:"false"`
 
 	// GPU类型，枚举值["K80", "P40", "V100", "T4","T4A", "T4S","2080Ti","2080Ti-4C","1080Ti", "T4/4", "V100S",2080","2080TiS","2080TiPro","3090","4090","4090Pro","4090_48G","A100","A800","H20"]。MachineType为G时必填
 	GpuType *string `required:"false"`
@@ -650,6 +674,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 【该字段已废弃，请谨慎使用】
 	InstallAgent *string `required:"false" deprecated:"true"`
+
+	// 是否安装 GPU/CUDA 驱动。True 为安装，False 为不安装，默认 False。开启后可配合驱动相关参数使用。
+	InstallGpuDriver *bool `required:"false"`
 
 	// 硬件隔离组id。可通过DescribeIsolationGroup获取。
 	IsolationGroup *string `required:"false"`
@@ -693,6 +720,9 @@ type CreateUHostInstanceRequest struct {
 	//
 	NetworkInterface []CreateUHostInstanceParamNetworkInterface `required:"false"`
 
+	// GPU 驱动脚本模板变量（对应模板中的 OSName）。用于驱动安装脚本按操作系统匹配安装逻辑。
+	OSName *string `required:"false"`
+
 	// UHost密码。请遵照[[api:uhost-api:specification|字段规范]]设定密码。密码需使用base64进行编码，举例如下：# echo -n Password1 | base64 UGFzc3dvcmQx。
 	Password *string `required:"false"`
 
@@ -704,6 +734,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 购买时长。默认:值 1。按小时购买（Dynamic/Postpay）时无需此参数。 月付时，此参数传0，代表购买至月末。
 	Quantity *int `required:"false"`
+
+	// 是否强制要求 Metadata Token。True 表示创建时写入并强制要求镜像支持 MetadataToken（NewCloudinitFeature >= 2）；未传则按默认策略处理
+	RequireMetadataToken *bool `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
 	ResourceType *string `required:"false" deprecated:"true"`
@@ -719,6 +752,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 主机安全模式。Firewall：防火墙；SecGroup：安全组；默认值：Firewall。
 	SecurityMode *string `required:"false"`
+
+	// 安全加固（VendorShellScript）。True 为开启，False 为未开启，默认 False。
+	SecurityReinforce *bool `required:"false"`
 
 	// 【该字段已废弃，请谨慎使用】
 	SetId *int `required:"false" deprecated:"true"`
@@ -746,6 +782,9 @@ type CreateUHostInstanceRequest struct {
 
 	// 【建议后续不再使用】云主机机型（V1.0），在本字段和字段MachineType中，仅需要其中1个字段即可。参考[[api:uhost-api:uhost_type|云主机机型说明]]。
 	UHostType *string `required:"false"`
+
+	// 主机监控（Ubolt Agent）。True 为安装/开启，False 为未开启，默认 False。
+	UboltAgent *bool `required:"false"`
 
 	// 用户自定义数据。当镜像支持Cloud-init Feature时可填写此字段。注意：1、总数据量大小不超过 16K；2、使用base64编码
 	UserData *string `required:"false"`
